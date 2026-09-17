@@ -8,7 +8,10 @@ local Weapons = require(ReplicatedStorage.Shared.Weapons)
 
 local WeaponService = Knit.CreateService({
     Name = "WeaponService",
-    Client = {},
+    Client = {
+        Tracer = Knit.CreateSignal(), -- (shooter, origin, endPoints: {Vector3})
+        Hit = Knit.CreateSignal(), -- (damage, headshot) sent to the shooter only
+    },
 })
 
 local lastShot = {} -- [player] = os.clock()
@@ -38,6 +41,7 @@ function WeaponService.Client:Fire(player, weaponName, origin, direction)
     params.FilterType = Enum.RaycastFilterType.Exclude
     params.FilterDescendantsInstances = { character }
 
+    local endPoints = {}
     for _ = 1, stats.Pellets do
         local spread = CFrame.Angles(
             math.rad((math.random() - 0.5) * stats.Spread),
@@ -46,19 +50,23 @@ function WeaponService.Client:Fire(player, weaponName, origin, direction)
         )
         local dir = (CFrame.lookAt(origin, origin + direction) * spread).LookVector
         local hit = workspace:Raycast(origin, dir * stats.Range, params)
+        table.insert(endPoints, hit and hit.Position or origin + dir * stats.Range)
         if hit and hit.Instance then
             local model = hit.Instance:FindFirstAncestorOfClass("Model")
             local hum = model and model:FindFirstChildOfClass("Humanoid")
             local victim = model and Players:GetPlayerFromCharacter(model)
-            if hum and victim and victim:GetAttribute("Team") ~= player:GetAttribute("Team") then
+            if hum and hum.Health > 0 and victim and victim:GetAttribute("Team") ~= player:GetAttribute("Team") then
                 local dmg = stats.Damage
-                if hit.Instance.Name == "Head" and stats.HeadshotMultiplier then
+                local headshot = hit.Instance.Name == "Head" and stats.HeadshotMultiplier ~= nil
+                if headshot then
                     dmg *= stats.HeadshotMultiplier
                 end
                 hum:TakeDamage(dmg)
+                self.Hit:Fire(player, dmg, headshot)
             end
         end
     end
+    self.Tracer:FireExcept(player, player, origin, endPoints)
 end
 
 Players.PlayerRemoving:Connect(function(p)

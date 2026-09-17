@@ -2,6 +2,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Weapons = require(ReplicatedStorage.Shared.Weapons)
 
@@ -26,6 +27,17 @@ function WeaponController:Fire()
     local cam = workspace.CurrentCamera
     local WeaponService = Knit.GetService("WeaponService")
     WeaponService:Fire(self.Current, cam.CFrame.Position, cam.CFrame.LookVector)
+    -- Local tracer so your own shots feel instant; others see the server's version.
+    local origin = cam.CFrame.Position
+    local endPoint = origin + cam.CFrame.LookVector * stats.Range
+    local params = RaycastParams.new()
+    params.FilterType = Enum.RaycastFilterType.Exclude
+    params.FilterDescendantsInstances = { Players.LocalPlayer.Character }
+    local hit = workspace:Raycast(origin, cam.CFrame.LookVector * stats.Range, params)
+    if hit then
+        endPoint = hit.Position
+    end
+    Knit.GetController("EffectsController"):DrawTracer(origin, endPoint)
     if self.Ammo == 0 then
         self:Reload()
     end
