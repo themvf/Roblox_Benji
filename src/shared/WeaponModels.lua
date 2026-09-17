@@ -95,6 +95,15 @@ local SPECS = {
     },
 }
 
+-- Tweak these to rotate or shift a gun in the hand.
+-- Offset moves it in studs; Angles rotate it. Try Angles = { -90, 0, 0 } vs { -90, 180, 0 }
+-- if a barrel points backward, and adjust the first number for tilt up or down.
+local GRIP = {
+    Default = { Offset = { 0, -0.1, 0 }, Angles = { -90, 0, 0 } },
+    Minigun = { Offset = { 0, -0.3, 0.4 }, Angles = { -90, 0, 0 } },
+    Sniper = { Offset = { 0, -0.1, 0.2 }, Angles = { -90, 0, 0 } },
+}
+
 local function makePart(name, size, color, shape, glow)
     local part = Instance.new("Part")
     part.Name = name
@@ -121,8 +130,11 @@ function WeaponModels.Build(weaponName)
     tool.RequiresHandle = true
     tool.CanBeDropped = false
     tool.ManualActivationOnly = true -- our controller handles clicks
-    -- Grip: hand holds the Handle; tilt so the barrel points forward.
-    tool.Grip = CFrame.new(0, -0.1, 0) * CFrame.Angles(math.rad(-90), 0, 0)
+    -- Grip: where the Handle sits relative to the hand. Rotate to aim the barrel.
+    -- Angles are (pitch, yaw, roll) in degrees. Barrel is built along -Z of the Handle.
+    local g = GRIP[weaponName] or GRIP.Default
+    tool.Grip = CFrame.new(g.Offset[1], g.Offset[2], g.Offset[3])
+        * CFrame.Angles(math.rad(g.Angles[1]), math.rad(g.Angles[2]), math.rad(g.Angles[3]))
 
     local handle = makePart("Handle", { 0.28, 0.75, 0.32 }, DARK)
     handle.Parent = tool

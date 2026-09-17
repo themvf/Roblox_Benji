@@ -36,19 +36,45 @@ function WeaponController:Stats()
     return Weapons[self.Current]
 end
 
-function WeaponController:FireOne(name, ammo)
-    ammo.Mag -= 1
+-- Where the crosshair points: ray from the camera, ignoring our own character.
+local function aimPoint(character)
     local cam = workspace.CurrentCamera
-    local origin = cam.CFrame.Position
-    local look = cam.CFrame.LookVector
-    Knit.GetService("WeaponService"):Fire(name, origin, look)
-
-    -- Local tracer so your own shots feel instant; others see the server's version.
     local params = RaycastParams.new()
     params.FilterType = Enum.RaycastFilterType.Exclude
-    params.FilterDescendantsInstances = { Players.LocalPlayer.Character }
-    local hit = workspace:Raycast(origin, look * 1000, params)
-    Knit.GetController("EffectsController"):DrawTracer(origin, hit and hit.Position or origin + look * 1000)
+    params.FilterDescendantsInstances = { character }
+    local hit = workspace:Raycast(cam.CFrame.Position, cam.CFrame.LookVector * 1000, params)
+    return hit and hit.Position or cam.CFrame.Position + cam.CFrame.LookVector * 1000
+end
+
+function WeaponController:FireOne(name, ammo)
+    local character = Players.LocalPlayer.Character
+    local head = character and character:FindFirstChild("Head")
+    if not head then
+        return
+    end
+    ammo.Mag -= 1
+
+    -- Shoot from the head toward the crosshair target, not from the camera.
+    local target = aimPoint(character)
+    local origin = head.Position
+    local dir = (target - origin).Unit
+    Knit.GetService("WeaponService"):Fire(name, origin, dir)
+
+    -- Local tracer from the gun barrel so your own shots feel instant.
+    local tool = character:FindFirstChildOfClass("Tool")
+    local muzzle = tool
+        and (
+            tool:FindFirstChild("Barrel")
+            or tool:FindFirstChild("Barrels")
+            or tool:FindFirstChild("Emitter")
+            or tool:FindFirstChild("Barrel1")
+        )
+    local tracerStart = muzzle and muzzle.Position or origin
+    local params = RaycastParams.new()
+    params.FilterType = Enum.RaycastFilterType.Exclude
+    params.FilterDescendantsInstances = { character }
+    local hit = workspace:Raycast(origin, dir * 1000, params)
+    Knit.GetController("EffectsController"):DrawTracer(tracerStart, hit and hit.Position or origin + dir * 1000)
 end
 
 function WeaponController:Fire()

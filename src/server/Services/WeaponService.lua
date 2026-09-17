@@ -42,9 +42,9 @@ function WeaponService.Client:Fire(player, weaponName, origin, direction)
     lastShot[player] = now
 
     local character = player.Character
-    local root = character and character:FindFirstChild("HumanoidRootPart")
-    if not root or (root.Position - origin).Magnitude > 10 then
-        return
+    local head = character and character:FindFirstChild("Head")
+    if not head or (head.Position - origin).Magnitude > 8 then
+        return -- shot did not come from the player's head
     end
 
     local params = RaycastParams.new()
