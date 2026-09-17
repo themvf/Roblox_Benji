@@ -1,113 +1,97 @@
--- Server-authoritative hit validation. The client says "I shot from here in
--- this direction"; the server checks fire rate, position, and raycasts itself
--- before dealing damage. Never trust the client for damage.
+-- Bridges Roblox's Weapons Kit (ServerScriptService/WeaponsSystem) with our game:
+--   * team check uses the Team attribute set by RoundService
+--   * headshots deal Rivals crit damage
+--   * players receive their loadout on spawn
+-- Firing, bullets, recoil, reloads, GUI, and the shoulder camera are all the kit's.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
-local Weapons = require(ReplicatedStorage.Shared.Weapons)
-local WeaponModels = require(ReplicatedStorage.Shared.WeaponModels)
 
-local WeaponService = Knit.CreateService({
-    Name = "WeaponService",
-    Client = {
-        Tracer = Knit.CreateSignal(), -- (shooter, origin, endPoints: {Vector3})
-        Hit = Knit.CreateSignal(), -- (damage, headshot) sent to the shooter only
-    },
-})
+local WeaponService = Knit.CreateService({ Name = "WeaponService" })
 
-local lastShot = {} -- [player] = os.clock()
+-- Rivals default loadout. Players get a copy of each on spawn.
+WeaponService.DefaultLoadout = { Primary = "AssaultRifle", Secondary = "Handgun" }
 
--- Minimum gap between shots the server will accept. Burst weapons fire
--- several shots quickly, so use the burst delay for those.
-local function minGap(stats)
-    if stats.Burst then
-        return stats.BurstDelay * 0.8
-    end
-    return stats.Cooldown * 0.9
+local TEAM_IDS = { Red = 1, Blue = 2 }
+
+local function teamOf(player)
+    return TEAM_IDS[player:GetAttribute("Team")] or 0 -- 0 = no team, can hit anyone
 end
 
-function WeaponService.Client:Fire(player, weaponName, origin, direction)
-    local stats = Weapons[weaponName]
-    if not stats then
+local function onDamage(_system, target, amount, _damageType, _dealer, hitInfo, weaponInstance)
+    if not target:IsA("Humanoid") then
         return
     end
-    if typeof(origin) ~= "Vector3" or typeof(direction) ~= "Vector3" then
-        return
-    end
-
-    local now = os.clock()
-    if lastShot[player] and now - lastShot[player] < minGap(stats) then
-        return -- firing too fast
-    end
-    lastShot[player] = now
-
-    local character = player.Character
-    local head = character and character:FindFirstChild("Head")
-    if not head or (head.Position - origin).Magnitude > 8 then
-        return -- shot did not come from the player's head
-    end
-
-    local params = RaycastParams.new()
-    params.FilterType = Enum.RaycastFilterType.Exclude
-    params.FilterDescendantsInstances = { character }
-
-    local maxRange = 1000
-    local endPoints = {}
-    local totalDamage, anyHeadshot = 0, false
-    for _ = 1, stats.Pellets do
-        local spread = CFrame.Angles(
-            math.rad((math.random() - 0.5) * stats.Spread),
-            math.rad((math.random() - 0.5) * stats.Spread),
-            0
-        )
-        local dir = (CFrame.lookAt(origin, origin + direction) * spread).LookVector
-        local hit = workspace:Raycast(origin, dir * maxRange, params)
-        table.insert(endPoints, hit and hit.Position or origin + dir * maxRange)
-        if hit and hit.Instance then
-            local model = hit.Instance:FindFirstAncestorOfClass("Model")
-            local hum = model and model:FindFirstChildOfClass("Humanoid")
-            local victim = model and Players:GetPlayerFromCharacter(model)
-            if hum and hum.Health > 0 and victim and victim:GetAttribute("Team") ~= player:GetAttribute("Team") then
-                local headshot = hit.Instance.Name == "Head"
-                local dmg = Weapons.DamageAt(stats, hit.Distance, headshot)
-                hum:TakeDamage(dmg)
-                totalDamage += dmg
-                anyHeadshot = anyHeadshot or headshot
-            end
+    local part = hitInfo and hitInfo.part
+    if part and part.Name == "Head" and weaponInstance then
+        local config = weaponInstance:FindFirstChild("Configuration")
+        local crit = config and config:FindFirstChild("CritMultiplier")
+        if crit then
+            amount *= crit.Value
         end
     end
-    if totalDamage > 0 then
-        self.Hit:Fire(player, math.round(totalDamage * 10) / 10, anyHeadshot)
-    end
-    self.Tracer:FireExcept(player, player, origin, endPoints)
+    target:TakeDamage(amount)
 end
 
--- Client asks to hold a weapon; server builds the model and equips it.
-function WeaponService.Client:Equip(player, weaponName)
-    if not Weapons[weaponName] then
-        return
-    end
+function WeaponService:GiveLoadout(player)
+    local backpack = player:FindFirstChildOfClass("Backpack")
     local character = player.Character
     local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-    if not humanoid or humanoid.Health <= 0 then
+    if not backpack or not humanoid then
         return
     end
+    backpack:ClearAllChildren()
     for _, child in character:GetChildren() do
         if child:IsA("Tool") then
             child:Destroy()
         end
     end
-    local backpack = player:FindFirstChildOfClass("Backpack")
-    if backpack then
-        backpack:ClearAllChildren()
+
+    local loadout = self.DefaultLoadout
+    local first
+    for _, slot in { "Primary", "Secondary" } do
+        local template = self.Tools:FindFirstChild(loadout[slot])
+        if template then
+            local tool = template:Clone()
+            tool.Parent = backpack
+            first = first or tool
+        end
     end
-    local tool = WeaponModels.Build(weaponName)
-    tool.Parent = backpack or character
-    humanoid:EquipTool(tool)
+    if first then
+        task.delay(0.1, function()
+            if humanoid.Health > 0 and first.Parent == backpack then
+                humanoid:EquipTool(first)
+            end
+        end)
+    end
 end
 
-Players.PlayerRemoving:Connect(function(p)
-    lastShot[p] = nil
-end)
+function WeaponService:KnitStart()
+    self.Tools = ReplicatedStorage:WaitForChild("WeaponTools")
+
+    -- The kit's ServerWeaponsScript clones its folder into ReplicatedStorage on startup.
+    local systemFolder = ReplicatedStorage:WaitForChild("WeaponsSystem", 30)
+    if not systemFolder then
+        warn("[WeaponService] WeaponsSystem folder never appeared; is the kit in ServerScriptService?")
+        return
+    end
+    local WeaponsSystem = require(systemFolder.WeaponsSystem)
+    WeaponsSystem.setGetTeamCallback(teamOf)
+    WeaponsSystem.setDamageCallback(onDamage)
+
+    local function watch(player)
+        player.CharacterAdded:Connect(function()
+            task.wait(0.3) -- let the kit's client script and the character finish loading
+            self:GiveLoadout(player)
+        end)
+        if player.Character then
+            self:GiveLoadout(player)
+        end
+    end
+    Players.PlayerAdded:Connect(watch)
+    for _, p in Players:GetPlayers() do
+        watch(p)
+    end
+end
 
 return WeaponService

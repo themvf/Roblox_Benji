@@ -1,6 +1,5 @@
 -- Minimal HUD: round state, score, ammo. Replace with real UI later.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 
@@ -25,7 +24,6 @@ function HudController:KnitStart()
         return l
     end
     local state = label(UDim2.fromScale(0.35, 0.02))
-    local ammo = label(UDim2.fromScale(0.68, 0.9))
 
     local RoundService = Knit.GetService("RoundService")
     RoundService.StateChanged:Connect(function(s, data)
@@ -37,16 +35,6 @@ function HudController:KnitStart()
             text ..= "  Red " .. data.Score.Red .. " - " .. data.Score.Blue .. " Blue"
         end
         state.Text = text
-    end)
-
-    local Weapon = Knit.GetController("WeaponController")
-    RunService.RenderStepped:Connect(function()
-        local a = Weapon:GetAmmo()
-        local function fmt(n)
-            return n == math.huge and "INF" or tostring(n)
-        end
-        local status = Weapon.Reloading and "Reloading..." or (fmt(a.Mag) .. " / " .. fmt(a.Reserve))
-        ammo.Text = Weapon.Current .. "  " .. status
     end)
 end
 

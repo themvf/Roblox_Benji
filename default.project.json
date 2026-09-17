@@ -4,10 +4,12 @@
     "$className": "DataModel",
     "ReplicatedStorage": {
       "Packages": { "$path": "Packages" },
-      "Shared": { "$path": "src/shared" }
+      "Shared": { "$path": "src/shared" },
+      "WeaponTools": { "$path": "assets/weapons/tools" }
     },
     "ServerScriptService": {
-      "Server": { "$path": "src/server" }
+      "Server": { "$path": "src/server" },
+      "WeaponsSystem": { "$path": "assets/WeaponsSystem.rbxm" }
     },
     "StarterPlayer": {
       "StarterPlayerScripts": {

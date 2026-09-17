@@ -3,3 +3,4 @@ ServerPackages/
 *.rbxl
 *.rbxlx
 *.rbxl.lock
+tools/wsrc/
