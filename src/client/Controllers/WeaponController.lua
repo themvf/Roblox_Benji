@@ -1,4 +1,4 @@
--- Handles input, ammo, and reload timing, then asks the server to validate the shot.
+-- Handles input, ammo, bursts, and reload timing, then asks the server to validate each shot.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -8,62 +8,139 @@ local Weapons = require(ReplicatedStorage.Shared.Weapons)
 
 local WeaponController = Knit.CreateController({ Name = "WeaponController" })
 
+-- Rivals default loadout: Assault Rifle + Handgun
+WeaponController.Loadout = { Primary = "AssaultRifle", Secondary = "Handgun" }
 WeaponController.Current = "AssaultRifle"
-WeaponController.Ammo = Weapons.AssaultRifle.MagSize
 WeaponController.Reloading = false
+WeaponController.Equipping = false
+WeaponController.AmmoState = {} -- [weaponName] = { Mag = n, Reserve = n }
+
 local lastShot = 0
+local firing = false -- true while a burst is in progress
 
-function WeaponController:Fire()
-    local stats = Weapons[self.Current]
-    if self.Reloading or self.Ammo <= 0 then
-        return
+local function ammoFor(self, name)
+    local state = self.AmmoState[name]
+    if not state then
+        local stats = Weapons[name]
+        state = { Mag = stats.Ammo[1], Reserve = stats.Ammo[2] }
+        self.AmmoState[name] = state
     end
-    if os.clock() - lastShot < stats.FireRate then
-        return
-    end
-    lastShot = os.clock()
-    self.Ammo -= 1
+    return state
+end
 
+function WeaponController:GetAmmo()
+    return ammoFor(self, self.Current)
+end
+
+function WeaponController:Stats()
+    return Weapons[self.Current]
+end
+
+function WeaponController:FireOne(name, ammo)
+    ammo.Mag -= 1
     local cam = workspace.CurrentCamera
-    local WeaponService = Knit.GetService("WeaponService")
-    WeaponService:Fire(self.Current, cam.CFrame.Position, cam.CFrame.LookVector)
-    -- Local tracer so your own shots feel instant; others see the server's version.
     local origin = cam.CFrame.Position
-    local endPoint = origin + cam.CFrame.LookVector * stats.Range
+    local look = cam.CFrame.LookVector
+    Knit.GetService("WeaponService"):Fire(name, origin, look)
+
+    -- Local tracer so your own shots feel instant; others see the server's version.
     local params = RaycastParams.new()
     params.FilterType = Enum.RaycastFilterType.Exclude
     params.FilterDescendantsInstances = { Players.LocalPlayer.Character }
-    local hit = workspace:Raycast(origin, cam.CFrame.LookVector * stats.Range, params)
-    if hit then
-        endPoint = hit.Position
+    local hit = workspace:Raycast(origin, look * 1000, params)
+    Knit.GetController("EffectsController"):DrawTracer(origin, hit and hit.Position or origin + look * 1000)
+end
+
+function WeaponController:Fire()
+    local name = self.Current
+    local stats = self:Stats()
+    local ammo = self:GetAmmo()
+    if self.Reloading or self.Equipping or firing then
+        return
     end
-    Knit.GetController("EffectsController"):DrawTracer(origin, endPoint)
-    if self.Ammo == 0 then
+    if ammo.Mag <= 0 then
         self:Reload()
+        return
+    end
+    if os.clock() - lastShot < stats.Cooldown then
+        return
+    end
+    lastShot = os.clock()
+
+    if stats.Burst then
+        firing = true
+        task.spawn(function()
+            for i = 1, stats.Burst do
+                if ammo.Mag <= 0 or self.Current ~= name then
+                    break
+                end
+                self:FireOne(name, ammo)
+                if i < stats.Burst then
+                    task.wait(stats.BurstDelay)
+                end
+            end
+            firing = false
+            if ammo.Mag == 0 then
+                self:Reload()
+            end
+        end)
+    else
+        self:FireOne(name, ammo)
+        if ammo.Mag == 0 then
+            self:Reload()
+        end
     end
 end
 
 function WeaponController:Reload()
-    if self.Reloading then
+    local stats = self:Stats()
+    local ammo = self:GetAmmo()
+    if self.Reloading or ammo.Mag >= stats.Ammo[1] or ammo.Reserve <= 0 then
         return
     end
     self.Reloading = true
     local weapon = self.Current
-    task.delay(Weapons[weapon].ReloadTime, function()
-        if self.Current == weapon then
-            self.Ammo = Weapons[weapon].MagSize
+    local duration = stats.Reload
+    if ammo.Mag == 0 and stats.EmptyReload then
+        duration = stats.EmptyReload
+    end
+
+    task.spawn(function()
+        if stats.SegmentedReload then
+            -- Shotgun style: one shell at a time, interrupted by switching weapons.
+            while self.Current == weapon and ammo.Mag < stats.Ammo[1] and ammo.Reserve > 0 do
+                task.wait(duration)
+                if self.Current ~= weapon then
+                    break
+                end
+                ammo.Mag += 1
+                ammo.Reserve -= 1
+            end
+        else
+            task.wait(duration)
+            if self.Current == weapon then
+                local need = stats.Ammo[1] - ammo.Mag
+                local take = math.min(need, ammo.Reserve)
+                ammo.Mag += take
+                ammo.Reserve -= take
+            end
         end
         self.Reloading = false
     end)
 end
 
 function WeaponController:Equip(name)
-    if not Weapons[name] then
+    if not Weapons[name] or name == self.Current then
         return
     end
     self.Current = name
-    self.Ammo = Weapons[name].MagSize
     self.Reloading = false
+    self.Equipping = true
+    task.delay(Weapons[name].EquipTime, function()
+        if self.Current == name then
+            self.Equipping = false
+        end
+    end)
 end
 
 function WeaponController:KnitStart()
@@ -74,18 +151,16 @@ function WeaponController:KnitStart()
         end
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             holding = true
+            self:Fire() -- semi-auto weapons fire once per click
         end
         if input.KeyCode == Enum.KeyCode.R then
             self:Reload()
         end
         if input.KeyCode == Enum.KeyCode.One then
-            self:Equip("AssaultRifle")
+            self:Equip(self.Loadout.Primary)
         end
         if input.KeyCode == Enum.KeyCode.Two then
-            self:Equip("Shotgun")
-        end
-        if input.KeyCode == Enum.KeyCode.Three then
-            self:Equip("Sniper")
+            self:Equip(self.Loadout.Secondary)
         end
     end)
     UserInputService.InputEnded:Connect(function(input)
@@ -94,7 +169,7 @@ function WeaponController:KnitStart()
         end
     end)
     RunService.RenderStepped:Connect(function()
-        if holding then
+        if holding and self:Stats().Auto then
             self:Fire()
         end
     end)

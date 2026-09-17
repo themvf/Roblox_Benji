@@ -41,7 +41,11 @@ function HudController:KnitStart()
 
     local Weapon = Knit.GetController("WeaponController")
     RunService.RenderStepped:Connect(function()
-        local status = Weapon.Reloading and "Reloading..." or tostring(Weapon.Ammo)
+        local a = Weapon:GetAmmo()
+        local function fmt(n)
+            return n == math.huge and "INF" or tostring(n)
+        end
+        local status = Weapon.Reloading and "Reloading..." or (fmt(a.Mag) .. " / " .. fmt(a.Reserve))
         ammo.Text = Weapon.Current .. "  " .. status
     end)
 end

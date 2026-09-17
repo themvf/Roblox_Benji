@@ -16,6 +16,15 @@ local WeaponService = Knit.CreateService({
 
 local lastShot = {} -- [player] = os.clock()
 
+-- Minimum gap between shots the server will accept. Burst weapons fire
+-- several shots quickly, so use the burst delay for those.
+local function minGap(stats)
+    if stats.Burst then
+        return stats.BurstDelay * 0.8
+    end
+    return stats.Cooldown * 0.9
+end
+
 function WeaponService.Client:Fire(player, weaponName, origin, direction)
     local stats = Weapons[weaponName]
     if not stats then
@@ -26,7 +35,7 @@ function WeaponService.Client:Fire(player, weaponName, origin, direction)
     end
 
     local now = os.clock()
-    if lastShot[player] and now - lastShot[player] < stats.FireRate * 0.9 then
+    if lastShot[player] and now - lastShot[player] < minGap(stats) then
         return -- firing too fast
     end
     lastShot[player] = now
@@ -41,7 +50,9 @@ function WeaponService.Client:Fire(player, weaponName, origin, direction)
     params.FilterType = Enum.RaycastFilterType.Exclude
     params.FilterDescendantsInstances = { character }
 
+    local maxRange = 1000
     local endPoints = {}
+    local totalDamage, anyHeadshot = 0, false
     for _ = 1, stats.Pellets do
         local spread = CFrame.Angles(
             math.rad((math.random() - 0.5) * stats.Spread),
@@ -49,22 +60,23 @@ function WeaponService.Client:Fire(player, weaponName, origin, direction)
             0
         )
         local dir = (CFrame.lookAt(origin, origin + direction) * spread).LookVector
-        local hit = workspace:Raycast(origin, dir * stats.Range, params)
-        table.insert(endPoints, hit and hit.Position or origin + dir * stats.Range)
+        local hit = workspace:Raycast(origin, dir * maxRange, params)
+        table.insert(endPoints, hit and hit.Position or origin + dir * maxRange)
         if hit and hit.Instance then
             local model = hit.Instance:FindFirstAncestorOfClass("Model")
             local hum = model and model:FindFirstChildOfClass("Humanoid")
             local victim = model and Players:GetPlayerFromCharacter(model)
             if hum and hum.Health > 0 and victim and victim:GetAttribute("Team") ~= player:GetAttribute("Team") then
-                local dmg = stats.Damage
-                local headshot = hit.Instance.Name == "Head" and stats.HeadshotMultiplier ~= nil
-                if headshot then
-                    dmg *= stats.HeadshotMultiplier
-                end
+                local headshot = hit.Instance.Name == "Head"
+                local dmg = Weapons.DamageAt(stats, hit.Distance, headshot)
                 hum:TakeDamage(dmg)
-                self.Hit:Fire(player, dmg, headshot)
+                totalDamage += dmg
+                anyHeadshot = anyHeadshot or headshot
             end
         end
+    end
+    if totalDamage > 0 then
+        self.Hit:Fire(player, math.round(totalDamage * 10) / 10, anyHeadshot)
     end
     self.Tracer:FireExcept(player, player, origin, endPoints)
 end
