@@ -1,0 +1,5 @@
+Packages/
+ServerPackages/
+*.rbxl
+*.rbxlx
+*.rbxl.lock
