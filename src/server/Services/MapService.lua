@@ -336,9 +336,12 @@ function MapService:Build(layout)
         applyLighting(layout.Environment)
     end
 
-    local baseplate = workspace:FindFirstChild("Baseplate")
-    if baseplate then
-        baseplate:Destroy()
+    -- Studio's template place adds these; the map provides its own
+    for _, name in { "Baseplate", "SpawnLocation" } do
+        local inst = workspace:FindFirstChild(name)
+        if inst then
+            inst:Destroy()
+        end
     end
 end
 
@@ -352,6 +355,7 @@ function MapService:PlaceCharacter(player, character)
     if not root then
         return
     end
+    task.wait() -- let Roblox finish its own spawn placement first
     local idx = (player.UserId % #points) + 1
     local pos = points[idx] + Vector3.new(0, 3, 0)
     root.CFrame = CFrame.lookAt(pos, Vector3.new(0, pos.Y, 0))

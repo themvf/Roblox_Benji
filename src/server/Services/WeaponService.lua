@@ -5,6 +5,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Weapons = require(ReplicatedStorage.Shared.Weapons)
+local WeaponModels = require(ReplicatedStorage.Shared.WeaponModels)
 
 local WeaponService = Knit.CreateService({
     Name = "WeaponService",
@@ -79,6 +80,30 @@ function WeaponService.Client:Fire(player, weaponName, origin, direction)
         self.Hit:Fire(player, math.round(totalDamage * 10) / 10, anyHeadshot)
     end
     self.Tracer:FireExcept(player, player, origin, endPoints)
+end
+
+-- Client asks to hold a weapon; server builds the model and equips it.
+function WeaponService.Client:Equip(player, weaponName)
+    if not Weapons[weaponName] then
+        return
+    end
+    local character = player.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    if not humanoid or humanoid.Health <= 0 then
+        return
+    end
+    for _, child in character:GetChildren() do
+        if child:IsA("Tool") then
+            child:Destroy()
+        end
+    end
+    local backpack = player:FindFirstChildOfClass("Backpack")
+    if backpack then
+        backpack:ClearAllChildren()
+    end
+    local tool = WeaponModels.Build(weaponName)
+    tool.Parent = backpack or character
+    humanoid:EquipTool(tool)
 end
 
 Players.PlayerRemoving:Connect(function(p)

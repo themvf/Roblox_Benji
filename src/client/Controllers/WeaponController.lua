@@ -136,6 +136,7 @@ function WeaponController:Equip(name)
     self.Current = name
     self.Reloading = false
     self.Equipping = true
+    Knit.GetService("WeaponService"):Equip(name)
     task.delay(Weapons[name].EquipTime, function()
         if self.Current == name then
             self.Equipping = false
@@ -145,6 +146,16 @@ end
 
 function WeaponController:KnitStart()
     local holding = false
+    -- Hand the model over whenever a character spawns
+    local player = Players.LocalPlayer
+    player.CharacterAdded:Connect(function(character)
+        character:WaitForChild("Humanoid")
+        task.wait(0.2)
+        Knit.GetService("WeaponService"):Equip(self.Current)
+    end)
+    if player.Character then
+        Knit.GetService("WeaponService"):Equip(self.Current)
+    end
     UserInputService.InputBegan:Connect(function(input, gameProcessed)
         if gameProcessed then
             return
