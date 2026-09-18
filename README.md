@@ -56,6 +56,14 @@ mock store and prints a warning.
   `Carrier` is the first built for it (Flight Deck -> Hangar -> Bridge).
 - **Duel**: 1v1 / 2v2 elimination, first to 5 rounds. Side pads in the lobby.
 
+## Carrier testing (Testability & Safety Fix Spec v1)
+`Debug_CarrierTestSafety` (Tuning, default true) forces the Carrier for Convergence, adds an invisible perimeter
+barrier (bullets pass, players don't), recovers anyone who reaches water / below-deck / an invalid void to the
+nearest safe point within ~1.5 s (logged as `RECOVERY: ...` with a reason and position), and shows launch pad
+trigger volumes, direction arrows and landing markers. Set it false for production-intent behaviour.
+`/map carrier` (or any map name) forces the next Convergence map; `/map off` restores rotation. Launch pads use a
+server-side trigger volume and apply velocity on the client (character is client-owned), 1 s re-trigger guard.
+
 ## Carrier v1 (Map Design Specification)
 Data-driven layers on `Carrier.lua`: `Pickups` (weapon / speed / jetpack, S11-S13), `LaunchPads` (ballistic arcs,
 S14), `SniperOutposts` (telemetry, S9), `Flyovers` (30-60 s, formations and low passes, S6), `Fleet` (background

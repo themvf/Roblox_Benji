@@ -27,6 +27,13 @@ function TuningService:KnitInit()
             tuning:SetAttribute(key, Config[key])
         end
     end
+    -- dev switches (Carrier Testability & Safety Fix Spec v1)
+    if tuning:GetAttribute("Debug_ForceMap") == nil then
+        tuning:SetAttribute("Debug_ForceMap", "")
+    end
+    if tuning:GetAttribute("Debug_CarrierTestSafety") == nil then
+        tuning:SetAttribute("Debug_CarrierTestSafety", true)
+    end
     local conv = Config.Convergence
     for _, key in Config.CONVERGENCE_TUNABLE do
         if tuning:GetAttribute("Convergence_" .. key) == nil then

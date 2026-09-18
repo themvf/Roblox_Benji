@@ -16,6 +16,7 @@ local PickupService = Knit.CreateService({
     Name = "PickupService",
     Client = {
         Notice = Knit.CreateSignal(), -- (text) small HUD toast
+        Launch = Knit.CreateSignal(), -- (velocity, flightSeconds) client applies it (character is client-owned)
     },
 })
 
@@ -325,14 +326,16 @@ function PickupService:GiveJetpack(player, fuelSeconds)
 end
 
 -- ===== launch pads (S14) =====
-local function launchVelocity(from, to, apexHeight)
-    -- ballistic arc that clears apexHeight above the higher of the two points
+-- Ballistic arc: given a vertical launch speed, the flight time and horizontal speed that lands at `to`.
+local function launchVelocity(from, to, vy)
     local dy = to.Y - from.Y
-    local h = math.max(dy, 0) + apexHeight
-    local vy = math.sqrt(2 * GRAVITY * h)
-    local tUp = vy / GRAVITY
-    local tDown = math.sqrt(2 * math.max(h - dy, 0.1) / GRAVITY)
-    local t = tUp + tDown
+    -- solve vy*t - g/2*t^2 = dy for the later root
+    local disc = vy * vy - 2 * GRAVITY * dy
+    if disc < 0 then
+        vy = math.sqrt(2 * GRAVITY * dy) + 12
+        disc = vy * vy - 2 * GRAVITY * dy
+    end
+    local t = (vy + math.sqrt(disc)) / GRAVITY
     local horiz = Vector3.new(to.X - from.X, 0, to.Z - from.Z)
     return horiz / t + Vector3.new(0, vy, 0), t
 end
@@ -341,6 +344,8 @@ local function makeLaunchPad(self, folder, spec, index)
     local pos = Vector3.new(spec.pos[1], spec.pos[2], spec.pos[3])
     local target = Vector3.new(spec.target[1], spec.target[2], spec.target[3])
     local size = spec.size or 8
+    local debug = Knit.GetService("SafetyService"):Enabled()
+
     local pad = Instance.new("Part")
     pad.Name = "LaunchPad" .. index
     pad.Anchored = true
@@ -350,7 +355,6 @@ local function makeLaunchPad(self, folder, spec, index)
     pad.Size = Vector3.new(size, 0.6, size)
     pad.CFrame = CFrame.new(pos + Vector3.new(0, 0.3, 0))
     pad.Parent = folder
-    -- chevrons pointing at the target
     local dir = Vector3.new(target.X - pos.X, 0, target.Z - pos.Z).Unit
     for i = 1, 3 do
         local chev = Instance.new("WedgePart")
@@ -367,7 +371,6 @@ local function makeLaunchPad(self, folder, spec, index)
         chev.Parent = folder
     end
     icon(pad, "LAUNCH", COLORS.pad)
-    -- landing marker
     local land = Instance.new("Part")
     land.Name = "LandingZone" .. index
     land.Shape = Enum.PartType.Cylinder
@@ -381,54 +384,82 @@ local function makeLaunchPad(self, folder, spec, index)
     land.CFrame = CFrame.new(target + Vector3.new(0, 0.3, 0)) * CFrame.Angles(0, 0, math.rad(90))
     land.Parent = folder
 
-    local cooldown = {} -- [character] = time
-    pad.Touched:Connect(function(hit)
-        local character = hit.Parent
-        local hum = character and character:FindFirstChildOfClass("Humanoid")
-        local root = character and character:FindFirstChild("HumanoidRootPart")
-        if not hum or not root or hum.Health <= 0 then
-            return
+    -- trigger volume: larger than the visible pad, server-authoritative distance check
+    local trig = { Center = pos + Vector3.new(0, 2, 0), Half = Vector3.new(size / 2 + 1, 2.5, size / 2 + 1) }
+    if debug then
+        local outline = Instance.new("Part")
+        outline.Name = "LaunchTrigger" .. index
+        outline.Anchored = true
+        outline.CanCollide = false
+        outline.CanQuery = false
+        outline.Transparency = 0.75
+        outline.Color = COLORS.pad
+        outline.Material = Enum.Material.ForceField
+        outline.Size = trig.Half * 2
+        outline.CFrame = CFrame.new(trig.Center)
+        outline.Parent = folder
+        local v, flight = launchVelocity(pos, target, spec.vy or 62)
+        -- direction arrow: a thin neon rod along the initial velocity
+        local arrow = Instance.new("Part")
+        arrow.Anchored = true
+        arrow.CanCollide = false
+        arrow.CanQuery = false
+        arrow.Material = Enum.Material.Neon
+        arrow.Color = Color3.new(1, 1, 1)
+        arrow.Size = Vector3.new(0.3, 0.3, 12)
+        arrow.CFrame = CFrame.lookAt(pos + Vector3.new(0, 2, 0), pos + Vector3.new(0, 2, 0) + v.Unit * 12)
+            * CFrame.new(0, 0, -6)
+        arrow.Parent = folder
+        icon(land, ("LAND %.1fs"):format(flight), COLORS.pad)
+    end
+    table.insert(self.LaunchPads, { Spec = spec, Pos = pos, Target = target, Trigger = trig, Pad = pad, Cooldown = {} })
+end
+
+function PickupService:TryLaunch(padInfo, player)
+    local character = player.Character
+    local hum = character and character:FindFirstChildOfClass("Humanoid")
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+    if not hum or not root or hum.Health <= 0 then
+        return
+    end
+    local now = os.clock()
+    if now - (padInfo.Cooldown[player] or 0) < 1.0 then
+        return -- re-trigger protection
+    end
+    padInfo.Cooldown[player] = now
+    local v, flight = launchVelocity(root.Position, padInfo.Target, padInfo.Spec.vy or 62)
+    character:SetAttribute("Launched", true)
+    self.Stats.LaunchUses += 1
+    self.Client.Launch:Fire(player, v, flight)
+    playSound(padInfo.Pad, "upload:LaunchPad", 1)
+    local a0 = Instance.new("Attachment")
+    a0.Parent = root
+    local a1 = Instance.new("Attachment")
+    a1.Position = Vector3.new(0, -2, 0)
+    a1.Parent = root
+    local trail = Instance.new("Trail")
+    trail.Attachment0 = a0
+    trail.Attachment1 = a1
+    trail.Color = ColorSequence.new(COLORS.pad)
+    trail.Lifetime = 0.5
+    trail.LightEmission = 1
+    trail.Parent = root
+    Debris:AddItem(trail, flight + 0.5)
+    Debris:AddItem(a0, flight + 0.5)
+    Debris:AddItem(a1, flight + 0.5)
+    local diedConn
+    diedConn = hum.Died:Connect(function()
+        if character:GetAttribute("Launched") then
+            self.Stats.LaunchDeathsInFlight += 1
         end
-        if os.clock() - (cooldown[character] or 0) < 2 then
-            return
+    end)
+    task.delay(flight + 0.5, function()
+        if character.Parent then
+            character:SetAttribute("Launched", nil)
         end
-        cooldown[character] = os.clock()
-        local v, flight = launchVelocity(root.Position, target, spec.apex or 18)
-        root.AssemblyLinearVelocity = v
-        hum:ChangeState(Enum.HumanoidStateType.Jumping)
-        character:SetAttribute("Launched", true)
-        self.Stats.LaunchUses += 1
-        playSound(pad, "upload:LaunchPad", 1)
-        -- visible while airborne: a glowing trail
-        local a0 = Instance.new("Attachment")
-        a0.Parent = root
-        local a1 = Instance.new("Attachment")
-        a1.Position = Vector3.new(0, -2, 0)
-        a1.Parent = root
-        local trail = Instance.new("Trail")
-        trail.Attachment0 = a0
-        trail.Attachment1 = a1
-        trail.Color = ColorSequence.new(COLORS.pad)
-        trail.Lifetime = 0.5
-        trail.LightEmission = 1
-        trail.Parent = root
-        Debris:AddItem(trail, flight + 0.5)
-        Debris:AddItem(a0, flight + 0.5)
-        Debris:AddItem(a1, flight + 0.5)
-        local diedConn
-        diedConn = hum.Died:Connect(function()
-            if character:GetAttribute("Launched") then
-                self.Stats.LaunchDeathsInFlight += 1
-            end
-        end)
-        task.delay(flight + 0.3, function()
-            if character.Parent then
-                character:SetAttribute("Launched", nil)
-            end
-            if diedConn then
-                diedConn:Disconnect()
-            end
-        end)
+        if diedConn then
+            diedConn:Disconnect()
+        end
     end)
 end
 
@@ -441,6 +472,7 @@ function PickupService:Build(layout)
     folder.Parent = workspace
     self.Folder = folder
     self.Pickups = {}
+    self.LaunchPads = {}
     for i, spec in layout.Pickups or {} do
         table.insert(self.Pickups, makePickup(folder, spec, i))
     end
@@ -452,6 +484,23 @@ function PickupService:Build(layout)
     local t0 = os.clock()
     self.Conn = RunService.Heartbeat:Connect(function()
         local t = os.clock() - t0
+        for _, lp in self.LaunchPads do
+            for _, player in Players:GetPlayers() do
+                if player:GetAttribute("InMatch") then
+                    local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                    if root and not player.Character:GetAttribute("Launched") then
+                        local d = root.Position - lp.Trigger.Center
+                        if
+                            math.abs(d.X) <= lp.Trigger.Half.X
+                            and math.abs(d.Y) <= lp.Trigger.Half.Y
+                            and math.abs(d.Z) <= lp.Trigger.Half.Z
+                        then
+                            self:TryLaunch(lp, player)
+                        end
+                    end
+                end
+            end
+        end
         for _, p in self.Pickups do
             if p.Model and p.Ready then
                 p.Model:PivotTo(
@@ -532,6 +581,7 @@ function PickupService:Clear()
         self.Folder = nil
     end
     self.Pickups = {}
+    self.LaunchPads = {}
 end
 
 return PickupService

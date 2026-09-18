@@ -227,6 +227,24 @@ function RoundService:KnitStart()
         task.defer(function()
             self.Client.StateChanged:Fire(player, "Lobby", {})
         end)
+        -- /map <name|off>: force the next Convergence map (dev)
+        player.Chatted:Connect(function(msg)
+            local name = msg:match("^/map%s+(%a+)")
+            if name then
+                local tuning = ReplicatedStorage:FindFirstChild("Tuning")
+                local pretty = name:sub(1, 1):upper() .. name:sub(2):lower()
+                if tuning and (pretty == "Off" or pretty == "None") then
+                    tuning:SetAttribute("Debug_ForceMap", "")
+                    Knit.GetService("SafetyService").Client.Notice:Fire(player, "Map override off: normal rotation")
+                elseif tuning and ReplicatedStorage.Shared.Maps:FindFirstChild(pretty) then
+                    tuning:SetAttribute("Debug_ForceMap", pretty)
+                    Knit.GetService("SafetyService").Client.Notice
+                        :Fire(player, "Next Convergence map forced to: " .. pretty)
+                else
+                    Knit.GetService("SafetyService").Client.Notice:Fire(player, "Unknown map: " .. name)
+                end
+            end
+        end)
         -- Lobby preview: type /celebrate to run your default celebration solo on the podium
         player.Chatted:Connect(function(msg)
             if msg:lower():sub(1, 10) == "/celebrate" and not player:GetAttribute("InMatch") and not self.Busy then

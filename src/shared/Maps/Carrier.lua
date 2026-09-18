@@ -1,25 +1,33 @@
--- Aircraft Carrier, Map Design Specification v1.
+-- Aircraft Carrier, Map Design Specification v1 + Testability & Safety Fix Spec v1.
 -- "Battlefield atmosphere, Roblox readability, arcade spectacle."
 -- Layers: core combat (deck / hangar / island / catwalks / corridor / cover / sniper outposts / launch pads),
 -- living world (flyovers, fleet, lights, steam, radar), signature spectacle (jet-launch hazard, kraken).
 -- Red spawns at the bow (-X), Blue at the stern (+X). Island is starboard (+Z). Heights: hangar 0, deck 16, bridge 32.
+-- Routes deck <-> hangar: a ramp opening at each deck end (x +-106..140, z -8..8) and the two aircraft elevators.
 return {
     Name = "Carrier",
     Size = 340,
     WallHeight = 80,
     Seed = 7,
-    ShadowY = 16.2, -- deck height, used by flyover shadows
+    ShadowY = 16.2,
 
     Spawns = {
         Red = {
-            { -140, 18, -10 },
-            { -140, 18, 0 },
-            { -140, 18, 10 },
-            { -150, 18, -5 },
-            { -150, 18, 5 },
-            { -145, 18, 15 },
+            { -138, 18, -30 },
+            { -138, 18, -20 },
+            { -146, 18, -25 },
+            { -138, 18, 20 },
+            { -138, 18, 30 },
+            { -146, 18, 25 },
         },
-        Blue = { { 140, 18, -10 }, { 140, 18, 0 }, { 140, 18, 10 }, { 150, 18, -5 }, { 150, 18, 5 }, { 145, 18, 15 } },
+        Blue = {
+            { 138, 18, -30 },
+            { 138, 18, -20 },
+            { 146, 18, -25 },
+            { 138, 18, 20 },
+            { 138, 18, 30 },
+            { 146, 18, 25 },
+        },
     },
 
     Objectives = {
@@ -30,35 +38,77 @@ return {
 
     Vista = { pos = { -175, 60, -95 }, look = { 20, 20, 20 }, seconds = 2.5 },
 
-    -- S9 sniper outposts (telemetry: occupancy + kills from these)
+    -- ===== Testability & Safety (Spec v1) =====
+    RecoveryY = -14, -- below this = water / under the hull
+    Bounds = { min = { -170, -16, -70 }, max = { 170, 90, 70 } },
+    -- voids a player should never be in: between hangar walls and hull sides, and under the deck ends
+    InvalidRegions = {
+        { name = "PortVoid", pos = { 0, 6, -40 }, size = { 220, 16, 10 } },
+        { name = "StarboardVoid", pos = { 0, 6, 40 }, size = { 220, 16, 10 } },
+        { name = "BowVoid", pos = { -130, 6, 0 }, size = { 40, 16, 90 } },
+        { name = "SternVoid", pos = { 130, 6, 0 }, size = { 40, 16, 90 } },
+    },
+    -- legitimate places inside those boxes: the two hangar ramps and the catwalk stairs
+    SafeRegions = {
+        { pos = { -123, 8, 0 }, size = { 44, 22, 18 } },
+        { pos = { 123, 8, 0 }, size = { 44, 22, 18 } },
+        { pos = { -44, 14, -47 }, size = { 12, 8, 8 } },
+        { pos = { 44, 14, 47 }, size = { 12, 8, 8 } },
+    },
+    SafePoints = {
+        { name = "Bow", pos = { -120, 17, 25 } },
+        { name = "Stern", pos = { 120, 17, -25 } },
+        { name = "Hangar", pos = { 0, 1, -20 } },
+        { name = "Island side", pos = { 0, 17, 25 } },
+        { name = "Deck centre", pos = { 0, 17, -30 } },
+    },
+    -- invisible perimeter walls (test safety): deck edges, bow/stern, catwalk outer edges, overlook edges
+    Barrier = {
+        { pos = { 0, 22, -46.5 }, size = { 302, 12, 1.5 } },
+        { pos = { 0, 22, 46.5 }, size = { 302, 12, 1.5 } },
+        { pos = { -151, 22, 0 }, size = { 1.5, 12, 94 } },
+        { pos = { 151, 22, 0 }, size = { 1.5, 12, 94 } },
+        { pos = { -80, 17, -52.5 }, size = { 72, 12, 1.5 } },
+        { pos = { 80, 17, 52.5 }, size = { 72, 12, 1.5 } },
+        { pos = { -80, 17, 52.5 }, size = { 72, 12, 1.5 } },
+        { pos = { 80, 17, -52.5 }, size = { 72, 12, 1.5 } },
+        { pos = { -116, 17, -52.5 }, size = { 8, 12, 1.5 } },
+        { pos = { 116, 17, 52.5 }, size = { 8, 12, 1.5 } },
+        { pos = { -44, 17, -52.5 }, size = { 8, 12, 1.5 } },
+        { pos = { 44, 17, 52.5 }, size = { 8, 12, 1.5 } },
+        { pos = { -128, 29, -48.8 }, size = { 14, 10, 1 } },
+        { pos = { 128, 29, 48.8 }, size = { 14, 10, 1 } },
+        { pos = { -135.5, 29, -44 }, size = { 1, 10, 10 } },
+        { pos = { 135.5, 29, 44 }, size = { 1, 10, 10 } },
+    },
+
+    -- S9 sniper outposts (telemetry)
     SniperOutposts = {
         { Name = "Island Roof", pos = { 0, 38, 42 }, radius = 9 },
         { Name = "Stern Overlook", pos = { 128, 24, -44 }, radius = 6 },
     },
 
-    -- S11-S13 pickups: 1 special per major area, long timers, visible pads
+    -- S11-S13 pickups
     Pickups = {
-        { kind = "weapon", weapon = "Sniper", pos = { 8, 37.5, 42 }, respawn = 75, duration = 45 }, -- island roof
-        { kind = "weapon", weapon = "Shotgun", pos = { -20, 1, -20 }, respawn = 60, duration = 45 }, -- hangar
-        { kind = "weapon", weapon = "Minigun", pos = { 0, 17, 30 }, respawn = 90, duration = 40 }, -- central deck
-        { kind = "speed", pos = { -80, 12.8, -49 } }, -- port catwalk
-        { kind = "speed", pos = { 80, 12.8, 49 } }, -- starboard catwalk
-        { kind = "speed", pos = { -60, 1, 24 } }, -- maintenance corridor
+        { kind = "weapon", weapon = "Sniper", pos = { 8, 37.5, 42 }, respawn = 75, duration = 45 },
+        { kind = "weapon", weapon = "Shotgun", pos = { -20, 1, -20 }, respawn = 60, duration = 45 },
+        { kind = "weapon", weapon = "Minigun", pos = { 0, 17, 30 }, respawn = 90, duration = 40 },
+        { kind = "speed", pos = { -80, 12.8, -49 } },
+        { kind = "speed", pos = { 80, 12.8, 49 } },
+        { kind = "speed", pos = { -60, 1, 24 } },
         { kind = "speed", pos = { 60, 1, -24 } },
         { kind = "jetpack", pos = { -110, 17, 30 }, respawn = 50, fuel = 3.5 },
         { kind = "jetpack", pos = { 110, 17, -30 }, respawn = 50, fuel = 3.5 },
     },
 
-    -- S14 launch pads: port side bow -> island approach, starboard stern -> hangar mouth (visible arcs)
+    -- S14 launch pads: explicit vertical speed, server trigger volume, client-applied velocity
     LaunchPads = {
-        { pos = { -100, 16.3, -40 }, target = { -30, 16.3, 34 }, apex = 22 },
-        { pos = { 100, 16.3, 40 }, target = { 30, 16.3, -34 }, apex = 22 },
+        { pos = { -100, 16.3, -38 }, target = { -30, 16.3, 30 }, vy = 62, size = 8 },
+        { pos = { 100, 16.3, 38 }, target = { 30, 16.3, -30 }, vy = 62, size = 8 },
     },
 
-    -- S6 flyovers: one every 30-60 s, low passes and formations mixed in
     Flyovers = { Interval = { 30, 60 }, Height = 90, Sound = "upload:JetPass" },
 
-    -- S7 background fleet (non-playable, far outside the walls)
     Fleet = {
         { kind = "cruiser", pos = { -420, -22, -520 }, heading = 15 },
         { kind = "escort", pos = { 380, -22, -600 }, heading = -20 },
@@ -66,7 +116,6 @@ return {
         { kind = "supply", pos = { -560, -22, 380 }, heading = 200 },
     },
 
-    -- Signature events (S10 kraken is visual only in v1; jet launch is the hazard)
     Events = {
         {
             Name = "Jet Launch",
@@ -75,7 +124,7 @@ return {
             DurationSeconds = 25,
             Banner = "JET LAUNCH  CLEAR THE CATAPULT",
             Sound = "upload:Siren",
-            Flyover = true, -- a jet roars overhead as the sirens start
+            Flyover = true,
             Region = { pos = { -40, 22, -12 }, size = { 150, 14, 22 } },
             Shield = { pos = { 30, 16.5, -12 }, size = { 2, 0.5, 22 }, rise = 6 },
             Beacons = true,
@@ -87,7 +136,7 @@ return {
             DurationSeconds = 14,
             Banner = "SOMETHING IN THE WATER",
             Sound = "upload:Kraken",
-            Origin = { 40, -30, -230 }, -- port side, outside the walls
+            Origin = { 40, -30, -230 },
             Height = 130,
         },
     },
@@ -142,11 +191,14 @@ return {
     },
 
     Center = {
-        -- hull
+        -- hull (solid slab under everything so nothing can drop into the sea from inside)
         { kind = "block", name = "HullBottom", pos = { 0, -8, 0 }, size = { 300, 4, 90 }, color = "HullDark" },
         { kind = "block", name = "HullSideN", pos = { 0, 4, -46 }, size = { 300, 24, 2 }, color = "Hull" },
         { kind = "block", name = "HullSideS", pos = { 0, 4, 46 }, size = { 300, 24, 2 }, color = "Hull" },
-        -- hangar: floor with painted zones, walls, suspended lights, scaffolding, workshop
+        -- side voids between hangar wall and hull side are filled so nobody drops into them
+        { kind = "block", name = "VoidFillN", pos = { 0, 6, -40 }, size = { 220, 16, 10 }, color = "HullDark" },
+        { kind = "block", name = "VoidFillS", pos = { 0, 6, 40 }, size = { 220, 16, 10 }, color = "HullDark" },
+        -- hangar
         { kind = "block", name = "HangarFloor", pos = { 0, -1, 0 }, size = { 220, 2, 70 }, color = "Hangar" },
         { kind = "block", name = "HangarZoneMid", pos = { 0, 0.06, 0 }, size = { 40, 0.1, 40 }, color = "HangarZone" },
         { kind = "block", name = "HangarWallN", pos = { 0, 7, -34 }, size = { 220, 16, 2 }, color = "Hangar" },
@@ -163,7 +215,7 @@ return {
         { kind = "block", name = "MissileRack", pos = { -14, 1.5, -24 }, size = { 10, 3, 3 }, color = "Missile" },
         { kind = "block", name = "FuelHose", pos = { 14, 0.3, 24 }, size = { 16, 0.4, 0.4 }, color = "Warning" },
         { kind = "steam", name = "HangarVent1", pos = { 40, 0.5, -30 } },
-        -- flight deck: markings, cables, tie-downs, lights, barriers
+        -- flight deck mid section: markings, cables, tie-downs, lights, barriers
         { kind = "block", name = "DeckMid", pos = { 0, 15, 0 }, size = { 80, 2, 90 }, color = "Deck" },
         {
             kind = "block",
@@ -218,7 +270,7 @@ return {
         },
         { kind = "block", name = "Barrier1", pos = { 0, 17.2, -24 }, size = { 10, 2.4, 0.6 }, color = "Hazard" },
         { kind = "helicopter", name = "Helo", pos = { 22, 16, 26 }, rot = { 0, 40, 0 } },
-        -- island: base, deck 2 (bridge), roof outpost A with rails and consoles, radar/antennas, beacon
+        -- island: base, deck 2 (bridge), roof outpost with rails and consoles, radar/antennas, beacon
         { kind = "block", name = "IslandBase", pos = { 0, 20, 42 }, size = { 30, 8, 14 }, color = "Island" },
         { kind = "block", name = "IslandDeck2", pos = { 0, 28, 42 }, size = { 26, 8, 12 }, color = "Island" },
         { kind = "block", name = "BridgeFloor", pos = { 0, 32.5, 42 }, size = { 26, 1, 12 }, color = "Deck" },
@@ -249,9 +301,16 @@ return {
     },
 
     Mirrored = {
-        -- deck ends with an elevator cutout on the port side, numbers, extra markings
-        { kind = "block", name = "DeckEnd", pos = { -110, 15, 0 }, size = { 80, 2, 90 }, color = "Deck" },
+        -- deck end in four pieces around the ramp opening (x -140..-106, z -8..8), plus the elevator gap fills
+        { kind = "block", name = "DeckEndN", pos = { -110, 15, -26.5 }, size = { 80, 2, 37 }, color = "Deck" },
+        { kind = "block", name = "DeckEndS", pos = { -110, 15, 26.5 }, size = { 80, 2, 37 }, color = "Deck" },
+        { kind = "block", name = "DeckEndBow", pos = { -145, 15, 0 }, size = { 10, 2, 16 }, color = "Deck" },
+        { kind = "block", name = "DeckEndAft", pos = { -88, 15, 0 }, size = { 36, 2, 16 }, color = "Deck" },
+        { kind = "block", name = "RampRailN", pos = { -123, 17.5, -8.5 }, size = { 36, 3, 0.5 }, color = "Hazard" },
+        { kind = "block", name = "RampRailS", pos = { -123, 17.5, 8.5 }, size = { 36, 3, 0.5 }, color = "Hazard" },
         { kind = "block", name = "DeckFillS", pos = { -55, 15, 22 }, size = { 30, 2, 46 }, color = "Deck" },
+        { kind = "block", name = "DeckFillN", pos = { -55, 15, -38 }, size = { 30, 2, 16 }, color = "Deck" },
+        { kind = "block", name = "DeckFillMid", pos = { -55, 15, -4 }, size = { 30, 2, 6 }, color = "Deck" },
         {
             kind = "elevator",
             name = "Elevator",
@@ -269,7 +328,7 @@ return {
             color = "Hazard",
         },
         { kind = "beacon", name = "ElevatorBeacon", pos = { -41, 17.5, -30 }, color = "Hazard" },
-        { kind = "block", name = "BowNumber", pos = { -135, 16.06, 0 }, size = { 12, 0.1, 8 }, color = "DeckLine" },
+        { kind = "block", name = "BowNumber", pos = { -135, 16.06, 20 }, size = { 12, 0.1, 8 }, color = "DeckLine" },
         { kind = "block", name = "EdgeLineN", pos = { -110, 16.06, -43 }, size = { 80, 0.1, 0.6 }, color = "DeckLine" },
         { kind = "block", name = "EdgeLineS", pos = { -110, 16.06, 43 }, size = { 80, 0.1, 0.6 }, color = "DeckLine" },
         {
@@ -283,11 +342,11 @@ return {
         -- big props: jets, tractor, fuel + maintenance carts, crates, wing section cover
         { kind = "jet", name = "DeckJet1", pos = { -88, 16, -28 }, rot = { 0, 20, 0 } },
         { kind = "jet", name = "DeckJet2", pos = { -68, 16, 24 }, rot = { 0, -30, 0 } },
-        { kind = "jet", name = "DeckJet3", pos = { -118, 16, 26 }, rot = { 0, 10, 0 } },
+        { kind = "jet", name = "DeckJet3", pos = { -118, 16, 30 }, rot = { 0, 10, 0 } },
         { kind = "block", name = "Tractor", pos = { -35, 17.5, 30 }, size = { 5, 3, 4 }, color = "Hazard" },
         { kind = "block", name = "FuelCart", pos = { -25, 17.5, -30 }, size = { 6, 3, 4 }, color = "Warning" },
-        { kind = "block", name = "MaintCart", pos = { -95, 17.3, 8 }, size = { 3, 2.6, 2 }, color = "Steel" },
-        { kind = "block", name = "DeckCrates", pos = { -100, 17.5, -8 }, size = { 6, 3, 10 }, color = "Crate" },
+        { kind = "block", name = "MaintCart", pos = { -95, 17.3, 14 }, size = { 3, 2.6, 2 }, color = "Steel" },
+        { kind = "block", name = "DeckCrates", pos = { -100, 17.5, -14 }, size = { 6, 3, 10 }, color = "Crate" },
         {
             kind = "block",
             name = "WingSection",
@@ -304,7 +363,7 @@ return {
             color = "Hazard",
             rot = { 0, 30, 0 },
         },
-        -- catwalks both edges + stairs; stern catwalk overlook = sniper outpost B (mirrored bow twin is a decoy platform)
+        -- catwalks both edges + stairs; stern catwalk overlook = sniper outpost B
         { kind = "block", name = "CatwalkN", pos = { -80, 12, -49 }, size = { 70, 0.5, 5 }, color = "Steel" },
         {
             kind = "block",
@@ -323,6 +382,14 @@ return {
             color = "Steel",
             rot = { 0, 0, -28 },
         },
+        {
+            kind = "block",
+            name = "CatwalkStairS",
+            pos = { -44, 14, 47 },
+            size = { 8, 0.5, 5 },
+            color = "Steel",
+            rot = { 0, 0, -28 },
+        },
         { kind = "block", name = "CatwalkSupport", pos = { -80, 6, -47 }, size = { 1, 12, 1 }, color = "Steel" },
         { kind = "block", name = "Overlook", pos = { -128, 23.5, -44 }, size = { 12, 1, 8 }, color = "Steel" },
         { kind = "block", name = "OverlookRail", pos = { -128, 25, -47.8 }, size = { 12, 2, 0.4 }, color = "Hazard" },
@@ -334,17 +401,22 @@ return {
             color = "Steel",
             rot = { 0, 0, -35 },
         },
-        -- hangar end: ramp down from the deck end, door frame, corridor with alcoves
+        -- hangar end: ramp from the deck opening (y 16 at x -140) down to the hangar floor (y 0 at x -106)
         {
             kind = "block",
             name = "HangarRamp",
-            pos = { -122, 7, 0 },
-            size = { 36, 1, 12 },
+            pos = { -123, 7.6, 0 },
+            size = { 38, 1, 15 },
             color = "Steel",
             rot = { 0, 0, -25 },
         },
-        { kind = "block", name = "HangarEndWall", pos = { -110, 7, 0 }, size = { 2, 16, 70 }, color = "Hangar" },
-        { kind = "block", name = "HangarDoor", pos = { -109, 7, 0 }, size = { 4, 14, 14 }, color = "Hazard" },
+        { kind = "block", name = "RampFoot", pos = { -104, 0.5, 0 }, size = { 6, 1, 15 }, color = "Steel" },
+        { kind = "block", name = "HangarEndWallN", pos = { -110, 7, -21.5 }, size = { 2, 16, 27 }, color = "Hangar" },
+        { kind = "block", name = "HangarEndWallS", pos = { -110, 7, 21.5 }, size = { 2, 16, 27 }, color = "Hangar" },
+        { kind = "block", name = "HangarLintel", pos = { -110, 13.5, 0 }, size = { 2, 3, 16 }, color = "Hazard" },
+        -- under-deck voids at the bow are filled solid except the ramp channel
+        { kind = "block", name = "BowVoidN", pos = { -130, 6, -26.5 }, size = { 40, 16, 37 }, color = "HullDark" },
+        { kind = "block", name = "BowVoidS", pos = { -130, 6, 26.5 }, size = { 40, 16, 37 }, color = "HullDark" },
         {
             kind = "light",
             name = "HangarLight2",
@@ -362,14 +434,14 @@ return {
         { kind = "block", name = "CorridorDoor2", pos = { -25, 4, 28 }, size = { 6, 9, 1.2 }, color = "Hazard" },
         { kind = "block", name = "Alcove", pos = { -50, 4, 31 }, size = { 6, 8, 1 }, color = "HullDark" },
         { kind = "steam", name = "CorridorVent", pos = { -70, 0.5, 30 } },
-        -- island stairs from the deck (bridge route)
+        -- island stairs from the deck (bridge route): rise toward the island
         {
             kind = "block",
             name = "IslandStair1",
             pos = { -22, 20, 42 },
             size = { 14, 1, 6 },
             color = "Steel",
-            rot = { 0, 0, -30 },
+            rot = { 0, 0, 30 },
         },
         {
             kind = "block",
@@ -377,7 +449,7 @@ return {
             pos = { -20, 28, 36 },
             size = { 12, 1, 5 },
             color = "Steel",
-            rot = { 0, 0, -32 },
+            rot = { 0, 0, 32 },
         },
         {
             kind = "block",

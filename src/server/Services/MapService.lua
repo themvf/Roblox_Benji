@@ -754,9 +754,11 @@ function MapService:Build(layout)
     local themed = layout.Terrain ~= nil
     applyPalette(layout.Palette)
 
+    self.Layout = layout
     self.Vista = layout.Vista
     self.Events = layout.Events or {}
     self.MapFolder = folder
+    Knit.GetService("SafetyService"):BuildBarrier(layout, folder)
     self.SniperOutposts = {}
     for _, o in layout.SniperOutposts or {} do
         table.insert(self.SniperOutposts, { Name = o.Name, Position = v3(o.pos), Radius = o.radius })

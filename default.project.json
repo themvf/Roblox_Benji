@@ -43,7 +43,9 @@
           "Convergence_ZoneCloseWarningSeconds": 15,
           "Convergence_RespawnSeconds": 3.5,
           "Convergence_SpawnProtectSeconds": 2,
-          "Convergence_BotsPerTeam": 0
+          "Convergence_BotsPerTeam": 0,
+          "Debug_ForceMap": "",
+          "Debug_CarrierTestSafety": true
         }
       },
       "Uploads": {

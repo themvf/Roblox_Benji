@@ -12,6 +12,15 @@ local fillSince = {} -- [pad] = os.clock() when both sides first reached MinTeam
 local lastConvergenceMap = nil
 
 local function pickConvergenceMap()
+    local tuning = ReplicatedStorage:FindFirstChild("Tuning")
+    local forced = tuning and tuning:GetAttribute("Debug_ForceMap")
+    if tuning and tuning:GetAttribute("Debug_CarrierTestSafety") == true and (forced == nil or forced == "") then
+        forced = "Carrier"
+    end
+    if type(forced) == "string" and forced ~= "" and ReplicatedStorage.Shared.Maps:FindFirstChild(forced) then
+        lastConvergenceMap = forced
+        return forced
+    end
     local choices = {}
     for _, name in Config.ConvergenceMaps or { "Forest" } do
         if name ~= lastConvergenceMap or #Config.ConvergenceMaps == 1 then

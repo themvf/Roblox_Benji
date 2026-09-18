@@ -49,6 +49,17 @@ function HudController:KnitStart()
     toast.TextColor3 = Color3.fromRGB(255, 220, 80)
     toast.Visible = false
     local toastToken = 0
+    Knit.GetService("SafetyService").Notice:Connect(function(text)
+        toast.Text = text
+        toast.Visible = true
+        toastToken += 1
+        local mine = toastToken
+        task.delay(2.5, function()
+            if toastToken == mine then
+                toast.Visible = false
+            end
+        end)
+    end)
     Knit.GetService("PickupService").Notice:Connect(function(text)
         toast.Text = text
         toast.Visible = true
