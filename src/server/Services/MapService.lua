@@ -5,6 +5,7 @@ local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Config = require(ReplicatedStorage.Shared.Config)
 
 local ACTIVE_MAP = "Forest" -- "Greybox" or "Forest"
 
@@ -354,6 +355,13 @@ local function buildLobby(self, layout)
 
     self.Pads = {}
     for _, spec in layout.Pads do
+        if spec.kind == "Convergence" then
+            -- team sizes come from Config/Tuning so tests can shrink the featured mode
+            local rules = Config.GetConvergence()
+            spec = table.clone(spec)
+            spec.teamSize = rules.TeamSize
+            spec.minTeamSize = rules.MinTeamSize
+        end
         local pw, ph, pd = spec.size[1], spec.size[2], spec.size[3]
         local gap = 1.5
         local halfW = (pw - gap) / 2

@@ -43,7 +43,8 @@ Game Settings > Security > "Enable Studio Access to API Services" to save for re
 mock store and prints a warning.
 
 ## Modes
-- **Convergence (featured)**: 6v6 objective battle, starts at 4v4 after a 30 s wait. Three capture zones close
+- **Convergence (featured)**: 6v6 objective battle, starts at 4v4 after a 30 s wait. (Currently set to 1v1 for
+  testing via `Convergence_TeamSize` / `Convergence_MinTeamSize` on Tuning; set 6 / 4 to restore.) Three capture zones close
   3 -> 2 -> 1 over three 3-minute phases; held zones score 1/s, kills 5; first to 1200 or highest at the 12-minute
   cap, with up to 60 s overtime if the final zone is in play. Respawns 5 s with 2 s protection. Capture: 8 s solo
   from neutral, +50% per teammate (max 3), enemy points neutralize first, contested freezes, empty holds.

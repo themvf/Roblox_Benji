@@ -32,7 +32,7 @@ return {
             kind = "Convergence",
             mode = "CONVERGENCE",
             featured = true,
-            teamSize = 6,
+            teamSize = 6, -- overridden at build time by Convergence_TeamSize / MinTeamSize in Tuning
             minTeamSize = 4,
             pos = { 0, 0, -18 },
             size = { 44, 1, 22 },

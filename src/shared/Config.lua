@@ -12,8 +12,8 @@ local Config = {
     -- Convergence (featured objective mode). Every number here is a Tuning attribute too.
     ConvergenceMaps = { "Carrier", "Forest", "Snow" },
     Convergence = {
-        TeamSize = 6, -- design target
-        MinTeamSize = 4, -- low-population fallback
+        TeamSize = 1, -- TESTING: design target is 6 (set Convergence_TeamSize in Tuning or here)
+        MinTeamSize = 1, -- TESTING: design fallback is 4
         FillWaitSeconds = 30, -- once both sides have MinTeamSize, start after this even if not full
         PhaseSeconds = { 180, 180, 180 }, -- 3 zones -> 2 zones -> 1 zone
         HardCapSeconds = 720, -- 12 min
