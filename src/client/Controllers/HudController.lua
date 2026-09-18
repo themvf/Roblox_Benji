@@ -25,7 +25,6 @@ end
 
 function HudController:KnitStart()
     spinShowcase()
-    local RunService = game:GetService("RunService")
     local gui = Instance.new("ScreenGui")
     gui.Name = "Hud"
     gui.ResetOnSpawn = false
@@ -44,6 +43,40 @@ function HudController:KnitStart()
         return l
     end
     local state = label(UDim2.fromScale(0.35, 0.02))
+    -- pickup toasts
+    local toast = label(UDim2.fromScale(0.35, 0.16))
+    toast.Size = UDim2.fromScale(0.3, 0.05)
+    toast.TextColor3 = Color3.fromRGB(255, 220, 80)
+    toast.Visible = false
+    local toastToken = 0
+    Knit.GetService("PickupService").Notice:Connect(function(text)
+        toast.Text = text
+        toast.Visible = true
+        toastToken += 1
+        local mine = toastToken
+        task.delay(1.6, function()
+            if toastToken == mine then
+                toast.Visible = false
+            end
+        end)
+    end)
+    -- mild camera rumble for flyovers / kraken
+    Knit.GetService("AmbientService").Rumble:Connect(function(strength, seconds)
+        local cam = workspace.CurrentCamera
+        local t0 = os.clock()
+        local conn
+        conn = game:GetService("RunService").RenderStepped:Connect(function()
+            local t = os.clock() - t0
+            if t > seconds then
+                conn:Disconnect()
+                return
+            end
+            local k = strength * (1 - t / seconds)
+            cam.CFrame = cam.CFrame
+                * CFrame.Angles(math.rad((math.random() - 0.5) * k), math.rad((math.random() - 0.5) * k), 0)
+        end)
+    end)
+    local RunService = game:GetService("RunService")
     local timer = label(UDim2.fromScale(0.42, 0.085))
     timer.Size = UDim2.fromScale(0.16, 0.06)
     timer.TextColor3 = Color3.fromRGB(255, 220, 80)

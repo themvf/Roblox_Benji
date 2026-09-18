@@ -646,6 +646,70 @@ local function placePiece(folder, prefix, piece, rng, mirrored)
                 goingDown = not goingDown
             end
         end)
+    elseif kind == "steam" then
+        -- steam vent: small particle plume, ambient only
+        local vent = makePart(folder, name, pos, { 1.5, 0.6, 1.5 }, nil, PALETTE.HullDark or GREY, Enum.Material.Metal)
+        vent.CanCollide = false
+        local att = Instance.new("Attachment")
+        att.Parent = vent
+        local pe = Instance.new("ParticleEmitter")
+        pe.Color = ColorSequence.new(Color3.fromRGB(230, 235, 240))
+        pe.Size = NumberSequence.new(1, 3)
+        pe.Transparency = NumberSequence.new(0.5, 1)
+        pe.Lifetime = NumberRange.new(1.5, 2.5)
+        pe.Speed = NumberRange.new(4, 7)
+        pe.SpreadAngle = Vector2.new(15, 15)
+        pe.Rate = 6
+        pe.Parent = att
+    elseif kind == "radar" then
+        -- rotating radar dish on a pivot
+        local pivot = makePart(folder, name .. "Pivot", pos, { 1, 1, 1 }, nil, PALETTE.Steel or GREY)
+        pivot.Transparency = 1
+        pivot.CanCollide = false
+        local dish = makePart(
+            folder,
+            name,
+            { pos[1], pos[2], pos[3] },
+            { 10, 0.6, 3 },
+            { 0, 0, 15 },
+            PALETTE.Steel or GREY
+        )
+        dish.CanCollide = false
+        task.spawn(function()
+            local angle = 0
+            while dish.Parent do
+                task.wait(0.05)
+                angle += 0.05 * 1.5
+                dish.CFrame = CFrame.new(v3(pos)) * CFrame.Angles(0, angle, math.rad(15))
+            end
+        end)
+    elseif kind == "helicopter" then
+        local model = Instance.new("Model")
+        model.Name = name
+        local r = rot or { 0, 0, 0 }
+        local base = CFrame.new(pos[1], pos[2], pos[3]) * CFrame.Angles(0, math.rad(r[2]), 0)
+        local col = PALETTE.Jet or GREY
+        local function hp(n, off, size, color, material)
+            local p = Instance.new("Part")
+            p.Name = n
+            p.Anchored = true
+            p.Size = Vector3.new(size[1], size[2], size[3])
+            p.CFrame = base * CFrame.new(off[1], off[2], off[3])
+            p.Color = color or col
+            p.Material = material or Enum.Material.Metal
+            p.Parent = model
+            return p
+        end
+        hp("Cabin", { 0, 3, 0 }, { 5, 4, 12 })
+        hp("Tail", { 0, 3.5, 11 }, { 1.2, 1.4, 12 })
+        hp("TailFin", { 0, 5.5, 16 }, { 0.4, 3, 2 })
+        hp("Skid1", { -2, 0.6, 0 }, { 0.4, 0.4, 10 }, Color3.fromRGB(40, 40, 45))
+        hp("Skid2", { 2, 0.6, 0 }, { 0.4, 0.4, 10 }, Color3.fromRGB(40, 40, 45))
+        hp("Canopy", { 0, 4, -4.5 }, { 4, 2.4, 3 }, Color3.fromRGB(60, 70, 90), Enum.Material.Glass)
+        local rotor = hp("Rotor", { 0, 5.6, 0 }, { 22, 0.15, 1 }, Color3.fromRGB(40, 40, 45))
+        hp("Rotor2", { 0, 5.6, 0 }, { 1, 0.15, 22 }, Color3.fromRGB(40, 40, 45))
+        rotor.Name = "RotorA"
+        model.Parent = folder
     elseif kind == "jet" then
         -- chunky parked jet: fuselage, wings, tail, canopy. One big readable prop.
         local model = Instance.new("Model")
@@ -693,6 +757,13 @@ function MapService:Build(layout)
     self.Vista = layout.Vista
     self.Events = layout.Events or {}
     self.MapFolder = folder
+    self.SniperOutposts = {}
+    for _, o in layout.SniperOutposts or {} do
+        table.insert(self.SniperOutposts, { Name = o.Name, Position = v3(o.pos), Radius = o.radius })
+    end
+    -- gameplay pickups / launch pads and the living-world layer
+    Knit.GetService("PickupService"):Build(layout)
+    Knit.GetService("AmbientService"):Build(layout)
 
     -- Objectives for ConvergenceService (absolute positions)
     self.Objectives = {}

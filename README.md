@@ -56,6 +56,13 @@ mock store and prints a warning.
   `Carrier` is the first built for it (Flight Deck -> Hangar -> Bridge).
 - **Duel**: 1v1 / 2v2 elimination, first to 5 rounds. Side pads in the lobby.
 
+## Carrier v1 (Map Design Specification)
+Data-driven layers on `Carrier.lua`: `Pickups` (weapon / speed / jetpack, S11-S13), `LaunchPads` (ballistic arcs,
+S14), `SniperOutposts` (telemetry, S9), `Flyovers` (30-60 s, formations and low passes, S6), `Fleet` (background
+ships with radar, nav lights and drift, S7), events with `Kind = "Kraken"` (visual only, S10) or `Flyover = true`.
+Sounds are upload slots: JetPass, LaunchPad, Pickup, Kraken, Siren. A MAP REPORT prints at match end with score by
+phase, outpost occupancy and kill share, launch/pickup uses and deaths (S22/S23).
+
 ## Map events and atmosphere
 A map can declare `Vista` (hero camera on entry), `Events` (signature moments fired by Convergence phase: warning
 banner + siren via `upload:Siren`, beacons flash, a blast shield rises, a lethal region for the duration) and living

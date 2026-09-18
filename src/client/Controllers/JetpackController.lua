@@ -66,10 +66,18 @@ function JetpackController:KnitStart()
             return
         end
 
-        if not self.Active then
+        local temporary = tool:GetAttribute("Temporary") == true
+        if not self.Active or self.ActiveTool ~= tool then
             self.Active = true
-            self.MaxFuel = stats.Fuel
-            self.Fuel = self.Fuel > 0 and math.min(self.Fuel, stats.Fuel) or stats.Fuel
+            self.ActiveTool = tool
+            if temporary then
+                -- pickup jetpack: FuelSeconds of thrust, converted to fuel units at the burn rate
+                self.MaxFuel = (tool:GetAttribute("FuelSeconds") or 3.5) * stats.Burn
+                self.Fuel = self.MaxFuel
+            else
+                self.MaxFuel = stats.Fuel
+                self.Fuel = self.Fuel > 0 and math.min(self.Fuel, stats.Fuel) or stats.Fuel
+            end
         end
 
         -- JumpRequest fires repeatedly while held; treat "held" as key still down
@@ -99,8 +107,10 @@ function JetpackController:KnitStart()
         else
             stopMover()
             setThrusting(false)
-            if grounded then
+            if grounded and not temporary then
                 self.Fuel = math.min(stats.Fuel, self.Fuel + stats.Recharge * dt)
+            elseif grounded and temporary and self.Fuel <= 0 then
+                tool:Destroy() -- spent pickup jetpack
             end
         end
         tool:SetAttribute("Fuel", math.floor(self.Fuel))

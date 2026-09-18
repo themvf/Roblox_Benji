@@ -240,6 +240,7 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
     local match = {
         Players = players,
         Score = { Red = 0, Blue = 0 },
+        Telemetry = { Outposts = {}, ScoreByPhase = {}, AreaTime = {} },
         Phase = 1,
         PhaseTimeLeft = rules.PhaseSeconds and rules.PhaseSeconds[1] or 180,
         TimeLeft = rules.HardCapSeconds,
@@ -313,6 +314,14 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                         if killer and killer ~= p and kteam and kteam ~= teamOf(p) then
                             killer:SetAttribute("MatchKills", (killer:GetAttribute("MatchKills") or 0) + 1)
                             match.Score[kteam] += rules.KillPoints
+                            local outpost = killer:GetAttribute("AtOutpost")
+                            if outpost and match.Telemetry.Outposts[outpost] then
+                                match.Telemetry.Outposts[outpost].Kills += 1
+                            end
+                        end
+                        local root = character:FindFirstChild("HumanoidRootPart")
+                        if root then
+                            Knit.GetService("PickupService"):NoteDeath(root.Position)
                         end
                         task.delay(rules.RespawnSeconds, function()
                             if match.Running and p.Parent and p:GetAttribute("InMatch") then
@@ -332,7 +341,14 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
         local hazards = {} -- list of inside(position) functions
         local function fireEventsForPhase(phase)
             for _, ev in MapService.Events or {} do
-                if ev.TriggerPhase == phase then
+                if ev.TriggerPhase == phase and ev.Kind == "Kraken" then
+                    -- S10: visual spectacle only in v1
+                    self:FireAll(match, self.Client.Event, "MapEventStart", { Name = ev.Name, Banner = ev.Banner })
+                    Knit.GetService("AmbientService"):Kraken(ev)
+                elseif ev.TriggerPhase == phase then
+                    if ev.Flyover then
+                        Knit.GetService("AmbientService"):Flyover({ Low = true, Speed = 260 })
+                    end
                     local inside = MapService:RunEvent(ev, {
                         onWarning = function()
                             self:FireAll(
@@ -441,6 +457,8 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                     end
                 end
                 if match.PhaseTimeLeft <= 0 and match.Phase < phaseCount then
+                    match.Telemetry.ScoreByPhase[match.Phase] =
+                        { Red = math.floor(match.Score.Red), Blue = math.floor(match.Score.Blue) }
                     match.Phase += 1
                     match.PhaseTimeLeft = rules.PhaseSeconds[match.Phase]
                     self:FireAll(
@@ -450,6 +468,20 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                         { Phase = match.Phase, Zones = phaseCount - match.Phase + 1 }
                     )
                     fireEventsForPhase(match.Phase)
+                end
+            end
+
+            -- S22 telemetry: sniper outpost occupancy (players + bots)
+            for _, o in MapService.SniperOutposts or {} do
+                match.Telemetry.Outposts[o.Name] = match.Telemetry.Outposts[o.Name] or { Seconds = 0, Kills = 0 }
+                for _, p in present(match) do
+                    local root = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+                    if root and (root.Position - o.Position).Magnitude <= o.Radius then
+                        match.Telemetry.Outposts[o.Name].Seconds += dt
+                        p:SetAttribute("AtOutpost", o.Name)
+                    elseif root and p:GetAttribute("AtOutpost") == o.Name then
+                        p:SetAttribute("AtOutpost", nil)
+                    end
                 end
             end
 
@@ -568,8 +600,49 @@ function ConvergenceService:CreditKill(killerId, victimTeam)
     end
 end
 
+local function printMapTelemetry(match)
+    local pk = Knit.GetService("PickupService").Stats or {}
+    local lines = { "=== MAP REPORT ===" }
+    match.Telemetry.ScoreByPhase[match.Phase] =
+        { Red = math.floor(match.Score.Red), Blue = math.floor(match.Score.Blue) }
+    for ph, sc in match.Telemetry.ScoreByPhase do
+        table.insert(lines, ("phase %d  Red %d  Blue %d"):format(ph, sc.Red, sc.Blue))
+    end
+    local totalKills = 0
+    for _, p in match.Players do
+        totalKills += p:GetAttribute("MatchKills") or 0
+    end
+    for name, o in match.Telemetry.Outposts do
+        local share = totalKills > 0 and (o.Kills / totalKills * 100) or 0
+        table.insert(
+            lines,
+            ("outpost %-16s occupancy %.0fs  kills %d (%.0f%% of player kills; red flag > 25%%)"):format(
+                name,
+                o.Seconds,
+                o.Kills,
+                share
+            )
+        )
+    end
+    table.insert(
+        lines,
+        ("launch pads %d uses, %d deaths in flight | speed %d | jetpack %d | weapon %d | deaths near pickups %d"):format(
+            pk.LaunchUses or 0,
+            pk.LaunchDeathsInFlight or 0,
+            pk.SpeedUses or 0,
+            pk.JetpackUses or 0,
+            pk.WeaponUses or 0,
+            pk.DeathsNearPickups or 0
+        )
+    )
+    print(table.concat(lines, "\n"))
+end
+
 function ConvergenceService:Finish(match, winner, aborted)
     BotService:Stop()
+    if match.Telemetry then
+        printMapTelemetry(match)
+    end
     local RoundService = Knit.GetService("RoundService")
     RoundService:Broadcast(
         "MatchOver",
