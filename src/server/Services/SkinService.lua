@@ -80,8 +80,12 @@ local function applyTexture(model, tex)
                 if rule.Material and Enum.Material[rule.Material] then
                     part.Material = Enum.Material[rule.Material]
                 end
+                if rule.Reflectance then
+                    part.Reflectance = rule.Reflectance
+                end
                 if part:IsA("MeshPart") then
-                    part.TextureID = ""
+                    -- pattern image (camo, stripes) if the skin has one and it is uploaded; else flat colour
+                    part.TextureID = (tex.Asset and tex.Asset ~= "TODO") and tex.Asset or ""
                 end
             end
         end

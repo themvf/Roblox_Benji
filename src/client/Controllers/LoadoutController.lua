@@ -27,7 +27,8 @@ local TEXT = Color3.fromRGB(245, 245, 250)
 local MUTED = Color3.fromRGB(160, 165, 180)
 local TIER_COLORS = {
     Common = Color3.fromRGB(170, 175, 185),
-    Rare = Color3.fromRGB(80, 150, 255),
+    Uncommon = Color3.fromRGB(90, 200, 120),
+    Rare = Color3.fromRGB(255, 200, 70),
     Legendary = Color3.fromRGB(255, 160, 60),
     Mythical = Color3.fromRGB(230, 80, 255),
 }

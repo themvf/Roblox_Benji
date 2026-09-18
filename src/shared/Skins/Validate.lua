@@ -2,7 +2,7 @@
 -- so it runs in Lune at build time (tools/check_skins.luau) and in the game at runtime.
 --
 -- A skin is a table:
---   Id        "skn_<weapon>_<tier>_<concept>"  (tier short: common | rare | leg | myth)
+--   Id        "skn_<weapon>_<tier>_<concept>"  (tier short: common | uncommon | rare | leg | myth)
 --   Weapon    name in Shared/Weapons
 --   Tier      "Common" | "Rare" | "Legendary" | "Mythical"
 --   Concept   one sentence; the concept word in the Id must appear in it
@@ -28,6 +28,15 @@ Validate.TIERS = {
     {
         Name = "Common",
         Short = "common",
+        May = { "Texture" },
+        MustOneOf = { "Texture" },
+        MaxSystems = 1,
+        NoPattern = true, -- a flat recolour only; a pattern image makes it Uncommon
+    },
+    -- Uncommon: a patterned texture (camo, stripes: an uploaded image) or a model swap, nothing else
+    {
+        Name = "Uncommon",
+        Short = "uncommon",
         May = { "Model", "Texture" },
         MustOneOf = { "Model", "Texture" },
         MaxSystems = 1,
@@ -118,7 +127,7 @@ local function tierByName(name)
 end
 
 -- Lowest tier whose May set admits every system the skin touches and whose Must rules are met.
-function Validate.minimalTier(systems)
+function Validate.minimalTier(systems, skin)
     for _, tier in Validate.TIERS do
         local ok = true
         for _, sys in systems do
@@ -129,6 +138,9 @@ function Validate.minimalTier(systems)
         end
         if ok and tier.MaxSystems and #systems > tier.MaxSystems then
             ok = false
+        end
+        if ok and tier.NoPattern and skin and skin.Systems and skin.Systems.Texture and skin.Systems.Texture.Asset then
+            ok = false -- a texture image is a pattern; Common is flat colour only
         end
         if ok then
             return tier
@@ -168,7 +180,7 @@ function Validate.check(skin, weapons)
     end
     local tier = type(skin.Tier) == "string" and tierByName(skin.Tier) or nil
     if not tier then
-        fail("Tier must be Common, Rare, Legendary or Mythical; got " .. tostring(skin.Tier))
+        fail("Tier must be Common, Uncommon, Rare, Legendary or Mythical; got " .. tostring(skin.Tier))
     end
     if type(skin.Concept) ~= "string" or #skin.Concept < 10 then
         fail("Concept sentence missing")
@@ -208,7 +220,7 @@ function Validate.check(skin, weapons)
     end
 
     -- Tier placement: must be the lowest tier that admits everything
-    local minimal = Validate.minimalTier(systems)
+    local minimal = Validate.minimalTier(systems, skin)
     if tier and minimal then
         if tier.Name ~= minimal.Name then
             fail(
