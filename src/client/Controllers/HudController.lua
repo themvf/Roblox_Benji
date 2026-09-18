@@ -64,6 +64,27 @@ function HudController:KnitStart()
         end
         if s == "Intermission" and data.Map then
             text = ("%s  Next map: %s"):format(data.Mode or "", data.Map)
+            -- Hero view: hold the camera on the map's vista for a couple of seconds
+            if data.Vista then
+                local cam = workspace.CurrentCamera
+                local v = data.Vista
+                cam.CameraType = Enum.CameraType.Scriptable
+                cam.CFrame = CFrame.lookAt(
+                    Vector3.new(v.pos[1], v.pos[2], v.pos[3]),
+                    Vector3.new(v.look[1], v.look[2], v.look[3])
+                )
+                local tween = game:GetService("TweenService"):Create(
+                    cam,
+                    TweenInfo.new(v.seconds or 2.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    { CFrame = cam.CFrame * CFrame.new(6, -2, 0) }
+                )
+                tween:Play()
+                task.delay(math.min((v.seconds or 2.5), (data.Time or 5) - 0.5), function()
+                    if cam.CameraType == Enum.CameraType.Scriptable then
+                        cam.CameraType = Enum.CameraType.Custom
+                    end
+                end)
+            end
         end
         -- Convergence has its own top bar; keep this label out of the way during play
         state.Visible = not (data.Mode == "Convergence" and s == "Round")

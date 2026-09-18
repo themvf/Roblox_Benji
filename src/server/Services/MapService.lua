@@ -6,6 +6,8 @@ local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Config = require(ReplicatedStorage.Shared.Config)
+local TweenService = game:GetService("TweenService")
+local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
 local ACTIVE_MAP = "Forest" -- "Greybox" or "Forest"
 
@@ -584,6 +586,94 @@ local function placePiece(folder, prefix, piece, rng, mirrored)
         local strip =
             makePart(folder, name, { pos[1], pos[2] + 0.15, pos[3] }, piece.size, rot, MARKER, Enum.Material.Neon)
         strip.CanCollide = false
+    elseif kind == "light" then
+        -- invisible anchor with a PointLight: interior and bridge lighting
+        local anchor = makePart(folder, name, pos, { 1, 1, 1 }, nil, PALETTE[piece.color] or GREY)
+        anchor.Transparency = 1
+        anchor.CanCollide = false
+        local light = Instance.new("PointLight")
+        light.Color = PALETTE[piece.color] or Color3.new(1, 1, 1)
+        light.Range = piece.range or 40
+        light.Brightness = piece.brightness or 1
+        light.Shadows = true
+        light.Parent = anchor
+    elseif kind == "beacon" then
+        -- flashing warning light: neon ball + point light, toggled by a loop the folder owns
+        local color = PALETTE[piece.color] or Color3.fromRGB(255, 60, 50)
+        local ball = makePart(folder, name, pos, { 1.2, 1.2, 1.2 }, nil, color, Enum.Material.Neon, Enum.PartType.Ball)
+        ball.CanCollide = false
+        local light = Instance.new("PointLight")
+        light.Color = color
+        light.Range = 18
+        light.Brightness = 2
+        light.Parent = ball
+        ball:SetAttribute("Beacon", true)
+        task.spawn(function()
+            local on = true
+            while ball.Parent do
+                on = not on
+                ball.Transparency = on and 0 or 0.8
+                light.Enabled = on
+                task.wait(ball:GetAttribute("BeaconFast") and 0.25 or 1.2)
+            end
+        end)
+    elseif kind == "elevator" then
+        -- aircraft elevator: a platform cycling between deck level and hangar level
+        local plat = makePart(folder, name, pos, piece.size, rot, PALETTE.Steel or GREY, Enum.Material.DiamondPlate)
+        local stripe = makePart(
+            folder,
+            name .. "Stripe",
+            { pos[1], pos[2] + piece.size[2] / 2 + 0.05, pos[3] },
+            { piece.size[1], 0.1, 1 },
+            rot,
+            PALETTE.Hazard or MARKER
+        )
+        stripe.CanCollide = false
+        local low, high, period = piece.low or 0.5, piece.high or pos[2], piece.period or 12
+        task.spawn(function()
+            local goingDown = true
+            while plat.Parent do
+                task.wait(period / 2)
+                if not plat.Parent then
+                    break
+                end
+                local targetY = goingDown and low or high
+                local info = TweenInfo.new(period / 4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+                TweenService:Create(plat, info, { CFrame = CFrame.new(pos[1], targetY, pos[3]) }):Play()
+                TweenService
+                    :Create(stripe, info, { CFrame = CFrame.new(pos[1], targetY + piece.size[2] / 2 + 0.05, pos[3]) })
+                    :Play()
+                goingDown = not goingDown
+            end
+        end)
+    elseif kind == "jet" then
+        -- chunky parked jet: fuselage, wings, tail, canopy. One big readable prop.
+        local model = Instance.new("Model")
+        model.Name = name
+        local r = rot or { 0, 0, 0 }
+        local base = CFrame.new(pos[1], pos[2], pos[3]) * CFrame.Angles(0, math.rad(r[2]), 0)
+        local jet = PALETTE.Jet or GREY
+        local function jp(n, off, size, color, material)
+            local p = Instance.new("Part")
+            p.Name = n
+            p.Anchored = true
+            p.Size = Vector3.new(size[1], size[2], size[3])
+            p.CFrame = base * CFrame.new(off[1], off[2], off[3])
+            p.Color = color or jet
+            p.Material = material or Enum.Material.Metal
+            p.Parent = model
+            return p
+        end
+        jp("Fuselage", { 0, 2.2, 0 }, { 4, 3, 22 })
+        jp("Nose", { 0, 2.2, -13 }, { 2.5, 2.2, 5 })
+        jp("WingL", { -8, 1.8, 2 }, { 12, 0.5, 8 })
+        jp("WingR", { 8, 1.8, 2 }, { 12, 0.5, 8 })
+        jp("Tail", { 0, 5, 9 }, { 0.5, 5, 5 })
+        jp("Canopy", { 0, 4.2, -5 }, { 2.4, 1.4, 5 }, Color3.fromRGB(60, 70, 90), Enum.Material.Glass)
+        jp("Gear1", { 0, 0.6, -8 }, { 0.6, 1.4, 0.6 }, Color3.fromRGB(40, 40, 45))
+        jp("Gear2", { -2, 0.6, 3 }, { 0.6, 1.4, 0.6 }, Color3.fromRGB(40, 40, 45))
+        jp("Gear3", { 2, 0.6, 3 }, { 0.6, 1.4, 0.6 }, Color3.fromRGB(40, 40, 45))
+        model.Parent = folder
     end
 end
 
@@ -599,6 +689,10 @@ function MapService:Build(layout)
     local rng = Random.new(layout.Seed or 0)
     local themed = layout.Terrain ~= nil
     applyPalette(layout.Palette)
+
+    self.Vista = layout.Vista
+    self.Events = layout.Events or {}
+    self.MapFolder = folder
 
     -- Objectives for ConvergenceService (absolute positions)
     self.Objectives = {}
@@ -705,6 +799,126 @@ function MapService:PlaceCharacter(player, character)
         -- face the pads (toward -Z of the lobby)
         root.CFrame = CFrame.lookAt(pos, pos + Vector3.new(0, 0, -10))
     end
+end
+
+-- ===== Map events (signature moments) =====
+-- Runs one event's visuals + hazard on a timeline. onWarning/onStart/onEnd are optional callbacks.
+-- Returns a function that tells whether a position is inside the lethal region right now.
+function MapService:RunEvent(event, callbacks)
+    callbacks = callbacks or {}
+    local folder = self.MapFolder
+    local active = false
+    local region = event.Region
+
+    local function inside(position)
+        if not active or not region then
+            return false
+        end
+        local p, sz = region.pos, region.size
+        return math.abs(position.X - p[1]) <= sz[1] / 2
+            and math.abs(position.Y - p[2]) <= sz[2] / 2
+            and math.abs(position.Z - p[3]) <= sz[3] / 2
+    end
+
+    task.spawn(function()
+        -- Warning: siren, beacons fast, hazard box outline
+        local soundId = Uploads.resolve(event.Sound)
+        local anchor
+        if region then
+            anchor = makePart(folder, "EventAnchor", region.pos, { 1, 1, 1 }, nil, Color3.new())
+            anchor.Transparency = 1
+            anchor.CanCollide = false
+        end
+        if soundId and anchor then
+            local snd = Instance.new("Sound")
+            snd.SoundId = soundId
+            snd.Volume = 1
+            snd.RollOffMaxDistance = 400
+            snd.Looped = true
+            snd.Parent = anchor
+            snd:Play()
+            task.delay((event.WarningSeconds or 5) + (event.DurationSeconds or 20), function()
+                snd:Stop()
+            end)
+        end
+        if event.Beacons and folder then
+            for _, d in folder:GetDescendants() do
+                if d:GetAttribute("Beacon") then
+                    d:SetAttribute("BeaconFast", true)
+                end
+            end
+        end
+        local outline
+        if region then
+            outline = makePart(
+                folder,
+                "EventZone",
+                region.pos,
+                region.size,
+                nil,
+                Color3.fromRGB(255, 80, 40),
+                Enum.Material.ForceField
+            )
+            outline.Transparency = 0.7
+            outline.CanCollide = false
+            outline.CanQuery = false
+        end
+        if callbacks.onWarning then
+            callbacks.onWarning()
+        end
+        task.wait(event.WarningSeconds or 5)
+
+        -- Start: blast shield rises, region lethal
+        local shield
+        if event.Shield then
+            shield = folder:FindFirstChild("BlastShield")
+            if shield then
+                TweenService:Create(shield, TweenInfo.new(1.2, Enum.EasingStyle.Quad), {
+                    CFrame = shield.CFrame
+                        * CFrame.Angles(0, 0, math.rad(-60))
+                        * CFrame.new(0, (event.Shield.rise or 6) / 2, 0),
+                    Size = Vector3.new(shield.Size.X, event.Shield.rise or 6, shield.Size.Z),
+                }):Play()
+            end
+        end
+        if outline then
+            outline.Transparency = 0.4
+            outline.Color = Color3.fromRGB(255, 120, 40)
+        end
+        active = true
+        if callbacks.onStart then
+            callbacks.onStart()
+        end
+        task.wait(event.DurationSeconds or 20)
+
+        -- End: restore
+        active = false
+        if shield then
+            TweenService
+                :Create(shield, TweenInfo.new(1.2, Enum.EasingStyle.Quad), {
+                    CFrame = CFrame.new(event.Shield.pos[1], event.Shield.pos[2], event.Shield.pos[3]),
+                    Size = Vector3.new(event.Shield.size[1], event.Shield.size[2], event.Shield.size[3]),
+                })
+                :Play()
+        end
+        if outline then
+            outline:Destroy()
+        end
+        if anchor then
+            anchor:Destroy()
+        end
+        if event.Beacons and folder then
+            for _, d in folder:GetDescendants() do
+                if d:GetAttribute("Beacon") then
+                    d:SetAttribute("BeaconFast", nil)
+                end
+            end
+        end
+        if callbacks.onEnd then
+            callbacks.onEnd()
+        end
+    end)
+    return inside
 end
 
 -- Rebuild the arena for a named map (module name under Shared/Maps). Safe between matches.

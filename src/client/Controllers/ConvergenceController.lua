@@ -236,6 +236,15 @@ function ConvergenceController:KnitStart()
                 ("PHASE %d   %d ZONE%s"):format(data.Phase, data.Zones, data.Zones == 1 and "" or "S"),
                 ACCENT
             )
+        elseif kind == "MapEventWarning" then
+            self:ShowBanner(
+                (data.Banner or data.Name:upper()) .. "  " .. tostring(data.Seconds) .. "s",
+                Color3.fromRGB(255, 90, 50)
+            )
+        elseif kind == "MapEventStart" then
+            self:ShowBanner(data.Banner or data.Name:upper(), Color3.fromRGB(255, 90, 50))
+        elseif kind == "MapEventEnd" then
+            self:ShowBanner(data.Name:upper() .. " CLEAR", NEUTRAL)
         elseif kind == "Overtime" then
             self:ShowBanner("OVERTIME", ACCENT)
         end

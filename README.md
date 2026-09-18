@@ -52,6 +52,12 @@ mock store and prints a warning.
   `Carrier` is the first built for it (Flight Deck -> Hangar -> Bridge).
 - **Duel**: 1v1 / 2v2 elimination, first to 5 rounds. Side pads in the lobby.
 
+## Map events and atmosphere
+A map can declare `Vista` (hero camera on entry), `Events` (signature moments fired by Convergence phase: warning
+banner + siren via `upload:Siren`, beacons flash, a blast shield rises, a lethal region for the duration) and living
+pieces: `light`, `beacon` (flashing), `elevator` (moving platform), `jet` (chunky parked aircraft). Carrier uses all
+of them; the jet-launch event fires when phase 2 begins.
+
 ## Maps
 `Config.Maps` lists the rotation; each match picks one at random (never the same twice in a row) and rebuilds the
 arena during the intermission. `Snow.lua` shows how to make a variant from an existing layout with a new palette.

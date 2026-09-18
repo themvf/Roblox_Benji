@@ -261,11 +261,11 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
 
     task.spawn(function()
         -- Map + intermission
+        MapService:Load(mapName)
         RoundService:Broadcast(
             "Intermission",
-            { Time = Config.IntermissionSeconds, Mode = "Convergence", Map = mapName }
+            { Time = Config.IntermissionSeconds, Mode = "Convergence", Map = mapName, Vista = MapService.Vista }
         )
-        MapService:Load(mapName)
         local objectives = MapService.Objectives or {}
         if #objectives == 0 then
             warn("[Convergence] map " .. mapName .. " has no Objectives; aborting")
@@ -325,6 +325,38 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
         match.Running = true
         RoundService:Broadcast("Round", { Mode = "Convergence", Score = match.Score })
         self:FireAll(match, self.Client.Event, "Phase", { Phase = 1, Zones = 3 })
+
+        -- Signature map events: fire those whose TriggerPhase matches, kill anyone inside the region
+        local hazards = {} -- list of inside(position) functions
+        local function fireEventsForPhase(phase)
+            for _, ev in MapService.Events or {} do
+                if ev.TriggerPhase == phase then
+                    local inside = MapService:RunEvent(ev, {
+                        onWarning = function()
+                            self:FireAll(
+                                match,
+                                self.Client.Event,
+                                "MapEventWarning",
+                                { Name = ev.Name, Banner = ev.Banner, Seconds = ev.WarningSeconds }
+                            )
+                        end,
+                        onStart = function()
+                            self:FireAll(
+                                match,
+                                self.Client.Event,
+                                "MapEventStart",
+                                { Name = ev.Name, Banner = ev.Banner }
+                            )
+                        end,
+                        onEnd = function()
+                            self:FireAll(match, self.Client.Event, "MapEventEnd", { Name = ev.Name })
+                        end,
+                    })
+                    table.insert(hazards, inside)
+                end
+            end
+        end
+        fireEventsForPhase(1)
 
         -- Main loop
         local lastSnap = 0
@@ -404,7 +436,26 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                         "Phase",
                         { Phase = match.Phase, Zones = phaseCount - match.Phase + 1 }
                     )
+                    fireEventsForPhase(match.Phase)
                 end
+            end
+
+            -- Lethal map-event regions
+            if #hazards > 0 then
+                for _, p in present(match) do
+                    local root = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+                    local hum = p.Character and p.Character:FindFirstChildOfClass("Humanoid")
+                    if root and hum and hum.Health > 0 then
+                        for _, inside in hazards do
+                            if inside(root.Position) then
+                                hum:TakeDamage(hum.MaxHealth * 0.6 * dt) -- lethal in under 2 s
+                                break
+                            end
+                        end
+                    end
+                end
+            end
+            if not match.Overtime then
             else
                 match.OvertimeLeft -= dt
             end
