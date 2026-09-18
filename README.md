@@ -49,8 +49,11 @@ mock store and prints a warning.
   cap, with up to 60 s overtime if the final zone is in play. Respawns 5 s with 2 s protection. Capture: 8 s solo
   from neutral, +50% per teammate (max 3), enemy points neutralize first, contested freezes, empty holds.
   Every rule is a `Convergence_*` attribute on `ReplicatedStorage.Tuning`.
-  Test bots: type `/bots 5` in the lobby (or set `Convergence_BotsPerTeam`) and the next Convergence match adds
-  5 bots per team that path to zones, capture, shoot (hitscan, 65% accuracy) and respawn. `/bots 0` turns them off. Any map with an `Objectives` table works;
+  Test bots: `/bots 5` in the lobby (or `Convergence_BotsPerTeam`) adds 5 bots per team to the next Convergence
+  match. Archetypes cycle Assault / Anchor / Flanker; `/botlevel easy|normal|hard` sets reaction, aim error,
+  accuracy, burst size and speed; `/botdebug off` hides the state labels above their heads. Bots pathfind for long
+  travel, move directly and strafe in combat, fire controlled bursts with reaction time and angular error, reload,
+  reposition when low, and put the objective before kill chasing. `/bots 0` turns them off. Any map with an `Objectives` table works;
   `Carrier` is the first built for it (Flight Deck -> Hangar -> Bridge).
 - **Duel**: 1v1 / 2v2 elimination, first to 5 rounds. Side pads in the lobby.
 
