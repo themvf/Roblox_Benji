@@ -20,6 +20,20 @@
         "Shots": {
           "$path": "assets/skins/Shots"
         }
+      },
+      "Tuning": {
+        "$className": "Configuration",
+        "$ignoreUnknownInstances": true,
+        "$attributes": {
+          "IntermissionSeconds": 5,
+          "RoundSeconds": 90,
+          "RoundsToWin": 5,
+          "RespawnSeconds": 3
+        }
+      },
+      "Uploads": {
+        "$className": "Folder",
+        "$ignoreUnknownInstances": true
       }
     },
     "ServerScriptService": {
