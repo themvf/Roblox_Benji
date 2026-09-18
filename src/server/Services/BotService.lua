@@ -686,10 +686,10 @@ local function act(bot, dt)
             bot.RepositionNudge = Vector3.new(math.random(-10, 10), 0, math.random(-10, 10))
         end
         local farFromZone = bot.Zone and flat(bot.Zone.Position - bot.Root.Position).Magnitude > bot.Zone.Radius * 2
-        if bot.Archetype == "Assault" and farFromZone and bot.Zone.Owner ~= bot.Team then
-            navigateTo(bot, bot.ZoneSpot or bot.Zone.Position)
-        elseif bot.HoldZoneWhileEngaging and bot.Zone and not inZone(bot.Root.Position, bot.Zone) then
-            navigateTo(bot, bot.ZoneSpot or bot.Zone.Position)
+        local pushToZone = (bot.Archetype == "Assault" and farFromZone and bot.Zone.Owner ~= bot.Team)
+            or (bot.HoldZoneWhileEngaging and bot.Zone and not inZone(bot.Root.Position, bot.Zone))
+        if pushToZone then
+            navigateTo(bot, bot.ZoneSpot or bot.Zone.Position) -- keep the objective while shooting
         else
             strafe(bot)
         end
