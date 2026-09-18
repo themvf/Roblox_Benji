@@ -643,8 +643,21 @@ function MapService:PlaceCharacter(player, character)
     end
 end
 
+-- Rebuild the arena for a named map (module name under Shared/Maps). Safe between matches.
+function MapService:Load(name)
+    local module = ReplicatedStorage.Shared.Maps:FindFirstChild(name)
+    if not module then
+        warn("[MapService] unknown map " .. tostring(name))
+        return false
+    end
+    self:Build(require(module))
+    self.CurrentMap = name
+    return true
+end
+
 function MapService:KnitInit()
     local layoutModule = ReplicatedStorage.Shared.Maps:FindFirstChild(ACTIVE_MAP == "Greybox" and "Arena" or ACTIVE_MAP)
+    self.CurrentMap = layoutModule.Name
     self:Build(require(layoutModule))
     buildLobby(self, require(ReplicatedStorage.Shared.Maps.Lobby))
 

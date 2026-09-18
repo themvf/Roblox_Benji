@@ -25,6 +25,7 @@ end
 
 function HudController:KnitStart()
     spinShowcase()
+    local RunService = game:GetService("RunService")
     local gui = Instance.new("ScreenGui")
     gui.Name = "Hud"
     gui.ResetOnSpawn = false
@@ -43,14 +44,34 @@ function HudController:KnitStart()
         return l
     end
     local state = label(UDim2.fromScale(0.35, 0.02))
+    local timer = label(UDim2.fromScale(0.42, 0.085))
+    timer.Size = UDim2.fromScale(0.16, 0.06)
+    timer.TextColor3 = Color3.fromRGB(255, 220, 80)
+    timer.Visible = false
+    local fuel = label(UDim2.fromScale(0.02, 0.9))
+    fuel.Size = UDim2.fromScale(0.16, 0.05)
+    fuel.TextColor3 = Color3.fromRGB(255, 150, 60)
+    fuel.Visible = false
 
     local RoundService = Knit.GetService("RoundService")
+    local deadline = nil
     RoundService.StateChanged:Connect(function(s, data)
         local text = s
         if s == "Lobby" then
             text = "Stand on a pad to queue"
         elseif data.Mode then
             text = data.Mode .. "  " .. s
+        end
+        if s == "Intermission" and data.Map then
+            text = ("%s  Next map: %s"):format(data.Mode or "", data.Map)
+        end
+        -- Countdown for any state that carries a Time (Intermission, Round)
+        if data.Time then
+            deadline = os.clock() + data.Time
+            timer.Visible = true
+        else
+            deadline = nil
+            timer.Visible = false
         end
         if data.Winner then
             text ..= " - " .. data.Winner .. " wins"
@@ -59,6 +80,21 @@ function HudController:KnitStart()
             text ..= "  Red " .. data.Score.Red .. " - " .. data.Score.Blue .. " Blue"
         end
         state.Text = text
+    end)
+
+    RunService.RenderStepped:Connect(function()
+        if deadline then
+            local left = math.max(0, deadline - os.clock())
+            timer.Text = ("%d:%02d"):format(math.floor(left / 60), math.floor(left % 60))
+        end
+        local character = Players.LocalPlayer.Character
+        local tool = character and character:FindFirstChildOfClass("Tool")
+        if tool and tool.Name == "Jetpack" then
+            fuel.Visible = true
+            fuel.Text = ("FUEL  %d"):format(tool:GetAttribute("Fuel") or 0)
+        else
+            fuel.Visible = false
+        end
     end)
 end
 

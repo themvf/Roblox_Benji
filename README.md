@@ -32,6 +32,11 @@ DataService loads a ProfileStore profile per player into attributes (`Loadout*`,
 Game Settings > Security > "Enable Studio Access to API Services" to save for real; otherwise ProfileStore uses a
 mock store and prints a warning.
 
+## Maps
+`Config.Maps` lists the rotation; each match picks one at random (never the same twice in a row) and rebuilds the
+arena during the intermission. `Snow.lua` shows how to make a variant from an existing layout with a new palette.
+Type `/celebrate` in the lobby to preview your default celebration on the podium.
+
 ## Celebrations
 Winners pick from up to 3 favourites (kiosk, Celebration column; first = default) in a 3 s wheel after the final round,
 then stand on a podium above the arena in MVP order (most kills). Common = emote only, Rare adds audio or effects,
@@ -49,10 +54,10 @@ Pick skins at the lobby kiosk: chips under the 3D preview, coloured by tier. Ass
 A system whose asset is still `TODO` is skipped at equip with one warning, so draft skins never break the game.
 
 ## Controls
-Mouse1 fire or swing, Mouse2 aim, R reload, 1-4 switch slots (Primary, Secondary, Melee, Utility), Shift sprint. Guns are the Weapons Kit; melee is MeleeService.
+Mouse1 fire or swing, Mouse2 aim, R reload, 1-4 switch slots (Primary, Secondary, Melee, Utility), Shift sprint. With the Jetpack equipped, hold Jump to fly. Guns are the Weapons Kit; melee is MeleeService; utility is UtilityService.
 
 ## Next steps
 - Shooting range with target dummies, leaderboard, skins
-- Utility weapons (Flamethrower, Exogun) and the Gunblade dash; more melee (Knife, Scythe)
+- More utility (Flamethrower, Exogun), the Gunblade dash, more melee (Knife, Scythe), party queue
 - Kits/abilities like Rivals (dash, grapple)
 - ProfileStore for saving wins, kills, and unlocked weapons

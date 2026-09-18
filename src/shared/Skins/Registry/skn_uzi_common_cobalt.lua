@@ -1,19 +1,24 @@
--- Common: texture only. Works today with the Weapons Kit (recolors the base mesh).
+-- Common: texture only. Generated recolour; works today on the kit mesh.
 return {
     Id = "skn_uzi_common_cobalt",
     Weapon = "Uzi",
     Tier = "Common",
-    Concept = "The Uzi is dipped in cobalt: same gun, deep blue body with a brass business end",
-    Materials = { Primary = "cobalt enamel", Accent = "brass" },
+    Concept = "The Uzi in cobalt: same gun, cobalt body with a contrasting business end",
+    Materials = { Primary = "cobalt smoothplastic", Accent = "accent metal" },
     SoundPalette = "base",
     Systems = {
         Texture = {
-            -- Applied to every BasePart of the weapon model unless overridden by name
             Body = { Color = { 40, 70, 200 }, Material = "SmoothPlastic" },
-            -- Business end stays the highest contrast part
             Overrides = {
                 Barrel = { Color = { 230, 190, 90 }, Material = "Metal" },
                 Muzzle = { Color = { 230, 190, 90 }, Material = "Metal" },
+                Bolt = { Color = { 230, 190, 90 }, Material = "Metal" },
+                Magazine = { Color = { 230, 190, 90 }, Material = "Metal" },
+                Scope = { Color = { 230, 190, 90 }, Material = "Metal" },
+                Core = { Color = { 230, 190, 90 }, Material = "Metal" },
+                Emitter = { Color = { 230, 190, 90 }, Material = "Metal" },
+                Barrels = { Color = { 230, 190, 90 }, Material = "Metal" },
+                Edge = { Color = { 230, 190, 90 }, Material = "Metal" },
             },
         },
     },

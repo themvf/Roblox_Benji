@@ -179,6 +179,69 @@ end
 fs.writeFile("assets/weapons/tools/Katana.rbxm", roblox.serializeModel({ buildKatana() }))
 print("wrote assets/weapons/tools/Katana.rbxm")
 
+local function buildJetpack()
+    local tool = Instance.new("Tool")
+    tool.Name = "Jetpack"
+    tool.RequiresHandle = true
+    tool.CanBeDropped = false
+    tool.ManualActivationOnly = true
+    tool.Grip = CFrame.new(0, -0.2, 0)
+    tool:SetAttribute("WeaponClass", "Utility")
+
+    -- in-hand remote
+    local handle = part("Handle", Vector3.new(0.4, 0.9, 0.25), Color3.fromRGB(40, 40, 48), Enum.Material.SmoothPlastic)
+    handle.Parent = tool
+    local button = part("Button", Vector3.new(0.2, 0.2, 0.1), Color3.fromRGB(255, 120, 40), Enum.Material.Neon)
+    button.Parent = tool
+    weld(handle, button, CFrame.new(0, 0.2, -0.15))
+
+    -- pack worn on the back (server welds it to the torso when equipped)
+    local pack = Instance.new("Model")
+    pack.Name = "Pack"
+    local body = part("Body", Vector3.new(1.6, 1.8, 0.7), Color3.fromRGB(230, 230, 235), Enum.Material.Metal)
+    body.Anchored = true
+    body.Parent = pack
+    pack.PrimaryPart = body
+    for i, x in { -0.5, 0.5 } do
+        local tank = part("Tank" .. i, Vector3.new(0.55, 1.9, 0.55), Color3.fromRGB(255, 120, 40), Enum.Material.SmoothPlastic, Enum.PartType.Cylinder)
+        tank.Anchored = true
+        tank.CFrame = body.CFrame * CFrame.new(x, 0, 0.1) * CFrame.Angles(0, 0, math.rad(90))
+        tank.Parent = pack
+        weld(body, tank, CFrame.new(x, 0, 0.1) * CFrame.Angles(0, 0, math.rad(90)))
+        local nozzle = part("Nozzle" .. i, Vector3.new(0.35, 0.35, 0.35), Color3.fromRGB(60, 60, 70), Enum.Material.Metal, Enum.PartType.Cylinder)
+        nozzle.Anchored = true
+        nozzle.CFrame = body.CFrame * CFrame.new(x, -1.15, 0.1) * CFrame.Angles(0, 0, math.rad(90))
+        nozzle.Parent = pack
+        weld(body, nozzle, CFrame.new(x, -1.15, 0.1) * CFrame.Angles(0, 0, math.rad(90)))
+        local att = Instance.new("Attachment")
+        att.Name = "Flame"
+        att.CFrame = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, math.rad(-90))
+        att.Parent = nozzle
+        local flame = Instance.new("ParticleEmitter")
+        flame.Name = "FlameFx"
+        flame.Enabled = false
+        flame.Rate = 60
+        flame.Lifetime = NumberRange.new(0.25, 0.45)
+        flame.Speed = NumberRange.new(18, 26)
+        flame.SpreadAngle = Vector2.new(8, 8)
+        flame.Size = NumberSequence.new(0.5, 0.1)
+        flame.Transparency = NumberSequence.new(0.1, 1)
+        flame.LightEmission = 1
+        flame.Color = ColorSequence.new(Color3.fromRGB(255, 200, 80), Color3.fromRGB(255, 80, 30))
+        flame.Parent = att
+    end
+    pack.Parent = tool
+
+    -- kiosk preview model
+    local preview = pack:Clone()
+    preview.Name = "Jetpack"
+    preview.Parent = tool
+    return tool
+end
+
+fs.writeFile("assets/weapons/tools/Jetpack.rbxm", roblox.serializeModel({ buildJetpack() }))
+print("wrote assets/weapons/tools/Jetpack.rbxm")
+
 -- 2b. One clean Tool per Rivals gun, from the kit models
 local count = 0
 for name, base in BASE do

@@ -130,7 +130,18 @@ function RoundService:StartMatch(players, teamSize, mode)
     local killConns = trackKills(match)
 
     task.spawn(function()
-        self:Broadcast("Intermission", { Time = Config.IntermissionSeconds, Mode = mode })
+        -- Map variation: random pick, never the same map twice in a row
+        local MapService = Knit.GetService("MapService")
+        local choices = {}
+        for _, name in Config.Maps or { MapService.CurrentMap } do
+            if name ~= self.LastMap or #Config.Maps == 1 then
+                table.insert(choices, name)
+            end
+        end
+        local mapName = choices[math.random(#choices)]
+        self.LastMap = mapName
+        self:Broadcast("Intermission", { Time = Config.IntermissionSeconds, Mode = mode, Map = mapName })
+        MapService:Load(mapName)
         task.wait(Config.IntermissionSeconds)
 
         local aborted = false
@@ -215,6 +226,17 @@ function RoundService:KnitStart()
         player:LoadCharacter()
         task.defer(function()
             self.Client.StateChanged:Fire(player, "Lobby", {})
+        end)
+        -- Lobby preview: type /celebrate to run your default celebration solo on the podium
+        player.Chatted:Connect(function(msg)
+            if msg:lower():sub(1, 10) == "/celebrate" and not player:GetAttribute("InMatch") and not self.Busy then
+                self.Busy = true
+                Knit.GetService("CelebrationService"):Run({ player }, {})
+                self.Busy = false
+                if player.Parent then
+                    self:SendToLobby(player)
+                end
+            end
         end)
     end
 

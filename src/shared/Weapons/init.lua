@@ -253,6 +253,29 @@ Weapons.Katana = {
     Arc = 120,
 }
 
+-- ===== Utility =====
+-- Type = "Utility" routes the item to UtilityService + a client controller.
+Weapons.Jetpack = {
+    Slot = "Utility",
+    Type = "Utility",
+    Damage = { 0, 0 },
+    Crit = { 0, 0 },
+    DropoffStart = math.huge,
+    DropoffEnd = math.huge,
+    Cooldown = 0,
+    Spread = 0,
+    Pellets = 0,
+    Ammo = { math.huge, math.huge },
+    Reload = 0,
+    EquipTime = 0.4,
+    MoveSpeed = 0,
+    Auto = false,
+    Fuel = 100, -- units
+    Burn = 40, -- units per second while thrusting
+    Recharge = 30, -- units per second on the ground
+    Thrust = 42, -- vertical studs per second while thrusting
+}
+
 Weapons.SLOTS = { "Primary", "Secondary", "Melee", "Utility" }
 
 -- Damage for one pellet at a given distance, with headshot crit.

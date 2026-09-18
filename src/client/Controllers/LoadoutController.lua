@@ -53,6 +53,16 @@ end
 
 -- Short human stat summary from the Rivals stats table
 local function statLines(stats)
+    if stats.Type == "Utility" then
+        return {
+            ("Fuel  %s"):format(stats.Fuel),
+            ("Burn  %s/s"):format(stats.Burn),
+            ("Recharge  %s/s"):format(stats.Recharge),
+            ("Lift  %s studs/s"):format(stats.Thrust),
+            "Hold Jump to fly",
+            ("Equip  %.2fs"):format(stats.EquipTime),
+        }
+    end
     if stats.Type == "Melee" then
         return {
             ("Damage  %s"):format(stats.Damage[1]),
