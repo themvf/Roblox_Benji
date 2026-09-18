@@ -16,9 +16,27 @@ local TEAM_COLORS = {
 }
 
 local GREY = Color3.fromRGB(160, 160, 160)
+-- Theme palette; overwritten from layout.Palette when a map is built
 local ROCK = Color3.fromRGB(96, 98, 92)
+local ROCK_EDGE = nil
 local BARK = Color3.fromRGB(78, 56, 40)
+local WOOD = Color3.fromRGB(110, 75, 45)
 local NEEDLE = { Color3.fromRGB(34, 68, 44), Color3.fromRGB(42, 80, 50), Color3.fromRGB(28, 58, 40) }
+local MARKER = Color3.fromRGB(255, 240, 80)
+local MOUNTAIN = nil
+
+local function applyPalette(pal)
+    if not pal then
+        return
+    end
+    ROCK = pal.Rock or ROCK
+    ROCK_EDGE = pal.RockEdge
+    BARK = pal.Bark or BARK
+    WOOD = pal.Wood or WOOD
+    NEEDLE = pal.Needles or NEEDLE
+    MARKER = pal.Marker or MARKER
+    MOUNTAIN = pal.Mountain
+end
 
 local function v3(t)
     return Vector3.new(t[1], t[2], t[3])
@@ -53,7 +71,21 @@ local function makeRock(folder, name, pos, size, rot, rng)
     -- A few overlapping blocks with slight tilt reads as a boulder.
     local model = Instance.new("Model")
     model.Name = name
-    local base = makePart(model, "Base", { pos[1], pos[2] + size[2] / 2, pos[3] }, size, rot, ROCK, Enum.Material.Slate)
+    local base =
+        makePart(model, "Base", { pos[1], pos[2] + size[2] / 2, pos[3] }, size, rot, ROCK, Enum.Material.SmoothPlastic)
+    if ROCK_EDGE then
+        -- accent band near the top so cover height reads instantly
+        local band = makePart(
+            model,
+            "Band",
+            { pos[1], pos[2] + size[2] - 0.6, pos[3] },
+            { size[1] + 0.1, 0.5, size[3] + 0.1 },
+            rot,
+            ROCK_EDGE,
+            Enum.Material.Neon
+        )
+        band.CanCollide = false
+    end
     for i = 1, 2 do
         local s = {
             size[1] * rng:NextNumber(0.5, 0.8),
@@ -65,7 +97,7 @@ local function makeRock(folder, name, pos, size, rot, rng)
             rng:NextNumber(-12, 12),
             rng:NextNumber(0, 360),
             rng:NextNumber(-12, 12),
-        }, ROCK, Enum.Material.Slate)
+        }, ROCK, Enum.Material.SmoothPlastic)
     end
     model.PrimaryPart = base
     model.Parent = folder
@@ -79,7 +111,7 @@ local function makeLog(folder, name, pos, size, rot)
         r[1],
         r[2] + 90,
         r[3],
-    }, BARK, Enum.Material.Wood, Enum.PartType.Cylinder)
+    }, WOOD, Enum.Material.SmoothPlastic, Enum.PartType.Cylinder)
     return log
 end
 
@@ -88,7 +120,7 @@ local function makeStump(folder, name, pos, size)
         0,
         0,
         90,
-    }, BARK, Enum.Material.Wood, Enum.PartType.Cylinder)
+    }, WOOD, Enum.Material.SmoothPlastic, Enum.PartType.Cylinder)
 end
 
 local function makeTree(folder, pos, height, rng)
@@ -106,23 +138,23 @@ local function makeTree(folder, pos, height, rng)
             90,
         },
         BARK,
-        Enum.Material.Wood,
+        Enum.Material.SmoothPlastic,
         Enum.PartType.Cylinder
     )
     trunk.CanCollide = true
 
     -- Foliage: stacked flattened balls shrinking upward = pine silhouette
     local color = NEEDLE[rng:NextInteger(1, #NEEDLE)]
-    local tiers = 5
+    local tiers = 3
     for i = 1, tiers do
         local t = (i - 1) / (tiers - 1)
-        local y = pos[2] + height * (0.35 + 0.6 * t)
-        local w = height * (0.42 - 0.3 * t)
-        local ball = makePart(model, "Foliage" .. i, { pos[1], y, pos[3] }, { w, w * 0.55, w }, {
+        local y = pos[2] + height * (0.42 + 0.5 * t)
+        local w = height * (0.5 - 0.28 * t)
+        local ball = makePart(model, "Foliage" .. i, { pos[1], y, pos[3] }, { w, w * 0.8, w }, {
             0,
             rng:NextNumber(0, 360),
             0,
-        }, color, Enum.Material.Grass, Enum.PartType.Ball)
+        }, color, Enum.Material.SmoothPlastic, Enum.PartType.Ball)
         ball.CanCollide = false
         ball.CastShadow = true
     end
@@ -176,6 +208,15 @@ local function buildTerrain(layout)
     local terrain = workspace.Terrain
     terrain:Clear()
     local t = layout.Terrain
+    if t.GroundColor then
+        terrain:SetMaterialColor(t.GroundMaterial, t.GroundColor)
+    end
+    if MOUNTAIN then
+        terrain:SetMaterialColor(Enum.Material.Rock, MOUNTAIN)
+    end
+    terrain.WaterColor = Color3.fromRGB(70, 180, 255)
+    terrain.WaterTransparency = 0.6
+    terrain.WaterReflectance = 0.4
     -- Ground slab, extended well past the walls so the backdrop has a floor
     terrain:FillBlock(CFrame.new(0, -6, 0), Vector3.new(layout.Size * 4, 12, layout.Size * 4), t.GroundMaterial)
     for _, h in t.Hills do
@@ -227,9 +268,9 @@ local function applyLighting(env)
     bloom.Parent = Lighting
 
     local cc = Instance.new("ColorCorrectionEffect")
-    cc.Saturation = -0.1
-    cc.Contrast = 0.08
-    cc.TintColor = Color3.fromRGB(240, 235, 225)
+    cc.Saturation = env.Saturation or -0.1
+    cc.Contrast = env.Contrast or 0.08
+    cc.TintColor = env.Tint or Color3.fromRGB(240, 235, 225)
     cc.Parent = Lighting
 end
 
@@ -257,6 +298,10 @@ local function placePiece(folder, prefix, piece, rng, mirrored)
         makeStump(folder, name, pos, piece.size)
     elseif kind == "grove" then
         makeGrove(folder, pos, piece.size, piece.count, rng)
+    elseif kind == "marker" then
+        local strip =
+            makePart(folder, name, { pos[1], pos[2] + 0.15, pos[3] }, piece.size, rot, MARKER, Enum.Material.Neon)
+        strip.CanCollide = false
     end
 end
 
@@ -271,6 +316,7 @@ function MapService:Build(layout)
 
     local rng = Random.new(layout.Seed or 0)
     local themed = layout.Terrain ~= nil
+    applyPalette(layout.Palette)
 
     if themed then
         buildTerrain(layout)

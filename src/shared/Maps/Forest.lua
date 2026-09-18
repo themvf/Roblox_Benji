@@ -13,21 +13,37 @@ return {
         Blue = { { 100, 4, -14 }, { 100, 4, 0 }, { 100, 4, 14 } },
     },
 
+    -- Rivals look: bright midday, no fog, saturated color blocks, glowing indicators.
     Environment = {
-        ClockTime = 17.6, -- golden hour
-        Brightness = 1.6,
-        Ambient = Color3.fromRGB(70, 85, 75),
-        OutdoorAmbient = Color3.fromRGB(110, 125, 105),
-        FogColor = Color3.fromRGB(205, 195, 175),
-        FogStart = 40,
-        FogEnd = 320,
-        Atmosphere = { Density = 0.42, Haze = 2.4, Glare = 0.35, Color = Color3.fromRGB(215, 200, 180) },
-        SunRays = 0.18,
-        Bloom = 0.35,
+        ClockTime = 13.5,
+        Brightness = 2.4,
+        Ambient = Color3.fromRGB(120, 130, 140),
+        OutdoorAmbient = Color3.fromRGB(150, 165, 180),
+        FogColor = Color3.fromRGB(200, 230, 255),
+        FogStart = 400,
+        FogEnd = 1500,
+        Atmosphere = { Density = 0.22, Haze = 0.6, Glare = 0.1, Color = Color3.fromRGB(200, 225, 255) },
+        SunRays = 0.05,
+        Bloom = 0.5,
+        Saturation = 0.25, -- push colors, never desaturate
+        Contrast = 0.12,
+        Tint = Color3.fromRGB(255, 255, 255),
+    },
+
+    -- Color jobs. Environment stays soft; cover and indicators stay loud.
+    Palette = {
+        Rock = Color3.fromRGB(235, 225, 205), -- pale warm stone: cover reads as light blocks
+        RockEdge = Color3.fromRGB(255, 170, 60), -- orange accent band on cover
+        Bark = Color3.fromRGB(150, 95, 60),
+        Needles = { Color3.fromRGB(60, 200, 110), Color3.fromRGB(40, 175, 120), Color3.fromRGB(90, 215, 90) },
+        Wood = Color3.fromRGB(200, 130, 70),
+        Marker = Color3.fromRGB(255, 240, 80), -- neon lane strips
+        Mountain = Color3.fromRGB(120, 150, 210), -- distant blue silhouettes
     },
 
     Terrain = {
         GroundMaterial = Enum.Material.Grass,
+        GroundColor = Color3.fromRGB(96, 190, 96), -- bright toy grass
         -- Rolling hills inside the arena: {x, y, z, radius}. Kept low so they act as cover, not walls.
         Hills = {
             { -30, -6, -62, 22 },
@@ -79,6 +95,11 @@ return {
         { kind = "rock", pos = { -62, 0, -48 }, size = { 6, 4.5, 10 } },
         { kind = "rock", pos = { -62, 0, 48 }, size = { 6, 4.5, 10 } },
 
+        -- glowing lane strips (mirrored) so routes read at a glance
+        { kind = "marker", pos = { -70, 0, 0 }, size = { 40, 0.3, 1.5 } },
+        { kind = "marker", pos = { -40, 0, -50 }, size = { 30, 0.3, 1.5 }, rot = { 0, 25, 0 } },
+        { kind = "marker", pos = { -40, 0, 50 }, size = { 30, 0.3, 1.5 }, rot = { 0, -25, 0 } },
+
         -- dense tree clusters that block long sightlines out of spawn
         { kind = "grove", pos = { -80, 0, -40 }, size = { 24, 0, 24 }, count = 9 },
         { kind = "grove", pos = { -80, 0, 40 }, size = { 24, 0, 24 }, count = 9 },
@@ -86,8 +107,8 @@ return {
 
     -- Scatter trees everywhere except lanes and spawns
     Trees = {
-        Count = 150,
-        MinSpacing = 9,
+        Count = 90,
+        MinSpacing = 13,
         -- Rectangles kept clear: {x, z, halfW, halfD}
         Exclude = {
             { 0, 0, 40, 40 }, -- lake and mid
@@ -96,6 +117,6 @@ return {
             { -50, 0, 30, 12 }, -- Red mid lane
             { 50, 0, 30, 12 }, -- Blue mid lane
         },
-        Height = { 26, 46 },
+        Height = { 24, 40 },
     },
 }
