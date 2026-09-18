@@ -42,8 +42,11 @@ function QueueService:KnitStart()
                     status = "Match in progress"
                 elseif #queued >= need then
                     status = "Starting..."
+                elseif #queued == 0 then
+                    status = ("Stand here  (%d players)"):format(need)
                 else
-                    status = ("%d / %d"):format(#queued, need)
+                    local more = need - #queued
+                    status = ("%d / %d  needs %d more"):format(#queued, need, more)
                 end
                 pad.Label.Text = pad.Mode .. "\n" .. status
 

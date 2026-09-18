@@ -361,6 +361,22 @@ local function buildLobby(self, layout)
         label.Text = spec.mode
         label.Parent = sign
 
+        -- Floor text on the pad itself: mode + player count, readable from anywhere in the hub
+        local floorGui = Instance.new("SurfaceGui")
+        floorGui.Face = Enum.NormalId.Top
+        floorGui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+        floorGui.PixelsPerStud = 30
+        floorGui.Parent = pad
+        local floorText = Instance.new("TextLabel")
+        floorText.Size = UDim2.fromScale(1, 1)
+        floorText.BackgroundTransparency = 1
+        floorText.Text = spec.mode .. "\n" .. (spec.teamSize * 2) .. " PLAYERS"
+        floorText.TextScaled = true
+        floorText.Font = Enum.Font.GothamBlack
+        floorText.TextColor3 = Color3.fromRGB(20, 24, 30)
+        floorText.Rotation = 180
+        floorText.Parent = floorGui
+
         table.insert(self.Pads, { Part = pad, Label = label, Mode = spec.mode, TeamSize = spec.teamSize })
     end
 
