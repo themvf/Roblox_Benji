@@ -9,9 +9,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local WeaponService = Knit.CreateService({ Name = "WeaponService" })
 
--- Rivals default loadout. Players get a copy of each on spawn.
-WeaponService.DefaultLoadout = { Primary = "AssaultRifle", Secondary = "Handgun" }
-
 local TEAM_IDS = { Red = 1, Blue = 2, Lobby = 3 }
 
 local function teamOf(player)
@@ -47,7 +44,7 @@ function WeaponService:GiveLoadout(player)
         end
     end
 
-    local loadout = self.DefaultLoadout
+    local loadout = Knit.GetService("LoadoutService"):Get(player)
     local first
     for _, slot in { "Primary", "Secondary" } do
         local template = self.Tools:FindFirstChild(loadout[slot])

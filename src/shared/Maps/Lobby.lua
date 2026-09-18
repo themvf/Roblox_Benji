@@ -43,6 +43,13 @@ return {
         },
     },
 
+    -- Weapon kiosk: walk up and press E to open the loadout picker
+    Kiosk = {
+        pos = { -44, 0, 12 }, -- counter center, on the floor
+        size = { 12, 3.5, 5 },
+        showcase = "AssaultRifle", -- model displayed on the counter
+    },
+
     -- Decorative structure so the hub reads as a place, not a slab
     Pieces = {
         { name = "BackWall", pos = { 0, 6, -44 }, size = { 120, 12, 2 }, color = "Wall" },

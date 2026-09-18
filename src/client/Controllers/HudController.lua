@@ -5,7 +5,26 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local HudController = Knit.CreateController({ Name = "HudController" })
 
+-- Slowly spin the kiosk showcase weapon so it catches the eye
+local function spinShowcase()
+    local RunService = game:GetService("RunService")
+    task.spawn(function()
+        local lobby = workspace:WaitForChild("Lobby", 30)
+        local show = lobby and lobby:WaitForChild("Showcase", 30)
+        if not show then
+            return
+        end
+        local pivot = show:GetPivot()
+        local angle = 0
+        RunService.Heartbeat:Connect(function(dt)
+            angle += dt * 0.6
+            show:PivotTo(CFrame.new(pivot.Position) * CFrame.Angles(0, angle, 0))
+        end)
+    end)
+end
+
 function HudController:KnitStart()
+    spinShowcase()
     local gui = Instance.new("ScreenGui")
     gui.Name = "Hud"
     gui.ResetOnSpawn = false

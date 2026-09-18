@@ -26,7 +26,7 @@ when one team is eliminated or the timer runs out, first team to 5 rounds wins.
 Mouse1 fire, Mouse2 aim, R reload, 1/2 switch weapons, Shift sprint. All handled by the Weapons Kit.
 
 ## Next steps
-- Lobby weapon kiosk with 3D preview, shooting range, leaderboard
+- Shooting range with target dummies, leaderboard, skins
 - Melee, utility, and projectile weapons (Rivals kit has these; the Weapons Kit supports bows and launchers)
 - Kits/abilities like Rivals (dash, grapple)
 - ProfileStore for saving wins, kills, and unlocked weapons

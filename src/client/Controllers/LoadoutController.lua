@@ -1,0 +1,344 @@
+-- Weapon kiosk screen: pick a primary and secondary with a big rotating 3D preview.
+-- Opens from the kiosk's ProximityPrompt in the lobby.
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local ProximityPromptService = game:GetService("ProximityPromptService")
+local UserInputService = game:GetService("UserInputService")
+local Knit = require(ReplicatedStorage.Packages.Knit)
+local Weapons = require(ReplicatedStorage.Shared.Weapons)
+
+local LoadoutController = Knit.CreateController({ Name = "LoadoutController" })
+
+local PANEL = Color3.fromRGB(28, 30, 38)
+local PANEL_LIGHT = Color3.fromRGB(44, 47, 58)
+local ACCENT = Color3.fromRGB(255, 200, 70)
+local PRIMARY = Color3.fromRGB(80, 230, 120)
+local SECONDARY = Color3.fromRGB(80, 150, 255)
+local TEXT = Color3.fromRGB(245, 245, 250)
+local MUTED = Color3.fromRGB(160, 165, 180)
+
+local function corner(inst, r)
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, r or 10)
+    c.Parent = inst
+end
+
+local function label(parent, text, size, color, font)
+    local l = Instance.new("TextLabel")
+    l.BackgroundTransparency = 1
+    l.Text = text
+    l.TextSize = size
+    l.TextColor3 = color or TEXT
+    l.Font = font or Enum.Font.GothamBold
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    l.Size = UDim2.new(1, 0, 0, size + 6)
+    l.Parent = parent
+    return l
+end
+
+-- Short human stat summary from the Rivals stats table
+local function statLines(stats)
+    local dmg = stats.Damage[1]
+    local shotDmg = dmg * stats.Pellets
+    local dps = shotDmg / stats.Cooldown
+    if stats.Burst then
+        dps = (shotDmg * stats.Burst) / stats.Cooldown
+    end
+    local mag = stats.Ammo[1] == math.huge and "Infinite" or tostring(stats.Ammo[1])
+    local mode = stats.Burst and ("Burst x" .. stats.Burst) or (stats.Auto and "Automatic" or "Semi-auto")
+    return {
+        ("Damage  %s%s"):format(dmg, stats.Pellets > 1 and (" x" .. stats.Pellets) or ""),
+        ("Headshot  %s"):format(stats.Crit[1] * stats.Pellets),
+        ("DPS  %d"):format(dps),
+        ("Fire  %s"):format(mode),
+        ("Mag  %s"):format(mag),
+        ("Reload  %.2fs"):format(stats.Reload),
+    }
+end
+
+function LoadoutController:BuildGui()
+    local player = Players.LocalPlayer
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "LoadoutGui"
+    gui.ResetOnSpawn = false
+    gui.Enabled = false
+    gui.IgnoreGuiInset = true
+    gui.DisplayOrder = 10
+    gui.Parent = player:WaitForChild("PlayerGui")
+    self.Gui = gui
+
+    local dim = Instance.new("Frame")
+    dim.Size = UDim2.fromScale(1, 1)
+    dim.BackgroundColor3 = Color3.new(0, 0, 0)
+    dim.BackgroundTransparency = 0.45
+    dim.Parent = gui
+
+    local panel = Instance.new("Frame")
+    panel.AnchorPoint = Vector2.new(0.5, 0.5)
+    panel.Position = UDim2.fromScale(0.5, 0.5)
+    panel.Size = UDim2.new(0.8, 0, 0.8, 0)
+    panel.BackgroundColor3 = PANEL
+    panel.Parent = dim
+    corner(panel, 16)
+
+    local title = label(panel, "WEAPONS", 34, ACCENT, Enum.Font.GothamBlack)
+    title.Position = UDim2.new(0, 24, 0, 14)
+    title.Size = UDim2.new(0.5, 0, 0, 40)
+
+    local close = Instance.new("TextButton")
+    close.AnchorPoint = Vector2.new(1, 0)
+    close.Position = UDim2.new(1, -16, 0, 14)
+    close.Size = UDim2.fromOffset(44, 44)
+    close.BackgroundColor3 = PANEL_LIGHT
+    close.Text = "X"
+    close.TextSize = 22
+    close.Font = Enum.Font.GothamBlack
+    close.TextColor3 = TEXT
+    close.Parent = panel
+    corner(close, 10)
+    close.Activated:Connect(function()
+        self:Close()
+    end)
+
+    -- Left: two columns of weapon buttons
+    local lists = Instance.new("Frame")
+    lists.Position = UDim2.new(0, 24, 0, 70)
+    lists.Size = UDim2.new(0.42, 0, 1, -140)
+    lists.BackgroundTransparency = 1
+    lists.Parent = panel
+
+    self.Columns = {}
+    for i, slot in { "Primary", "Secondary" } do
+        local col = Instance.new("ScrollingFrame")
+        col.Position = UDim2.new((i - 1) * 0.52, 0, 0, 0)
+        col.Size = UDim2.new(0.48, 0, 1, 0)
+        col.BackgroundTransparency = 1
+        col.ScrollBarThickness = 4
+        col.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        col.CanvasSize = UDim2.new()
+        col.Parent = lists
+        local layout = Instance.new("UIListLayout")
+        layout.Padding = UDim.new(0, 8)
+        layout.Parent = col
+        local head = label(col, slot:upper(), 18, slot == "Primary" and PRIMARY or SECONDARY, Enum.Font.GothamBlack)
+        head.LayoutOrder = 0
+        self.Columns[slot] = col
+    end
+
+    -- Right: 3D preview + stats
+    local preview = Instance.new("Frame")
+    preview.AnchorPoint = Vector2.new(1, 0)
+    preview.Position = UDim2.new(1, -24, 0, 70)
+    preview.Size = UDim2.new(0.52, 0, 1, -140)
+    preview.BackgroundColor3 = PANEL_LIGHT
+    preview.Parent = panel
+    corner(preview, 14)
+
+    local viewport = Instance.new("ViewportFrame")
+    viewport.Size = UDim2.new(1, 0, 0.62, 0)
+    viewport.BackgroundTransparency = 1
+    viewport.Ambient = Color3.fromRGB(200, 200, 210)
+    viewport.LightColor = Color3.fromRGB(255, 255, 255)
+    viewport.LightDirection = Vector3.new(-1, -1, -0.5)
+    viewport.Parent = preview
+    self.Viewport = viewport
+    local cam = Instance.new("Camera")
+    cam.Parent = viewport
+    viewport.CurrentCamera = cam
+    self.PreviewCamera = cam
+
+    local name = label(preview, "", 30, TEXT, Enum.Font.GothamBlack)
+    name.Position = UDim2.new(0, 20, 0.62, 0)
+    name.Size = UDim2.new(1, -40, 0, 40)
+    self.NameLabel = name
+
+    local stats = Instance.new("Frame")
+    stats.Position = UDim2.new(0, 20, 0.62, 44)
+    stats.Size = UDim2.new(1, -40, 0.38, -54)
+    stats.BackgroundTransparency = 1
+    stats.Parent = preview
+    local grid = Instance.new("UIGridLayout")
+    grid.CellSize = UDim2.new(0.5, -6, 0, 26)
+    grid.CellPadding = UDim2.fromOffset(6, 4)
+    grid.Parent = stats
+    self.StatLabels = {}
+    for i = 1, 6 do
+        local l = label(stats, "", 18, MUTED, Enum.Font.GothamMedium)
+        l.LayoutOrder = i
+        self.StatLabels[i] = l
+    end
+
+    -- Bottom: current loadout + confirm
+    local bar = Instance.new("Frame")
+    bar.AnchorPoint = Vector2.new(0, 1)
+    bar.Position = UDim2.new(0, 24, 1, -16)
+    bar.Size = UDim2.new(1, -48, 0, 50)
+    bar.BackgroundTransparency = 1
+    bar.Parent = panel
+
+    self.SummaryLabel = label(bar, "", 20, MUTED, Enum.Font.GothamMedium)
+    self.SummaryLabel.Size = UDim2.new(0.6, 0, 1, 0)
+    self.SummaryLabel.TextYAlignment = Enum.TextYAlignment.Center
+
+    local confirm = Instance.new("TextButton")
+    confirm.AnchorPoint = Vector2.new(1, 0)
+    confirm.Position = UDim2.new(1, 0, 0, 0)
+    confirm.Size = UDim2.new(0.3, 0, 1, 0)
+    confirm.BackgroundColor3 = ACCENT
+    confirm.Text = "EQUIP"
+    confirm.TextSize = 24
+    confirm.Font = Enum.Font.GothamBlack
+    confirm.TextColor3 = PANEL
+    confirm.Parent = bar
+    corner(confirm, 12)
+    confirm.Activated:Connect(function()
+        self:Confirm()
+    end)
+    self.ConfirmButton = confirm
+end
+
+function LoadoutController:MakeButton(slot, weaponName)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -8, 0, 46)
+    btn.BackgroundColor3 = PANEL_LIGHT
+    btn.Text = "  " .. weaponName:gsub("(%l)(%u)", "%1 %2")
+    btn.TextSize = 20
+    btn.Font = Enum.Font.GothamBold
+    btn.TextColor3 = TEXT
+    btn.TextXAlignment = Enum.TextXAlignment.Left
+    btn.AutoButtonColor = false
+    btn.Parent = self.Columns[slot]
+    corner(btn, 10)
+    local stripe = Instance.new("Frame")
+    stripe.Size = UDim2.new(0, 6, 1, 0)
+    stripe.BackgroundColor3 = slot == "Primary" and PRIMARY or SECONDARY
+    stripe.BorderSizePixel = 0
+    stripe.Visible = false
+    stripe.Parent = btn
+    corner(stripe, 6)
+    btn.Activated:Connect(function()
+        self.Selected[slot] = weaponName
+        self:Refresh()
+        self:Preview(weaponName)
+    end)
+    self.Buttons[slot][weaponName] = { Button = btn, Stripe = stripe }
+end
+
+function LoadoutController:Refresh()
+    for slot, set in self.Buttons do
+        for name, ui in set do
+            local on = self.Selected[slot] == name
+            ui.Stripe.Visible = on
+            ui.Button.BackgroundColor3 = on and Color3.fromRGB(62, 66, 82) or PANEL_LIGHT
+        end
+    end
+    self.SummaryLabel.Text = ("Primary: %s    Secondary: %s"):format(
+        self.Selected.Primary or "?",
+        self.Selected.Secondary or "?"
+    )
+end
+
+function LoadoutController:Preview(weaponName)
+    local viewport = self.Viewport
+    for _, c in viewport:GetChildren() do
+        if not c:IsA("Camera") then
+            c:Destroy()
+        end
+    end
+    local tool = ReplicatedStorage.WeaponTools:FindFirstChild(weaponName)
+    local source = tool and tool:FindFirstChildOfClass("Model")
+    if not source then
+        return
+    end
+    local model = source:Clone()
+    for _, d in model:GetDescendants() do
+        if d:IsA("Script") or d:IsA("LocalScript") or d:IsA("Sound") or d:IsA("Beam") then
+            d:Destroy()
+        end
+    end
+    model.Parent = viewport
+    local cf, size = model:GetBoundingBox()
+    self.PreviewModel = model
+    self.PreviewCenter = cf.Position
+    self.PreviewRadius = math.max(size.X, size.Y, size.Z)
+    self.PreviewPivot = cf
+
+    self.NameLabel.Text = weaponName:gsub("(%l)(%u)", "%1 %2"):upper()
+    local stats = Weapons[weaponName]
+    local lines = stats and statLines(stats) or {}
+    for i, l in self.StatLabels do
+        l.Text = lines[i] or ""
+    end
+end
+
+function LoadoutController:Confirm()
+    local sel = self.Selected
+    if not sel.Primary or not sel.Secondary then
+        return
+    end
+    self.ConfirmButton.Text = "..."
+    Knit.GetService("LoadoutService"):SetLoadout(sel.Primary, sel.Secondary):andThen(function(result)
+        self.ConfirmButton.Text = result and "EQUIPPED" or "INVALID"
+        task.delay(0.8, function()
+            self.ConfirmButton.Text = "EQUIP"
+            if result then
+                self:Close()
+            end
+        end)
+    end)
+end
+
+function LoadoutController:Open()
+    if self.Gui.Enabled then
+        return
+    end
+    local LoadoutService = Knit.GetService("LoadoutService")
+    LoadoutService:GetLoadout():andThen(function(current)
+        self.Selected = { Primary = current.Primary, Secondary = current.Secondary }
+        self:Refresh()
+        self:Preview(current.Primary)
+        self.Gui.Enabled = true
+        UserInputService.MouseIconEnabled = true
+    end)
+end
+
+function LoadoutController:Close()
+    self.Gui.Enabled = false
+end
+
+function LoadoutController:KnitStart()
+    self.Selected = {}
+    self.Buttons = { Primary = {}, Secondary = {} }
+    self:BuildGui()
+
+    Knit.GetService("LoadoutService"):GetOptions():andThen(function(options)
+        for _, slot in { "Primary", "Secondary" } do
+            for i, name in options[slot] do
+                self:MakeButton(slot, name)
+                self.Buttons[slot][name].Button.LayoutOrder = i
+            end
+        end
+    end)
+
+    -- Spin the preview
+    local angle = 0
+    RunService.RenderStepped:Connect(function(dt)
+        if not self.Gui.Enabled or not self.PreviewModel then
+            return
+        end
+        angle += dt * 0.8
+        local r = self.PreviewRadius * 1.15
+        local center = self.PreviewCenter
+        local eye = center + Vector3.new(math.cos(angle) * r, r * 0.35, math.sin(angle) * r)
+        self.PreviewCamera.CFrame = CFrame.lookAt(eye, center)
+    end)
+
+    ProximityPromptService.PromptTriggered:Connect(function(prompt)
+        if prompt.Name == "WeaponKiosk" then
+            self:Open()
+        end
+    end)
+end
+
+return LoadoutController

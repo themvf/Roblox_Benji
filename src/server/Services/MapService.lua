@@ -368,6 +368,91 @@ local function buildLobby(self, layout)
     for _, p in layout.Spawns do
         table.insert(self.LobbySpawns, v3(at(p)))
     end
+
+    -- Weapon kiosk
+    local k = layout.Kiosk
+    if k then
+        local counter = makePart(
+            folder,
+            "WeaponKiosk",
+            at({ k.pos[1], k.pos[2] + k.size[2] / 2, k.pos[3] }),
+            k.size,
+            nil,
+            pal.Pillar
+        )
+        local top = makePart(
+            folder,
+            "KioskTop",
+            at({ k.pos[1], k.pos[2] + k.size[2] + 0.2, k.pos[3] }),
+            { k.size[1] + 0.6, 0.4, k.size[3] + 0.6 },
+            nil,
+            pal.Accent,
+            Enum.Material.Neon
+        )
+        top.CanCollide = false
+        local backboard = makePart(
+            folder,
+            "KioskBoard",
+            at({ k.pos[1], k.pos[2] + 7, k.pos[3] - k.size[3] / 2 - 0.5 }),
+            { k.size[1], 6, 1 },
+            nil,
+            pal.Wall
+        )
+
+        local sign = Instance.new("SurfaceGui")
+        sign.Face = Enum.NormalId.Front
+        sign.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+        sign.PixelsPerStud = 40
+        sign.Parent = backboard
+        local text = Instance.new("TextLabel")
+        text.Size = UDim2.fromScale(1, 1)
+        text.BackgroundTransparency = 1
+        text.Text = "WEAPONS"
+        text.TextScaled = true
+        text.Font = Enum.Font.GothamBlack
+        text.TextColor3 = pal.Accent
+        text.Parent = sign
+
+        local prompt = Instance.new("ProximityPrompt")
+        prompt.Name = "WeaponKiosk"
+        prompt.ActionText = "Choose Loadout"
+        prompt.ObjectText = "Weapons"
+        prompt.KeyboardKeyCode = Enum.KeyCode.E
+        prompt.HoldDuration = 0
+        prompt.MaxActivationDistance = 12
+        prompt.RequiresLineOfSight = false
+        prompt.Parent = counter
+
+        -- Showcase model on the counter, scaled up so it reads from across the hub
+        local tool = ReplicatedStorage:FindFirstChild("WeaponTools")
+            and ReplicatedStorage.WeaponTools:FindFirstChild(k.showcase)
+        local source = tool and tool:FindFirstChildOfClass("Model")
+        if source then
+            local show = source:Clone()
+            show.Name = "Showcase"
+            for _, desc in show:GetDescendants() do
+                if desc:IsA("BasePart") then
+                    desc.Anchored = true
+                    desc.CanCollide = false
+                elseif
+                    desc:IsA("Script")
+                    or desc:IsA("LocalScript")
+                    or desc:IsA("Sound")
+                    or desc:IsA("ProximityPrompt")
+                then
+                    desc:Destroy()
+                end
+            end
+            show:ScaleTo(2.5)
+            local _, size = show:GetBoundingBox()
+            show:PivotTo(
+                CFrame.new(v3(at({ k.pos[1], k.pos[2] + k.size[2] + 0.4 + size.Y / 2 + 1, k.pos[3] })))
+                    * CFrame.Angles(0, math.rad(90), 0)
+            )
+            show.Parent = folder
+            self.Showcase = show
+        end
+    end
 end
 
 -- ===== Builder =====
