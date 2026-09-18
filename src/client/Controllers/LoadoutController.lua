@@ -17,6 +17,12 @@ local PRIMARY = Color3.fromRGB(80, 230, 120)
 local SECONDARY = Color3.fromRGB(80, 150, 255)
 local TEXT = Color3.fromRGB(245, 245, 250)
 local MUTED = Color3.fromRGB(160, 165, 180)
+local TIER_COLORS = {
+    Common = Color3.fromRGB(170, 175, 185),
+    Rare = Color3.fromRGB(80, 150, 255),
+    Legendary = Color3.fromRGB(255, 160, 60),
+    Mythical = Color3.fromRGB(230, 80, 255),
+}
 
 local function corner(inst, r)
     local c = Instance.new("UICorner")
@@ -155,7 +161,7 @@ function LoadoutController:BuildGui()
 
     local stats = Instance.new("Frame")
     stats.Position = UDim2.new(0, 20, 0.62, 44)
-    stats.Size = UDim2.new(1, -40, 0.38, -54)
+    stats.Size = UDim2.new(1, -40, 0.38, -110)
     stats.BackgroundTransparency = 1
     stats.Parent = preview
     local grid = Instance.new("UIGridLayout")
@@ -168,6 +174,24 @@ function LoadoutController:BuildGui()
         l.LayoutOrder = i
         self.StatLabels[i] = l
     end
+
+    -- Skins for the previewed weapon: one chip per skin, plus Default
+    local skinRow = Instance.new("ScrollingFrame")
+    skinRow.AnchorPoint = Vector2.new(0, 1)
+    skinRow.Position = UDim2.new(0, 20, 1, -12)
+    skinRow.Size = UDim2.new(1, -40, 0, 48)
+    skinRow.BackgroundTransparency = 1
+    skinRow.ScrollBarThickness = 3
+    skinRow.ScrollingDirection = Enum.ScrollingDirection.X
+    skinRow.AutomaticCanvasSize = Enum.AutomaticSize.X
+    skinRow.CanvasSize = UDim2.new()
+    skinRow.Parent = preview
+    local rowLayout = Instance.new("UIListLayout")
+    rowLayout.FillDirection = Enum.FillDirection.Horizontal
+    rowLayout.Padding = UDim.new(0, 8)
+    rowLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    rowLayout.Parent = skinRow
+    self.SkinRow = skinRow
 
     -- Bottom: current loadout + confirm
     local bar = Instance.new("Frame")
@@ -265,11 +289,61 @@ function LoadoutController:Preview(weaponName)
     self.PreviewPivot = cf
 
     self.NameLabel.Text = weaponName:gsub("(%l)(%u)", "%1 %2"):upper()
+    self.PreviewWeapon = weaponName
+    self:ShowSkins(weaponName)
     local stats = Weapons[weaponName]
     local lines = stats and statLines(stats) or {}
     for i, l in self.StatLabels do
         l.Text = lines[i] or ""
     end
+end
+
+local function prettyId(id)
+    -- skn_uzi_common_cobalt -> Cobalt
+    local word = id:match("_([a-z0-9]+)$") or id
+    return word:sub(1, 1):upper() .. word:sub(2)
+end
+
+function LoadoutController:ShowSkins(weaponName)
+    local row = self.SkinRow
+    for _, c in row:GetChildren() do
+        if c:IsA("TextButton") then
+            c:Destroy()
+        end
+    end
+    Knit.GetService("SkinService"):GetSkins(weaponName):andThen(function(list, current)
+        if self.PreviewWeapon ~= weaponName then
+            return
+        end
+        local function chip(text, color, skinId, order)
+            local b = Instance.new("TextButton")
+            b.Size = UDim2.fromOffset(math.max(96, #text * 11 + 24), 40)
+            b.BackgroundColor3 = (current == skinId) and color or PANEL
+            b.Text = text
+            b.TextSize = 16
+            b.Font = Enum.Font.GothamBold
+            b.TextColor3 = (current == skinId) and PANEL or color
+            b.AutoButtonColor = false
+            b.LayoutOrder = order
+            b.Parent = row
+            corner(b, 10)
+            local stroke = Instance.new("UIStroke")
+            stroke.Color = color
+            stroke.Thickness = 2
+            stroke.Parent = b
+            b.Activated:Connect(function()
+                Knit.GetService("SkinService"):SetSkin(weaponName, skinId):andThen(function(ok)
+                    if ok then
+                        self:ShowSkins(weaponName)
+                    end
+                end)
+            end)
+        end
+        chip("Default", MUTED, nil, 0)
+        for i, sk in list do
+            chip(prettyId(sk.Id) .. "  " .. sk.Tier, TIER_COLORS[sk.Tier] or MUTED, sk.Id, i)
+        end
+    end)
 end
 
 function LoadoutController:Confirm()

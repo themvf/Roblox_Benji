@@ -29,7 +29,10 @@ A skin is one module in `src/shared/Skins/Registry/` named after its Id (`skn_<w
 It declares a concept sentence, materials story, sound palette, and which of the nine systems it replaces.
 Rules enforced by the validator: no gameplay numbers anywhere, tier = lowest tier that admits the systems,
 tier must-replace sets, naming, and concept word present in the sentence. Run the check before committing.
-Debug: set the player attribute `Skin_<Weapon>` to a skin Id (or call SkinService:SetSkin from the client) and re-equip.
+Pick skins at the lobby kiosk: chips under the 3D preview, coloured by tier. Assets a skin references live in
+`assets/skins/Models/*.rbxm` (weapon Model templates with PrimaryPart, TipAttachment, HandleAttachment) and
+`assets/skins/Shots/*.rbxm` (shot effect templates), or use the kit's built-in shot effects by name.
+A system whose asset is still `TODO` is skipped at equip with one warning, so draft skins never break the game.
 
 ## Controls
 Mouse1 fire, Mouse2 aim, R reload, 1/2 switch weapons, Shift sprint. All handled by the Weapons Kit.

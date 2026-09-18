@@ -3,17 +3,38 @@
   "tree": {
     "$className": "DataModel",
     "ReplicatedStorage": {
-      "Packages": { "$path": "Packages" },
-      "Shared": { "$path": "src/shared" },
-      "WeaponTools": { "$path": "assets/weapons/tools" }
+      "Packages": {
+        "$path": "Packages"
+      },
+      "Shared": {
+        "$path": "src/shared"
+      },
+      "WeaponTools": {
+        "$path": "assets/weapons/tools"
+      },
+      "SkinAssets": {
+        "$className": "Folder",
+        "Models": {
+          "$path": "assets/skins/Models"
+        },
+        "Shots": {
+          "$path": "assets/skins/Shots"
+        }
+      }
     },
     "ServerScriptService": {
-      "Server": { "$path": "src/server" },
-      "WeaponsSystem": { "$path": "assets/WeaponsSystem.rbxm" }
+      "Server": {
+        "$path": "src/server"
+      },
+      "WeaponsSystem": {
+        "$path": "assets/WeaponsSystem.rbxm"
+      }
     },
     "StarterPlayer": {
       "StarterPlayerScripts": {
-        "Client": { "$path": "src/client" }
+        "Client": {
+          "$path": "src/client"
+        }
       }
     }
   }
