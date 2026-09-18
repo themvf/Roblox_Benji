@@ -24,6 +24,13 @@ when one team is eliminated or the timer runs out, first team to 5 rounds wins.
 - `src/shared/Skins/`          Skin registry + validator (the Weapon & Skin Design Spec as code)
 - `tools/check_skins.luau`     Build gate: `lune run tools/check_skins.luau` fails on any spec violation
 - `src/shared/Celebrations/`   Celebration registry + validator; `lune run tools/check_celebrations.luau`
+- `src/server/ProfileStore.luau` MadStudioRoblox ProfileStore (vendored); DataService saves loadout, favourites, skins, stats
+
+## Saving
+DataService loads a ProfileStore profile per player into attributes (`Loadout*`, `CelebrationFavorites`, `Skin_*`,
+`Wins`, `Kills`, `Matches`) and mirrors attribute changes back. In Studio, enable
+Game Settings > Security > "Enable Studio Access to API Services" to save for real; otherwise ProfileStore uses a
+mock store and prints a warning.
 
 ## Celebrations
 Winners pick from up to 3 favourites (kiosk, Celebration column; first = default) in a 3 s wheel after the final round,

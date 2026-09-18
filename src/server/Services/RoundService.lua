@@ -161,6 +161,14 @@ function RoundService:StartMatch(players, teamSize, mode)
                 end
                 return a.UserId < b.UserId
             end)
+            -- Lifetime stats (DataService mirrors these attributes into the profile)
+            for _, p in present(match) do
+                p:SetAttribute("Matches", (p:GetAttribute("Matches") or 0) + 1)
+                p:SetAttribute("Kills", (p:GetAttribute("Kills") or 0) + (p:GetAttribute("MatchKills") or 0))
+            end
+            for _, p in winners do
+                p:SetAttribute("Wins", (p:GetAttribute("Wins") or 0) + 1)
+            end
             Knit.GetService("CelebrationService"):Run(winners, losers)
         else
             task.wait(1)
@@ -183,6 +191,14 @@ function RoundService:KnitStart()
     Players.CharacterAutoLoads = false -- we decide where and when characters spawn
 
     local function onPlayer(player)
+        -- Let DataService load the profile first so the first spawn has the saved loadout
+        local t0 = os.clock()
+        while player.Parent and not player:GetAttribute("DataLoaded") and os.clock() - t0 < 15 do
+            task.wait(0.1)
+        end
+        if not player.Parent then
+            return
+        end
         player:SetAttribute("Team", "Lobby")
         player.CharacterAdded:Connect(function(character)
             local hum = character:WaitForChild("Humanoid")

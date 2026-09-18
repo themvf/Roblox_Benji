@@ -478,12 +478,23 @@ function LoadoutController:Open()
         self:Refresh()
         self:Preview(current.Primary)
         self.Gui.Enabled = true
-        UserInputService.MouseIconEnabled = true
+        -- The Weapons Kit re-locks the cursor every frame while a gun is held. Put it away
+        -- and force the cursor free after the camera step, for as long as the kiosk is open.
+        local character = Players.LocalPlayer.Character
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid:UnequipTools()
+        end
+        RunService:BindToRenderStep("KioskMouse", Enum.RenderPriority.Last.Value, function()
+            UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+            UserInputService.MouseIconEnabled = true
+        end)
     end)
 end
 
 function LoadoutController:Close()
     self.Gui.Enabled = false
+    RunService:UnbindFromRenderStep("KioskMouse")
 end
 
 function LoadoutController:KnitStart()
