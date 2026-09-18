@@ -41,7 +41,7 @@
           "Convergence_StackBonus": 0.5,
           "Convergence_MaxStack": 3,
           "Convergence_ZoneCloseWarningSeconds": 15,
-          "Convergence_RespawnSeconds": 5,
+          "Convergence_RespawnSeconds": 3.5,
           "Convergence_SpawnProtectSeconds": 2,
           "Convergence_BotsPerTeam": 0
         }

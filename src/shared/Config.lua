@@ -25,7 +25,7 @@ local Config = {
         StackBonus = 0.5, -- +50% speed per extra teammate in the zone
         MaxStack = 3, -- teammates counted for speed
         ZoneCloseWarningSeconds = 15,
-        RespawnSeconds = 5,
+        RespawnSeconds = 3.5,
         SpawnProtectSeconds = 2,
         BotsPerTeam = 0, -- test bots per team (chat: /bots N)
     },

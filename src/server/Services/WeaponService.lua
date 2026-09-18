@@ -21,6 +21,7 @@ local function onDamage(_system, target, amount, _damageType, dealer, hitInfo, w
     end
     if dealer and dealer:IsA("Player") and target.Parent then
         target.Parent:SetAttribute("LastHitBy", dealer.UserId)
+        target.Parent:SetAttribute("LastHitByName", dealer.Name)
     end
     local part = hitInfo and hitInfo.part
     if part and part.Name == "Head" and weaponInstance then
