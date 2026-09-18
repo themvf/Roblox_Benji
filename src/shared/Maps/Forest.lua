@@ -9,8 +9,15 @@ return {
     Seed = 1337, -- change for a different tree/rock arrangement
 
     Spawns = {
-        Red = { { -100, 4, -14 }, { -100, 4, 0 }, { -100, 4, 14 } },
-        Blue = { { 100, 4, -14 }, { 100, 4, 0 }, { 100, 4, 14 } },
+        Red = { { -100, 4, -14 }, { -100, 4, 0 }, { -100, 4, 14 }, { -108, 4, -7 }, { -108, 4, 7 }, { -104, 4, 20 } },
+        Blue = { { 100, 4, -14 }, { 100, 4, 0 }, { 100, 4, 14 }, { 108, 4, -7 }, { 108, 4, 7 }, { 104, 4, 20 } },
+    },
+
+    -- Convergence objectives, all on the centre line: North perch side -> South -> the Lake last
+    Objectives = {
+        { Name = "North Ridge", pos = { 0, 0, -58 }, radius = 14, Phases = { 1 } },
+        { Name = "South Ridge", pos = { 0, 0, 58 }, radius = 14, Phases = { 1, 2 } },
+        { Name = "The Lake", pos = { 0, 0, 0 }, radius = 18, Phases = { 1, 2, 3 } },
     },
 
     -- Rivals look: bright midday, no fog, saturated color blocks, glowing indicators.

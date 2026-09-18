@@ -12,7 +12,7 @@ when one team is eliminated or the timer runs out, first team to 5 rounds wins.
    rojo serve
    ```
 3. In Roblox Studio, install the Rojo plugin (Plugins > Rojo > Connect) while `rojo serve` is running.
-4. Test with Test > Clients and Servers (2+ players). Everyone spawns in the lobby; walk onto the RED or BLUE half of the green pad (1v1) or blue pad (2v2) to queue on that team; friends stand on the same half.
+4. Test with Test > Clients and Servers (2+ players). Everyone spawns in the lobby; stand on the RED or BLUE half of the big gold CONVERGENCE pad (or a DUEL side pad) to queue on that team; friends stand on the same half.
 
 ## Layout
 - `src/server/Services`   Knit services. QueueService watches the lobby pads, RoundService runs a match, MapService builds arena + lobby, WeaponService hooks the Weapons Kit.
@@ -41,6 +41,15 @@ DataService loads a ProfileStore profile per player into attributes (`Loadout*`,
 `Wins`, `Kills`, `Matches`) and mirrors attribute changes back. In Studio, enable
 Game Settings > Security > "Enable Studio Access to API Services" to save for real; otherwise ProfileStore uses a
 mock store and prints a warning.
+
+## Modes
+- **Convergence (featured)**: 6v6 objective battle, starts at 4v4 after a 30 s wait. Three capture zones close
+  3 -> 2 -> 1 over three 3-minute phases; held zones score 1/s, kills 5; first to 1200 or highest at the 12-minute
+  cap, with up to 60 s overtime if the final zone is in play. Respawns 5 s with 2 s protection. Capture: 8 s solo
+  from neutral, +50% per teammate (max 3), enemy points neutralize first, contested freezes, empty holds.
+  Every rule is a `Convergence_*` attribute on `ReplicatedStorage.Tuning`. Any map with an `Objectives` table works;
+  `Carrier` is the first built for it (Flight Deck -> Hangar -> Bridge).
+- **Duel**: 1v1 / 2v2 elimination, first to 5 rounds. Side pads in the lobby.
 
 ## Maps
 `Config.Maps` lists the rotation; each match picks one at random (never the same twice in a row) and rebuilds the

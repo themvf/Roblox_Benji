@@ -28,7 +28,21 @@
           "IntermissionSeconds": 5,
           "RoundSeconds": 90,
           "RoundsToWin": 5,
-          "RespawnSeconds": 3
+          "RespawnSeconds": 3,
+          "Convergence_TeamSize": 6,
+          "Convergence_MinTeamSize": 4,
+          "Convergence_FillWaitSeconds": 30,
+          "Convergence_HardCapSeconds": 720,
+          "Convergence_OvertimeMaxSeconds": 60,
+          "Convergence_ScoreToWin": 1200,
+          "Convergence_PointsPerZonePerSecond": 1,
+          "Convergence_KillPoints": 5,
+          "Convergence_CaptureSeconds": 8,
+          "Convergence_StackBonus": 0.5,
+          "Convergence_MaxStack": 3,
+          "Convergence_ZoneCloseWarningSeconds": 15,
+          "Convergence_RespawnSeconds": 5,
+          "Convergence_SpawnProtectSeconds": 2
         }
       },
       "Uploads": {

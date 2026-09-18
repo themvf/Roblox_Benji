@@ -27,6 +27,12 @@ function TuningService:KnitInit()
             tuning:SetAttribute(key, Config[key])
         end
     end
+    local conv = Config.Convergence
+    for _, key in Config.CONVERGENCE_TUNABLE do
+        if tuning:GetAttribute("Convergence_" .. key) == nil then
+            tuning:SetAttribute("Convergence_" .. key, conv[key])
+        end
+    end
     local note = tuning:FindFirstChild("README")
     if not note then
         note = Instance.new("StringValue")

@@ -8,8 +8,14 @@ return {
 
     -- Red spawns at -X, Blue at +X. Facing is toward the center.
     Spawns = {
-        Red = { { -95, 3, -12 }, { -95, 3, 0 }, { -95, 3, 12 } },
-        Blue = { { 95, 3, -12 }, { 95, 3, 0 }, { 95, 3, 12 } },
+        Red = { { -95, 3, -12 }, { -95, 3, 0 }, { -95, 3, 12 }, { -100, 3, -6 }, { -100, 3, 6 }, { -98, 3, 18 } },
+        Blue = { { 95, 3, -12 }, { 95, 3, 0 }, { 95, 3, 12 }, { 100, 3, -6 }, { 100, 3, 6 }, { 98, 3, 18 } },
+    },
+
+    Objectives = {
+        { Name = "North", pos = { 0, 0, -45 }, radius = 12, Phases = { 1 } },
+        { Name = "South", pos = { 0, 0, 45 }, radius = 12, Phases = { 1, 2 } },
+        { Name = "Mid", pos = { 0, 4, 0 }, radius = 14, Phases = { 1, 2, 3 } },
     },
 
     -- Pieces placed once, on the center line.

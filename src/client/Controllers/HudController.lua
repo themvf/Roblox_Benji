@@ -65,6 +65,8 @@ function HudController:KnitStart()
         if s == "Intermission" and data.Map then
             text = ("%s  Next map: %s"):format(data.Mode or "", data.Map)
         end
+        -- Convergence has its own top bar; keep this label out of the way during play
+        state.Visible = not (data.Mode == "Convergence" and s == "Round")
         -- Countdown for any state that carries a Time (Intermission, Round)
         if data.Time then
             deadline = os.clock() + data.Time

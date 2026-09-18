@@ -24,8 +24,10 @@ local WOOD = Color3.fromRGB(110, 75, 45)
 local NEEDLE = { Color3.fromRGB(34, 68, 44), Color3.fromRGB(42, 80, 50), Color3.fromRGB(28, 58, 40) }
 local MARKER = Color3.fromRGB(255, 240, 80)
 local MOUNTAIN = nil
+local PALETTE = {} -- full palette table for blocks that name a colour
 
 local function applyPalette(pal)
+    PALETTE = pal or {}
     if not pal then
         return
     end
@@ -217,12 +219,22 @@ local function buildTerrain(layout)
     terrain.WaterColor = Color3.fromRGB(70, 180, 255)
     terrain.WaterTransparency = 0.6
     terrain.WaterReflectance = 0.4
-    -- Ground slab, extended well past the walls so the backdrop has a floor
-    terrain:FillBlock(CFrame.new(0, -6, 0), Vector3.new(layout.Size * 4, 12, layout.Size * 4), t.GroundMaterial)
-    for _, h in t.Hills do
+    if t.Sea then
+        -- open water far below the structure, out to the horizon
+        local level = t.SeaLevel or -30
+        terrain:FillBlock(
+            CFrame.new(0, level - 20, 0),
+            Vector3.new(layout.Size * 6, 40, layout.Size * 6),
+            Enum.Material.Water
+        )
+    else
+        -- Ground slab, extended well past the walls so the backdrop has a floor
+        terrain:FillBlock(CFrame.new(0, -6, 0), Vector3.new(layout.Size * 4, 12, layout.Size * 4), t.GroundMaterial)
+    end
+    for _, h in t.Hills or {} do
         terrain:FillBall(Vector3.new(h[1], h[2], h[3]), h[4], t.GroundMaterial)
     end
-    for _, m in t.Mountains do
+    for _, m in t.Mountains or {} do
         terrain:FillBall(Vector3.new(m[1], m[2], m[3]), m[4], Enum.Material.Rock)
     end
     if t.Lake then
@@ -369,11 +381,10 @@ local function buildLobby(self, layout)
                 TEAM_COLORS[side.team],
                 Enum.Material.Neon
             )
-            floorLabel(
-                part,
-                side.team:upper() .. "\n" .. spec.teamSize .. (spec.teamSize == 1 and " PLAYER" or " PLAYERS"),
-                Color3.fromRGB(20, 24, 30)
-            )
+            local count = (spec.minTeamSize and spec.minTeamSize < spec.teamSize)
+                    and (spec.minTeamSize .. "-" .. spec.teamSize .. " PLAYERS")
+                or (spec.teamSize .. (spec.teamSize == 1 and " PLAYER" or " PLAYERS"))
+            floorLabel(part, side.team:upper() .. "\n" .. count, Color3.fromRGB(20, 24, 30))
             sides[side.team] = part
         end
 
@@ -389,8 +400,8 @@ local function buildLobby(self, layout)
         anchor.Transparency = 1
         local sign = Instance.new("BillboardGui")
         sign.Name = "Sign"
-        sign.Size = UDim2.fromOffset(280, 100)
-        sign.StudsOffset = Vector3.new(0, 7, 0)
+        sign.Size = spec.featured and UDim2.fromOffset(420, 150) or UDim2.fromOffset(280, 100)
+        sign.StudsOffset = Vector3.new(0, spec.featured and 10 or 7, 0)
         sign.AlwaysOnTop = true
         sign.MaxDistance = 200
         sign.Parent = anchor
@@ -403,8 +414,40 @@ local function buildLobby(self, layout)
         label.TextStrokeTransparency = 0.3
         label.Text = spec.mode
         label.Parent = sign
+        if spec.featured then
+            local tag = Instance.new("TextLabel")
+            tag.AnchorPoint = Vector2.new(0.5, 0)
+            tag.Position = UDim2.new(0.5, 0, 0, -26)
+            tag.Size = UDim2.new(1, 0, 0, 24)
+            tag.BackgroundTransparency = 1
+            tag.Text = "FEATURED"
+            tag.TextScaled = true
+            tag.Font = Enum.Font.GothamBlack
+            tag.TextColor3 = Color3.fromRGB(255, 200, 70)
+            tag.TextStrokeTransparency = 0.3
+            tag.Parent = sign
+            -- gold frame around the whole featured pad
+            local frame = makePart(
+                folder,
+                spec.name .. "Frame",
+                at({ spec.pos[1], spec.pos[2] + 0.05, spec.pos[3] }),
+                { w + 6, 0.15, d + 6 },
+                nil,
+                Color3.fromRGB(255, 200, 70),
+                Enum.Material.Neon
+            )
+            frame.Transparency = 0.4
+            frame.CanCollide = false
+        end
 
-        table.insert(self.Pads, { Sides = sides, Label = label, Mode = spec.mode, TeamSize = spec.teamSize })
+        table.insert(self.Pads, {
+            Sides = sides,
+            Label = label,
+            Mode = spec.mode,
+            Kind = spec.kind or "Duel",
+            TeamSize = spec.teamSize,
+            MinTeamSize = spec.minTeamSize or spec.teamSize,
+        })
     end
 
     self.LobbySpawns = {}
@@ -509,11 +552,18 @@ local function placePiece(folder, prefix, piece, rng, mirrored)
     local name = prefix .. (piece.name or piece.kind)
     local kind = piece.kind or "block"
     if kind == "block" then
-        local tint = mirrored and Color3.fromRGB(140, 160, 190) or Color3.fromRGB(190, 140, 140)
-        if prefix == "" then
-            tint = Color3.fromRGB(190, 190, 120)
+        local tint
+        if type(piece.color) == "string" then
+            tint = PALETTE[piece.color] or GREY
+        elseif typeof(piece.color) == "Color3" then
+            tint = piece.color
+        else
+            tint = mirrored and Color3.fromRGB(140, 160, 190) or Color3.fromRGB(190, 140, 140)
+            if prefix == "" then
+                tint = Color3.fromRGB(190, 190, 120)
+            end
         end
-        makePart(folder, name, pos, piece.size, rot, tint)
+        makePart(folder, name, pos, piece.size, rot, tint, piece.material and Enum.Material[piece.material] or nil)
     elseif kind == "rock" then
         makeRock(folder, name, pos, piece.size, rot, rng)
     elseif kind == "log" then
@@ -541,6 +591,12 @@ function MapService:Build(layout)
     local rng = Random.new(layout.Seed or 0)
     local themed = layout.Terrain ~= nil
     applyPalette(layout.Palette)
+
+    -- Objectives for ConvergenceService (absolute positions)
+    self.Objectives = {}
+    for _, o in layout.Objectives or {} do
+        table.insert(self.Objectives, { Name = o.Name, Position = v3(o.pos), Radius = o.radius, Phases = o.Phases })
+    end
 
     if themed then
         buildTerrain(layout)

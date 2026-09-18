@@ -26,20 +26,35 @@ return {
     -- Matchmaking pads. Each has a Red half and a Blue half; stand on a half to queue for
     -- that mode on that team. Green ring = 1v1, blue ring = 2v2. Size is the whole pad.
     Pads = {
+        -- FEATURED: Convergence, 6v6 objective battle (starts at 4v4 after a wait). Big, central, gold-framed.
+        {
+            name = "PadConvergence",
+            kind = "Convergence",
+            mode = "CONVERGENCE",
+            featured = true,
+            teamSize = 6,
+            minTeamSize = 4,
+            pos = { 0, 0, -18 },
+            size = { 44, 1, 22 },
+            color = Color3.fromRGB(255, 200, 70),
+        },
+        -- Duel: elimination, smaller side pads
         {
             name = "Pad1v1",
-            mode = "1v1",
+            kind = "Duel",
+            mode = "DUEL 1v1",
             teamSize = 1,
-            pos = { -22, 0, -10 },
-            size = { 22, 1, 14 },
+            pos = { -44, 0, -24 },
+            size = { 16, 1, 12 },
             color = Color3.fromRGB(80, 230, 120),
         },
         {
             name = "Pad2v2",
-            mode = "2v2",
+            kind = "Duel",
+            mode = "DUEL 2v2",
             teamSize = 2,
-            pos = { 22, 0, -10 },
-            size = { 22, 1, 14 },
+            pos = { 44, 0, -24 },
+            size = { 16, 1, 12 },
             color = Color3.fromRGB(80, 150, 255),
         },
     },

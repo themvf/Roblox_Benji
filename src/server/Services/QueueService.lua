@@ -4,8 +4,23 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Config = require(ReplicatedStorage.Shared.Config)
 
 local QueueService = Knit.CreateService({ Name = "QueueService" })
+
+local fillSince = {} -- [pad] = os.clock() when both sides first reached MinTeamSize
+local lastConvergenceMap = nil
+
+local function pickConvergenceMap()
+    local choices = {}
+    for _, name in Config.ConvergenceMaps or { "Forest" } do
+        if name ~= lastConvergenceMap or #Config.ConvergenceMaps == 1 then
+            table.insert(choices, name)
+        end
+    end
+    lastConvergenceMap = choices[math.random(#choices)]
+    return lastConvergenceMap
+end
 
 local CHECK_INTERVAL = 0.25
 
@@ -46,31 +61,57 @@ function QueueService:KnitStart()
                 end
 
                 local need = pad.TeamSize
+                local minNeed = pad.MinTeamSize or need
                 local red, blue = #queued.Red, #queued.Blue
+                local full = red >= need and blue >= need
+                local viable = red >= minNeed and blue >= minNeed
+                local rules = Config.GetConvergence()
+                local waitLeft = nil
+                if viable and not full and pad.Kind == "Convergence" then
+                    fillSince[pad] = fillSince[pad] or os.clock()
+                    waitLeft = math.max(0, rules.FillWaitSeconds - (os.clock() - fillSince[pad]))
+                else
+                    fillSince[pad] = nil
+                end
+
                 local status
                 if RoundService.Busy then
                     status = "Match in progress"
-                elseif red >= need and blue >= need then
+                elseif full then
                     status = "Starting..."
+                elseif waitLeft then
+                    status = ("Red %d   Blue %d   starting in %ds (or when full)"):format(
+                        red,
+                        blue,
+                        math.ceil(waitLeft)
+                    )
                 elseif red == 0 and blue == 0 then
-                    status = ("Pick a side  (%d per team)"):format(need)
+                    status = minNeed < need and ("Pick a side  (%d-%d per team)"):format(minNeed, need)
+                        or ("Pick a side  (%d per team)"):format(need)
                 else
                     status = ("Red %d/%d   Blue %d/%d"):format(math.min(red, need), need, math.min(blue, need), need)
                 end
                 pad.Label.Text = pad.Mode .. "\n" .. status
 
-                if red >= need and blue >= need and not RoundService.Busy then
+                local go = not RoundService.Busy and (full or (waitLeft ~= nil and waitLeft <= 0))
+                if go then
+                    fillSince[pad] = nil
                     table.sort(queued.Red, byJoinOrder)
                     table.sort(queued.Blue, byJoinOrder)
+                    local n = math.min(red, blue, need) -- balanced teams
                     local picked = {}
-                    for i = 1, need do
+                    for i = 1, n do
                         table.insert(picked, queued.Red[i])
                     end
-                    for i = 1, need do
+                    for i = 1, n do
                         table.insert(picked, queued.Blue[i])
                     end
-                    -- RoundService assigns the first teamSize players to Red, the rest to Blue
-                    RoundService:StartMatch(picked, pad.TeamSize, pad.Mode)
+                    -- The mode assigns the first n players to Red, the rest to Blue
+                    if pad.Kind == "Convergence" then
+                        Knit.GetService("ConvergenceService"):StartMatch(picked, n, pickConvergenceMap())
+                    else
+                        RoundService:StartMatch(picked, n, pad.Mode)
+                    end
                 end
             end
         end

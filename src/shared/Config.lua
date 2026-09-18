@@ -1,12 +1,51 @@
 -- Tune the game here, or in Studio: ReplicatedStorage.Tuning attributes override these
 -- values at runtime (TuningService creates that Configuration on first run).
 local Config = {
+    -- Duel (elimination) mode
     IntermissionSeconds = 5, -- countdown after a queue fills, before round 1
     RoundSeconds = 90,
     RoundsToWin = 5,
-    RespawnSeconds = 3, -- lobby respawn only; in a match you wait for the next round
+    RespawnSeconds = 3, -- lobby respawn only; in a Duel you wait for the next round
     Teams = { "Red", "Blue" },
-    Maps = { "Forest", "Snow", "Arena" }, -- one is picked at random per match (never the same twice in a row)
+    Maps = { "Forest", "Snow", "Arena" }, -- Duel rotation
+
+    -- Convergence (featured objective mode). Every number here is a Tuning attribute too.
+    ConvergenceMaps = { "Carrier", "Forest", "Snow" },
+    Convergence = {
+        TeamSize = 6, -- design target
+        MinTeamSize = 4, -- low-population fallback
+        FillWaitSeconds = 30, -- once both sides have MinTeamSize, start after this even if not full
+        PhaseSeconds = { 180, 180, 180 }, -- 3 zones -> 2 zones -> 1 zone
+        HardCapSeconds = 720, -- 12 min
+        OvertimeMaxSeconds = 60,
+        ScoreToWin = 1200,
+        PointsPerZonePerSecond = 1,
+        KillPoints = 5,
+        CaptureSeconds = 8, -- solo, neutral -> owned (enemy -> neutral takes the same again)
+        StackBonus = 0.5, -- +50% speed per extra teammate in the zone
+        MaxStack = 3, -- teammates counted for speed
+        ZoneCloseWarningSeconds = 15,
+        RespawnSeconds = 5,
+        SpawnProtectSeconds = 2,
+    },
+}
+
+-- Convergence keys exposed as flat Tuning attributes (Convergence_<Key>)
+Config.CONVERGENCE_TUNABLE = {
+    "TeamSize",
+    "MinTeamSize",
+    "FillWaitSeconds",
+    "HardCapSeconds",
+    "OvertimeMaxSeconds",
+    "ScoreToWin",
+    "PointsPerZonePerSecond",
+    "KillPoints",
+    "CaptureSeconds",
+    "StackBonus",
+    "MaxStack",
+    "ZoneCloseWarningSeconds",
+    "RespawnSeconds",
+    "SpawnProtectSeconds",
 }
 
 local overrides = nil
@@ -14,6 +53,23 @@ local overrides = nil
 -- Called by TuningService with the Configuration instance; reads are live thereafter.
 function Config.SetOverrideSource(inst)
     overrides = inst
+end
+
+-- Convergence settings with Tuning overrides applied
+function Config.GetConvergence()
+    local out = {}
+    for k, v in Config.Convergence do
+        out[k] = v
+    end
+    if overrides then
+        for _, key in Config.CONVERGENCE_TUNABLE do
+            local v = overrides:GetAttribute("Convergence_" .. key)
+            if v ~= nil then
+                out[key] = v
+            end
+        end
+    end
+    return out
 end
 
 return setmetatable({}, {
