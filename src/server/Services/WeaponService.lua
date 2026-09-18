@@ -46,8 +46,8 @@ function WeaponService:GiveLoadout(player)
 
     local loadout = Knit.GetService("LoadoutService"):Get(player)
     local first
-    for _, slot in { "Primary", "Secondary" } do
-        local template = self.Tools:FindFirstChild(loadout[slot])
+    for _, slot in { "Primary", "Secondary", "Melee", "Utility" } do
+        local template = loadout[slot] and self.Tools:FindFirstChild(loadout[slot])
         if template then
             local tool = template:Clone()
             Knit.GetService("SkinService"):Apply(tool, player)

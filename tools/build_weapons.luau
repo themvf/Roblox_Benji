@@ -6,6 +6,10 @@
 local fs = require("@lune/fs")
 local roblox = require("@lune/roblox")
 local Instance = roblox.Instance
+local Enum = roblox.Enum
+local Vector3 = roblox.Vector3
+local CFrame = roblox.CFrame
+local Color3 = roblox.Color3
 local Weapons = require("../src/shared/Weapons")
 
 -- Rivals weapon -> kit model to start from
@@ -113,8 +117,69 @@ do
     print("wrote assets/WeaponsSystem.rbxm")
 end
 
--- 2. One clean Tool per Rivals weapon
+-- 2a. Melee tools built from parts (no kit involvement; MeleeService drives them)
 fs.writeDir("assets/weapons/tools")
+local function part(name, size, color, material, shape)
+    local p = Instance.new("Part")
+    p.Name = name
+    p.Size = size
+    p.Color = color
+    p.Material = material or Enum.Material.SmoothPlastic
+    p.CanCollide = false
+    p.Massless = true
+    if shape then
+        p.Shape = shape
+    end
+    return p
+end
+
+local function weld(a, b, c0)
+    local w = Instance.new("Weld")
+    w.Part0 = a
+    w.Part1 = b
+    w.C0 = c0
+    w.Parent = a
+end
+
+local function buildKatana()
+    local tool = Instance.new("Tool")
+    tool.Name = "Katana"
+    tool.RequiresHandle = true
+    tool.CanBeDropped = false
+    tool.ManualActivationOnly = true
+    tool.Grip = CFrame.new(0, -0.3, 0) * CFrame.Angles(0, 0, math.rad(0))
+    tool:SetAttribute("WeaponClass", "Melee")
+
+    local handle = part("Handle", Vector3.new(0.3, 1.3, 0.3), Color3.fromRGB(40, 40, 48), Enum.Material.Fabric)
+    handle.Parent = tool
+    local guard = part("Guard", Vector3.new(0.9, 0.15, 0.6), Color3.fromRGB(220, 180, 70), Enum.Material.Metal)
+    guard.Parent = tool
+    weld(handle, guard, CFrame.new(0, 0.75, 0))
+    local blade = part("Blade", Vector3.new(0.12, 4.2, 0.55), Color3.fromRGB(235, 240, 250), Enum.Material.Metal)
+    blade.Parent = tool
+    weld(handle, blade, CFrame.new(0, 2.95, 0) * CFrame.Angles(0, 0, math.rad(2)))
+    local edge = part("Edge", Vector3.new(0.05, 4.1, 0.12), Color3.fromRGB(120, 220, 255), Enum.Material.Neon)
+    edge.Parent = tool
+    weld(handle, edge, CFrame.new(0, 2.95, -0.28) * CFrame.Angles(0, 0, math.rad(2)))
+    local pommel = part("Pommel", Vector3.new(0.35, 0.2, 0.35), Color3.fromRGB(220, 180, 70), Enum.Material.Metal)
+    pommel.Parent = tool
+    weld(handle, pommel, CFrame.new(0, -0.7, 0))
+
+    -- Preview model for the kiosk viewport (same parts, grouped)
+    local model = Instance.new("Model")
+    model.Name = "Katana"
+    for _, p in { handle, guard, blade, edge, pommel } do
+        p:Clone().Parent = model
+    end
+    model.PrimaryPart = model:FindFirstChild("Handle")
+    model.Parent = tool
+    return tool
+end
+
+fs.writeFile("assets/weapons/tools/Katana.rbxm", roblox.serializeModel({ buildKatana() }))
+print("wrote assets/weapons/tools/Katana.rbxm")
+
+-- 2b. One clean Tool per Rivals gun, from the kit models
 local count = 0
 for name, base in BASE do
     local stats = Weapons[name]

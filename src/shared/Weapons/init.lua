@@ -231,6 +231,30 @@ Weapons.EnergyPistols = {
     Auto = true,
 }
 
+-- ===== Melee =====
+-- Type = "Melee" routes the weapon to MeleeService instead of the Weapons Kit.
+-- Range is reach in studs, Arc the swing width in degrees, Cooldown the swing time.
+Weapons.Katana = {
+    Slot = "Melee",
+    Type = "Melee",
+    Damage = { 45, 45 },
+    Crit = { 45, 45 },
+    DropoffStart = math.huge,
+    DropoffEnd = math.huge,
+    Cooldown = 0.5,
+    Spread = 0,
+    Pellets = 1,
+    Ammo = { math.huge, math.huge },
+    Reload = 0,
+    EquipTime = 0.3,
+    MoveSpeed = 0.05,
+    Auto = true,
+    Range = 9,
+    Arc = 120,
+}
+
+Weapons.SLOTS = { "Primary", "Secondary", "Melee", "Utility" }
+
 -- Damage for one pellet at a given distance, with headshot crit.
 function Weapons.DamageAt(stats, distance, headshot)
     local near, far = table.unpack(headshot and stats.Crit or stats.Damage)

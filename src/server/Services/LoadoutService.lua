@@ -8,11 +8,15 @@ local LoadoutService = Knit.CreateService({
     Client = {},
 })
 
-local DEFAULT = { Primary = "AssaultRifle", Secondary = "Handgun" }
+local DEFAULT = { Primary = "AssaultRifle", Secondary = "Handgun", Melee = "Katana", Utility = nil }
+local SLOTS = Weapons.SLOTS
 
 local function available()
     local tools = ReplicatedStorage:FindFirstChild("WeaponTools")
-    local out = { Primary = {}, Secondary = {} }
+    local out = {}
+    for _, slot in SLOTS do
+        out[slot] = {}
+    end
     if not tools then
         return out
     end
@@ -22,16 +26,22 @@ local function available()
             table.insert(out[stats.Slot], tool.Name)
         end
     end
-    table.sort(out.Primary)
-    table.sort(out.Secondary)
+    for _, slot in SLOTS do
+        table.sort(out[slot])
+    end
     return out
 end
 
 function LoadoutService:Get(player)
-    return {
-        Primary = player:GetAttribute("LoadoutPrimary") or DEFAULT.Primary,
-        Secondary = player:GetAttribute("LoadoutSecondary") or DEFAULT.Secondary,
-    }
+    local out = {}
+    for _, slot in SLOTS do
+        local v = player:GetAttribute("Loadout" .. slot)
+        if v == "" then
+            v = nil
+        end
+        out[slot] = v or DEFAULT[slot]
+    end
+    return out
 end
 
 function LoadoutService.Client:GetOptions(_player)
@@ -42,14 +52,26 @@ function LoadoutService.Client:GetLoadout(player)
     return self.Server:Get(player)
 end
 
--- Returns the saved loadout, or nil if a pick was invalid.
-function LoadoutService.Client:SetLoadout(player, primary, secondary)
-    local options = available()
-    if not table.find(options.Primary, primary) or not table.find(options.Secondary, secondary) then
+-- picks = { Primary = name, Secondary = name, Melee = name?, Utility = name? }
+-- Returns the saved loadout, or nil if a pick was invalid. Primary and Secondary are required.
+function LoadoutService.Client:SetLoadout(player, picks)
+    if type(picks) ~= "table" then
         return nil
     end
-    player:SetAttribute("LoadoutPrimary", primary)
-    player:SetAttribute("LoadoutSecondary", secondary)
+    local options = available()
+    for _, slot in SLOTS do
+        local pick = picks[slot]
+        local required = slot == "Primary" or slot == "Secondary"
+        if pick ~= nil and not table.find(options[slot], pick) then
+            return nil
+        end
+        if required and pick == nil then
+            return nil
+        end
+    end
+    for _, slot in SLOTS do
+        player:SetAttribute("Loadout" .. slot, picks[slot] or "")
+    end
 
     -- In the lobby, swap weapons right away so the player can try them.
     if not player:GetAttribute("InMatch") then

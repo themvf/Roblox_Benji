@@ -35,10 +35,10 @@ Pick skins at the lobby kiosk: chips under the 3D preview, coloured by tier. Ass
 A system whose asset is still `TODO` is skipped at equip with one warning, so draft skins never break the game.
 
 ## Controls
-Mouse1 fire, Mouse2 aim, R reload, 1/2 switch weapons, Shift sprint. All handled by the Weapons Kit.
+Mouse1 fire or swing, Mouse2 aim, R reload, 1-4 switch slots (Primary, Secondary, Melee, Utility), Shift sprint. Guns are the Weapons Kit; melee is MeleeService.
 
 ## Next steps
 - Shooting range with target dummies, leaderboard, skins
-- Melee, utility, and projectile weapons (Rivals kit has these; the Weapons Kit supports bows and launchers)
+- Utility weapons (Flamethrower, Exogun) and the Gunblade dash; more melee (Knife, Scythe)
 - Kits/abilities like Rivals (dash, grapple)
 - ProfileStore for saving wins, kills, and unlocked weapons

@@ -13,8 +13,13 @@ local LoadoutController = Knit.CreateController({ Name = "LoadoutController" })
 local PANEL = Color3.fromRGB(28, 30, 38)
 local PANEL_LIGHT = Color3.fromRGB(44, 47, 58)
 local ACCENT = Color3.fromRGB(255, 200, 70)
-local PRIMARY = Color3.fromRGB(80, 230, 120)
-local SECONDARY = Color3.fromRGB(80, 150, 255)
+local SLOT_COLORS = {
+    Primary = Color3.fromRGB(80, 230, 120),
+    Secondary = Color3.fromRGB(80, 150, 255),
+    Melee = Color3.fromRGB(255, 120, 90),
+    Utility = Color3.fromRGB(200, 120, 255),
+}
+local SLOTS = { "Primary", "Secondary", "Melee", "Utility" }
 local TEXT = Color3.fromRGB(245, 245, 250)
 local MUTED = Color3.fromRGB(160, 165, 180)
 local TIER_COLORS = {
@@ -45,6 +50,16 @@ end
 
 -- Short human stat summary from the Rivals stats table
 local function statLines(stats)
+    if stats.Type == "Melee" then
+        return {
+            ("Damage  %s"):format(stats.Damage[1]),
+            ("Reach  %s studs"):format(stats.Range),
+            ("Arc  %s deg"):format(stats.Arc),
+            ("Swing  %.2fs"):format(stats.Cooldown),
+            "Ammo  None",
+            ("Equip  %.2fs"):format(stats.EquipTime),
+        }
+    end
     local dmg = stats.Damage[1]
     local shotDmg = dmg * stats.Pellets
     local dps = shotDmg / stats.Cooldown
@@ -110,15 +125,15 @@ function LoadoutController:BuildGui()
     -- Left: two columns of weapon buttons
     local lists = Instance.new("Frame")
     lists.Position = UDim2.new(0, 24, 0, 70)
-    lists.Size = UDim2.new(0.42, 0, 1, -140)
+    lists.Size = UDim2.new(0.5, 0, 1, -140)
     lists.BackgroundTransparency = 1
     lists.Parent = panel
 
     self.Columns = {}
-    for i, slot in { "Primary", "Secondary" } do
+    for i, slot in SLOTS do
         local col = Instance.new("ScrollingFrame")
-        col.Position = UDim2.new((i - 1) * 0.52, 0, 0, 0)
-        col.Size = UDim2.new(0.48, 0, 1, 0)
+        col.Position = UDim2.new((i - 1) * 0.255, 0, 0, 0)
+        col.Size = UDim2.new(0.235, 0, 1, 0)
         col.BackgroundTransparency = 1
         col.ScrollBarThickness = 4
         col.AutomaticCanvasSize = Enum.AutomaticSize.Y
@@ -127,7 +142,7 @@ function LoadoutController:BuildGui()
         local layout = Instance.new("UIListLayout")
         layout.Padding = UDim.new(0, 8)
         layout.Parent = col
-        local head = label(col, slot:upper(), 18, slot == "Primary" and PRIMARY or SECONDARY, Enum.Font.GothamBlack)
+        local head = label(col, slot:upper(), 16, SLOT_COLORS[slot], Enum.Font.GothamBlack)
         head.LayoutOrder = 0
         self.Columns[slot] = col
     end
@@ -136,7 +151,7 @@ function LoadoutController:BuildGui()
     local preview = Instance.new("Frame")
     preview.AnchorPoint = Vector2.new(1, 0)
     preview.Position = UDim2.new(1, -24, 0, 70)
-    preview.Size = UDim2.new(0.52, 0, 1, -140)
+    preview.Size = UDim2.new(0.44, 0, 1, -140)
     preview.BackgroundColor3 = PANEL_LIGHT
     preview.Parent = panel
     corner(preview, 14)
@@ -227,7 +242,8 @@ function LoadoutController:MakeButton(slot, weaponName)
     btn.Size = UDim2.new(1, -8, 0, 46)
     btn.BackgroundColor3 = PANEL_LIGHT
     btn.Text = "  " .. weaponName:gsub("(%l)(%u)", "%1 %2")
-    btn.TextSize = 20
+    btn.TextSize = 16
+    btn.TextTruncate = Enum.TextTruncate.AtEnd
     btn.Font = Enum.Font.GothamBold
     btn.TextColor3 = TEXT
     btn.TextXAlignment = Enum.TextXAlignment.Left
@@ -236,13 +252,18 @@ function LoadoutController:MakeButton(slot, weaponName)
     corner(btn, 10)
     local stripe = Instance.new("Frame")
     stripe.Size = UDim2.new(0, 6, 1, 0)
-    stripe.BackgroundColor3 = slot == "Primary" and PRIMARY or SECONDARY
+    stripe.BackgroundColor3 = SLOT_COLORS[slot]
     stripe.BorderSizePixel = 0
     stripe.Visible = false
     stripe.Parent = btn
     corner(stripe, 6)
     btn.Activated:Connect(function()
-        self.Selected[slot] = weaponName
+        local optional = slot == "Melee" or slot == "Utility"
+        if optional and self.Selected[slot] == weaponName then
+            self.Selected[slot] = nil -- tap again to leave the slot empty
+        else
+            self.Selected[slot] = weaponName
+        end
         self:Refresh()
         self:Preview(weaponName)
     end)
@@ -257,10 +278,11 @@ function LoadoutController:Refresh()
             ui.Button.BackgroundColor3 = on and Color3.fromRGB(62, 66, 82) or PANEL_LIGHT
         end
     end
-    self.SummaryLabel.Text = ("Primary: %s    Secondary: %s"):format(
-        self.Selected.Primary or "?",
-        self.Selected.Secondary or "?"
-    )
+    local parts = {}
+    for _, slot in SLOTS do
+        table.insert(parts, slot .. ": " .. (self.Selected[slot] or "-"))
+    end
+    self.SummaryLabel.Text = table.concat(parts, "   ")
 end
 
 function LoadoutController:Preview(weaponName)
@@ -352,15 +374,22 @@ function LoadoutController:Confirm()
         return
     end
     self.ConfirmButton.Text = "..."
-    Knit.GetService("LoadoutService"):SetLoadout(sel.Primary, sel.Secondary):andThen(function(result)
-        self.ConfirmButton.Text = result and "EQUIPPED" or "INVALID"
-        task.delay(0.8, function()
-            self.ConfirmButton.Text = "EQUIP"
-            if result then
-                self:Close()
-            end
+    Knit.GetService("LoadoutService")
+        :SetLoadout({
+            Primary = sel.Primary,
+            Secondary = sel.Secondary,
+            Melee = sel.Melee,
+            Utility = sel.Utility,
+        })
+        :andThen(function(result)
+            self.ConfirmButton.Text = result and "EQUIPPED" or "INVALID"
+            task.delay(0.8, function()
+                self.ConfirmButton.Text = "EQUIP"
+                if result then
+                    self:Close()
+                end
+            end)
         end)
-    end)
 end
 
 function LoadoutController:Open()
@@ -369,7 +398,12 @@ function LoadoutController:Open()
     end
     local LoadoutService = Knit.GetService("LoadoutService")
     LoadoutService:GetLoadout():andThen(function(current)
-        self.Selected = { Primary = current.Primary, Secondary = current.Secondary }
+        self.Selected = {
+            Primary = current.Primary,
+            Secondary = current.Secondary,
+            Melee = current.Melee,
+            Utility = current.Utility,
+        }
         self:Refresh()
         self:Preview(current.Primary)
         self.Gui.Enabled = true
@@ -383,11 +417,15 @@ end
 
 function LoadoutController:KnitStart()
     self.Selected = {}
-    self.Buttons = { Primary = {}, Secondary = {} }
+    self.Buttons = { Primary = {}, Secondary = {}, Melee = {}, Utility = {} }
     self:BuildGui()
 
     Knit.GetService("LoadoutService"):GetOptions():andThen(function(options)
-        for _, slot in { "Primary", "Secondary" } do
+        for _, slot in SLOTS do
+            if #options[slot] == 0 then
+                local none = label(self.Columns[slot], "Coming soon", 14, MUTED, Enum.Font.GothamMedium)
+                none.LayoutOrder = 1
+            end
             for i, name in options[slot] do
                 self:MakeButton(slot, name)
                 self.Buttons[slot][name].Button.LayoutOrder = i
