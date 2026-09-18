@@ -274,6 +274,102 @@ local function applyLighting(env)
     cc.Parent = Lighting
 end
 
+-- ===== Lobby =====
+
+local function buildLobby(self, layout)
+    local old = workspace:FindFirstChild("Lobby")
+    if old then
+        old:Destroy()
+    end
+    local folder = Instance.new("Folder")
+    folder.Name = "Lobby"
+    folder.Parent = workspace
+
+    local o = layout.Origin
+    local pal = layout.Palette
+    local function at(p)
+        return { o[1] + p[1], o[2] + p[2], o[3] + p[3] }
+    end
+
+    local w, d = layout.Size[1], layout.Size[2]
+    makePart(folder, "Floor", at({ 0, -1, 0 }), { w, 2, d }, nil, pal.Floor)
+    -- thin grid lines so the floor reads as a designed surface
+    for x = -w / 2 + 10, w / 2 - 10, 10 do
+        local line = makePart(folder, "GridX", at({ x, 0.02, 0 }), { 0.3, 0.04, d }, nil, pal.FloorGrid)
+        line.CanCollide = false
+    end
+    for z = -d / 2 + 10, d / 2 - 10, 10 do
+        local line = makePart(folder, "GridZ", at({ 0, 0.02, z }), { w, 0.04, 0.3 }, nil, pal.FloorGrid)
+        line.CanCollide = false
+    end
+    -- invisible rails so nobody walks off
+    local h = 30
+    for _, wall in
+        {
+            { at({ 0, h / 2, -d / 2 }), { w, h, 1 } },
+            { at({ 0, h / 2, d / 2 }), { w, h, 1 } },
+            { at({ -w / 2, h / 2, 0 }), { 1, h, d } },
+            { at({ w / 2, h / 2, 0 }), { 1, h, d } },
+        }
+    do
+        local p = makePart(folder, "Rail", wall[1], wall[2])
+        p.Transparency = 1
+    end
+
+    for _, piece in layout.Pieces do
+        makePart(folder, piece.name, at(piece.pos), piece.size, piece.rot, pal[piece.color] or GREY)
+    end
+
+    self.Pads = {}
+    for _, spec in layout.Pads do
+        local pad = makePart(
+            folder,
+            spec.name,
+            at({ spec.pos[1], spec.pos[2] + spec.size[2] / 2, spec.pos[3] }),
+            spec.size,
+            nil,
+            spec.color,
+            Enum.Material.Neon
+        )
+        -- ring around the pad in the same color so it reads from across the lobby
+        local ring = makePart(
+            folder,
+            spec.name .. "Ring",
+            at({ spec.pos[1], spec.pos[2] + 0.1, spec.pos[3] }),
+            { spec.size[1] + 3, 0.2, spec.size[3] + 3 },
+            nil,
+            spec.color,
+            Enum.Material.Neon
+        )
+        ring.Transparency = 0.5
+        ring.CanCollide = false
+
+        local sign = Instance.new("BillboardGui")
+        sign.Name = "Sign"
+        sign.Size = UDim2.fromOffset(240, 90)
+        sign.StudsOffset = Vector3.new(0, 7, 0)
+        sign.AlwaysOnTop = true
+        sign.MaxDistance = 200
+        sign.Parent = pad
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.fromScale(1, 1)
+        label.BackgroundTransparency = 1
+        label.TextScaled = true
+        label.Font = Enum.Font.GothamBlack
+        label.TextColor3 = spec.color
+        label.TextStrokeTransparency = 0.3
+        label.Text = spec.mode
+        label.Parent = sign
+
+        table.insert(self.Pads, { Part = pad, Label = label, Mode = spec.mode, TeamSize = spec.teamSize })
+    end
+
+    self.LobbySpawns = {}
+    for _, p in layout.Spawns do
+        table.insert(self.LobbySpawns, v3(at(p)))
+    end
+end
+
 -- ===== Builder =====
 
 local function placePiece(folder, prefix, piece, rng, mirrored)
@@ -392,24 +488,37 @@ function MapService:Build(layout)
 end
 
 function MapService:PlaceCharacter(player, character)
-    local team = player:GetAttribute("Team")
-    local points = self.Spawns and self.Spawns[team]
-    if not points or #points == 0 then
-        return
-    end
     local root = character:WaitForChild("HumanoidRootPart", 5)
     if not root then
         return
     end
     task.wait() -- let Roblox finish its own spawn placement first
-    local idx = (player.UserId % #points) + 1
-    local pos = points[idx] + Vector3.new(0, 3, 0)
-    root.CFrame = CFrame.lookAt(pos, Vector3.new(0, pos.Y, 0))
+
+    if player:GetAttribute("InMatch") then
+        local team = player:GetAttribute("Team")
+        local points = self.Spawns and self.Spawns[team]
+        if not points or #points == 0 then
+            return
+        end
+        local idx = (player.UserId % #points) + 1
+        local pos = points[idx] + Vector3.new(0, 3, 0)
+        root.CFrame = CFrame.lookAt(pos, Vector3.new(0, pos.Y, 0))
+    else
+        local points = self.LobbySpawns
+        if not points or #points == 0 then
+            return
+        end
+        local idx = (player.UserId % #points) + 1
+        local pos = points[idx] + Vector3.new(0, 3, 0)
+        -- face the pads (toward -Z of the lobby)
+        root.CFrame = CFrame.lookAt(pos, pos + Vector3.new(0, 0, -10))
+    end
 end
 
 function MapService:KnitInit()
     local layoutModule = ReplicatedStorage.Shared.Maps:FindFirstChild(ACTIVE_MAP == "Greybox" and "Arena" or ACTIVE_MAP)
     self:Build(require(layoutModule))
+    buildLobby(self, require(ReplicatedStorage.Shared.Maps.Lobby))
 end
 
 function MapService:KnitStart()

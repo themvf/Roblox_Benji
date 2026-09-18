@@ -12,7 +12,7 @@ local WeaponService = Knit.CreateService({ Name = "WeaponService" })
 -- Rivals default loadout. Players get a copy of each on spawn.
 WeaponService.DefaultLoadout = { Primary = "AssaultRifle", Secondary = "Handgun" }
 
-local TEAM_IDS = { Red = 1, Blue = 2 }
+local TEAM_IDS = { Red = 1, Blue = 2, Lobby = 3 }
 
 local function teamOf(player)
     return TEAM_IDS[player:GetAttribute("Team")] or 0 -- 0 = no team, can hit anyone

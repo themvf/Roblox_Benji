@@ -28,6 +28,11 @@ function HudController:KnitStart()
     local RoundService = Knit.GetService("RoundService")
     RoundService.StateChanged:Connect(function(s, data)
         local text = s
+        if s == "Lobby" then
+            text = "Stand on a pad to queue"
+        elseif data.Mode then
+            text = data.Mode .. "  " .. s
+        end
         if data.Winner then
             text ..= " - " .. data.Winner .. " wins"
         end
