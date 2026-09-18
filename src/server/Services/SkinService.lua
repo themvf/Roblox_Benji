@@ -316,7 +316,20 @@ end
 function SkinService.Client:GetSkins(player, weaponName)
     local out = {}
     for _, s in Skins.forWeapon(weaponName) do
-        table.insert(out, { Id = s.Id, Tier = s.Tier, Concept = s.Concept })
+        -- Ready = something will visibly change today (texture rules, or any non-TODO asset)
+        local isReady = false
+        local tex = s.Systems.Texture
+        if tex and (tex.Body or tex.Overrides) then
+            isReady = true
+        end
+        for _, sys in s.Systems do
+            for _, v in sys do
+                if ready(v) then
+                    isReady = true
+                end
+            end
+        end
+        table.insert(out, { Id = s.Id, Tier = s.Tier, Concept = s.Concept, Ready = isReady })
     end
     return out, player:GetAttribute(attrName(weaponName))
 end

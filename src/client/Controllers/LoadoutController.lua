@@ -5,6 +5,7 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local UserInputService = game:GetService("UserInputService")
+local StarterGui = game:GetService("StarterGui")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Weapons = require(ReplicatedStorage.Shared.Weapons)
 
@@ -143,6 +144,7 @@ function LoadoutController:BuildGui()
         col.Parent = lists
         local layout = Instance.new("UIListLayout")
         layout.Padding = UDim.new(0, 8)
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
         layout.Parent = col
         local head = label(col, slot:upper(), 16, SLOT_COLORS[slot], Enum.Font.GothamBlack)
         head.LayoutOrder = 0
@@ -159,7 +161,7 @@ function LoadoutController:BuildGui()
     corner(preview, 14)
 
     local viewport = Instance.new("ViewportFrame")
-    viewport.Size = UDim2.new(1, 0, 0.62, 0)
+    viewport.Size = UDim2.new(1, 0, 0.52, 0)
     viewport.BackgroundTransparency = 1
     viewport.Ambient = Color3.fromRGB(200, 200, 210)
     viewport.LightColor = Color3.fromRGB(255, 255, 255)
@@ -172,13 +174,13 @@ function LoadoutController:BuildGui()
     self.PreviewCamera = cam
 
     local name = label(preview, "", 30, TEXT, Enum.Font.GothamBlack)
-    name.Position = UDim2.new(0, 20, 0.62, 0)
+    name.Position = UDim2.new(0, 20, 0.52, 0)
     name.Size = UDim2.new(1, -40, 0, 40)
     self.NameLabel = name
 
     local stats = Instance.new("Frame")
-    stats.Position = UDim2.new(0, 20, 0.62, 44)
-    stats.Size = UDim2.new(1, -40, 0.38, -110)
+    stats.Position = UDim2.new(0, 20, 0.52, 44)
+    stats.Size = UDim2.new(1, -40, 0, 96)
     stats.BackgroundTransparency = 1
     stats.Parent = preview
     local grid = Instance.new("UIGridLayout")
@@ -206,6 +208,7 @@ function LoadoutController:BuildGui()
     local rowLayout = Instance.new("UIListLayout")
     rowLayout.FillDirection = Enum.FillDirection.Horizontal
     rowLayout.Padding = UDim.new(0, 8)
+    rowLayout.SortOrder = Enum.SortOrder.LayoutOrder
     rowLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     rowLayout.Parent = skinRow
     self.SkinRow = skinRow
@@ -366,7 +369,7 @@ function LoadoutController:ShowSkins(weaponName)
         if self.PreviewWeapon ~= weaponName then
             return
         end
-        local function chip(text, color, skinId, order)
+        local function chip(text, color, skinId, order, draft)
             local b = Instance.new("TextButton")
             b.Size = UDim2.fromOffset(math.max(96, #text * 11 + 24), 40)
             b.BackgroundColor3 = (current == skinId) and color or PANEL
@@ -382,6 +385,14 @@ function LoadoutController:ShowSkins(weaponName)
             stroke.Color = color
             stroke.Thickness = 2
             stroke.Parent = b
+            if draft then
+                b.Text = text .. "  (draft)"
+                b.TextColor3 = MUTED
+                stroke.Color = MUTED
+                b.AutoButtonColor = false
+                b.Size = UDim2.fromOffset(b.Size.X.Offset + 60, 40)
+                return
+            end
             b.Activated:Connect(function()
                 Knit.GetService("SkinService"):SetSkin(weaponName, skinId):andThen(function(ok)
                     if ok then
@@ -392,7 +403,7 @@ function LoadoutController:ShowSkins(weaponName)
         end
         chip("Default", MUTED, nil, 0)
         for i, sk in list do
-            chip(prettyId(sk.Id) .. "  " .. sk.Tier, TIER_COLORS[sk.Tier] or MUTED, sk.Id, i)
+            chip(prettyId(sk.Id) .. "  " .. sk.Tier, TIER_COLORS[sk.Tier] or MUTED, sk.Id, i, not sk.Ready)
         end
     end)
 end
@@ -485,6 +496,10 @@ function LoadoutController:Open()
         if humanoid then
             humanoid:UnequipTools()
         end
+        pcall(function()
+            StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, false)
+            StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
+        end)
         RunService:BindToRenderStep("KioskMouse", Enum.RenderPriority.Last.Value, function()
             UserInputService.MouseBehavior = Enum.MouseBehavior.Default
             UserInputService.MouseIconEnabled = true
@@ -495,6 +510,10 @@ end
 function LoadoutController:Close()
     self.Gui.Enabled = false
     RunService:UnbindFromRenderStep("KioskMouse")
+    pcall(function()
+        StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, true)
+        StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
+    end)
 end
 
 function LoadoutController:KnitStart()

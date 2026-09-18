@@ -992,10 +992,12 @@ export type ProfileStoreModule = {
             listener: (store_name: string, profile_key: string) -> ()
         ) -> { Disconnect: (self: any) -> () },
     },
-    OnCriticalToggle: { Connect: (
-        self: any,
-        listener: (is_critical: boolean) -> ()
-    ) -> { Disconnect: (self: any) -> () } },
+    OnCriticalToggle: {
+        Connect: (
+            self: any,
+            listener: (is_critical: boolean) -> ()
+        ) -> { Disconnect: (self: any) -> () },
+    },
     DataStoreState: "NotReady" | "NoInternet" | "NoAccess" | "Access",
     New: <T>(store_name: string, template: (T & JSONAcceptable)?) -> ProfileStore<T>,
     SetConstant: (name: ConstantName, value: number) -> (),
