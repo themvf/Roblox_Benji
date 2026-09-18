@@ -604,14 +604,21 @@ function MapService:KnitInit()
     local layoutModule = ReplicatedStorage.Shared.Maps:FindFirstChild(ACTIVE_MAP == "Greybox" and "Arena" or ACTIVE_MAP)
     self:Build(require(layoutModule))
     buildLobby(self, require(ReplicatedStorage.Shared.Maps.Lobby))
-end
 
-function MapService:KnitStart()
-    Players.PlayerAdded:Connect(function(player)
+    -- Hook spawns here, in KnitInit, so this runs before RoundService (KnitStart) can
+    -- load anyone's character. Otherwise the first spawn lands at the world origin.
+    local function watch(player)
         player.CharacterAdded:Connect(function(character)
             task.defer(self.PlaceCharacter, self, player, character)
         end)
-    end)
+        if player.Character then
+            task.defer(self.PlaceCharacter, self, player, player.Character)
+        end
+    end
+    Players.PlayerAdded:Connect(watch)
+    for _, p in Players:GetPlayers() do
+        watch(p)
+    end
 end
 
 return MapService
