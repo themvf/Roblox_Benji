@@ -1,5 +1,6 @@
--- Matchmaking pads. Standing on a pad puts you in that mode's queue; when the
--- queue fills and no match is running, those players are handed to RoundService.
+-- Matchmaking pads. Each mode pad has a Red half and a Blue half; standing on a half
+-- queues you for that mode on that team. When both halves hold teamSize players and no
+-- match is running, those players are handed to RoundService (Red first, then Blue).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
@@ -11,6 +12,10 @@ local CHECK_INTERVAL = 0.25
 local function onPad(root, pad)
     local rel = pad.CFrame:PointToObjectSpace(root.Position)
     return math.abs(rel.X) <= pad.Size.X / 2 and math.abs(rel.Z) <= pad.Size.Z / 2 and rel.Y > -2 and rel.Y < 8
+end
+
+local function byJoinOrder(a, b)
+    return a.UserId < b.UserId
 end
 
 function QueueService:KnitStart()
@@ -25,40 +30,46 @@ function QueueService:KnitStart()
                 continue
             end
             for _, pad in pads do
-                local queued = {}
+                local queued = { Red = {}, Blue = {} }
                 for _, player in Players:GetPlayers() do
                     if player:GetAttribute("InMatch") then
                         continue
                     end
                     local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-                    if root and onPad(root, pad.Part) then
-                        table.insert(queued, player)
+                    if root then
+                        for team, part in pad.Sides do
+                            if onPad(root, part) then
+                                table.insert(queued[team], player)
+                            end
+                        end
                     end
                 end
 
-                local need = pad.TeamSize * 2
+                local need = pad.TeamSize
+                local red, blue = #queued.Red, #queued.Blue
                 local status
                 if RoundService.Busy then
                     status = "Match in progress"
-                elseif #queued >= need then
+                elseif red >= need and blue >= need then
                     status = "Starting..."
-                elseif #queued == 0 then
-                    status = ("Stand here  (%d players)"):format(need)
+                elseif red == 0 and blue == 0 then
+                    status = ("Pick a side  (%d per team)"):format(need)
                 else
-                    local more = need - #queued
-                    status = ("%d / %d  needs %d more"):format(#queued, need, more)
+                    status = ("Red %d/%d   Blue %d/%d"):format(math.min(red, need), need, math.min(blue, need), need)
                 end
                 pad.Label.Text = pad.Mode .. "\n" .. status
 
-                if #queued >= need and not RoundService.Busy then
-                    -- Sort so queue order is stable: earliest joiners first
-                    table.sort(queued, function(a, b)
-                        return a.UserId < b.UserId
-                    end)
+                if red >= need and blue >= need and not RoundService.Busy then
+                    table.sort(queued.Red, byJoinOrder)
+                    table.sort(queued.Blue, byJoinOrder)
                     local picked = {}
                     for i = 1, need do
-                        picked[i] = queued[i]
+                        table.insert(picked, queued.Red[i])
                     end
+                    for i = 1, need do
+                        table.insert(picked, queued.Blue[i])
+                    end
+                    -- RoundService assigns the first teamSize players to Red, the rest to Blue
                     RoundService:StartMatch(picked, pad.TeamSize, pad.Mode)
                 end
             end

@@ -320,23 +320,37 @@ local function buildLobby(self, layout)
         makePart(folder, piece.name, at(piece.pos), piece.size, piece.rot, pal[piece.color] or GREY)
     end
 
+    -- Each mode pad is two halves: stand on the RED half to be Red, BLUE half to be Blue.
+    -- A match starts when both halves hold teamSize players. Friends pick a side together.
+    local function floorLabel(part, text, color)
+        local gui = Instance.new("SurfaceGui")
+        gui.Face = Enum.NormalId.Top
+        gui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+        gui.PixelsPerStud = 30
+        gui.Parent = part
+        local t = Instance.new("TextLabel")
+        t.Size = UDim2.fromScale(1, 1)
+        t.BackgroundTransparency = 1
+        t.Text = text
+        t.TextScaled = true
+        t.Font = Enum.Font.GothamBlack
+        t.TextColor3 = color
+        t.Rotation = 180
+        t.Parent = gui
+        return t
+    end
+
     self.Pads = {}
     for _, spec in layout.Pads do
-        local pad = makePart(
-            folder,
-            spec.name,
-            at({ spec.pos[1], spec.pos[2] + spec.size[2] / 2, spec.pos[3] }),
-            spec.size,
-            nil,
-            spec.color,
-            Enum.Material.Neon
-        )
-        -- ring around the pad in the same color so it reads from across the lobby
+        local w, h, d = spec.size[1], spec.size[2], spec.size[3]
+        local gap = 1.5
+        local halfW = (w - gap) / 2
+        -- ring in the mode colour around both halves
         local ring = makePart(
             folder,
             spec.name .. "Ring",
             at({ spec.pos[1], spec.pos[2] + 0.1, spec.pos[3] }),
-            { spec.size[1] + 3, 0.2, spec.size[3] + 3 },
+            { w + 3, 0.2, d + 3 },
             nil,
             spec.color,
             Enum.Material.Neon
@@ -344,13 +358,42 @@ local function buildLobby(self, layout)
         ring.Transparency = 0.5
         ring.CanCollide = false
 
+        local sides = {}
+        for _, side in { { team = "Red", dx = -1 }, { team = "Blue", dx = 1 } } do
+            local part = makePart(
+                folder,
+                spec.name .. side.team,
+                at({ spec.pos[1] + side.dx * (halfW + gap) / 2, spec.pos[2] + h / 2, spec.pos[3] }),
+                { halfW, h, d },
+                nil,
+                TEAM_COLORS[side.team],
+                Enum.Material.Neon
+            )
+            floorLabel(
+                part,
+                side.team:upper() .. "\n" .. spec.teamSize .. (spec.teamSize == 1 and " PLAYER" or " PLAYERS"),
+                Color3.fromRGB(20, 24, 30)
+            )
+            sides[side.team] = part
+        end
+
+        -- one floating sign per mode above the middle
+        local anchor = makePart(
+            folder,
+            spec.name .. "Sign",
+            at({ spec.pos[1], spec.pos[2] + h / 2, spec.pos[3] }),
+            { 1, 1, 1 },
+            nil,
+            spec.color
+        )
+        anchor.Transparency = 1
         local sign = Instance.new("BillboardGui")
         sign.Name = "Sign"
-        sign.Size = UDim2.fromOffset(240, 90)
+        sign.Size = UDim2.fromOffset(280, 100)
         sign.StudsOffset = Vector3.new(0, 7, 0)
         sign.AlwaysOnTop = true
         sign.MaxDistance = 200
-        sign.Parent = pad
+        sign.Parent = anchor
         local label = Instance.new("TextLabel")
         label.Size = UDim2.fromScale(1, 1)
         label.BackgroundTransparency = 1
@@ -361,23 +404,7 @@ local function buildLobby(self, layout)
         label.Text = spec.mode
         label.Parent = sign
 
-        -- Floor text on the pad itself: mode + player count, readable from anywhere in the hub
-        local floorGui = Instance.new("SurfaceGui")
-        floorGui.Face = Enum.NormalId.Top
-        floorGui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
-        floorGui.PixelsPerStud = 30
-        floorGui.Parent = pad
-        local floorText = Instance.new("TextLabel")
-        floorText.Size = UDim2.fromScale(1, 1)
-        floorText.BackgroundTransparency = 1
-        floorText.Text = spec.mode .. "\n" .. (spec.teamSize * 2) .. " PLAYERS"
-        floorText.TextScaled = true
-        floorText.Font = Enum.Font.GothamBlack
-        floorText.TextColor3 = Color3.fromRGB(20, 24, 30)
-        floorText.Rotation = 180
-        floorText.Parent = floorGui
-
-        table.insert(self.Pads, { Part = pad, Label = label, Mode = spec.mode, TeamSize = spec.teamSize })
+        table.insert(self.Pads, { Sides = sides, Label = label, Mode = spec.mode, TeamSize = spec.teamSize })
     end
 
     self.LobbySpawns = {}

@@ -12,7 +12,7 @@ when one team is eliminated or the timer runs out, first team to 5 rounds wins.
    rojo serve
    ```
 3. In Roblox Studio, install the Rojo plugin (Plugins > Rojo > Connect) while `rojo serve` is running.
-4. Test with Test > Clients and Servers (2+ players). Everyone spawns in the lobby; walk onto the green pad (1v1) or blue pad (2v2) to queue.
+4. Test with Test > Clients and Servers (2+ players). Everyone spawns in the lobby; walk onto the RED or BLUE half of the green pad (1v1) or blue pad (2v2) to queue on that team; friends stand on the same half.
 
 ## Layout
 - `src/server/Services`   Knit services. QueueService watches the lobby pads, RoundService runs a match, MapService builds arena + lobby, WeaponService hooks the Weapons Kit.

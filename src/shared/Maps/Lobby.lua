@@ -23,14 +23,15 @@ return {
         { 16, 3, 34 },
     },
 
-    -- Matchmaking pads. Stand on one to queue. Green = 1v1, blue = 2v2.
+    -- Matchmaking pads. Each has a Red half and a Blue half; stand on a half to queue for
+    -- that mode on that team. Green ring = 1v1, blue ring = 2v2. Size is the whole pad.
     Pads = {
         {
             name = "Pad1v1",
             mode = "1v1",
             teamSize = 1,
             pos = { -22, 0, -10 },
-            size = { 16, 1, 16 },
+            size = { 22, 1, 14 },
             color = Color3.fromRGB(80, 230, 120),
         },
         {
@@ -38,7 +39,7 @@ return {
             mode = "2v2",
             teamSize = 2,
             pos = { 22, 0, -10 },
-            size = { 16, 1, 16 },
+            size = { 22, 1, 14 },
             color = Color3.fromRGB(80, 150, 255),
         },
     },
