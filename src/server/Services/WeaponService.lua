@@ -50,6 +50,7 @@ function WeaponService:GiveLoadout(player)
         local template = self.Tools:FindFirstChild(loadout[slot])
         if template then
             local tool = template:Clone()
+            Knit.GetService("SkinService"):Apply(tool, player)
             tool.Parent = backpack
             first = first or tool
         end

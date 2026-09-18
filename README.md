@@ -21,6 +21,15 @@ when one team is eliminated or the timer runs out, first team to 5 rounds wins.
 - `assets/WeaponsSystem.rbxm`  Roblox Weapons Kit (firing, bullets, recoil, GUI, camera)
 - `assets/weapons/tools/`      One Tool per Rivals weapon, generated from the kit models
 - `tools/build_weapons.luau`   Rebuilds those tools from `src/shared/Weapons` stats: `lune run tools/build_weapons.luau`
+- `src/shared/Skins/`          Skin registry + validator (the Weapon & Skin Design Spec as code)
+- `tools/check_skins.luau`     Build gate: `lune run tools/check_skins.luau` fails on any spec violation
+
+## Skins
+A skin is one module in `src/shared/Skins/Registry/` named after its Id (`skn_<weapon>_<tier>_<concept>`).
+It declares a concept sentence, materials story, sound palette, and which of the nine systems it replaces.
+Rules enforced by the validator: no gameplay numbers anywhere, tier = lowest tier that admits the systems,
+tier must-replace sets, naming, and concept word present in the sentence. Run the check before committing.
+Debug: set the player attribute `Skin_<Weapon>` to a skin Id (or call SkinService:SetSkin from the client) and re-equip.
 
 ## Controls
 Mouse1 fire, Mouse2 aim, R reload, 1/2 switch weapons, Shift sprint. All handled by the Weapons Kit.
