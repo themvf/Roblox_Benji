@@ -27,6 +27,7 @@ local Config = {
         ZoneCloseWarningSeconds = 15,
         RespawnSeconds = 5,
         SpawnProtectSeconds = 2,
+        BotsPerTeam = 0, -- test bots per team (chat: /bots N)
     },
 }
 
@@ -46,6 +47,7 @@ Config.CONVERGENCE_TUNABLE = {
     "ZoneCloseWarningSeconds",
     "RespawnSeconds",
     "SpawnProtectSeconds",
+    "BotsPerTeam",
 }
 
 local overrides = nil

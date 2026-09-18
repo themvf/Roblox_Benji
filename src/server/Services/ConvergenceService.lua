@@ -8,6 +8,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Config = require(ReplicatedStorage.Shared.Config)
+local BotService
 
 local ConvergenceService = Knit.CreateService({
     Name = "ConvergenceService",
@@ -226,6 +227,7 @@ end
 
 -- players: Red first (teamSize of them) then Blue. Runs async; returns immediately.
 function ConvergenceService:StartMatch(players, teamSize, mapName)
+    BotService = BotService or Knit.GetService("BotService")
     local RoundService = Knit.GetService("RoundService")
     if self.Busy or RoundService.Busy then
         return false
@@ -358,6 +360,14 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
         end
         fireEventsForPhase(1)
 
+        -- Test bots: fill each team with N bots that capture, shoot and respawn
+        local botsPerTeam = rules.BotsPerTeam or 0
+        if botsPerTeam > 0 then
+            BotService:Start(botsPerTeam, rules.RespawnSeconds, function()
+                return match.Zones
+            end)
+        end
+
         -- Main loop
         local lastSnap = 0
         local warned = {}
@@ -378,6 +388,9 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                 end
                 if live and not zone.Closed then
                     local counts = playersIn(zone, teamOf)
+                    local botCounts = BotService:CountInZone(zone)
+                    counts.Red += botCounts.Red
+                    counts.Blue += botCounts.Blue
                     local ev = stepZone(zone, counts, rules, dt)
                     if ev == "Captured" then
                         self:FireAll(match, self.Client.Event, "ZoneCaptured", { Zone = zone.Name, Team = zone.Owner })
@@ -535,7 +548,28 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
     return true
 end
 
+-- Credit a kill on a bot (or any non-player victim) to the killer's team
+function ConvergenceService:CreditKill(killerId, victimTeam)
+    local match = self.Match
+    if not match or not match.Running then
+        return
+    end
+    local killer = killerId and killerId > 0 and Players:GetPlayerByUserId(killerId)
+    if killer and killer:GetAttribute("InMatch") then
+        local kteam = killer:GetAttribute("Team")
+        if kteam and kteam ~= victimTeam then
+            killer:SetAttribute("MatchKills", (killer:GetAttribute("MatchKills") or 0) + 1)
+            match.Score[kteam] += match.Rules.KillPoints
+        end
+    elseif killerId and killerId < 0 then
+        -- bot killed a bot: score for the bot's team
+        local kteam = victimTeam == "Red" and "Blue" or "Red"
+        match.Score[kteam] += match.Rules.KillPoints
+    end
+end
+
 function ConvergenceService:Finish(match, winner, aborted)
+    BotService:Stop()
     local RoundService = Knit.GetService("RoundService")
     RoundService:Broadcast(
         "MatchOver",
