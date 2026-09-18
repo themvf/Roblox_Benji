@@ -10,6 +10,10 @@ local Enum = roblox.Enum
 local Vector3 = roblox.Vector3
 local CFrame = roblox.CFrame
 local Color3 = roblox.Color3
+local Vector2 = roblox.Vector2
+local NumberRange = roblox.NumberRange
+local NumberSequence = roblox.NumberSequence
+local ColorSequence = roblox.ColorSequence
 local Weapons = require("../src/shared/Weapons")
 
 -- Rivals weapon -> kit model to start from
