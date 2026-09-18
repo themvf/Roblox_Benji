@@ -93,6 +93,28 @@ function RoundService:RunRound(match)
 end
 
 -- players: array of Player, already split so #players == teamSize * 2
+-- Kills are attributed from the LastHitBy attribute that damage code sets on the character.
+local function trackKills(match)
+    local conns = {}
+    for _, p in match.Players do
+        p:SetAttribute("MatchKills", 0)
+        table.insert(
+            conns,
+            p.CharacterAdded:Connect(function(character)
+                local hum = character:WaitForChild("Humanoid")
+                hum.Died:Connect(function()
+                    local killerId = character:GetAttribute("LastHitBy")
+                    local killer = killerId and Players:GetPlayerByUserId(killerId)
+                    if killer and killer ~= p and killer:GetAttribute("InMatch") then
+                        killer:SetAttribute("MatchKills", (killer:GetAttribute("MatchKills") or 0) + 1)
+                    end
+                end)
+            end)
+        )
+    end
+    return conns
+end
+
 function RoundService:StartMatch(players, teamSize, mode)
     if self.Busy then
         return false
@@ -105,6 +127,7 @@ function RoundService:StartMatch(players, teamSize, mode)
         player:SetAttribute("InMatch", true)
         player:SetAttribute("Team", i <= teamSize and "Red" or "Blue")
     end
+    local killConns = trackKills(match)
 
     task.spawn(function()
         self:Broadcast("Intermission", { Time = Config.IntermissionSeconds, Mode = mode })
@@ -119,8 +142,33 @@ function RoundService:StartMatch(players, teamSize, mode)
             or match.Score.Blue >= Config.RoundsToWin
 
         self:Broadcast("MatchOver", { Score = match.Score, Mode = mode, Aborted = aborted })
-        task.wait(aborted and 1 or 6)
 
+        if not aborted then
+            -- Winners in MVP order (most kills first), losers watch, then the podium sequence
+            local winTeam = match.Score.Red > match.Score.Blue and "Red" or "Blue"
+            local winners, losers = {}, {}
+            for _, p in present(match) do
+                if p:GetAttribute("Team") == winTeam then
+                    table.insert(winners, p)
+                else
+                    table.insert(losers, p)
+                end
+            end
+            table.sort(winners, function(a, b)
+                local ka, kb = a:GetAttribute("MatchKills") or 0, b:GetAttribute("MatchKills") or 0
+                if ka ~= kb then
+                    return ka > kb
+                end
+                return a.UserId < b.UserId
+            end)
+            Knit.GetService("CelebrationService"):Run(winners, losers)
+        else
+            task.wait(1)
+        end
+
+        for _, c in killConns do
+            c:Disconnect()
+        end
         for _, p in present(match) do
             self:SendToLobby(p)
         end

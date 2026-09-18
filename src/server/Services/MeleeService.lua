@@ -111,6 +111,7 @@ function MeleeService.Client:Swing(player, weaponName)
                         local angle =
                             math.acos(math.clamp(flat.Unit:Dot(Vector3.new(forward.X, 0, forward.Z).Unit), -1, 1))
                         if angle <= halfArc then
+                            oc:SetAttribute("LastHitBy", player.UserId)
                             ohum:TakeDamage(stats.Damage[1])
                         end
                     end

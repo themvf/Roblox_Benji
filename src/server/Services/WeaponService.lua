@@ -15,9 +15,12 @@ local function teamOf(player)
     return TEAM_IDS[player:GetAttribute("Team")] or 0 -- 0 = no team, can hit anyone
 end
 
-local function onDamage(_system, target, amount, _damageType, _dealer, hitInfo, weaponInstance)
+local function onDamage(_system, target, amount, _damageType, dealer, hitInfo, weaponInstance)
     if not target:IsA("Humanoid") then
         return
+    end
+    if dealer and dealer:IsA("Player") and target.Parent then
+        target.Parent:SetAttribute("LastHitBy", dealer.UserId)
     end
     local part = hitInfo and hitInfo.part
     if part and part.Name == "Head" and weaponInstance then

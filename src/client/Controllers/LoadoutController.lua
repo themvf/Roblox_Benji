@@ -18,8 +18,10 @@ local SLOT_COLORS = {
     Secondary = Color3.fromRGB(80, 150, 255),
     Melee = Color3.fromRGB(255, 120, 90),
     Utility = Color3.fromRGB(200, 120, 255),
+    Celebration = Color3.fromRGB(255, 200, 70),
 }
-local SLOTS = { "Primary", "Secondary", "Melee", "Utility" }
+local SLOTS = { "Primary", "Secondary", "Melee", "Utility", "Celebration" }
+local Celebrations = require(ReplicatedStorage.Shared.Celebrations)
 local TEXT = Color3.fromRGB(245, 245, 250)
 local MUTED = Color3.fromRGB(160, 165, 180)
 local TIER_COLORS = {
@@ -125,15 +127,15 @@ function LoadoutController:BuildGui()
     -- Left: two columns of weapon buttons
     local lists = Instance.new("Frame")
     lists.Position = UDim2.new(0, 24, 0, 70)
-    lists.Size = UDim2.new(0.5, 0, 1, -140)
+    lists.Size = UDim2.new(0.54, 0, 1, -140)
     lists.BackgroundTransparency = 1
     lists.Parent = panel
 
     self.Columns = {}
     for i, slot in SLOTS do
         local col = Instance.new("ScrollingFrame")
-        col.Position = UDim2.new((i - 1) * 0.255, 0, 0, 0)
-        col.Size = UDim2.new(0.235, 0, 1, 0)
+        col.Position = UDim2.new((i - 1) * 0.204, 0, 0, 0)
+        col.Size = UDim2.new(0.19, 0, 1, 0)
         col.BackgroundTransparency = 1
         col.ScrollBarThickness = 4
         col.AutomaticCanvasSize = Enum.AutomaticSize.Y
@@ -151,7 +153,7 @@ function LoadoutController:BuildGui()
     local preview = Instance.new("Frame")
     preview.AnchorPoint = Vector2.new(1, 0)
     preview.Position = UDim2.new(1, -24, 0, 70)
-    preview.Size = UDim2.new(0.44, 0, 1, -140)
+    preview.Size = UDim2.new(0.40, 0, 1, -140)
     preview.BackgroundColor3 = PANEL_LIGHT
     preview.Parent = panel
     corner(preview, 14)
@@ -258,6 +260,18 @@ function LoadoutController:MakeButton(slot, weaponName)
     stripe.Parent = btn
     corner(stripe, 6)
     btn.Activated:Connect(function()
+        if slot == "Celebration" then
+            local favs = self.Favorites
+            local idx = table.find(favs, weaponName)
+            if idx then
+                table.remove(favs, idx)
+            elseif #favs < Celebrations.MAX_FAVORITES then
+                table.insert(favs, weaponName)
+            end
+            self:Refresh()
+            self:PreviewCelebration(weaponName)
+            return
+        end
         local optional = slot == "Melee" or slot == "Utility"
         if optional and self.Selected[slot] == weaponName then
             self.Selected[slot] = nil -- tap again to leave the slot empty
@@ -273,14 +287,29 @@ end
 function LoadoutController:Refresh()
     for slot, set in self.Buttons do
         for name, ui in set do
-            local on = self.Selected[slot] == name
+            local on
+            if slot == "Celebration" then
+                local idx = table.find(self.Favorites, name)
+                on = idx ~= nil
+                local cel = Celebrations.get(name)
+                ui.Button.Text = "  " .. (idx and (idx .. ". ") or "") .. (cel and cel.Name or name)
+            else
+                on = self.Selected[slot] == name
+            end
             ui.Stripe.Visible = on
             ui.Button.BackgroundColor3 = on and Color3.fromRGB(62, 66, 82) or PANEL_LIGHT
         end
     end
     local parts = {}
     for _, slot in SLOTS do
-        table.insert(parts, slot .. ": " .. (self.Selected[slot] or "-"))
+        if slot == "Celebration" then
+            table.insert(
+                parts,
+                "Celebration: " .. (self.Favorites[1] and (Celebrations.get(self.Favorites[1]) or {}).Name or "-")
+            )
+        else
+            table.insert(parts, slot .. ": " .. (self.Selected[slot] or "-"))
+        end
     end
     self.SummaryLabel.Text = table.concat(parts, "   ")
 end
@@ -368,6 +397,43 @@ function LoadoutController:ShowSkins(weaponName)
     end)
 end
 
+function LoadoutController:PreviewCelebration(id)
+    local cel = Celebrations.get(id)
+    if not cel then
+        return
+    end
+    for _, c in self.Viewport:GetChildren() do
+        if not c:IsA("Camera") then
+            c:Destroy()
+        end
+    end
+    self.PreviewModel = nil
+    self.PreviewWeapon = nil
+    for _, c in self.SkinRow:GetChildren() do
+        if c:IsA("TextButton") then
+            c:Destroy()
+        end
+    end
+    self.NameLabel.Text = cel.Name:upper()
+    local lines = {
+        "Tier  " .. cel.Tier,
+        ("Length  %ss"):format(cel.Length),
+        "Flashing  " .. cel.Flashing,
+        "Systems  " .. tostring(#(function()
+            local t = {}
+            for k in cel.Systems do
+                table.insert(t, k)
+            end
+            return t
+        end)()),
+        cel.Concept,
+        "Default = first favourite. Up to 3.",
+    }
+    for i, l in self.StatLabels do
+        l.Text = lines[i] or ""
+    end
+end
+
 function LoadoutController:Confirm()
     local sel = self.Selected
     if not sel.Primary or not sel.Secondary then
@@ -382,6 +448,7 @@ function LoadoutController:Confirm()
             Utility = sel.Utility,
         })
         :andThen(function(result)
+            Knit.GetService("CelebrationService"):SetFavorites(self.Favorites)
             self.ConfirmButton.Text = result and "EQUIPPED" or "INVALID"
             task.delay(0.8, function()
                 self.ConfirmButton.Text = "EQUIP"
@@ -397,6 +464,10 @@ function LoadoutController:Open()
         return
     end
     local LoadoutService = Knit.GetService("LoadoutService")
+    Knit.GetService("CelebrationService"):GetFavorites():andThen(function(favs)
+        self.Favorites = favs
+        self:Refresh()
+    end)
     LoadoutService:GetLoadout():andThen(function(current)
         self.Selected = {
             Primary = current.Primary,
@@ -417,10 +488,15 @@ end
 
 function LoadoutController:KnitStart()
     self.Selected = {}
-    self.Buttons = { Primary = {}, Secondary = {}, Melee = {}, Utility = {} }
+    self.Favorites = {}
+    self.Buttons = { Primary = {}, Secondary = {}, Melee = {}, Utility = {}, Celebration = {} }
     self:BuildGui()
 
     Knit.GetService("LoadoutService"):GetOptions():andThen(function(options)
+        options.Celebration = {}
+        for _, c in Celebrations.all() do
+            table.insert(options.Celebration, c.Id)
+        end
         for _, slot in SLOTS do
             if #options[slot] == 0 then
                 local none = label(self.Columns[slot], "Coming soon", 14, MUTED, Enum.Font.GothamMedium)

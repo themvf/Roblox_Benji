@@ -23,6 +23,13 @@ when one team is eliminated or the timer runs out, first team to 5 rounds wins.
 - `tools/build_weapons.luau`   Rebuilds those tools from `src/shared/Weapons` stats: `lune run tools/build_weapons.luau`
 - `src/shared/Skins/`          Skin registry + validator (the Weapon & Skin Design Spec as code)
 - `tools/check_skins.luau`     Build gate: `lune run tools/check_skins.luau` fails on any spec violation
+- `src/shared/Celebrations/`   Celebration registry + validator; `lune run tools/check_celebrations.luau`
+
+## Celebrations
+Winners pick from up to 3 favourites (kiosk, Celebration column; first = default) in a 3 s wheel after the final round,
+then stand on a podium above the arena in MVP order (most kills). Common = emote only, Rare adds audio or effects,
+Legendary adds props, Mythical adds a camera orbit and teammate reactions. 8 s cap; losers press V to vote skip.
+Emotes are Roblox built-ins until custom animations are uploaded (swap `Motion.Emote` for `Motion.Animation`).
 
 ## Skins
 A skin is one module in `src/shared/Skins/Registry/` named after its Id (`skn_<weapon>_<tier>_<concept>`).
