@@ -85,7 +85,11 @@ function JetpackController:KnitStart()
                 mover.RelativeTo = Enum.ActuatorRelativeTo.World
                 mover.VelocityConstraintMode = Enum.VelocityConstraintMode.Line
                 mover.LineDirection = Vector3.yAxis
-                local att = root:FindFirstChild("RootAttachment") or Instance.new("Attachment", root)
+                local att = root:FindFirstChild("RootAttachment")
+                if not att then
+                    att = Instance.new("Attachment")
+                    att.Parent = root
+                end
                 mover.Attachment0 = att
                 mover.Parent = root
             end

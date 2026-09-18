@@ -57,10 +57,7 @@ end
 
 -- Convergence settings with Tuning overrides applied
 function Config.GetConvergence()
-    local out = {}
-    for k, v in Config.Convergence do
-        out[k] = v
-    end
+    local out = table.clone(Config.Convergence)
     if overrides then
         for _, key in Config.CONVERGENCE_TUNABLE do
             local v = overrides:GetAttribute("Convergence_" .. key)

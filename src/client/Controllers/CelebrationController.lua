@@ -37,7 +37,11 @@ local function playMotion(character, motion)
     if animId then
         local anim = Instance.new("Animation")
         anim.AnimationId = animId
-        local animator = hum:FindFirstChildOfClass("Animator") or Instance.new("Animator", hum)
+        local animator = hum:FindFirstChildOfClass("Animator")
+        if not animator then
+            animator = Instance.new("Animator")
+            animator.Parent = hum
+        end
         local track = animator:LoadAnimation(anim)
         track.Priority = Enum.AnimationPriority.Action
         track:Play()

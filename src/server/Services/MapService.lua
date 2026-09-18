@@ -354,15 +354,15 @@ local function buildLobby(self, layout)
 
     self.Pads = {}
     for _, spec in layout.Pads do
-        local w, h, d = spec.size[1], spec.size[2], spec.size[3]
+        local pw, ph, pd = spec.size[1], spec.size[2], spec.size[3]
         local gap = 1.5
-        local halfW = (w - gap) / 2
+        local halfW = (pw - gap) / 2
         -- ring in the mode colour around both halves
         local ring = makePart(
             folder,
             spec.name .. "Ring",
             at({ spec.pos[1], spec.pos[2] + 0.1, spec.pos[3] }),
-            { w + 3, 0.2, d + 3 },
+            { pw + 3, 0.2, pd + 3 },
             nil,
             spec.color,
             Enum.Material.Neon
@@ -375,8 +375,8 @@ local function buildLobby(self, layout)
             local part = makePart(
                 folder,
                 spec.name .. side.team,
-                at({ spec.pos[1] + side.dx * (halfW + gap) / 2, spec.pos[2] + h / 2, spec.pos[3] }),
-                { halfW, h, d },
+                at({ spec.pos[1] + side.dx * (halfW + gap) / 2, spec.pos[2] + ph / 2, spec.pos[3] }),
+                { halfW, ph, pd },
                 nil,
                 TEAM_COLORS[side.team],
                 Enum.Material.Neon
@@ -392,7 +392,7 @@ local function buildLobby(self, layout)
         local anchor = makePart(
             folder,
             spec.name .. "Sign",
-            at({ spec.pos[1], spec.pos[2] + h / 2, spec.pos[3] }),
+            at({ spec.pos[1], spec.pos[2] + ph / 2, spec.pos[3] }),
             { 1, 1, 1 },
             nil,
             spec.color
@@ -431,7 +431,7 @@ local function buildLobby(self, layout)
                 folder,
                 spec.name .. "Frame",
                 at({ spec.pos[1], spec.pos[2] + 0.05, spec.pos[3] }),
-                { w + 6, 0.15, d + 6 },
+                { pw + 6, 0.15, pd + 6 },
                 nil,
                 Color3.fromRGB(255, 200, 70),
                 Enum.Material.Neon

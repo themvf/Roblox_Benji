@@ -437,9 +437,10 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                     match.Overtime = true
                     match.OvertimeLeft = rules.OvertimeMaxSeconds
                     self:FireAll(match, self.Client.Event, "Overtime", {})
-                elseif match.Overtime and final and (final.Contested or final.Capturing) and match.OvertimeLeft > 0 then
-                    -- still resolving; keep going until OvertimeLeft runs out
-                else
+                elseif
+                    not (match.Overtime and final and (final.Contested or final.Capturing) and match.OvertimeLeft > 0)
+                then
+                    -- resolved (or overtime exhausted): decide the winner
                     if match.Score.Red ~= match.Score.Blue then
                         winner = match.Score.Red > match.Score.Blue and "Red" or "Blue"
                     elseif final and final.Owner then
