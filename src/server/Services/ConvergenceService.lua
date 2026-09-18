@@ -455,8 +455,7 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                     end
                 end
             end
-            if not match.Overtime then
-            else
+            if match.Overtime then
                 match.OvertimeLeft -= dt
             end
 
