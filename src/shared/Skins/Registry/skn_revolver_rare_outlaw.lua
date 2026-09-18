@@ -1,24 +1,24 @@
--- Rare: recolour + new fire sound + tracer. Sound and effect are kit assets, so it works today.
+-- Rare: shiny gold + new fire sound + tracer. Sound and effect are kit assets, so it works today.
 return {
     Id = "skn_revolver_rare_outlaw",
     Weapon = "Revolver",
     Tier = "Rare",
-    Concept = "The Revolver goes outlaw: a outlaw body, a new voice, and a railgun trail on every shot",
-    Materials = { Primary = "outlaw finish", Accent = "glow accents" },
+    Concept = "The Revolver goes outlaw: shiny gold, a new voice, and a railgun trail on every shot",
+    Materials = { Primary = "polished gold", Accent = "glow accents" },
     SoundPalette = "western twang",
     Systems = {
         Texture = {
-            Body = { Color = { 40, 35, 35 }, Material = "SmoothPlastic" },
+            Body = { Color = { 235, 190, 60 }, Material = "Metal", Reflectance = 0.55 },
             Overrides = {
-                Barrel = { Color = { 255, 170, 50 }, Material = "Neon" },
-                Muzzle = { Color = { 255, 170, 50 }, Material = "Neon" },
-                Bolt = { Color = { 255, 170, 50 }, Material = "Neon" },
-                Magazine = { Color = { 255, 170, 50 }, Material = "Neon" },
-                Scope = { Color = { 255, 170, 50 }, Material = "Neon" },
-                Core = { Color = { 255, 170, 50 }, Material = "Neon" },
-                Emitter = { Color = { 255, 170, 50 }, Material = "Neon" },
-                Barrels = { Color = { 255, 170, 50 }, Material = "Neon" },
-                Edge = { Color = { 255, 170, 50 }, Material = "Neon" },
+                Barrel = { Color = { 255, 170, 50 }, Material = "Neon", Reflectance = 0.55 },
+                Muzzle = { Color = { 255, 170, 50 }, Material = "Neon", Reflectance = 0.55 },
+                Bolt = { Color = { 255, 170, 50 }, Material = "Neon", Reflectance = 0.55 },
+                Magazine = { Color = { 255, 170, 50 }, Material = "Neon", Reflectance = 0.55 },
+                Scope = { Color = { 255, 170, 50 }, Material = "Neon", Reflectance = 0.55 },
+                Core = { Color = { 255, 170, 50 }, Material = "Neon", Reflectance = 0.55 },
+                Emitter = { Color = { 255, 170, 50 }, Material = "Neon", Reflectance = 0.55 },
+                Barrels = { Color = { 255, 170, 50 }, Material = "Neon", Reflectance = 0.55 },
+                Edge = { Color = { 255, 170, 50 }, Material = "Neon", Reflectance = 0.55 },
             },
         },
         FireSound = { Fire = "rbxassetid://3821792787", DryFire = "TODO", Impact = "TODO" },

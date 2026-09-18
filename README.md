@@ -26,6 +26,16 @@ when one team is eliminated or the timer runs out, first team to 5 rounds wins.
 - `src/shared/Celebrations/`   Celebration registry + validator; `lune run tools/check_celebrations.luau`
 - `src/server/ProfileStore.luau` MadStudioRoblox ProfileStore (vendored); DataService saves loadout, favourites, skins, stats
 
+## Editing in Studio (no code)
+TuningService creates two Studio-owned objects the first time the game runs; Rojo never touches them:
+- `ReplicatedStorage.Tuning`  a Configuration with attributes (RoundSeconds, RoundsToWin, IntermissionSeconds,
+  RespawnSeconds). Change them in the Properties panel; they apply to the next round or match.
+- `ReplicatedStorage.Uploads` a folder for assets you upload: add a Decal, Sound or Animation, name it, and
+  reference it as `upload:<Name>` from any skin or celebration. Example: a Decal named `BlueCamo` finishes every
+  Uncommon camo skin at once; a Sound named `WinSting` can be `Audio.Sting = "upload:WinSting"` in a celebration.
+Map layouts (`src/shared/Maps/*.lua`), weapon stats (`src/shared/Weapons`), skins and celebrations remain code
+files, but each is a plain table of numbers and names.
+
 ## Saving
 DataService loads a ProfileStore profile per player into attributes (`Loadout*`, `CelebrationFavorites`, `Skin_*`,
 `Wins`, `Kills`, `Matches`) and mirrors attribute changes back. In Studio, enable

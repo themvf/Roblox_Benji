@@ -13,6 +13,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Skins = require(ReplicatedStorage.Shared.Skins)
+local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
 local SkinService = Knit.CreateService({
     Name = "SkinService",
@@ -27,8 +28,12 @@ local function warnOnce(key, msg)
     end
 end
 
+-- A reference is ready when it resolves to an asset id (direct id, or an upload:Name that exists)
 local function ready(v)
-    return type(v) == "string" and v ~= "TODO" and v ~= ""
+    return Uploads.isReady(v)
+end
+local function asset(v)
+    return Uploads.resolve(v)
 end
 
 local function attrName(weapon)
@@ -85,7 +90,7 @@ local function applyTexture(model, tex)
                 end
                 if part:IsA("MeshPart") then
                     -- pattern image (camo, stripes) if the skin has one and it is uploaded; else flat colour
-                    part.TextureID = (tex.Asset and tex.Asset ~= "TODO") and tex.Asset or ""
+                    part.TextureID = asset(tex.Asset) or ""
                 end
             end
         end
@@ -136,13 +141,13 @@ end
 local function applyFireSound(model, sys, skinId)
     local fired = findSound(model, "Fired")
     if fired and ready(sys.Fire) then
-        fired.SoundId = sys.Fire
+        fired.SoundId = asset(sys.Fire)
     elseif not ready(sys.Fire) then
         warnOnce(skinId .. ":FireSound", skinId .. " FireSound not ready")
     end
     local dry = findSound(model, "DryFire")
     if dry and ready(sys.DryFire) then
-        dry.SoundId = sys.DryFire
+        dry.SoundId = asset(sys.DryFire)
     end
 end
 
@@ -150,14 +155,14 @@ local function applyEquipReloadSound(tool, model, sys, skinId)
     local reload = findSound(model, "Reload")
     local stage = type(sys.ReloadStages) == "table" and sys.ReloadStages[1] or nil
     if reload and ready(stage) then
-        reload.SoundId = stage
+        reload.SoundId = asset(stage)
     elseif not ready(stage) then
         warnOnce(skinId .. ":EquipReloadSound", skinId .. " reload sound not ready")
     end
     if ready(sys.Equip) and model.PrimaryPart then
         local equip = Instance.new("Sound")
         equip.Name = "SkinEquip"
-        equip.SoundId = sys.Equip
+        equip.SoundId = asset(sys.Equip)
         equip.Volume = 0.6
         equip.Parent = model.PrimaryPart
         tool.Equipped:Connect(function()
@@ -188,7 +193,7 @@ local function applyReloadAnimation(config, systemFolder, sys, skinId)
         warnOnce(skinId .. ":ReloadAnimation", skinId .. " reload animation not ready")
         return
     end
-    local name = registerAnimation(systemFolder, skinId .. "_Reload", id)
+    local name = registerAnimation(systemFolder, skinId .. "_Reload", asset(id))
     if name then
         setConfig(config, "ReloadAnimation", "StringValue", name)
     end
@@ -197,13 +202,13 @@ end
 local function applyFireEquipAnimation(config, systemFolder, sys, skinId)
     -- Kit exposes aim tracks by name; fire/equip/sprint motions have no hook yet.
     if ready(sys.Idle) then
-        local name = registerAnimation(systemFolder, skinId .. "_Aim", sys.Idle)
+        local name = registerAnimation(systemFolder, skinId .. "_Aim", asset(sys.Idle))
         if name then
             setConfig(config, "AimTrack", "StringValue", name)
         end
     end
     if ready(sys.Aim) then
-        local name = registerAnimation(systemFolder, skinId .. "_AimZoom", sys.Aim)
+        local name = registerAnimation(systemFolder, skinId .. "_AimZoom", asset(sys.Aim))
         if name then
             setConfig(config, "AimZoomTrack", "StringValue", name)
         end

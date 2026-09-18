@@ -6,6 +6,7 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Celebrations = require(ReplicatedStorage.Shared.Celebrations)
+local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
 local CelebrationController = Knit.CreateController({ Name = "CelebrationController" })
 
@@ -25,7 +26,27 @@ local function corner(inst, r)
     c.Parent = inst
 end
 
-local function playEmote(character, emote)
+local playEmote
+local function playMotion(character, motion)
+    local hum = character and character:FindFirstChildOfClass("Humanoid")
+    if not hum then
+        return
+    end
+    -- Custom animation wins when its asset is ready; otherwise the built-in emote
+    local animId = Uploads.resolve(motion.Animation)
+    if animId then
+        local anim = Instance.new("Animation")
+        anim.AnimationId = animId
+        local animator = hum:FindFirstChildOfClass("Animator") or Instance.new("Animator", hum)
+        local track = animator:LoadAnimation(anim)
+        track.Priority = Enum.AnimationPriority.Action
+        track:Play()
+        return
+    end
+    playEmote(character, motion.Emote)
+end
+
+playEmote = function(character, emote)
     local hum = character and character:FindFirstChildOfClass("Humanoid")
     if not hum then
         return
@@ -196,8 +217,8 @@ function CelebrationController:OnStart(sequence)
     if mine then
         local cel = Celebrations.get(mine.Celebration)
         task.delay(mine.StartAt, function()
-            if cel and cel.Systems.Motion and cel.Systems.Motion.Emote then
-                playEmote(me.Character, cel.Systems.Motion.Emote)
+            if cel and cel.Systems.Motion then
+                playMotion(me.Character, cel.Systems.Motion)
             end
         end)
         if mine.Reactive then

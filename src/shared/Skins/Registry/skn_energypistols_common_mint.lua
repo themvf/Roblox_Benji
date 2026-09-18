@@ -1,4 +1,4 @@
--- Common: texture only. Generated recolour; works today on the kit mesh.
+-- Common: flat recolour. Works today on the kit mesh.
 return {
     Id = "skn_energypistols_common_mint",
     Weapon = "EnergyPistols",

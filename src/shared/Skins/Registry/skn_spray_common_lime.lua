@@ -1,4 +1,4 @@
--- Common: texture only. Generated recolour; works today on the kit mesh.
+-- Common: flat recolour. Works today on the kit mesh.
 return {
     Id = "skn_spray_common_lime",
     Weapon = "Spray",

@@ -6,6 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Debris = game:GetService("Debris")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Celebrations = require(ReplicatedStorage.Shared.Celebrations)
+local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
 local CelebrationService = Knit.CreateService({
     Name = "CelebrationService",
@@ -268,11 +269,12 @@ local function spawnProps(folder, spot, def, player, reduced)
 end
 
 local function playAudio(folder, spot, def, celId)
-    if type(def.Sting) == "string" and def.Sting ~= "TODO" then
+    local stingId = Uploads.resolve(def.Sting)
+    if stingId then
         local anchor = makePart(folder, "Sting", spot, Vector3.new(1, 1, 1), Color3.new())
         anchor.Transparency = 1
         local s = Instance.new("Sound")
-        s.SoundId = def.Sting
+        s.SoundId = stingId
         s.Volume = 0.7
         s.RollOffMaxDistance = 120
         s.Parent = anchor
