@@ -29,6 +29,7 @@
           "RoundSeconds": 90,
           "RoundsToWin": 5,
           "RespawnSeconds": 3,
+          "StartupMap": "Forest",
           "Convergence_TeamSize": 1,
           "Convergence_MinTeamSize": 1,
           "Convergence_FillWaitSeconds": 30,

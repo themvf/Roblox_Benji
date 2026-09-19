@@ -8,6 +8,7 @@ local Config = {
     RespawnSeconds = 3, -- lobby respawn only; in a Duel you wait for the next round
     Teams = { "Red", "Blue" },
     Maps = { "Forest", "Snow", "Arena" }, -- Duel rotation
+    StartupMap = "Forest", -- module under Shared/Maps built at server start, before the first match
 
     -- Convergence (featured objective mode). Every number here is a Tuning attribute too.
     ConvergenceMaps = { "Carrier", "Forest", "Snow" },

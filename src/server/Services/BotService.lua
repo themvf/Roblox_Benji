@@ -825,9 +825,9 @@ function BotService:SpawnBot(bot, spawnCF)
 end
 
 function BotService:SpawnFor(team)
-    local MapService = Knit.GetService("MapService")
-    local points = MapService.Spawns and MapService.Spawns[team] or {}
-    local p = points[math.random(#points)] or Vector3.new(0, 20, 0)
+    -- MapService picks the pad so bots respect the same occupancy rule players do; a bot rig is
+    -- parented to workspace before the next one picks, so a wave of bots spreads across the pads.
+    local p = Knit.GetService("MapService"):PickSpawn(team) or Vector3.new(0, 20, 0)
     return CFrame.new(p)
 end
 

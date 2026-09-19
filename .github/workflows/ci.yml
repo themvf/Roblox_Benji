@@ -78,6 +78,9 @@ jobs:
       - name: Validate celebrations
         run: lune run tools/check_celebrations.luau
 
+      - name: Validate maps
+        run: lune run tools/check_maps.luau
+
       # build_weapons is deterministic, so regenerating must leave the tree clean.
       # A diff here means someone edited src/shared/Weapons without rebuilding.
       - name: Weapon tools are up to date

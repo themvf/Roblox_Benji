@@ -8,6 +8,7 @@ guns, Lune for build scripts. Read README.md for the full map of services.
 - `rojo serve` owns one terminal tab; run checks in another tab or Rojo stops.
 - Before committing: `stylua src && selene src && rojo build -o /tmp/arena.rbxl`. Zero warnings is the bar.
 - Build gates: `lune run tools/check_skins.luau`, `lune run tools/check_celebrations.luau`,
+  `lune run tools/check_maps.luau`,
   `lune run tools/build_weapons.luau` (regenerates weapon tools from `src/shared/Weapons`).
 - Lune scripts need datatypes imported from the roblox lib (`local Vector3 = roblox.Vector3` etc.).
 
