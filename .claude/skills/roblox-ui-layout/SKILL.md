@@ -82,12 +82,16 @@ local Theme = require(script.Parent.Parent.UI.Theme)   -- from src/client/Contro
   (`Text`, `TextMuted`, `TextInverse`) and status (`Accent`, `Energy`, `Fly`, `Good`, `Warn`, `Danger`).
 - `Theme.Team` / `Theme.team(name)` -- team colour, from `Shared/Palette`.
 - `Theme.Tier` -- the four rarity colours the validators accept. `Theme.Slot` -- loadout slot identity.
-- `Theme.Type` (`Display 30 / Title 22 / Body 16 / Label 14`) and `Theme.Font` for the matching weight.
+- `Theme.Type` -- the size ramp: `Display 30 / Title 22 / Body 16 / Label 14`.
 - `Theme.textSize(n)` -- a design size floored so it still reads after Screen's UIScale shrinks it.
-- `Theme.Transparency.Panel` / `.Scrim`, `Theme.Corner`.
-- `Theme.panel(frame, opts)` -- standard HUD surface in one call.
+- `Theme.Transparency.Panel` / `.Scrim`.
 - `Theme.overWorld(label)` -- the stroke for text drawn over the 3D world (= `Palette.worldText`).
 - `Theme.contrast(fg, bg)` and `Theme.contrastOverBackdrop(fg, panel, transparency)` -- check a new pair.
+
+Theme holds tokens and checks, not widgets: assign them directly
+(`frame.BackgroundColor3 = Theme.Color.Panel`, `label.TextSize = Theme.textSize(Theme.Type.Body)`). There is
+deliberately no `Theme.panel()` or `Theme.text()` wrapper -- each controller builds its own widgets, and a
+wrapper nothing called would drift from how they actually do it.
 
 ## Visual rules
 

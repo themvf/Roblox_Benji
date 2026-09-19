@@ -37,7 +37,6 @@ Theme.Color = {
     -- Text. Text on Panel is 16.6:1, TextMuted on Panel is 7.4:1; both clear WCAG AA.
     Text = Color3.fromRGB(245, 245, 250),
     TextMuted = Color3.fromRGB(160, 165, 180),
-    TextInverse = Color3.fromRGB(20, 22, 28), -- on an Accent fill
 
     -- Status. Accent is the game's gold; the rest are semantic, not decorative.
     Accent = Color3.fromRGB(255, 200, 70),
@@ -70,19 +69,13 @@ Theme.Slot = {
 }
 
 -- Four sizes, not the seven ad-hoc ones this replaced. Display is a banner or a score, Title is a
--- panel heading, Body is the default, Label is a caption or a unit.
+-- panel heading, Body is the default, Label is a caption or a unit. Sizes only: the three Gotham
+-- weights in use are already applied consistently and do not need a token.
 Theme.Type = {
     Display = 30,
     Title = 22,
     Body = 16,
     Label = 14,
-}
-
-Theme.Font = {
-    Display = Enum.Font.GothamBlack,
-    Title = Enum.Font.GothamBlack,
-    Body = Enum.Font.GothamBold,
-    Label = Enum.Font.GothamMedium,
 }
 
 -- Opacity for a panel that carries text. 0.12 keeps TextMuted at 5.8:1 over a bright sky, clear of
@@ -92,8 +85,6 @@ Theme.Transparency = {
     Panel = 0.12,
     Scrim = 0.45,
 }
-
-Theme.Corner = { Panel = 12, Control = 10, Bar = 6 }
 
 -- Smallest text that still reads on the current device, in design pixels. Screen's UIScale shrinks
 -- text along with the panel, so a design-time 12 becomes roughly 7 px on a phone -- gone. Console
@@ -149,30 +140,8 @@ function Theme.contrastOverBackdrop(foreground, panel, panelTransparency, backdr
     return Theme.contrast(foreground, blended)
 end
 
--- Standard HUD surface: the panel colour, the opacity that holds contrast, and a rounded corner.
-function Theme.panel(frame, options)
-    options = options or {}
-    frame.BackgroundColor3 = options.Color or Theme.Color.Panel
-    frame.BackgroundTransparency = options.Transparency or Theme.Transparency.Panel
-    frame.BorderSizePixel = 0
-    if options.Corner ~= false then
-        local corner = frame:FindFirstChildOfClass("UICorner") or Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, options.Corner or Theme.Corner.Panel)
-        corner.Parent = frame
-    end
-    return frame
-end
-
 -- Text drawn straight over the 3D world, rather than on a panel, has no guaranteed backdrop and
 -- needs a stroke. The server builds world billboards too, so the implementation is shared.
 Theme.overWorld = Palette.worldText
-
--- Apply a role from the type ramp: font, size and colour in one call.
-function Theme.text(label, role, color)
-    label.Font = Theme.Font[role] or Theme.Font.Body
-    label.TextSize = Theme.textSize(Theme.Type[role] or Theme.Type.Body)
-    label.TextColor3 = color or Theme.Color.Text
-    return label
-end
 
 return Theme
