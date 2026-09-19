@@ -6,6 +6,47 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local HudController = Knit.CreateController({ Name = "HudController" })
 
 -- Slowly spin the kiosk showcase weapon so it catches the eye
+-- Lobby nameplates: a flame + status for anyone on a visible streak (Phase 1 visibility)
+local function streakNameplates()
+    local RunService = game:GetService("RunService")
+    local plates = {}
+    RunService.Heartbeat:Connect(function()
+        if os.clock() - (plates._t or 0) < 1 then
+            return
+        end
+        plates._t = os.clock()
+        for _, p in Players:GetPlayers() do
+            local status = p:GetAttribute("StreakStatus")
+            local head = p.Character and p.Character:FindFirstChild("Head")
+            if status and status ~= "" and head and p ~= Players.LocalPlayer then
+                local bb = plates[p]
+                if not bb or bb.Parent ~= head then
+                    bb = Instance.new("BillboardGui")
+                    bb.Name = "StreakPlate"
+                    bb.Size = UDim2.fromOffset(200, 30)
+                    bb.StudsOffset = Vector3.new(0, 2.6, 0)
+                    bb.AlwaysOnTop = true
+                    bb.MaxDistance = 90
+                    bb.Parent = head
+                    local l = Instance.new("TextLabel")
+                    l.Size = UDim2.fromScale(1, 1)
+                    l.BackgroundTransparency = 1
+                    l.TextScaled = true
+                    l.Font = Enum.Font.GothamBold
+                    l.TextColor3 = Color3.fromRGB(255, 160, 60)
+                    l.TextStrokeTransparency = 0.3
+                    l.Parent = bb
+                    plates[p] = bb
+                end
+                bb.TextLabel.Text = ("🔥 %s (%d)"):format(status, p:GetAttribute("CurrentStreak") or 0)
+            elseif plates[p] then
+                plates[p]:Destroy()
+                plates[p] = nil
+            end
+        end
+    end)
+end
+
 local function spinShowcase()
     local RunService = game:GetService("RunService")
     task.spawn(function()
@@ -25,6 +66,7 @@ end
 
 function HudController:KnitStart()
     spinShowcase()
+    streakNameplates()
     local gui = Instance.new("ScreenGui")
     gui.Name = "Hud"
     gui.ResetOnSpawn = false
@@ -108,6 +150,22 @@ function HudController:KnitStart()
         end
         if s == "Intermission" and data.Map then
             text = ("%s  Next map: %s"):format(data.Mode or "", data.Map)
+            local wanted = {}
+            for _, p in Players:GetPlayers() do
+                if p:GetAttribute("InMatch") and (p:GetAttribute("CurrentStreak") or 0) >= 3 then
+                    table.insert(
+                        wanted,
+                        ("%s (%d-match streak, %s)"):format(
+                            p.Name,
+                            p:GetAttribute("CurrentStreak"),
+                            p:GetAttribute("StreakStatus") or ""
+                        )
+                    )
+                end
+            end
+            if #wanted > 0 then
+                text = text .. "\nWANTED: " .. table.concat(wanted, "  ·  ")
+            end
             -- Hero view: hold the camera on the map's vista for a couple of seconds
             if data.Vista then
                 local cam = workspace.CurrentCamera

@@ -34,6 +34,9 @@ function TuningService:KnitInit()
     if tuning:GetAttribute("Debug_CarrierTestSafety") == nil then
         tuning:SetAttribute("Debug_CarrierTestSafety", true)
     end
+    if tuning:GetAttribute("Debug_CountBotMatches") == nil then
+        tuning:SetAttribute("Debug_CountBotMatches", true) -- dev: bot matches count for stats/streaks
+    end
     local conv = Config.Convergence
     for _, key in Config.CONVERGENCE_TUNABLE do
         if tuning:GetAttribute("Convergence_" .. key) == nil then

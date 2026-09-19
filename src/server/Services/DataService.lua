@@ -18,12 +18,45 @@ local TEMPLATE = {
     Loadout = {},
     Favorites = "",
     Skins = {},
-    Stats = { Wins = 0, Kills = 0, Matches = 0 },
+    Stats = {
+        Wins = 0,
+        Losses = 0,
+        Kills = 0,
+        Deaths = 0,
+        Assists = 0,
+        Captures = 0,
+        Matches = 0,
+        MVPs = 0,
+        ObjectiveScore = 0,
+        BountiesClaimed = 0,
+        BountiesSurvived = 0,
+        XP = 0,
+        Level = 1,
+        CurrentStreak = 0,
+        BestStreak = 0,
+    },
+    StreakCheckpoints = "",
 }
 
 local STORE_NAME = "PlayerData_v1"
 local SLOTS = { "Primary", "Secondary", "Melee", "Utility" }
-local STATS = { "Wins", "Kills", "Matches" }
+local STATS = {
+    "Wins",
+    "Losses",
+    "Kills",
+    "Deaths",
+    "Assists",
+    "Captures",
+    "Matches",
+    "MVPs",
+    "ObjectiveScore",
+    "BountiesClaimed",
+    "BountiesSurvived",
+    "XP",
+    "Level",
+    "CurrentStreak",
+    "BestStreak",
+}
 
 local profiles = {} -- [player] = profile
 
@@ -38,6 +71,9 @@ local function applyToAttributes(player, data)
     for _, stat in STATS do
         player:SetAttribute(stat, data.Stats[stat] or 0)
     end
+    player:SetAttribute("StreakCheckpoints", data.StreakCheckpoints or "")
+    local tier = require(ReplicatedStorage.Shared.Progression).streakTier(data.Stats.CurrentStreak or 0)
+    player:SetAttribute("StreakStatus", tier and tier.Name or "")
 end
 
 local function mirrorAttribute(player, data, name)
@@ -58,6 +94,10 @@ local function mirrorAttribute(player, data, name)
     end
     if table.find(STATS, name) and type(value) == "number" then
         data.Stats[name] = value
+        return
+    end
+    if name == "StreakCheckpoints" and type(value) == "string" then
+        data.StreakCheckpoints = value
     end
 end
 

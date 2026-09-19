@@ -9,6 +9,7 @@ local TweenService = game:GetService("TweenService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Config = require(ReplicatedStorage.Shared.Config)
 local BotService
+local StatsService
 
 local ConvergenceService = Knit.CreateService({
     Name = "ConvergenceService",
@@ -228,6 +229,7 @@ end
 -- players: Red first (teamSize of them) then Blue. Runs async; returns immediately.
 function ConvergenceService:StartMatch(players, teamSize, mapName)
     BotService = BotService or Knit.GetService("BotService")
+    StatsService = StatsService or Knit.GetService("StatsService")
     local RoundService = Knit.GetService("RoundService")
     if self.Busy or RoundService.Busy then
         return false
@@ -260,6 +262,27 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
             return p:GetAttribute("Team")
         end
         return nil
+    end
+    StatsService:StartMatch(players, "Convergence", mapName)
+
+    -- players inside a zone (for score credit)
+    local function insideZone(zone, p)
+        local root = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+        local hum = p.Character and p.Character:FindFirstChildOfClass("Humanoid")
+        if not root or not hum or hum.Health <= 0 then
+            return false
+        end
+        local d = root.Position - zone.Position
+        return Vector3.new(d.X, 0, d.Z).Magnitude <= zone.Radius and math.abs(d.Y) <= 12
+    end
+    local function playersInside(zone, team)
+        local out = {}
+        for _, p in present(match) do
+            if (team == nil or p:GetAttribute("Team") == team) and insideZone(zone, p) then
+                table.insert(out, p)
+            end
+        end
+        return out
     end
 
     task.spawn(function()
@@ -323,6 +346,7 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                         if root then
                             Knit.GetService("PickupService"):NoteDeath(root.Position)
                         end
+                        StatsService:OnKill((killer and killer ~= p) and killer or nil, p, character)
                         task.delay(rules.RespawnSeconds, function()
                             if match.Running and p.Parent and p:GetAttribute("InMatch") then
                                 p:LoadCharacter()
@@ -410,8 +434,10 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                     local ev = stepZone(zone, counts, rules, dt)
                     if ev == "Captured" then
                         self:FireAll(match, self.Client.Event, "ZoneCaptured", { Zone = zone.Name, Team = zone.Owner })
+                        StatsService:OnCapture(zone, playersInside(zone, zone.Owner))
                     elseif ev == "Neutralized" then
                         self:FireAll(match, self.Client.Event, "ZoneNeutralized", { Zone = zone.Name })
+                        StatsService:OnStop(zone, playersInside(zone, nil))
                     end
                     paintZone(zone)
                     if zone.Owner then
@@ -565,6 +591,19 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                 match.Aborted = true
             end
 
+            -- match score credit + bounty pings + scoreboard
+            StatsService:Tick(dt, match.Zones, insideZone)
+            match.PingClock = (match.PingClock or 0) + dt
+            if match.PingClock >= 75 then
+                match.PingClock = 0
+                StatsService:PingBounties(match.Zones)
+            end
+            match.BoardClock = (match.BoardClock or 0) + dt
+            if match.BoardClock >= 1 then
+                match.BoardClock = 0
+                StatsService:BroadcastScoreboard()
+            end
+
             -- snapshot to clients
             if os.clock() - lastSnap >= 0.25 then
                 lastSnap = os.clock()
@@ -592,6 +631,9 @@ function ConvergenceService:CreditKill(killerId, victimTeam)
         if kteam and kteam ~= victimTeam then
             killer:SetAttribute("MatchKills", (killer:GetAttribute("MatchKills") or 0) + 1)
             match.Score[kteam] += match.Rules.KillPoints
+            if StatsService then
+                StatsService:OnKill(killer, nil, nil)
+            end
         end
     elseif killerId and killerId < 0 then
         -- bot killed a bot: score for the bot's team
@@ -652,26 +694,27 @@ function ConvergenceService:Finish(match, winner, aborted)
         match.Folder:Destroy()
     end
     if not aborted and winner then
+        -- validation, transparent MVP, streaks, XP and persistent stats live in StatsService
+        StatsService:EndMatch(winner, aborted)
+        task.wait(6) -- recap card on screen
         local winners, losers = {}, {}
         for _, p in present(match) do
-            p:SetAttribute("Matches", (p:GetAttribute("Matches") or 0) + 1)
-            p:SetAttribute("Kills", (p:GetAttribute("Kills") or 0) + (p:GetAttribute("MatchKills") or 0))
             if p:GetAttribute("Team") == winner then
                 table.insert(winners, p)
-                p:SetAttribute("Wins", (p:GetAttribute("Wins") or 0) + 1)
             else
                 table.insert(losers, p)
             end
         end
         table.sort(winners, function(a, b)
-            local ka, kb = a:GetAttribute("MatchKills") or 0, b:GetAttribute("MatchKills") or 0
-            if ka ~= kb then
-                return ka > kb
+            local sa, sb = a:GetAttribute("MatchScore") or 0, b:GetAttribute("MatchScore") or 0
+            if sa ~= sb then
+                return sa > sb
             end
             return a.UserId < b.UserId
         end)
         Knit.GetService("CelebrationService"):Run(winners, losers)
     else
+        StatsService:Abort()
         task.wait(2)
     end
     for _, p in present(match) do

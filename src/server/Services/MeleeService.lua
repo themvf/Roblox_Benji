@@ -112,6 +112,7 @@ function MeleeService.Client:Swing(player, weaponName)
                             math.acos(math.clamp(flat.Unit:Dot(Vector3.new(forward.X, 0, forward.Z).Unit), -1, 1))
                         if angle <= halfArc then
                             oc:SetAttribute("LastHitBy", player.UserId)
+                            Knit.GetService("StatsService"):OnDamage(player, oc, math.min(stats.Damage[1], ohum.Health))
                             ohum:TakeDamage(stats.Damage[1])
                         end
                     end

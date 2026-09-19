@@ -465,6 +465,49 @@ local function buildLobby(self, layout)
         table.insert(self.LobbySpawns, v3(at(p)))
     end
 
+    -- Leaderboard wall
+    local b = layout.Board
+    if b then
+        local wall = makePart(
+            folder,
+            "LeaderboardWall",
+            at({ b.pos[1], b.pos[2] + b.size[2] / 2, b.pos[3] }),
+            b.size,
+            nil,
+            pal.Wall
+        )
+        local sg = Instance.new("SurfaceGui")
+        sg.Face = Enum.NormalId.Front
+        sg.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+        sg.PixelsPerStud = 40
+        sg.Parent = wall
+        local title = Instance.new("TextLabel")
+        title.Size = UDim2.new(1, 0, 0.14, 0)
+        title.BackgroundTransparency = 1
+        title.Text = "LEADERBOARDS"
+        title.TextScaled = true
+        title.Font = Enum.Font.GothamBlack
+        title.TextColor3 = pal.Accent
+        title.Parent = sg
+        self.BoardLabels = {}
+        local names = { "Rating", "BestStreak", "Wins", "BountiesClaimed" }
+        local titles = { "CONVERGENCE RATING", "BEST STREAK", "WINS", "BOUNTIES CLAIMED" }
+        for i, name in names do
+            local col = Instance.new("TextLabel")
+            col.Position = UDim2.new((i - 1) * 0.25, 4, 0.15, 0)
+            col.Size = UDim2.new(0.25, -8, 0.85, 0)
+            col.BackgroundTransparency = 1
+            col.TextScaled = true
+            col.TextYAlignment = Enum.TextYAlignment.Top
+            col.TextXAlignment = Enum.TextXAlignment.Left
+            col.Font = Enum.Font.GothamBold
+            col.TextColor3 = Color3.fromRGB(240, 240, 245)
+            col.Text = titles[i] .. "\n(loading)"
+            col.Parent = sg
+            self.BoardLabels[name] = { Label = col, Title = titles[i] }
+        end
+    end
+
     -- Weapon kiosk
     local k = layout.Kiosk
     if k then

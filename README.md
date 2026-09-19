@@ -42,6 +42,21 @@ DataService loads a ProfileStore profile per player into attributes (`Loadout*`,
 Game Settings > Security > "Enable Studio Access to API Services" to save for real; otherwise ProfileStore uses a
 mock store and prints a warning.
 
+## Competitive loop (Phases 1-2 of the bounty/streak design)
+- Match score = Objective + Defense + Teamplay + Combat + Discipline (weights in `Shared/Progression`). MVP is the
+  top scorer on the winning team; the recap card shows the breakdown. Hold Tab for the scoreboard.
+- Only completed public matches count (>= 90 s, not aborted). Bot matches count while `Debug_CountBotMatches` is on.
+- Streaks: 2 Heating Up, 3 Hot Streak, 5 On Fire, 8 Elite, 10 Legendary, 15 Mythic. Checkpoints at 3/5/8/10 are
+  saved forever. A loss resets the run, not the legacy. Lobby nameplates and the pre-match card show streak status.
+- Match bounties (XP + titles only): Combat (4/7/10 kills in one life -> Marked / Priority Target / Overrun) and
+  Objective (2 captures in a life, 90 s held in a life, or 3 stops). Markers show only with line of sight; a zone
+  ping every 75 s; capture callouts. Claimed on elimination; XP split 60% opposing team / 25% hunter / 15% top
+  objective contributor; eligibility needs 90 s match age, target score >= 100, hunter present >= 60 s, and repeat
+  kills on the same target pay 100% / 50% / 0%. Surviving to a win while marked pays survival XP.
+- Persistent stats (ProfileStore): wins, losses, K/D/A, captures, MVPs, objective score, bounties, XP/level, streaks.
+- Lobby leaderboard wall (OrderedDataStore): Convergence Rating, Best Streak, Wins, Bounties Claimed.
+- Not yet (Phase 3-4 by design): cross-match streak bounties with currency, rivalry ledger, weekly boards.
+
 ## Modes
 - **Convergence (featured)**: 6v6 objective battle, starts at 4v4 after a 30 s wait. (Currently set to 1v1 for
   testing via `Convergence_TeamSize` / `Convergence_MinTeamSize` on Tuning; set 6 / 4 to restore.) Three capture zones close

@@ -45,7 +45,8 @@
           "Convergence_SpawnProtectSeconds": 2,
           "Convergence_BotsPerTeam": 0,
           "Debug_ForceMap": "",
-          "Debug_CarrierTestSafety": true
+          "Debug_CarrierTestSafety": true,
+          "Debug_CountBotMatches": true
         }
       },
       "Uploads": {

@@ -59,6 +59,9 @@ return {
         },
     },
 
+    -- Leaderboard wall (opposite the kiosk): Rating, Best Streak, Wins, Bounties Claimed
+    Board = { pos = { 44, 0, 12 }, size = { 22, 10, 1 } },
+
     -- Weapon kiosk: walk up and press E to open the loadout picker
     Kiosk = {
         pos = { -44, 0, 12 }, -- counter center, on the floor

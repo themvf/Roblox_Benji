@@ -31,6 +31,9 @@ local function onDamage(_system, target, amount, _damageType, dealer, hitInfo, w
             amount *= crit.Value
         end
     end
+    if dealer and dealer:IsA("Player") then
+        Knit.GetService("StatsService"):OnDamage(dealer, target.Parent, math.min(amount, target.Health))
+    end
     target:TakeDamage(amount)
 end
 
