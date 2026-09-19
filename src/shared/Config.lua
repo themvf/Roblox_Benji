@@ -10,6 +10,11 @@ local Config = {
     Maps = { "Forest", "Snow", "Arena" }, -- Duel rotation
     StartupMap = "Forest", -- module under Shared/Maps built at server start, before the first match
 
+    -- Lobby map vote: once a pad fills, the players on it pick the map before the match starts.
+    MapVoteEnabled = true,
+    MapVoteSeconds = 12,
+    MapVoteOptions = 3, -- candidates offered; capped by how many maps the mode's rotation has
+
     -- Convergence (featured objective mode). Every number here is a Tuning attribute too.
     ConvergenceMaps = { "Carrier", "Forest", "Snow" },
     Convergence = {

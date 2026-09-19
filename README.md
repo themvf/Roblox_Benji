@@ -15,7 +15,7 @@ when one team is eliminated or the timer runs out, first team to 5 rounds wins.
 4. Test with Test > Clients and Servers (2+ players). Everyone spawns in the lobby; stand on the RED or BLUE half of the big gold CONVERGENCE pad (or a DUEL side pad) to queue on that team; friends stand on the same half.
 
 ## Layout
-- `src/server/Services`   Knit services. QueueService watches the lobby pads, RoundService runs a match, MapService builds arena + lobby, WeaponService hooks the Weapons Kit.
+- `src/server/Services`   Knit services. QueueService watches the lobby pads, MapVoteService runs the lobby map vote, RoundService runs a match, MapService builds arena + lobby, WeaponService hooks the Weapons Kit.
 - `src/client/Controllers` input handling and HUD
 - `src/shared`             Config, map layouts, and Rivals weapon stats
 - `assets/WeaponsSystem.rbxm`  Roblox Weapons Kit (firing, bullets, recoil, GUI, camera)
@@ -94,7 +94,8 @@ lost fight by jumping off. Bots go through the same rule (`OUT_OF_BOUNDS` in the
 player to the nearest safe point instead of killing them (logged as `RECOVERY: ...` with a reason and position),
 adds an invisible perimeter barrier (bullets pass, players don't), and shows launch pad trigger volumes,
 direction arrows and landing markers. The barrier is built with the map, so a mid-session toggle applies on the
-next map load.
+next map load. It no longer pins Convergence to the Carrier — that hid the map vote in every dev session; use
+`/map carrier` when you want the map pinned.
 `/map carrier` (or any map name) forces the next Convergence map; `/map off` restores rotation. Launch pads use a
 server-side trigger volume and apply velocity on the client (character is client-owned), 1 s re-trigger guard.
 
@@ -112,9 +113,20 @@ pieces: `light`, `beacon` (flashing), `elevator` (moving platform), `jet` (chunk
 of them; the jet-launch event fires when phase 2 begins.
 
 ## Maps
-`Config.Maps` lists the rotation; each match picks one at random (never the same twice in a row) and rebuilds the
-arena during the intermission. `Snow.lua` shows how to make a variant from an existing layout with a new palette.
-Type `/celebrate` in the lobby to preview your default celebration on the podium.
+`Config.Maps` (Duel) and `Config.ConvergenceMaps` (Convergence) list the rotations. `Snow.lua` shows how to make
+a variant from an existing layout with a new palette. Type `/celebrate` in the lobby to preview your default
+celebration on the podium.
+
+### Map vote
+When a lobby pad fills, the players who filled it vote on the map before the match starts — `MapVoteSeconds`
+(default 12) on a card in the lobby, tap or press the number key, tally updates live. Highest count wins, ties
+broken randomly, no votes at all falls back to random. `MapVoteOptions` (default 3) candidates are sampled from
+that mode's rotation; the map that just played is dropped only when the rotation is big enough to still fill the
+ballot, so a three-map rotation always offers all three and a rematch is a legitimate vote. `MapVoteEnabled`
+false restores the old silent random pick, and `/map <name>` (`Debug_ForceMap`) skips the vote entirely.
+
+Only the players on the pad vote, and the server only ever accepts an index into the list it published. A vote
+blocks every pad while it runs, so two matches cannot start at once.
 
 ## Celebrations
 Winners pick from up to 3 favourites (kiosk, Celebration column; first = default) in a 3 s wheel after the final round,

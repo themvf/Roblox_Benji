@@ -13,7 +13,16 @@ local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local TuningService = Knit.CreateService({ Name = "TuningService" })
 
 -- Keys exposed as attributes and their defaults from Config
-local TUNABLE = { "IntermissionSeconds", "RoundSeconds", "RoundsToWin", "RespawnSeconds", "StartupMap" }
+local TUNABLE = {
+    "IntermissionSeconds",
+    "RoundSeconds",
+    "RoundsToWin",
+    "RespawnSeconds",
+    "StartupMap",
+    "MapVoteEnabled",
+    "MapVoteSeconds",
+    "MapVoteOptions",
+}
 
 -- Idempotent, and safe to call from another service's KnitInit: Knit gives no ordering
 -- guarantee between services, and MapService builds the map (reading Tuning) in its own

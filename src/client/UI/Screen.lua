@@ -30,6 +30,7 @@ Screen.Layers = {
     Objective = 4, -- Convergence top bar and zone chips
     Meter = 6, -- mutation / jetpack meters
     Touch = 8, -- on-screen buttons: always above the readouts they drive
+    MapVote = 12, -- lobby map vote: above the touch buttons, below the scoreboard
     Scoreboard = 15,
     Recap = 18,
     Celebration = 20,
