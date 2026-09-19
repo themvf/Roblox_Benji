@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A new push supersedes an in-flight run on the same ref.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Matches the Rokit that manages rokit.toml locally.
+  ROKIT_VERSION: "1.2.0"
+
+jobs:
+  check:
+    name: Lint, validate, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Rokit tools
+        uses: actions/cache@v4
+        with:
+          path: ~/.rokit
+          key: rokit-${{ runner.os }}-${{ env.ROKIT_VERSION }}-${{ hashFiles('rokit.toml') }}
+
+      # Pinned release rather than a third-party action, so CI installs the exact
+      # Rokit that reads rokit.toml and resolves the same tool versions as local.
+      - name: Install Rokit
+        run: |
+          curl -fsSL -o /tmp/rokit.zip \
+            "https://github.com/rojo-rbx/rokit/releases/download/v${ROKIT_VERSION}/rokit-${ROKIT_VERSION}-linux-x86_64.zip"
+          unzip -qo /tmp/rokit.zip -d /tmp/rokit-bin
+          chmod +x /tmp/rokit-bin/rokit
+          /tmp/rokit-bin/rokit self-install
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+
+      # rokit.toml is the single source of truth: rojo, wally, stylua, selene, lune.
+      - name: Install pinned toolchain
+        run: rokit install --no-trust-check
+
+      - name: Tool versions
+        run: |
+          rojo --version
+          wally --version
+          stylua --version
+          selene --version
+          lune --version
+
+      - name: Cache Wally packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            Packages
+            ServerPackages
+          key: wally-${{ runner.os }}-${{ hashFiles('wally.lock') }}
+
+      # Packages/ is gitignored, so rojo build cannot resolve Knit without this.
+      - name: Install Wally dependencies
+        run: wally install
+
+      - name: StyLua
+        run: stylua --check src
+
+      - name: Selene
+        run: selene src
+
+      - name: Validate skins
+        run: lune run tools/check_skins.luau
+
+      - name: Validate celebrations
+        run: lune run tools/check_celebrations.luau
+
+      # build_weapons is deterministic, so regenerating must leave the tree clean.
+      # A diff here means someone edited src/shared/Weapons without rebuilding.
+      - name: Weapon tools are up to date
+        run: |
+          lune run tools/build_weapons.luau
+          if ! git diff --quiet -- assets; then
+            echo "::error::Generated weapon tools are stale. Run 'lune run tools/build_weapons.luau' and commit the result."
+            git diff --stat -- assets
+            exit 1
+          fi
+
+      - name: Rojo build
+        run: rojo build -o arena.rbxl
+
+      # Downloadable place file from every run - useful when working from the
+      # cloud, where you cannot run rojo build locally.
+      - name: Upload place file
+        uses: actions/upload-artifact@v4
+        with:
+          name: arena-rbxl
+          path: arena.rbxl
+          retention-days: 14
