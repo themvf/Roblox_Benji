@@ -83,11 +83,18 @@ who reached 100 and never activated, ability uses and hits). Numbers live in `Sh
   `Carrier` is the first built for it (Flight Deck -> Hangar -> Bridge).
 - **Duel**: 1v1 / 2v2 elimination, first to 5 rounds. Side pads in the lobby.
 
-## Carrier testing (Testability & Safety Fix Spec v1)
-`Debug_CarrierTestSafety` (Tuning, default true) forces the Carrier for Convergence, adds an invisible perimeter
-barrier (bullets pass, players don't), recovers anyone who reaches water / below-deck / an invalid void to the
-nearest safe point within ~1.5 s (logged as `RECOVERY: ...` with a reason and position), and shows launch pad
-trigger volumes, direction arrows and landing markers. Set it false for production-intent behaviour.
+## Out of bounds (Testability & Safety Fix Spec v1)
+Detection always runs, in production as well as in testing: anyone who reaches water, below-deck or an invalid
+void (`RecoveryY` / `Bounds` / `InvalidRegions`, minus `SafeRegions`) is caught within ~1.5 s. **In production
+they die and respawn normally** — a map over water has no kill plane, so before this a fall into the Carrier's
+sea meant swimming until the match ended, and teleporting them to safety instead would let a player escape a
+lost fight by jumping off. Bots go through the same rule (`OUT_OF_BOUNDS` in the bot report, target 0).
+
+`Debug_CarrierTestSafety` (Tuning, default true) switches the response to testing aids: recovery teleports the
+player to the nearest safe point instead of killing them (logged as `RECOVERY: ...` with a reason and position),
+adds an invisible perimeter barrier (bullets pass, players don't), and shows launch pad trigger volumes,
+direction arrows and landing markers. The barrier is built with the map, so a mid-session toggle applies on the
+next map load.
 `/map carrier` (or any map name) forces the next Convergence map; `/map off` restores rotation. Launch pads use a
 server-side trigger volume and apply velocity on the client (character is client-owned), 1 s re-trigger guard.
 

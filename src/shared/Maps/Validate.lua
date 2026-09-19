@@ -574,6 +574,37 @@ function Validate.check(layout, weapons)
             span(e.pos)
         end
     end
+    -- Out-of-bounds is lethal in production, so the Bounds ceiling has to clear everything a
+    -- player can legitimately reach. A jetpack burns its whole tank in one climb from the
+    -- tallest thing they can stand on, and recharges on the ground, so they can do it again.
+    local jet = weapons and weapons.Jetpack
+    if jet and layout.Bounds then
+        local burn = (jet.Burn and jet.Burn > 0) and (jet.Fuel / jet.Burn) or 0
+        local hasJetpack = false
+        for _, p in layout.Pickups or {} do
+            if p.kind == "jetpack" then
+                hasJetpack = true
+                burn = math.max(burn, p.fuel or 3.5)
+            end
+        end
+        if hasJetpack then
+            local tallest = -math.huge
+            for _, box in solids do
+                tallest = math.max(tallest, box.aabb.max.y)
+            end
+            local ceiling = tallest + burn * (jet.Thrust or 0)
+            if layout.Bounds.max[2] < ceiling then
+                err(
+                    "Bounds ceiling is %g but a jetpack reaches %.0f (%.0f stud climb from the tallest surface at %.0f): players would die for using one",
+                    layout.Bounds.max[2],
+                    ceiling,
+                    burn * (jet.Thrust or 0),
+                    tallest
+                )
+            end
+        end
+    end
+
     local drop = highest - lowest
     local overWater = layout.Terrain ~= nil and layout.Terrain.Sea == true
     if drop > R.DropHeight or overWater then

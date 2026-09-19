@@ -40,7 +40,10 @@ return {
 
     -- ===== Testability & Safety (Spec v1) =====
     RecoveryY = -14, -- below this = water / under the hull
-    Bounds = { min = { -170, -16, -70 }, max = { 170, 90, 70 } },
+    -- Leaving this box is lethal in production, so the ceiling clears a full jetpack climb
+    -- (147 studs) from the tallest surface on the ship (the island mast at 63). check_maps
+    -- fails the map if it does not.
+    Bounds = { min = { -170, -16, -70 }, max = { 170, 220, 70 } },
     -- voids a player should never be in: between hangar walls and hull sides, and under the deck ends
     InvalidRegions = {
         { name = "PortVoid", pos = { 0, 6, -40 }, size = { 220, 16, 10 } },

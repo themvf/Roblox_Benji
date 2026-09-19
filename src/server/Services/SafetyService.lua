@@ -1,7 +1,20 @@
 -- Carrier Testability and Safety Fix Spec v1 (S2, S5, S6, S7).
--- One switch, Tuning attribute Debug_CarrierTestSafety, enables:
---   perimeter collision barrier (layout.Barrier), water / below-map recovery, invalid-geometry recovery,
---   launch pad debug markers, and RECOVERY logging. Off = production-intent behaviour (none of the above).
+--
+-- Detection always runs: a character below layout.RecoveryY, outside layout.Bounds, or inside an
+-- InvalidRegion (and not in a SafeRegion) is somewhere the map does not want them. What happens
+-- next depends on the mode:
+--
+--   Production (default): they die and respawn through the normal flow. This has to be the
+--     shipped behaviour, because a map over water has no kill plane -- Roblox only destroys parts
+--     below FallenPartsDestroyHeight, and the Carrier's sea is swimmable, so a player who went
+--     over the deck edge used to swim until the match ended. Death is also the honest outcome:
+--     teleporting a player back to safety would let them dodge a lost fight by jumping off.
+--
+--   Testing (Tuning Debug_CarrierTestSafety): the same detection teleports to the nearest
+--     SafePoint instead of killing, and adds the perimeter barrier (layout.Barrier), launch pad
+--     debug markers and RECOVERY logging, so a QA run is not interrupted by every fall. The
+--     barrier is built with the map, so toggling this mid-session applies on the next map load.
+--
 -- Map data: layout.RecoveryY, layout.Bounds {min,max}, layout.InvalidRegions, layout.SafeRegions, layout.SafePoints.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -21,7 +34,8 @@ local function tuning()
     return ReplicatedStorage:FindFirstChild("Tuning")
 end
 
-function SafetyService:Enabled()
+-- Testing aids only. Detection and the production response do not depend on this.
+function SafetyService:TestAids()
     local t = tuning()
     return t ~= nil and t:GetAttribute("Debug_CarrierTestSafety") == true
 end
@@ -37,7 +51,7 @@ end
 
 -- ===== S2 perimeter barrier =====
 function SafetyService:BuildBarrier(layout, folder)
-    if not self:Enabled() or not layout.Barrier then
+    if not self:TestAids() or not layout.Barrier then
         return
     end
     for i, seg in layout.Barrier do
@@ -118,15 +132,36 @@ function SafetyService:Recover(player, character, layout, why)
     self.Stats.Recoveries += 1
 end
 
+-- Production response: the map has decided this position is not playable, so the character dies
+-- and the mode's own respawn timer takes over. No killer is credited (nothing sets LastHitBy),
+-- unless an enemy shot them just before they went over, which is the outcome we want anyway.
+function SafetyService:Eliminate(character, why)
+    local hum = character:FindFirstChildOfClass("Humanoid")
+    if not hum or hum.Health <= 0 then
+        return
+    end
+    self.Stats.Eliminations += 1
+    self.Stats.Reasons[why] = (self.Stats.Reasons[why] or 0) + 1
+    hum.Health = 0
+end
+
+-- The out-of-bounds rule, for anything that is not a Player: BotService runs its rigs through
+-- this so a bot cannot swim in the sea for the rest of a bot test.
+-- Returns a reason string, or nil when the position is fine (or the map declares no safety data).
+function SafetyService:OutOfBounds(position)
+    local layout = Knit.GetService("MapService").Layout
+    if not layout then
+        return nil
+    end
+    return reason(layout, position)
+end
+
 function SafetyService:KnitStart()
-    self.Stats = { Recoveries = 0 }
+    self.Stats = { Recoveries = 0, Eliminations = 0, Reasons = {} }
     self.OutSince = {}
     task.spawn(function()
         while true do
             task.wait(CHECK)
-            if not self:Enabled() then
-                continue
-            end
             local MapService = Knit.GetService("MapService")
             local layout = MapService.Layout
             if not layout then
@@ -148,7 +183,12 @@ function SafetyService:KnitStart()
                         self.OutSince[player] = self.OutSince[player] or os.clock()
                         if os.clock() - self.OutSince[player] >= GRACE then
                             self.OutSince[player] = nil
-                            self:Recover(player, character, layout, why)
+                            if self:TestAids() then
+                                self:Recover(player, character, layout, why)
+                            else
+                                self.Client.Notice:Fire(player, "Out of bounds")
+                                self:Eliminate(character, why)
+                            end
                         end
                     else
                         self.OutSince[player] = nil
