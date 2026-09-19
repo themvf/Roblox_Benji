@@ -37,6 +37,7 @@ local T = {
     AntiStack = 6,
     OrientDelay = 0.4,
     LeaveZoneEnemyRange = 18,
+    BoundsGrace = 1.0, -- seconds out of bounds before the rig is written off (matches SafetyService)
 }
 
 -- ===== S3 difficulty =====
@@ -543,6 +544,30 @@ local function stuckCheck(bot)
     end
 end
 
+-- Out of bounds, by the map's own rule (SafetyService owns it, players go through the same one).
+-- Without this a bot that went over the deck edge swam in the sea for the rest of the test,
+-- holding a slot and quietly skewing every objective number. Bots always die rather than being
+-- teleported back: there is no tester to avoid interrupting, and a death respawns them in seconds.
+local function boundsCheck(bot)
+    if bot.Character:GetAttribute("Launched") then
+        return
+    end
+    local p = bot.Root.Position
+    local why = Knit.GetService("SafetyService"):OutOfBounds(p)
+    if not why then
+        bot.OutSince = nil
+        return
+    end
+    bot.OutSince = bot.OutSince or now()
+    if now() - bot.OutSince < T.BoundsGrace then
+        return
+    end
+    bot.OutSince = nil
+    bot.Telemetry.OutOfBounds += 1
+    warn(("[Bots] OUT_OF_BOUNDS %s reason=%s at (%.0f, %.0f, %.0f)"):format(bot.Name, why, p.X, p.Y, p.Z))
+    bot.Humanoid.Health = 0
+end
+
 -- ===== S4 combat =====
 local function tracer(from, to, color)
     local d = (to - from).Magnitude
@@ -754,6 +779,7 @@ local function newTelemetry()
         Repaths = 0,
         StuckEvents = 0,
         PathingFailures = 0,
+        OutOfBounds = 0,
         FlankUses = 0,
         CombatDistSum = 0,
         CombatSamples = 0,
@@ -825,9 +851,9 @@ function BotService:SpawnBot(bot, spawnCF)
 end
 
 function BotService:SpawnFor(team)
-    local MapService = Knit.GetService("MapService")
-    local points = MapService.Spawns and MapService.Spawns[team] or {}
-    local p = points[math.random(#points)] or Vector3.new(0, 20, 0)
+    -- MapService picks the pad so bots respect the same occupancy rule players do; a bot rig is
+    -- parented to workspace before the next one picks, so a wave of bots spreads across the pads.
+    local p = Knit.GetService("MapService"):PickSpawn(team) or Vector3.new(0, 20, 0)
     return CFrame.new(p)
 end
 
@@ -876,6 +902,7 @@ function BotService:Start(perTeam, respawnSeconds, getZones)
                         perceive(bot, zones)
                         decide(bot, zones)
                         stuckCheck(bot)
+                        boundsCheck(bot)
                     end
                     act(bot, dt)
                 end)
@@ -901,7 +928,7 @@ function BotService:Report()
     end
     local lines = { "=== BOT REPORT ===" }
     local contacts, objectives = {}, {}
-    local totalStuck, totalFail, totalShots, totalHits = 0, 0, 0, 0
+    local totalStuck, totalFail, totalShots, totalHits, totalOob = 0, 0, 0, 0, 0
     for _, b in self.Bots do
         local tm = b.Telemetry
         local alive = tm.Alive + ((b.Alive and b.SpawnedAt) and (now() - b.SpawnedAt) or 0)
@@ -921,6 +948,7 @@ function BotService:Report()
         end
         totalStuck += tm.StuckEvents
         totalFail += tm.PathingFailures
+        totalOob += tm.OutOfBounds
         totalShots += tm.Shots
         totalHits += tm.Hits
         local acc = tm.Shots > 0 and (tm.Hits / tm.Shots * 100) or 0
@@ -932,7 +960,7 @@ function BotService:Report()
         table.sort(st)
         table.insert(
             lines,
-            ("%-12s %-7s %-6s alive %.0fs K%d D%d shots %d acc %.0f%% dist %.0f cap %.0fs def %.0fs repath %d stuck %d fail %d flank %d cdist %.0f | %s"):format(
+            ("%-12s %-7s %-6s alive %.0fs K%d D%d shots %d acc %.0f%% dist %.0f cap %.0fs def %.0fs repath %d stuck %d fail %d oob %d flank %d cdist %.0f | %s"):format(
                 b.Name,
                 b.Archetype,
                 b.LevelName,
@@ -947,6 +975,7 @@ function BotService:Report()
                 tm.Repaths,
                 tm.StuckEvents,
                 tm.PathingFailures,
+                tm.OutOfBounds,
                 tm.FlankUses,
                 combatD,
                 table.concat(st, ", ")
@@ -957,13 +986,14 @@ function BotService:Report()
     local c, o = avg(contacts), avg(objectives)
     table.insert(
         lines,
-        ("match %.0fs | spawn->contact avg %s (target 8-15s) | spawn->objective avg %s (target 10-18s) | overall acc %.0f%% (target 35-55) | stuck %d fail %d (target <1 fail per bot) | deaths logged %d"):format(
+        ("match %.0fs | spawn->contact avg %s (target 8-15s) | spawn->objective avg %s (target 10-18s) | overall acc %.0f%% (target 35-55) | stuck %d fail %d (target <1 fail per bot) | out of bounds %d (target 0) | deaths logged %d"):format(
             dur,
             c and ("%.1fs"):format(c) or "n/a",
             o and ("%.1fs"):format(o) or "n/a",
             totalShots > 0 and totalHits / totalShots * 100 or 0,
             totalStuck,
             totalFail,
+            totalOob,
             self.Match and #self.Match.Deaths or 0
         )
     )

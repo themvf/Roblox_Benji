@@ -4,12 +4,16 @@
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Config = require(ReplicatedStorage.Shared.Config)
 local TweenService = game:GetService("TweenService")
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
+local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
 
-local ACTIVE_MAP = "Forest" -- "Greybox" or "Forest"
+-- The startup map is Config.StartupMap (Tuning attribute StartupMap). This is the last resort
+-- if that name does not resolve, so the server still comes up with a playable arena.
+local FALLBACK_MAP = "Arena"
 
 local MapService = Knit.CreateService({ Name = "MapService" })
 
@@ -673,6 +677,11 @@ local function placePiece(folder, prefix, piece, rng, mirrored)
         )
         stripe.CanCollide = false
         local low, high, period = piece.low or 0.5, piece.high or pos[2], piece.period or 12
+        -- Keep each part's rotation and re-apply it at the target height. Rebuilding the CFrame
+        -- from pos alone squared up a rotated elevator on its first cycle.
+        local platRot = plat.CFrame - plat.CFrame.Position
+        local stripeRot = stripe.CFrame - stripe.CFrame.Position
+        local stripeLift = stripe.CFrame.Position.Y - plat.CFrame.Position.Y
         task.spawn(function()
             local goingDown = true
             while plat.Parent do
@@ -682,9 +691,11 @@ local function placePiece(folder, prefix, piece, rng, mirrored)
                 end
                 local targetY = goingDown and low or high
                 local info = TweenInfo.new(period / 4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
-                TweenService:Create(plat, info, { CFrame = CFrame.new(pos[1], targetY, pos[3]) }):Play()
+                TweenService:Create(plat, info, { CFrame = CFrame.new(pos[1], targetY, pos[3]) * platRot }):Play()
                 TweenService
-                    :Create(stripe, info, { CFrame = CFrame.new(pos[1], targetY + piece.size[2] / 2 + 0.05, pos[3]) })
+                    :Create(stripe, info, {
+                        CFrame = CFrame.new(pos[1], targetY + stripeLift, pos[3]) * stripeRot,
+                    })
                     :Play()
                 goingDown = not goingDown
             end
@@ -781,10 +792,32 @@ local function placePiece(folder, prefix, piece, rng, mirrored)
         jp("Gear2", { -2, 0.6, 3 }, { 0.6, 1.4, 0.6 }, Color3.fromRGB(40, 40, 45))
         jp("Gear3", { 2, 0.6, 3 }, { 0.6, 1.4, 0.6 }, Color3.fromRGB(40, 40, 45))
         model.Parent = folder
+    else
+        -- a typo in `kind` used to place nothing at all: an invisible hole in the map
+        warn(("[MapService] unknown piece kind %q on %s, nothing placed"):format(kind, name))
     end
 end
 
 function MapService:Build(layout)
+    -- Check before touching the world: bailing out after the old Map is destroyed would leave
+    -- players standing in an empty skybox.
+    for _, key in { "Name", "Size", "WallHeight", "Spawns" } do
+        if layout[key] == nil then
+            error(("[MapService] layout is missing %s"):format(key), 0)
+        end
+    end
+    if RunService:IsStudio() then
+        -- The build gate (tools/check_maps.luau) is the real check; this catches a layout edited
+        -- in Studio since the last run. Warn only, never block a test session.
+        local ok, errors = Validate.check(layout)
+        if not ok then
+            warn(("[MapService] %s fails validation (%d):"):format(layout.Name, #errors))
+            for _, e in errors do
+                warn("    " .. e)
+            end
+        end
+    end
+
     local old = workspace:FindFirstChild("Map")
     if old then
         old:Destroy()
@@ -847,10 +880,10 @@ function MapService:Build(layout)
         end
     end
 
-    for _, piece in layout.Center do
+    for _, piece in layout.Center or {} do
         placePiece(folder, "", piece, rng, false)
     end
-    for _, piece in layout.Mirrored do
+    for _, piece in layout.Mirrored or {} do
         placePiece(folder, "Red_", piece, rng, false)
         placePiece(folder, "Blue_", piece, rng, true)
     end
@@ -859,7 +892,12 @@ function MapService:Build(layout)
     end
 
     self.Spawns = {}
-    for team, points in layout.Spawns do
+    for team, points in layout.Spawns or {} do
+        if not TEAM_COLORS[team] then
+            -- a misspelt team builds a pad nobody spawns on and strands that side at the origin
+            warn(("[MapService] %s: Spawns.%s is not a team, ignoring"):format(layout.Name or "?", tostring(team)))
+            continue
+        end
         self.Spawns[team] = {}
         for i, p in points do
             local pad = makePart(
@@ -876,6 +914,12 @@ function MapService:Build(layout)
         end
     end
 
+    for _, team in Config.Teams do
+        if not self.Spawns[team] or #self.Spawns[team] == 0 then
+            warn(("[MapService] %s: no %s spawns; that team will spawn at the origin"):format(layout.Name or "?", team))
+        end
+    end
+
     if layout.Environment then
         applyLighting(layout.Environment)
     end
@@ -889,6 +933,58 @@ function MapService:Build(layout)
     end
 end
 
+-- Pick a spawn point that nobody is standing on. `UserId % #points` gave a player the same pad
+-- every round (learnable by the enemy) and stacked players whose ids collided modulo the count.
+-- Studs: another live character this close counts as taking the pad. Sized to the 6x6 spawn
+-- pad, so one character marks its own pad and not its neighbour's. check_maps enforces that
+-- pads stay at least this far apart (Validate.RULES.SpawnSpacingMin).
+local OCCUPIED = 6
+
+-- Anything that could be standing on a pad. Player characters and BotService rigs are both
+-- Models under workspace with a Humanoid, so one scan covers both and neither service has to
+-- know about the other.
+local function liveRoots(exclude)
+    local roots = {}
+    for _, inst in workspace:GetChildren() do
+        if inst ~= exclude and inst:IsA("Model") then
+            local hum = inst:FindFirstChildOfClass("Humanoid")
+            local root = inst:FindFirstChild("HumanoidRootPart")
+            if hum and root and hum.Health > 0 then
+                table.insert(roots, root)
+            end
+        end
+    end
+    return roots
+end
+
+local function pickSpawn(points, exclude)
+    local roots = liveRoots(exclude)
+    local free, taken = {}, {}
+    for _, point in points do
+        local occupied = false
+        for _, root in roots do
+            if (root.Position - point).Magnitude < OCCUPIED then
+                occupied = true
+                break
+            end
+        end
+        table.insert(occupied and taken or free, point)
+    end
+    local pool = #free > 0 and free or taken
+    return pool[math.random(#pool)]
+end
+
+-- Shared by PlaceCharacter and BotService:SpawnFor so players and bots never pick the same pad.
+-- `exclude` is the character being placed, when it already exists. Returns nil if the map has
+-- no spawns for that team.
+function MapService:PickSpawn(team, exclude)
+    local points = self.Spawns and self.Spawns[team]
+    if not points or #points == 0 then
+        return nil
+    end
+    return pickSpawn(points, exclude)
+end
+
 function MapService:PlaceCharacter(player, character)
     local root = character:WaitForChild("HumanoidRootPart", 5)
     if not root then
@@ -898,20 +994,24 @@ function MapService:PlaceCharacter(player, character)
 
     if player:GetAttribute("InMatch") then
         local team = player:GetAttribute("Team")
-        local points = self.Spawns and self.Spawns[team]
-        if not points or #points == 0 then
+        local point = self:PickSpawn(team, character)
+        if not point then
+            warn(
+                ("[MapService] no spawns for team %s; %s left where Roblox put them"):format(
+                    tostring(team),
+                    player.Name
+                )
+            )
             return
         end
-        local idx = (player.UserId % #points) + 1
-        local pos = points[idx] + Vector3.new(0, 3, 0)
+        local pos = point + Vector3.new(0, 3, 0)
         root.CFrame = CFrame.lookAt(pos, Vector3.new(0, pos.Y, 0))
     else
         local points = self.LobbySpawns
         if not points or #points == 0 then
             return
         end
-        local idx = (player.UserId % #points) + 1
-        local pos = points[idx] + Vector3.new(0, 3, 0)
+        local pos = pickSpawn(points, character) + Vector3.new(0, 3, 0)
         -- face the pads (toward -Z of the lobby)
         root.CFrame = CFrame.lookAt(pos, pos + Vector3.new(0, 0, -10))
     end
@@ -1039,20 +1139,36 @@ end
 
 -- Rebuild the arena for a named map (module name under Shared/Maps). Safe between matches.
 function MapService:Load(name)
-    local module = ReplicatedStorage.Shared.Maps:FindFirstChild(name)
-    if not module then
+    local module = type(name) == "string" and ReplicatedStorage.Shared.Maps:FindFirstChild(name)
+    if not module or not module:IsA("ModuleScript") then
         warn("[MapService] unknown map " .. tostring(name))
         return false
     end
-    self:Build(require(module))
+    -- A map is data written by hand; a syntax error or a bad field in one should not take the
+    -- server down with it, so the caller can fall back to a map that works.
+    local ok, layout = pcall(require, module)
+    if not ok or type(layout) ~= "table" then
+        warn(("[MapService] %s failed to load: %s"):format(name, tostring(layout)))
+        return false
+    end
+    local built, why = pcall(self.Build, self, layout)
+    if not built then
+        warn(("[MapService] %s failed to build: %s"):format(name, tostring(why)))
+        return false
+    end
     self.CurrentMap = name
     return true
 end
 
 function MapService:KnitInit()
-    local layoutModule = ReplicatedStorage.Shared.Maps:FindFirstChild(ACTIVE_MAP == "Greybox" and "Arena" or ACTIVE_MAP)
-    self.CurrentMap = layoutModule.Name
-    self:Build(require(layoutModule))
+    -- Tuning must exist before the first Build: the layout name and the safety switch both
+    -- come from it, and Knit does not order KnitInit between services.
+    Knit.GetService("TuningService"):EnsureSetup()
+
+    if not self:Load(Config.StartupMap) then
+        warn("[MapService] falling back to " .. FALLBACK_MAP)
+        self:Load(FALLBACK_MAP)
+    end
     buildLobby(self, require(ReplicatedStorage.Shared.Maps.Lobby))
 
     -- Hook spawns here, in KnitInit, so this runs before RoundService (KnitStart) can

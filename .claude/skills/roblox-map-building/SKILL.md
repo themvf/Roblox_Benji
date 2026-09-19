@@ -21,6 +21,9 @@ generic; the map supplies data. Read `Carrier.lua` as the reference layout and `
 - `Events = { {Name, TriggerPhase, WarningSeconds, DurationSeconds, Banner, Sound, Region, Shield, Beacons, Flyover} }`
   or `{Kind="Kraken", Origin, Height}`
 - `Pickups` (weapon/speed/jetpack), `LaunchPads` (pos, target, vy, size), `SniperOutposts`, `Flyovers`, `Fleet`
+- Mirroring flips **x only**. Every gameplay list above, and every safety list below, must pair the same way:
+  an entry at `{x, y, z}` needs its twin at `{-x, y, z}`, or must sit on `x = 0`. Pairing by 180-degree
+  rotation (flipping x *and* z) looks symmetric in the file and is not symmetric on the map.
 - Safety data (required for any map with edges or multiple floors): `RecoveryY`, `Bounds`, `InvalidRegions`,
   `SafeRegions`, `SafePoints`, `Barrier`
 
@@ -41,7 +44,10 @@ Mirrored pieces: remember z-rotation flips sign; a stair that is right on the bo
 - `SafePoints` (5, spread out, on open floor) for recovery teleports.
 - `Barrier` segments along every exposed edge: height 12, thickness 1.5, positioned 1.5 studs outside the edge.
   Bullets pass (CanQuery=false); players do not.
-The `Debug_CarrierTestSafety` Tuning switch turns these on for testing.
+`RecoveryY`, `Bounds`, `InvalidRegions` and `SafeRegions` are live in production: anything they catch dies and
+respawns. Get them right or players die on legitimate floor. `SafePoints` and `Barrier` are testing aids that
+the `Debug_CarrierTestSafety` Tuning switch turns on, which swaps the death for a teleport to the nearest safe
+point. `check_maps` verifies spawns, objectives and pickups all sit inside `Bounds`.
 
 ## Movement systems
 - Launch pads: server trigger volume (pad size + 1, height 5), velocity applied on the client, `vy` 55-70,
@@ -56,6 +62,14 @@ The `Debug_CarrierTestSafety` Tuning switch turns these on for testing.
 - Ten big recognisable props beat hundreds of small ones.
 
 ## QA gate before balance testing
-Force the map (`/map <name>`), run `/bots 6`, play a full match. Pass only if: no `RECOVERY:` lines, no repeated
+First `lune run tools/check_maps.luau`. It is the geometry audit below as code: mirror symmetry of every
+gameplay list, launch arcs traced against the built solids, ramp angles, safety data, buried pickups. Fix
+every ERROR before loading the map — it is far cheaper than finding the same thing in a bot match.
+
+Then force the map (`/map <name>`), run `/bots 6`, play a full match. Test it with
+`Debug_CarrierTestSafety` **off** at least once: that is the shipped behaviour, where leaving `Bounds` kills
+instead of teleporting, and a `Bounds` box that clips legitimate ground turns into deaths rather than a
+harmless nudge. Pass only if: no `RECOVERY:` lines, no `OUT_OF_BOUNDS` in the bot report, no repeated
 `PATHING_FAILURE` at the same coordinates, launch pads succeed 9/10, every edge walked without a fall, ramps and
-stairs climbable both ways, elevators reachable, tester finishes the match without a restart.
+stairs climbable both ways, elevators reachable, a full jetpack climb from the highest surface does not kill you,
+tester finishes the match without a restart.

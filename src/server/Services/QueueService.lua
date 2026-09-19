@@ -9,27 +9,6 @@ local Config = require(ReplicatedStorage.Shared.Config)
 local QueueService = Knit.CreateService({ Name = "QueueService" })
 
 local fillSince = {} -- [pad] = os.clock() when both sides first reached MinTeamSize
-local lastConvergenceMap = nil
-
-local function pickConvergenceMap()
-    local tuning = ReplicatedStorage:FindFirstChild("Tuning")
-    local forced = tuning and tuning:GetAttribute("Debug_ForceMap")
-    if tuning and tuning:GetAttribute("Debug_CarrierTestSafety") == true and (forced == nil or forced == "") then
-        forced = "Carrier"
-    end
-    if type(forced) == "string" and forced ~= "" and ReplicatedStorage.Shared.Maps:FindFirstChild(forced) then
-        lastConvergenceMap = forced
-        return forced
-    end
-    local choices = {}
-    for _, name in Config.ConvergenceMaps or { "Forest" } do
-        if name ~= lastConvergenceMap or #Config.ConvergenceMaps == 1 then
-            table.insert(choices, name)
-        end
-    end
-    lastConvergenceMap = choices[math.random(#choices)]
-    return lastConvergenceMap
-end
 
 local CHECK_INTERVAL = 0.25
 
@@ -45,6 +24,7 @@ end
 function QueueService:KnitStart()
     local MapService = Knit.GetService("MapService")
     local RoundService = Knit.GetService("RoundService")
+    local MapVoteService = Knit.GetService("MapVoteService")
 
     task.spawn(function()
         while true do
@@ -84,7 +64,9 @@ function QueueService:KnitStart()
                 end
 
                 local status
-                if RoundService.Busy then
+                if MapVoteService.Voting then
+                    status = "Map vote in progress"
+                elseif RoundService.Busy then
                     status = "Match in progress"
                 elseif full then
                     status = "Starting..."
@@ -102,7 +84,9 @@ function QueueService:KnitStart()
                 end
                 pad.Label.Text = pad.Mode .. "\n" .. status
 
-                local go = not RoundService.Busy and (full or (waitLeft ~= nil and waitLeft <= 0))
+                local go = not RoundService.Busy
+                    and not MapVoteService.Voting
+                    and (full or (waitLeft ~= nil and waitLeft <= 0))
                 if go then
                     fillSince[pad] = nil
                     table.sort(queued.Red, byJoinOrder)
@@ -115,12 +99,16 @@ function QueueService:KnitStart()
                     for i = 1, n do
                         table.insert(picked, queued.Blue[i])
                     end
-                    -- The mode assigns the first n players to Red, the rest to Blue
-                    if pad.Kind == "Convergence" then
-                        Knit.GetService("ConvergenceService"):StartMatch(picked, n, pickConvergenceMap())
-                    else
-                        RoundService:StartMatch(picked, n, pad.Mode)
-                    end
+                    -- The players who filled the pad vote on the map, then the mode starts with
+                    -- the winner. The mode assigns the first n players to Red, the rest to Blue.
+                    local kind, mode = pad.Kind, pad.Mode
+                    MapVoteService:Begin(picked, n, kind, function(players, teamSize, mapName)
+                        if kind == "Convergence" then
+                            Knit.GetService("ConvergenceService"):StartMatch(players, teamSize, mapName)
+                        else
+                            RoundService:StartMatch(players, teamSize, mode, mapName)
+                        end
+                    end)
                 end
             end
         end

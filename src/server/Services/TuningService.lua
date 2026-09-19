@@ -13,9 +13,26 @@ local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local TuningService = Knit.CreateService({ Name = "TuningService" })
 
 -- Keys exposed as attributes and their defaults from Config
-local TUNABLE = { "IntermissionSeconds", "RoundSeconds", "RoundsToWin", "RespawnSeconds" }
+local TUNABLE = {
+    "IntermissionSeconds",
+    "RoundSeconds",
+    "RoundsToWin",
+    "RespawnSeconds",
+    "StartupMap",
+    "MapVoteEnabled",
+    "MapVoteSeconds",
+    "MapVoteOptions",
+}
 
-function TuningService:KnitInit()
+-- Idempotent, and safe to call from another service's KnitInit: Knit gives no ordering
+-- guarantee between services, and MapService builds the map (reading Tuning) in its own
+-- KnitInit, which can run before this one.
+function TuningService:EnsureSetup()
+    if self.Ready then
+        return
+    end
+    self.Ready = true
+
     local tuning = ReplicatedStorage:FindFirstChild("Tuning")
     if not tuning then
         tuning = Instance.new("Configuration")
@@ -67,6 +84,10 @@ function TuningService:KnitInit()
             "Drop Decals (images), Sounds and Animations here. Name them, then reference as upload:<Name> from skins and celebrations. Expected today: BlueCamo (Decal)."
         guide.Parent = uploads
     end
+end
+
+function TuningService:KnitInit()
+    self:EnsureSetup()
 end
 
 return TuningService

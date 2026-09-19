@@ -346,7 +346,7 @@ local function makeLaunchPad(self, folder, spec, index)
     local pos = Vector3.new(spec.pos[1], spec.pos[2], spec.pos[3])
     local target = Vector3.new(spec.target[1], spec.target[2], spec.target[3])
     local size = spec.size or 8
-    local debug = Knit.GetService("SafetyService"):Enabled()
+    local debug = Knit.GetService("SafetyService"):TestAids()
 
     local pad = Instance.new("Part")
     pad.Name = "LaunchPad" .. index
