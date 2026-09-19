@@ -79,7 +79,7 @@ local Theme = require(script.Parent.Parent.UI.Theme)   -- from src/client/Contro
 ```
 
 - `Theme.Color` -- surfaces (`Panel`, `PanelRaised`, `PanelHigh`, `PanelSelected`, `Track`), text
-  (`Text`, `TextMuted`, `TextInverse`) and status (`Accent`, `Energy`, `Fly`, `Good`, `Warn`, `Danger`).
+  (`Text`, `TextMuted`) and status (`Accent`, `Energy`, `Fly`, `Good`, `Warn`, `Danger`).
 - `Theme.Team` / `Theme.team(name)` -- team colour, from `Shared/Palette`.
 - `Theme.Tier` -- the four rarity colours the validators accept. `Theme.Slot` -- loadout slot identity.
 - `Theme.Type` -- the size ramp: `Display 30 / Title 22 / Body 16 / Label 14`.
