@@ -160,7 +160,7 @@ function StatsService:OnDamage(dealer, victimCharacter, amount)
     end
 end
 
-function StatsService:OnKill(killer, victim, victimCharacter)
+function StatsService:OnKill(killer, victim, _victimCharacter)
     if not match then
         return
     end
