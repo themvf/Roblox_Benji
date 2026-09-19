@@ -4,21 +4,22 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Screen = require(script.Parent.Parent.UI.Screen)
+local Theme = require(script.Parent.Parent.UI.Theme)
 
 local RecapController = Knit.CreateController({ Name = "RecapController" })
 
-local PANEL = Color3.fromRGB(20, 22, 28)
-local TEXT = Color3.fromRGB(245, 245, 250)
-local MUTED = Color3.fromRGB(160, 165, 180)
-local ACCENT = Color3.fromRGB(255, 200, 70)
-local GREEN = Color3.fromRGB(90, 230, 130)
+local PANEL = Theme.Color.Panel
+local TEXT = Theme.Color.Text
+local MUTED = Theme.Color.TextMuted
+local ACCENT = Theme.Color.Accent
+local GREEN = Theme.Color.Good
 
 local function label(parent, text, size, color, font, order)
     local l = Instance.new("TextLabel")
     l.Size = UDim2.new(1, 0, 0, size + 8)
     l.BackgroundTransparency = 1
     l.Text = text
-    l.TextSize = size
+    l.TextSize = Theme.textSize(size)
     l.Font = font or Enum.Font.GothamMedium
     l.TextColor3 = color or TEXT
     l.TextXAlignment = Enum.TextXAlignment.Left
@@ -116,7 +117,7 @@ function RecapController:Show(r)
                     r.ObjectiveWhileMutated or 0
                 ),
                 16,
-                Color3.fromRGB(255, 120, 40)
+                Theme.Color.Energy
             )
         end
         if r.Won then

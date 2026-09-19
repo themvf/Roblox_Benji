@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Screen = require(script.Parent.Parent.UI.Screen)
+local Theme = require(script.Parent.Parent.UI.Theme)
 
 local HudController = Knit.CreateController({ Name = "HudController" })
 
@@ -34,8 +35,8 @@ local function streakNameplates()
                     l.BackgroundTransparency = 1
                     l.TextScaled = true
                     l.Font = Enum.Font.GothamBold
-                    l.TextColor3 = Color3.fromRGB(255, 160, 60)
-                    l.TextStrokeTransparency = 0.3
+                    l.TextColor3 = Theme.Color.Warn
+                    Theme.overWorld(l)
                     l.Parent = bb
                     plates[p] = bb
                 end
@@ -75,7 +76,8 @@ function HudController:KnitStart()
         local l = Instance.new("TextLabel")
         l.Size = UDim2.fromScale(0.3, 0.06)
         l.Position = pos
-        l.BackgroundTransparency = 0.4
+        -- 0.4 put muted text at 2.8:1 over a bright sky; Theme holds it at 5.8:1.
+        l.BackgroundTransparency = Theme.Transparency.Panel
         l.BackgroundColor3 = Color3.new(0, 0, 0)
         l.TextColor3 = Color3.new(1, 1, 1)
         l.TextScaled = true
@@ -93,7 +95,7 @@ function HudController:KnitStart()
     toast.Size = UDim2.fromScale(0.3, 0.05)
     toast.AnchorPoint = Vector2.new(0, 0)
     toast.TextXAlignment = Enum.TextXAlignment.Left
-    toast.TextColor3 = Color3.fromRGB(255, 220, 80)
+    toast.TextColor3 = Theme.Color.Accent
     toast.Visible = false
     local toastToken = 0
     Knit.GetService("SafetyService").Notice:Connect(function(text)
@@ -138,11 +140,11 @@ function HudController:KnitStart()
     local timer = label(UDim2.fromScale(0.42, 0.085))
     timer.Size = UDim2.fromScale(0.16, 0.06)
     timer.AnchorPoint = Vector2.new(0.5, 0)
-    timer.TextColor3 = Color3.fromRGB(255, 220, 80)
+    timer.TextColor3 = Theme.Color.Accent
     timer.Visible = false
     local fuel = label(UDim2.fromScale(0.02, 0.9))
     fuel.Size = UDim2.fromScale(0.16, 0.05)
-    fuel.TextColor3 = Color3.fromRGB(255, 150, 60)
+    fuel.TextColor3 = Theme.Color.Warn
     fuel.Visible = false
 
     -- All four readouts are re-anchored whenever the screen changes. The rules: hang off the

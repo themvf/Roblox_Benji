@@ -5,6 +5,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Debris = game:GetService("Debris")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Palette = require(ReplicatedStorage.Shared.Palette)
 local Celebrations = require(ReplicatedStorage.Shared.Celebrations)
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
@@ -23,8 +24,8 @@ local SPOT_GAP = 6
 local CAP = Celebrations.Validate.MAX_LENGTH
 
 local TEAM_COLORS = {
-    Red = Color3.fromRGB(255, 70, 70),
-    Blue = Color3.fromRGB(70, 140, 255),
+    Red = Palette.Ui.Red,
+    Blue = Palette.Ui.Blue,
 }
 
 local warned = {}

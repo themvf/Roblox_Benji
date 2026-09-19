@@ -10,14 +10,15 @@ local RunService = game:GetService("RunService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local AlterEgos = require(ReplicatedStorage.Shared.AlterEgos)
 local Screen = require(script.Parent.Parent.UI.Screen)
+local Theme = require(script.Parent.Parent.UI.Theme)
 
 local TouchController = Knit.CreateController({ Name = "TouchController" })
 
-local PANEL = Color3.fromRGB(20, 22, 28)
-local TEXT = Color3.fromRGB(245, 245, 250)
-local MUTED = Color3.fromRGB(160, 165, 180)
-local READY = Color3.fromRGB(255, 120, 40)
-local FLY = Color3.fromRGB(90, 200, 255)
+local PANEL = Theme.Color.Panel
+local TEXT = Theme.Color.Text
+local MUTED = Theme.Color.TextMuted
+local READY = Theme.Color.Energy
+local FLY = Theme.Color.Fly
 
 local ABILITY_SHORT = { GroundSlam = "SLAM", Brace = "BRACE", Charge = "CHARGE" }
 
@@ -54,7 +55,7 @@ local function makeButton(parent, text, color)
     local b = Instance.new("TextButton")
     b.Size = UDim2.fromOffset(Screen.MIN_TAP, Screen.MIN_TAP)
     b.BackgroundColor3 = PANEL
-    b.BackgroundTransparency = 0.25
+    b.BackgroundTransparency = Theme.Transparency.Panel
     b.AutoButtonColor = true
     b.Text = ""
     b.Parent = parent
@@ -187,9 +188,9 @@ function TouchController:BuildGui()
         local b = Instance.new("TextButton")
         b.Size = UDim2.fromOffset(width, 44)
         b.BackgroundColor3 = PANEL
-        b.BackgroundTransparency = 0.25
+        b.BackgroundTransparency = Theme.Transparency.Panel
         b.Text = text
-        b.TextSize = 16
+        b.TextSize = Theme.textSize(Theme.Type.Body)
         b.Font = Enum.Font.GothamBlack
         b.TextColor3 = TEXT
         b.Visible = false

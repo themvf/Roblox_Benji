@@ -46,11 +46,19 @@ guns, Lune for build scripts. Read README.md for the full map of services.
 - Every tunable number lives in `Config` and is exposed as a Tuning attribute so it can be changed in Studio.
 
 ## UI and screens
-All on-screen UI goes through `src/client/UI/Screen.lua`: safe-area insets, device class, a UIScale per
-panel, 44pt tap targets, one DisplayOrder table, and reserved zones (crosshair, thumbstick, jump button,
+Layout goes through `src/client/UI/Screen.lua`: safe-area insets, device class, a UIScale per panel, 44pt
+tap targets (96pt ceiling), one DisplayOrder table, and reserved zones (crosshair, thumbstick, jump button,
 hotbar). Never build a raw `ScreenGui` or position off a raw screen edge. World-space `BillboardGui` sizes
-go in scale (studs), never offset (pixels). Use the `roblox-ui-layout` skill (.claude/skills) before adding
-or moving any HUD, button, panel or billboard; it holds the rules and the multi-device QA gate.
+go in scale (studs), never offset (pixels).
+
+Appearance goes through `src/client/UI/Theme.lua`: palette, the four-step type ramp, surfaces and contrast.
+Never write a `Color3.fromRGB` in a controller (3D lighting values aside) -- copy-pasted tokens are how the
+team red became three values. Team colours live in `src/shared/Palette.lua` so the server and the HUD agree.
+Text-bearing panels use `Theme.Transparency.Panel`, which holds contrast against a bright sky; text drawn
+over the 3D world gets `Theme.overWorld`.
+
+Use the `roblox-ui-layout` skill (.claude/skills) before adding or moving any HUD, button, panel or
+billboard, or picking any colour or text size; it holds both module APIs and the multi-device QA gate.
 
 ## Map building
 Use the `roblox-map-building` skill (.claude/skills) before adding or editing a map layout. It holds the geometry

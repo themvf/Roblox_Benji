@@ -5,6 +5,7 @@ local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Palette = require(ReplicatedStorage.Shared.Palette)
 local Config = require(ReplicatedStorage.Shared.Config)
 local TweenService = game:GetService("TweenService")
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
@@ -13,9 +14,11 @@ local ACTIVE_MAP = "Forest" -- "Greybox" or "Forest"
 
 local MapService = Knit.CreateService({ Name = "MapService" })
 
+-- Map geometry uses the darker world variants of the same team hues; they read lighter once
+-- lit and surfaced. Kept in step with the UI colours in Shared.Palette.
 local TEAM_COLORS = {
-    Red = Color3.fromRGB(200, 60, 60),
-    Blue = Color3.fromRGB(60, 110, 200),
+    Red = Palette.World.Red,
+    Blue = Palette.World.Blue,
 }
 
 local GREY = Color3.fromRGB(160, 160, 160)
@@ -421,7 +424,7 @@ local function buildLobby(self, layout)
         label.TextScaled = true
         label.Font = Enum.Font.GothamBlack
         label.TextColor3 = spec.color
-        label.TextStrokeTransparency = 0.3
+        Palette.worldText(label)
         label.Text = spec.mode
         label.Parent = sign
         if spec.featured then
@@ -434,7 +437,7 @@ local function buildLobby(self, layout)
             tag.TextScaled = true
             tag.Font = Enum.Font.GothamBlack
             tag.TextColor3 = Color3.fromRGB(255, 200, 70)
-            tag.TextStrokeTransparency = 0.3
+            Palette.worldText(tag)
             tag.Parent = sign
             -- gold frame around the whole featured pad
             local frame = makePart(

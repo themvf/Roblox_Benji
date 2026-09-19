@@ -8,13 +8,14 @@ local UserInputService = game:GetService("UserInputService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local AlterEgos = require(ReplicatedStorage.Shared.AlterEgos)
 local Screen = require(script.Parent.Parent.UI.Screen)
+local Theme = require(script.Parent.Parent.UI.Theme)
 
 local MutationController = Knit.CreateController({ Name = "MutationController" })
 
-local PANEL = Color3.fromRGB(20, 22, 28)
-local TEXT = Color3.fromRGB(245, 245, 250)
-local MUTED = Color3.fromRGB(160, 165, 180)
-local READY = Color3.fromRGB(255, 120, 40)
+local PANEL = Theme.Color.Panel
+local TEXT = Theme.Color.Text
+local MUTED = Theme.Color.TextMuted
+local READY = Theme.Color.Energy
 
 local KEYS = { Q = Enum.KeyCode.Q, E = Enum.KeyCode.E, F = Enum.KeyCode.F, C = Enum.KeyCode.C }
 
@@ -31,7 +32,7 @@ function MutationController:BuildGui()
     -- Designed at 320x64 for a desktop window; the UIScale keeps that proportion on a phone.
     Screen.autoScale(frame)
     frame.BackgroundColor3 = PANEL
-    frame.BackgroundTransparency = 0.25
+    frame.BackgroundTransparency = Theme.Transparency.Panel
     frame.Parent = gui
     self.Frame = frame
     local corner = Instance.new("UICorner")
@@ -43,7 +44,7 @@ function MutationController:BuildGui()
     title.Size = UDim2.new(1, -20, 0, 18)
     title.BackgroundTransparency = 1
     title.Text = "TITAN"
-    title.TextSize = 14
+    title.TextSize = Theme.textSize(Theme.Type.Label)
     title.Font = Enum.Font.GothamBlack
     title.TextColor3 = READY
     title.TextXAlignment = Enum.TextXAlignment.Left
@@ -53,7 +54,7 @@ function MutationController:BuildGui()
     local back = Instance.new("Frame")
     back.Position = UDim2.new(0, 10, 0, 26)
     back.Size = UDim2.new(1, -20, 0, 12)
-    back.BackgroundColor3 = Color3.fromRGB(45, 48, 58)
+    back.BackgroundColor3 = Theme.Color.Track
     back.BorderSizePixel = 0
     back.Parent = frame
     local bc = Instance.new("UICorner")
@@ -75,7 +76,7 @@ function MutationController:BuildGui()
     pct.Size = UDim2.new(0.6, 0, 0, 18)
     pct.BackgroundTransparency = 1
     pct.Text = "0%"
-    pct.TextSize = 14
+    pct.TextSize = Theme.textSize(Theme.Type.Label)
     pct.Font = Enum.Font.GothamBold
     pct.TextColor3 = TEXT
     pct.TextXAlignment = Enum.TextXAlignment.Right
@@ -95,7 +96,7 @@ function MutationController:BuildGui()
         l.Position = UDim2.fromScale((i - 1) / 3, 0)
         l.Size = UDim2.fromScale(1 / 3, 1)
         l.BackgroundTransparency = 1
-        l.TextSize = 12
+        l.TextSize = Theme.textSize(Theme.Type.Label)
         l.Font = Enum.Font.GothamBold
         l.TextColor3 = MUTED
         l.Parent = row

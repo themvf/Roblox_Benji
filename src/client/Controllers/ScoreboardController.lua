@@ -4,14 +4,17 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Screen = require(script.Parent.Parent.UI.Screen)
+local Theme = require(script.Parent.Parent.UI.Theme)
 
 local ScoreboardController = Knit.CreateController({ Name = "ScoreboardController" })
 
-local PANEL = Color3.fromRGB(20, 22, 28)
-local MUTED = Color3.fromRGB(160, 165, 180)
-local RED = Color3.fromRGB(255, 90, 90)
-local BLUE = Color3.fromRGB(90, 150, 255)
-local ACCENT = Color3.fromRGB(255, 200, 70)
+local PANEL = Theme.Color.Panel
+local MUTED = Theme.Color.TextMuted
+-- Was a lighter red/blue than the Convergence bar used, so the scoreboard and the top bar
+-- disagreed about team colour. One source now.
+local RED = Theme.Team.Red
+local BLUE = Theme.Team.Blue
+local ACCENT = Theme.Color.Accent
 
 local COLS = {
     { "Player", 0.28 },
@@ -71,7 +74,7 @@ function ScoreboardController:Row(order, values, color, header)
         l.Size = UDim2.fromScale(col[2], 1)
         l.BackgroundTransparency = 1
         l.Text = tostring(values[i] or "")
-        l.TextSize = header and 13 or 16
+        l.TextSize = Theme.textSize(header and Theme.Type.Label or Theme.Type.Body)
         l.Font = header and Enum.Font.GothamBold or Enum.Font.GothamMedium
         l.TextColor3 = color
         l.TextXAlignment = i == 1 and Enum.TextXAlignment.Left or Enum.TextXAlignment.Center

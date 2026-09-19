@@ -8,33 +8,25 @@ local UserInputService = game:GetService("UserInputService")
 local StarterGui = game:GetService("StarterGui")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Screen = require(script.Parent.Parent.UI.Screen)
+local Theme = require(script.Parent.Parent.UI.Theme)
 local Weapons = require(ReplicatedStorage.Shared.Weapons)
 
 local LoadoutController = Knit.CreateController({ Name = "LoadoutController" })
 
-local PANEL = Color3.fromRGB(28, 30, 38)
-local PANEL_LIGHT = Color3.fromRGB(44, 47, 58)
-local ACCENT = Color3.fromRGB(255, 200, 70)
-local SLOT_COLORS = {
-    Primary = Color3.fromRGB(80, 230, 120),
-    Secondary = Color3.fromRGB(80, 150, 255),
-    Melee = Color3.fromRGB(255, 120, 90),
-    Utility = Color3.fromRGB(200, 120, 255),
-    Celebration = Color3.fromRGB(255, 200, 70),
-    AlterEgo = Color3.fromRGB(255, 120, 40),
-}
+-- A modal surface sits *on* the HUD, so it is the raised panel tone, not a second dark grey.
+local PANEL = Theme.Color.PanelRaised
+local PANEL_LIGHT = Theme.Color.PanelHigh
+local ACCENT = Theme.Color.Accent
+local SLOT_COLORS = Theme.Slot
 local SLOTS = { "Primary", "Secondary", "Melee", "Utility", "Celebration", "AlterEgo" }
 local AlterEgos = require(ReplicatedStorage.Shared.AlterEgos)
 local Celebrations = require(ReplicatedStorage.Shared.Celebrations)
-local TEXT = Color3.fromRGB(245, 245, 250)
-local MUTED = Color3.fromRGB(160, 165, 180)
-local TIER_COLORS = {
-    Common = Color3.fromRGB(170, 175, 185),
-    Uncommon = Color3.fromRGB(90, 200, 120),
-    Rare = Color3.fromRGB(255, 200, 70),
-    Legendary = Color3.fromRGB(255, 160, 60),
-    Mythical = Color3.fromRGB(230, 80, 255),
-}
+local TEXT = Theme.Color.Text
+local MUTED = Theme.Color.TextMuted
+-- Rare was gold here and blue in the celebration wheel, and the gold was the same value as
+-- ACCENT, so a Rare item was indistinguishable from the accent colour. Uncommon was dead: the
+-- validators only accept Common, Rare, Legendary and Mythical.
+local TIER_COLORS = Theme.Tier
 
 local function corner(inst, r)
     local c = Instance.new("UICorner")
@@ -46,7 +38,7 @@ local function label(parent, text, size, color, font)
     local l = Instance.new("TextLabel")
     l.BackgroundTransparency = 1
     l.Text = text
-    l.TextSize = size
+    l.TextSize = Theme.textSize(size)
     l.TextColor3 = color or TEXT
     l.Font = font or Enum.Font.GothamBold
     l.TextXAlignment = Enum.TextXAlignment.Left
@@ -108,7 +100,7 @@ function LoadoutController:BuildGui()
     local dim = Instance.new("Frame")
     dim.Size = UDim2.fromScale(1, 1)
     dim.BackgroundColor3 = Color3.new(0, 0, 0)
-    dim.BackgroundTransparency = 0.45
+    dim.BackgroundTransparency = Theme.Transparency.Scrim
     dim.Parent = gui
 
     local panel = Instance.new("Frame")
@@ -129,7 +121,7 @@ function LoadoutController:BuildGui()
     close.Size = UDim2.fromOffset(44, 44)
     close.BackgroundColor3 = PANEL_LIGHT
     close.Text = "X"
-    close.TextSize = 22
+    close.TextSize = Theme.textSize(Theme.Type.Title)
     close.Font = Enum.Font.GothamBlack
     close.TextColor3 = TEXT
     close.Parent = panel
@@ -244,7 +236,7 @@ function LoadoutController:BuildGui()
     confirm.Size = UDim2.new(0.3, 0, 1, 0)
     confirm.BackgroundColor3 = ACCENT
     confirm.Text = "EQUIP"
-    confirm.TextSize = 24
+    confirm.TextSize = Theme.textSize(Theme.Type.Title)
     confirm.Font = Enum.Font.GothamBlack
     confirm.TextColor3 = PANEL
     confirm.Parent = bar
@@ -260,7 +252,7 @@ function LoadoutController:MakeButton(slot, weaponName)
     btn.Size = UDim2.new(1, -8, 0, 46)
     btn.BackgroundColor3 = PANEL_LIGHT
     btn.Text = "  " .. weaponName:gsub("(%l)(%u)", "%1 %2")
-    btn.TextSize = 16
+    btn.TextSize = Theme.textSize(Theme.Type.Body)
     btn.TextTruncate = Enum.TextTruncate.AtEnd
     btn.Font = Enum.Font.GothamBold
     btn.TextColor3 = TEXT
@@ -321,7 +313,7 @@ function LoadoutController:Refresh()
                 on = self.Selected[slot] == name
             end
             ui.Stripe.Visible = on
-            ui.Button.BackgroundColor3 = on and Color3.fromRGB(62, 66, 82) or PANEL_LIGHT
+            ui.Button.BackgroundColor3 = on and Theme.Color.PanelSelected or PANEL_LIGHT
         end
     end
     local parts = {}
@@ -397,7 +389,7 @@ function LoadoutController:ShowSkins(weaponName)
             b.Size = UDim2.fromOffset(math.max(96, #text * 11 + 24), 40)
             b.BackgroundColor3 = (current == skinId) and color or PANEL
             b.Text = text
-            b.TextSize = 16
+            b.TextSize = Theme.textSize(Theme.Type.Body)
             b.Font = Enum.Font.GothamBold
             b.TextColor3 = (current == skinId) and PANEL or color
             b.AutoButtonColor = false

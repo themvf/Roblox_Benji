@@ -5,16 +5,19 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Screen = require(script.Parent.Parent.UI.Screen)
+local Theme = require(script.Parent.Parent.UI.Theme)
 
 local ConvergenceController = Knit.CreateController({ Name = "ConvergenceController" })
 
-local RED = Color3.fromRGB(255, 70, 70)
-local BLUE = Color3.fromRGB(70, 140, 255)
-local NEUTRAL = Color3.fromRGB(200, 200, 205)
-local CLOSED = Color3.fromRGB(80, 80, 85)
-local PANEL = Color3.fromRGB(20, 22, 28)
-local TEXT = Color3.fromRGB(245, 245, 250)
-local ACCENT = Color3.fromRGB(255, 200, 70)
+-- Team colours and surfaces come from Theme, so the top bar, the scoreboard and the world
+-- cannot drift apart again.
+local RED = Theme.Team.Red
+local BLUE = Theme.Team.Blue
+local NEUTRAL = Theme.Team.Neutral
+local CLOSED = Theme.Team.Closed
+local PANEL = Theme.Color.Panel
+local TEXT = Theme.Color.Text
+local ACCENT = Theme.Color.Accent
 
 local function corner(inst, r)
     local c = Instance.new("UICorner")
@@ -51,7 +54,7 @@ function ConvergenceController:BuildGui()
     top.AnchorPoint = Vector2.new(0.5, 0)
     top.Size = UDim2.fromOffset(420, 54)
     top.BackgroundColor3 = PANEL
-    top.BackgroundTransparency = 0.25
+    top.BackgroundTransparency = Theme.Transparency.Panel
     top.Parent = root
     self.TopBar = top
     corner(top, 12)
@@ -62,7 +65,7 @@ function ConvergenceController:BuildGui()
         l.Size = UDim2.new(0.3, 0, 1, 0)
         l.BackgroundTransparency = 1
         l.Text = "0"
-        l.TextSize = 30
+        l.TextSize = Theme.textSize(Theme.Type.Display)
         l.Font = Enum.Font.GothamBlack
         l.TextColor3 = color
         l.TextXAlignment = align
@@ -77,7 +80,7 @@ function ConvergenceController:BuildGui()
     mid.Size = UDim2.new(0.34, 0, 0, 22)
     mid.BackgroundTransparency = 1
     mid.Text = "PHASE 1"
-    mid.TextSize = 14
+    mid.TextSize = Theme.textSize(Theme.Type.Label)
     mid.Font = Enum.Font.GothamBold
     mid.TextColor3 = ACCENT
     mid.Parent = top
@@ -87,7 +90,7 @@ function ConvergenceController:BuildGui()
     clock.Size = UDim2.new(0.34, 0, 0, 26)
     clock.BackgroundTransparency = 1
     clock.Text = "3:00"
-    clock.TextSize = 22
+    clock.TextSize = Theme.textSize(Theme.Type.Title)
     clock.Font = Enum.Font.GothamBlack
     clock.TextColor3 = TEXT
     clock.Parent = top
@@ -114,9 +117,9 @@ function ConvergenceController:BuildGui()
     banner.AnchorPoint = Vector2.new(0.5, 0)
     banner.Size = UDim2.fromOffset(520, 44)
     banner.BackgroundColor3 = PANEL
-    banner.BackgroundTransparency = 0.3
+    banner.BackgroundTransparency = Theme.Transparency.Panel
     banner.Text = ""
-    banner.TextSize = 24
+    banner.TextSize = Theme.textSize(Theme.Type.Title)
     banner.Font = Enum.Font.GothamBlack
     banner.TextColor3 = ACCENT
     banner.Visible = false
@@ -147,7 +150,7 @@ function ConvergenceController:Chip(name)
     local f = Instance.new("Frame")
     f.Size = UDim2.fromOffset(130, 40)
     f.BackgroundColor3 = PANEL
-    f.BackgroundTransparency = 0.25
+    f.BackgroundTransparency = Theme.Transparency.Panel
     f.LayoutOrder = #self.ZoneRow:GetChildren()
     f.Parent = self.ZoneRow
     corner(f, 8)
@@ -155,14 +158,14 @@ function ConvergenceController:Chip(name)
     label.Size = UDim2.new(1, 0, 0, 22)
     label.BackgroundTransparency = 1
     label.Text = name
-    label.TextSize = 14
+    label.TextSize = Theme.textSize(Theme.Type.Label)
     label.Font = Enum.Font.GothamBold
     label.TextColor3 = TEXT
     label.Parent = f
     local back = Instance.new("Frame")
     back.Position = UDim2.new(0.08, 0, 0, 26)
     back.Size = UDim2.new(0.84, 0, 0, 8)
-    back.BackgroundColor3 = Color3.fromRGB(45, 48, 58)
+    back.BackgroundColor3 = Theme.Color.Track
     back.BorderSizePixel = 0
     back.Parent = f
     corner(back, 4)
@@ -217,7 +220,7 @@ function ConvergenceController:ShowBanner(text, color)
     b.TextColor3 = color or ACCENT
     b.Visible = true
     b.TextTransparency = 0
-    b.BackgroundTransparency = 0.3
+    b.BackgroundTransparency = Theme.Transparency.Panel
     if self.BannerToken then
         self.BannerToken = self.BannerToken + 1
     else
@@ -260,10 +263,10 @@ function ConvergenceController:KnitStart()
         elseif kind == "MapEventWarning" then
             self:ShowBanner(
                 (data.Banner or data.Name:upper()) .. "  " .. tostring(data.Seconds) .. "s",
-                Color3.fromRGB(255, 90, 50)
+                Theme.Color.Danger
             )
         elseif kind == "MapEventStart" then
-            self:ShowBanner(data.Banner or data.Name:upper(), Color3.fromRGB(255, 90, 50))
+            self:ShowBanner(data.Banner or data.Name:upper(), Theme.Color.Danger)
         elseif kind == "MapEventEnd" then
             self:ShowBanner(data.Name:upper() .. " CLEAR", NEUTRAL)
         elseif kind == "Overtime" then

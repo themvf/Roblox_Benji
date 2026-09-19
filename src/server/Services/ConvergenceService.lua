@@ -7,6 +7,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Palette = require(ReplicatedStorage.Shared.Palette)
 local Config = require(ReplicatedStorage.Shared.Config)
 local BotService
 local StatsService
@@ -20,8 +21,8 @@ local ConvergenceService = Knit.CreateService({
 })
 
 local TEAM_COLORS = {
-    Red = Color3.fromRGB(255, 70, 70),
-    Blue = Color3.fromRGB(70, 140, 255),
+    Red = Palette.Ui.Red,
+    Blue = Palette.Ui.Blue,
     Neutral = Color3.fromRGB(220, 220, 225),
     Closed = Color3.fromRGB(70, 70, 75),
 }
@@ -76,7 +77,7 @@ local function makeZoneVisual(folder, zone)
     label.TextScaled = true
     label.Font = Enum.Font.GothamBlack
     label.TextColor3 = Color3.new(1, 1, 1)
-    label.TextStrokeTransparency = 0.3
+    Palette.worldText(label)
     label.Parent = sign
     local barBack = Instance.new("Frame")
     barBack.Position = UDim2.fromScale(0.1, 0.68)

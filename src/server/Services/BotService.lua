@@ -9,6 +9,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Debris = game:GetService("Debris")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Palette = require(ReplicatedStorage.Shared.Palette)
 
 local BotService = Knit.CreateService({ Name = "BotService" })
 
@@ -17,7 +18,7 @@ BotService.Level = "Mix" -- S13: 4 Normal / 1 Easy / 1 Hard per team at 6v6
 BotService.Debug = true
 BotService.LastReport = nil
 
-local TEAM_COLORS = { Red = Color3.fromRGB(255, 70, 70), Blue = Color3.fromRGB(70, 140, 255) }
+local TEAM_COLORS = { Red = Palette.Ui.Red, Blue = Palette.Ui.Blue }
 
 -- ===== S2 global timing =====
 local T = {
@@ -205,7 +206,7 @@ local function makeRig(bot)
     lbl.TextScaled = true
     lbl.Font = Enum.Font.GothamBold
     lbl.TextColor3 = TEAM_COLORS[bot.Team]
-    lbl.TextStrokeTransparency = 0.3
+    Palette.worldText(lbl)
     lbl.Parent = bb
     bot.Label = lbl
     return model, hum

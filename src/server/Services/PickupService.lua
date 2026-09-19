@@ -10,6 +10,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Debris = game:GetService("Debris")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Palette = require(ReplicatedStorage.Shared.Palette)
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
 local PickupService = Knit.CreateService({
@@ -85,7 +86,7 @@ local function icon(parent, text, color)
     l.TextScaled = true
     l.Font = Enum.Font.GothamBlack
     l.TextColor3 = color
-    l.TextStrokeTransparency = 0.3
+    Palette.worldText(l)
     l.Parent = bb
     return l
 end

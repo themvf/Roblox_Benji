@@ -43,6 +43,10 @@ Screen.MIN_TAP = 44
 -- The layout is authored against this window and scaled from it.
 local DESIGN = Vector2.new(1280, 720)
 
+-- The smallest UIScale each device class can reach. Theme sizes text against the floor rather than
+-- the current scale, so a label that is legible in one orientation stays legible after a rotation.
+Screen.ScaleFloor = { Phone = 0.62, Tablet = 0.8, Desktop = 0.85, Console = 1 }
+
 local listeners = {}
 
 -- Device class. A laptop with a touchscreen keeps a keyboard, so it stays Desktop; an iPad with
@@ -68,13 +72,13 @@ end
 local function scaleFor(class, viewport)
     local raw = math.min(viewport.X / DESIGN.X, viewport.Y / DESIGN.Y)
     if class == "Phone" then
-        return math.clamp(raw, 0.62, 0.9)
+        return math.clamp(raw, Screen.ScaleFloor.Phone, 0.9)
     elseif class == "Tablet" then
-        return math.clamp(raw, 0.8, 1.15)
+        return math.clamp(raw, Screen.ScaleFloor.Tablet, 1.15)
     elseif class == "Console" then
-        return math.clamp(raw * 1.1, 1, 1.6)
+        return math.clamp(raw * 1.1, Screen.ScaleFloor.Console, 1.6)
     end
-    return math.clamp(raw, 0.85, 1.5)
+    return math.clamp(raw, Screen.ScaleFloor.Desktop, 1.5)
 end
 
 -- Safe insets in *screen* pixels: the notch / rounded corners / home indicator reported by the

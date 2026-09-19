@@ -1,13 +1,17 @@
 ---
 name: roblox-ui-layout
-description: Build or edit any on-screen UI in this project (HUDs, meters, touch buttons, modals, world-space billboards) so it is correct on phone, iPad, desktop and console. Holds the device/safe-area rules, the Screen module API, the reserved-zone map and the QA gate. Use whenever adding or moving a ScreenGui, BillboardGui, HUD element, on-screen button or panel.
+description: Build or edit any on-screen UI in this project (HUDs, meters, touch buttons, modals, world-space billboards) so it is correct on phone, iPad, desktop and console. Holds the device/safe-area rules, the Screen and Theme module APIs, the reserved-zone map, the colour/type/contrast rules and the QA gate. Use whenever adding or moving a ScreenGui, BillboardGui, HUD element, on-screen button or panel, or picking any colour or text size.
 ---
 
 # Roblox UI layout (this project)
 
 Every screen in this game is authored once and has to read on a 375 px-tall phone in landscape, a 12.9" iPad
-(including Split View), a 4K desktop window and a TV. The rules below are what `src/client/UI/Screen.lua`
-exists to enforce. Read that module before writing UI code; it is short and commented.
+(including Split View), a 4K desktop window and a TV. Two modules exist to enforce the rules below, and both
+are short and commented -- read them before writing UI code:
+
+- `src/client/UI/Screen.lua` -- **where things go**: device class, safe-area insets, scaling, reserved zones.
+- `src/client/UI/Theme.lua` -- **how things look**: palette, type ramp, surfaces, contrast.
+- `src/shared/Palette.lua` -- team colours and the world-text stroke, shared with the server.
 
 The failure it was written for: HUD panels authored as fixed `UDim2.fromOffset` sizes at desktop dimensions
 stack on top of each other and on top of the crosshair on a phone, and anything pinned to a screen edge
@@ -68,6 +72,48 @@ Recap 18, Celebration 20, Modal 30`. Never hard-code a DisplayOrder; add a layer
    a Desktop; an iPad with a Magic Keyboard is still a Tablet. `Tuning.Debug_ForceTouchUi` forces the touch
    HUD on in Studio.
 
+## The Theme module
+
+```lua
+local Theme = require(script.Parent.Parent.UI.Theme)   -- from src/client/Controllers/*
+```
+
+- `Theme.Color` -- surfaces (`Panel`, `PanelRaised`, `PanelHigh`, `PanelSelected`, `Track`), text
+  (`Text`, `TextMuted`, `TextInverse`) and status (`Accent`, `Energy`, `Fly`, `Good`, `Warn`, `Danger`).
+- `Theme.Team` / `Theme.team(name)` -- team colour, from `Shared/Palette`.
+- `Theme.Tier` -- the four rarity colours the validators accept. `Theme.Slot` -- loadout slot identity.
+- `Theme.Type` (`Display 30 / Title 22 / Body 16 / Label 14`) and `Theme.Font` for the matching weight.
+- `Theme.textSize(n)` -- a design size floored so it still reads after Screen's UIScale shrinks it.
+- `Theme.Transparency.Panel` / `.Scrim`, `Theme.Corner`.
+- `Theme.panel(frame, opts)` -- standard HUD surface in one call.
+- `Theme.overWorld(label)` -- the stroke for text drawn over the 3D world (= `Palette.worldText`).
+- `Theme.contrast(fg, bg)` and `Theme.contrastOverBackdrop(fg, panel, transparency)` -- check a new pair.
+
+## Visual rules
+
+10. **Never write a `Color3.fromRGB` in a controller.** Every colour is a `Theme` token. The exceptions are
+    3D lighting values (a `ViewportFrame`'s `Ambient`/`LightColor`), which are not UI. Copy-pasted tokens are
+    how the team red became three values, "dark panel" became two, and `Rare` ended up blue in one screen and
+    gold in another -- where it was also indistinguishable from `Accent`.
+11. **Team colour is one source.** `Shared/Palette` holds `Ui` (bright, for HUD) and `World` (darker, for
+    parts under lighting). They are two values of one colour, not a drift -- change them together. Never
+    redeclare a red or blue locally.
+12. **Translucent panels must hold contrast against the sky.** A HUD panel carrying text uses
+    `Theme.Transparency.Panel` (0.12). The old 0.25-0.4 dropped muted text to 4.2:1 and 2.8:1 over a bright
+    sky, under the 4.5:1 AA floor -- readable in a hangar, washed out on the horizon. For any new
+    colour-on-panel pair, check it with `Theme.contrastOverBackdrop`; body text wants 4.5:1, large text 3:1.
+13. **Text over the 3D world needs a stroke, text on a surface does not.** Anything on a `BillboardGui` or a
+    transparent parent gets `Theme.overWorld` / `Palette.worldText`. A `SurfaceGui` on a wall already has a
+    backdrop and must not get one.
+14. **Use the four-step type ramp.** No new ad-hoc sizes. Run every size through `Theme.textSize`, which
+    floors it at 14 px on a phone and 18 px on console -- a raw `TextSize = 12` scaled for a phone lands
+    around 7 px and is simply gone.
+15. **Tap targets have a ceiling as well as a floor.** 44pt minimum via `Screen.tapSize`; about 96pt maximum
+    for an action button, and the whole touch overlay stays under roughly 20-25% of screen area. An oversized
+    button is covering the thing the player is shooting at.
+16. **Colour is never the only signal.** Red/blue is the safest possible team pair for colour blindness, but
+    anything that matters (team, rarity, ownership) should also differ in position, shape or label.
+
 ## QA gate for any UI change
 
 1. Studio device emulator, all four: iPhone (small, notched, landscape), iPad (landscape **and** Split View),
@@ -76,4 +122,6 @@ Recap 18, Celebration 20, Modal 30`. Never hard-code a DisplayOrder; add a layer
 3. Rotate / resize mid-match and confirm every panel re-anchors — nothing may need a respawn to look right.
 4. Confirm no element overlaps the crosshair, the thumbstick, the jump button or the hotbar. `Screen.audit`
    warns for a named element if you are unsure.
-5. Then the usual: `stylua src && selene src && rojo build -o /tmp/arena.rbxl`, zero warnings.
+5. Look at the HUD against a bright sky, not just against the map. That is where contrast fails.
+6. `grep -n "Color3.fromRGB" src/client/Controllers/` should return nothing but ViewportFrame lighting.
+7. Then the usual: `stylua src && selene src && rojo build -o /tmp/arena.rbxl`, zero warnings.

@@ -7,10 +7,11 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Theme = require(script.Parent.Parent.UI.Theme)
 
 local BountyController = Knit.CreateController({ Name = "BountyController" })
 
-local ACCENT = Color3.fromRGB(255, 200, 70)
+local ACCENT = Theme.Color.Accent
 local markers = {} -- [player] = BillboardGui
 
 local function ensureMarker(player)
@@ -37,7 +38,7 @@ local function ensureMarker(player)
     l.TextScaled = true
     l.Font = Enum.Font.GothamBlack
     l.TextColor3 = ACCENT
-    l.TextStrokeTransparency = 0.2
+    Theme.overWorld(l)
     l.Text = "★ " .. (player:GetAttribute("Bounty") or "WANTED")
     l.Parent = bb
     markers[player] = bb

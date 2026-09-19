@@ -6,20 +6,17 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Screen = require(script.Parent.Parent.UI.Screen)
+local Theme = require(script.Parent.Parent.UI.Theme)
 local Celebrations = require(ReplicatedStorage.Shared.Celebrations)
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
 local CelebrationController = Knit.CreateController({ Name = "CelebrationController" })
 
-local PANEL = Color3.fromRGB(28, 30, 38)
-local ACCENT = Color3.fromRGB(255, 200, 70)
-local TEXT = Color3.fromRGB(245, 245, 250)
-local TIER_COLORS = {
-    Common = Color3.fromRGB(170, 175, 185),
-    Rare = Color3.fromRGB(80, 150, 255),
-    Legendary = Color3.fromRGB(255, 160, 60),
-    Mythical = Color3.fromRGB(230, 80, 255),
-}
+-- A modal surface sits *on* the HUD, so it is the raised panel tone, not a second dark grey.
+local PANEL = Theme.Color.PanelRaised
+local ACCENT = Theme.Color.Accent
+local TEXT = Theme.Color.Text
+local TIER_COLORS = Theme.Tier
 
 local function corner(inst, r)
     local c = Instance.new("UICorner")
@@ -90,7 +87,7 @@ function CelebrationController:BuildGui()
     timer.Size = UDim2.fromOffset(300, 34)
     timer.BackgroundTransparency = 1
     timer.Text = "CHOOSE YOUR CELEBRATION"
-    timer.TextSize = 22
+    timer.TextSize = Theme.textSize(Theme.Type.Title)
     timer.Font = Enum.Font.GothamBlack
     timer.TextColor3 = ACCENT
     timer.TextStrokeTransparency = 0.4
@@ -103,9 +100,9 @@ function CelebrationController:BuildGui()
     skip.Position = UDim2.new(0.5, 0, 1, -40)
     skip.Size = UDim2.fromOffset(420, 36)
     skip.BackgroundColor3 = PANEL
-    skip.BackgroundTransparency = 0.3
+    skip.BackgroundTransparency = Theme.Transparency.Panel
     skip.Text = "Press V to vote skip  (0 / 3)"
-    skip.TextSize = 18
+    skip.TextSize = Theme.textSize(Theme.Type.Body)
     skip.Font = Enum.Font.GothamBold
     skip.TextColor3 = TEXT
     skip.Visible = false
@@ -133,7 +130,7 @@ function CelebrationController:ShowWheel(favorites, seconds)
         b.Size = size
         b.BackgroundColor3 = PANEL
         b.Text = cel.Name
-        b.TextSize = 18
+        b.TextSize = Theme.textSize(Theme.Type.Body)
         b.Font = Enum.Font.GothamBold
         b.TextColor3 = TIER_COLORS[cel.Tier] or TEXT
         b.AutoButtonColor = true
