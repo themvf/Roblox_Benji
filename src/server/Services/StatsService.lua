@@ -6,6 +6,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Progression = require(ReplicatedStorage.Shared.Progression)
+local AlterEgos = require(ReplicatedStorage.Shared.AlterEgos)
 
 local StatsService = Knit.CreateService({
     Name = "StatsService",
@@ -97,9 +98,11 @@ function StatsService:Tick(dt, zones, playersIn)
                 if not z.Closed and playersIn(z, p) then
                     if z.Owner == e.Team and not z.Contested then
                         e.Defense += S.DefendSecond * dt
+                        Knit.GetService("MutationService"):DefenseTime(p, dt)
                         e.LifeHoldSeconds += dt
                     elseif z.Owner ~= e.Team or z.Contested then
                         e.Objective += S.CaptureSecond * dt
+                        Knit.GetService("MutationService"):NoteObjective(p, S.CaptureSecond * dt)
                         if z.Owner == e.Team then
                             e.LifeHoldSeconds += dt
                         end
@@ -120,6 +123,12 @@ function StatsService:OnCapture(zone, playersInside)
         local e = match.Entries[p]
         if e then
             e.Objective += Progression.Score.CapturePoints
+            local Mutation = Knit.GetService("MutationService")
+            Mutation:NoteObjective(p, Progression.Score.CapturePoints)
+            Mutation:AddEnergy(p, "Capture", AlterEgos.Energy.Capture)
+            if zone.LastContestedAt and os.clock() - zone.LastContestedAt <= AlterEgos.Energy.ContestedWindow then
+                Mutation:AddEnergy(p, "ContestedCapture", AlterEgos.Energy.ContestedCapture)
+            end
             e.Captures += 1
             e.LifeCaptures += 1
             self:CheckObjectiveBounty(e)
@@ -171,6 +180,7 @@ function StatsService:OnKill(killer, victim, _victimCharacter)
         ke.Kills += 1
         ke.LifeKills += 1
         ke.Combat += Progression.Score.KillPoints
+        Knit.GetService("MutationService"):OnKill(killer, ve ~= nil and ve.Bounty ~= nil)
         self:CheckCombatBounty(ke)
         if victim then
             ke.PairKills[victim.UserId] = (ke.PairKills[victim.UserId] or 0) + 1
@@ -178,6 +188,7 @@ function StatsService:OnKill(killer, victim, _victimCharacter)
     end
     if ve then
         ve.Deaths += 1
+        Knit.GetService("MutationService"):OnDeath(victim)
         -- assists: 25%+ of the victim's max health dealt by someone other than the killer, on this life
         local maxHp = 100
         for dealerId, dmg in ve.DamageBy do
@@ -187,6 +198,7 @@ function StatsService:OnKill(killer, victim, _victimCharacter)
                 if ae then
                     ae.Assists += 1
                     ae.Teamplay += Progression.Score.AssistPoints
+                    Knit.GetService("MutationService"):AddEnergy(assister, "Assist", AlterEgos.Energy.Assist)
                 end
             end
         end
@@ -381,6 +393,9 @@ function StatsService:EndMatch(winnerTeam, aborted)
             MVPScore = mvpScore,
             IsMVP = p == mvp,
             BountySurvived = false,
+            Mutations = p:GetAttribute("MutationActivations") or 0,
+            MutantKills = p:GetAttribute("MutantKills") or 0,
+            ObjectiveWhileMutated = p:GetAttribute("ObjectiveWhileMutated") or 0,
             BountyClaims = e.BountyClaims or 0,
             XP = 0,
             StreakBefore = p:GetAttribute("CurrentStreak") or 0,

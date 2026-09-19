@@ -143,6 +143,9 @@ local function stepZone(zone, counts, rules, dt)
     end
     local red, blue = counts.Red, counts.Blue
     zone.Contested = red > 0 and blue > 0
+    if zone.Contested then
+        zone.LastContestedAt = os.clock()
+    end
     if zone.Contested or (red == 0 and blue == 0) then
         return nil -- frozen while contested; holds while empty
     end
@@ -264,6 +267,8 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
         return nil
     end
     StatsService:StartMatch(players, "Convergence", mapName)
+    Knit.GetService("MutationService"):StartMatch(players)
+    Knit.GetService("AbilityService"):ResetTelemetry()
 
     -- players inside a zone (for score credit)
     local function insideZone(zone, p)
@@ -695,6 +700,7 @@ function ConvergenceService:Finish(match, winner, aborted)
     end
     if not aborted and winner then
         -- validation, transparent MVP, streaks, XP and persistent stats live in StatsService
+        Knit.GetService("MutationService"):EndMatch()
         StatsService:EndMatch(winner, aborted)
         task.wait(6) -- recap card on screen
         local winners, losers = {}, {}
@@ -714,6 +720,7 @@ function ConvergenceService:Finish(match, winner, aborted)
         end)
         Knit.GetService("CelebrationService"):Run(winners, losers)
     else
+        Knit.GetService("MutationService"):EndMatch()
         StatsService:Abort()
         task.wait(2)
     end

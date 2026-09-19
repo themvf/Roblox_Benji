@@ -20,8 +20,10 @@ local SLOT_COLORS = {
     Melee = Color3.fromRGB(255, 120, 90),
     Utility = Color3.fromRGB(200, 120, 255),
     Celebration = Color3.fromRGB(255, 200, 70),
+    AlterEgo = Color3.fromRGB(255, 120, 40),
 }
-local SLOTS = { "Primary", "Secondary", "Melee", "Utility", "Celebration" }
+local SLOTS = { "Primary", "Secondary", "Melee", "Utility", "Celebration", "AlterEgo" }
+local AlterEgos = require(ReplicatedStorage.Shared.AlterEgos)
 local Celebrations = require(ReplicatedStorage.Shared.Celebrations)
 local TEXT = Color3.fromRGB(245, 245, 250)
 local MUTED = Color3.fromRGB(160, 165, 180)
@@ -146,8 +148,8 @@ function LoadoutController:BuildGui()
     self.Columns = {}
     for i, slot in SLOTS do
         local col = Instance.new("ScrollingFrame")
-        col.Position = UDim2.new((i - 1) * 0.204, 0, 0, 0)
-        col.Size = UDim2.new(0.19, 0, 1, 0)
+        col.Position = UDim2.new((i - 1) * 0.1685, 0, 0, 0)
+        col.Size = UDim2.new(0.16, 0, 1, 0)
         col.BackgroundTransparency = 1
         col.ScrollBarThickness = 4
         col.AutomaticCanvasSize = Enum.AutomaticSize.Y
@@ -274,6 +276,12 @@ function LoadoutController:MakeButton(slot, weaponName)
     stripe.Parent = btn
     corner(stripe, 6)
     btn.Activated:Connect(function()
+        if slot == "AlterEgo" then
+            self.Selected.AlterEgo = weaponName
+            self:Refresh()
+            self:PreviewEgo(weaponName)
+            return
+        end
         if slot == "Celebration" then
             local favs = self.Favorites
             local idx = table.find(favs, weaponName)
@@ -307,6 +315,8 @@ function LoadoutController:Refresh()
                 on = idx ~= nil
                 local cel = Celebrations.get(name)
                 ui.Button.Text = "  " .. (idx and (idx .. ". ") or "") .. (cel and cel.Name or name)
+            elseif slot == "AlterEgo" then
+                on = (self.Selected.AlterEgo or AlterEgos.DEFAULT) == name
             else
                 on = self.Selected[slot] == name
             end
@@ -321,6 +331,8 @@ function LoadoutController:Refresh()
                 parts,
                 "Celebration: " .. (self.Favorites[1] and (Celebrations.get(self.Favorites[1]) or {}).Name or "-")
             )
+        elseif slot == "AlterEgo" then
+            table.insert(parts, "Ego: " .. (self.Selected.AlterEgo or AlterEgos.DEFAULT))
         else
             table.insert(parts, slot .. ": " .. (self.Selected[slot] or "-"))
         end
@@ -419,6 +431,41 @@ function LoadoutController:ShowSkins(weaponName)
     end)
 end
 
+function LoadoutController:PreviewEgo(id)
+    local ego = AlterEgos.get(id)
+    if not ego then
+        return
+    end
+    for _, c in self.Viewport:GetChildren() do
+        if not c:IsA("Camera") then
+            c:Destroy()
+        end
+    end
+    self.PreviewModel = nil
+    self.PreviewWeapon = nil
+    for _, c in self.SkinRow:GetChildren() do
+        if c:IsA("TextButton") then
+            c:Destroy()
+        end
+    end
+    self.NameLabel.Text = ego.Name:upper() .. "  ->  " .. ego.Mutant:upper()
+    local lines = {
+        ego.Tagline,
+        ("Mutation: %s for %ds (press %s at 100%%)"):format(
+            ego.Mutant,
+            AlterEgos.Mutation.DurationSeconds,
+            AlterEgos.Mutation.ActivateKey
+        ),
+        "E  Ground Slam: area knockback, 7 s",
+        "F  Brace: frontal resistance 3 s, 8 s",
+        "C  Charge: forward rush, pushes enemies, 6 s",
+        "Energy: kills, assists, captures, defending, bounty kills",
+    }
+    for i, l in self.StatLabels do
+        l.Text = lines[i] or ""
+    end
+end
+
 function LoadoutController:PreviewCelebration(id)
     local cel = Celebrations.get(id)
     if not cel then
@@ -471,6 +518,9 @@ function LoadoutController:Confirm()
         })
         :andThen(function(result)
             Knit.GetService("CelebrationService"):SetFavorites(self.Favorites)
+            if self.Selected.AlterEgo then
+                Knit.GetService("AlterEgoService"):Select(self.Selected.AlterEgo)
+            end
             self.ConfirmButton.Text = result and "EQUIPPED" or "INVALID"
             task.delay(0.8, function()
                 self.ConfirmButton.Text = "EQUIP"
@@ -488,6 +538,10 @@ function LoadoutController:Open()
     local LoadoutService = Knit.GetService("LoadoutService")
     Knit.GetService("CelebrationService"):GetFavorites():andThen(function(favs)
         self.Favorites = favs
+        self:Refresh()
+    end)
+    Knit.GetService("AlterEgoService"):Get():andThen(function(id)
+        self.Selected.AlterEgo = id
         self:Refresh()
     end)
     LoadoutService:GetLoadout():andThen(function(current)
@@ -530,10 +584,14 @@ end
 function LoadoutController:KnitStart()
     self.Selected = {}
     self.Favorites = {}
-    self.Buttons = { Primary = {}, Secondary = {}, Melee = {}, Utility = {}, Celebration = {} }
+    self.Buttons = { Primary = {}, Secondary = {}, Melee = {}, Utility = {}, Celebration = {}, AlterEgo = {} }
     self:BuildGui()
 
     Knit.GetService("LoadoutService"):GetOptions():andThen(function(options)
+        options.AlterEgo = {}
+        for id in AlterEgos.List do
+            table.insert(options.AlterEgo, id)
+        end
         options.Celebration = {}
         for _, c in Celebrations.all() do
             table.insert(options.Celebration, c.Id)

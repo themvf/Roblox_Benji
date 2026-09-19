@@ -42,6 +42,17 @@ DataService loads a ProfileStore profile per player into attributes (`Loadout*`,
 Game Settings > Security > "Enable Studio Access to API Services" to save for real; otherwise ProfileStore uses a
 mock store and prints a warning.
 
+## Alter Ego and Mutation (v1 prototype: Titan -> Colossus)
+Pick an Alter Ego at the kiosk (Titan only in v1; persisted). In a match, energy is server-authoritative:
+kill +20, assist +10, capture +25 (+15 if the zone was contested in the last 10 s), +5 per 10 s defending,
+bounty kill +30; cap 100. `MUTATION READY` -> press Q. Colossus lasts 25 s, scales 1.35x with a molten glow, then
+reverts (or on death). Abilities: E Ground Slam (14-stud knockback, 35 dmg, 7 s), F Brace (60% frontal damage
+resistance, 60% speed, 3 s, 8 s cd), C Charge (0.6 s rush at 70 studs/s with limited steering, 20 dmg + push, 6 s).
+Knockback and charge movement are applied on the victim's / charger's client (client-owned characters); all
+validation, damage, cooldowns and timers are server side. A MUTATION REPORT prints at match end (energy by source,
+time to first mutation, activations and timing, mutant K/D, objective score while mutated, survival time, players
+who reached 100 and never activated, ability uses and hits). Numbers live in `Shared/AlterEgos`.
+
 ## Competitive loop (Phases 1-2 of the bounty/streak design)
 - Match score = Objective + Defense + Teamplay + Combat + Discipline (weights in `Shared/Progression`). MVP is the
   top scorer on the winning team; the recap card shows the breakdown. Hold Tab for the scoreboard.

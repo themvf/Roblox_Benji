@@ -614,7 +614,8 @@ local function fire(bot)
         bot.Telemetry.Hits += 1
         target.Character:SetAttribute("LastHitBy", bot.Id)
         target.Character:SetAttribute("LastHitByName", bot.Name)
-        target.Humanoid:TakeDamage(SHOT_DAMAGE)
+        local dmg = Knit.GetService("AbilityService"):ApplyBrace(target.Character, bot.Root.Position, SHOT_DAMAGE)
+        target.Humanoid:TakeDamage(dmg)
     end
 end
 

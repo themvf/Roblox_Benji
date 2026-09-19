@@ -31,6 +31,12 @@ local function onDamage(_system, target, amount, _damageType, dealer, hitInfo, w
             amount *= crit.Value
         end
     end
+    local attackerRoot = dealer
+        and dealer:IsA("Player")
+        and dealer.Character
+        and dealer.Character:FindFirstChild("HumanoidRootPart")
+    amount = Knit.GetService("AbilityService")
+        :ApplyBrace(target.Parent, attackerRoot and attackerRoot.Position or nil, amount)
     if dealer and dealer:IsA("Player") then
         Knit.GetService("StatsService"):OnDamage(dealer, target.Parent, math.min(amount, target.Health))
     end

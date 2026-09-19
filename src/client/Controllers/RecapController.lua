@@ -107,6 +107,17 @@ function RecapController:Show(r)
         if r.BountyClaims > 0 then
             line(("Bounties claimed this match: %d"):format(r.BountyClaims), 16, ACCENT)
         end
+        if (r.Mutations or 0) > 0 then
+            line(
+                ("Mutations: %d · mutant kills %d · objective score while mutated %d"):format(
+                    r.Mutations,
+                    r.MutantKills or 0,
+                    r.ObjectiveWhileMutated or 0
+                ),
+                16,
+                Color3.fromRGB(255, 120, 40)
+            )
+        end
         if r.Won then
             local status = r.StatusAfter and ("  ·  " .. r.StatusAfter) or ""
             line(("Win streak: %d%s"):format(r.StreakAfter, status), 18, ACCENT, Enum.Font.GothamBold)

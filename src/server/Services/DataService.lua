@@ -36,6 +36,7 @@ local TEMPLATE = {
         BestStreak = 0,
     },
     StreakCheckpoints = "",
+    AlterEgo = "Titan",
 }
 
 local STORE_NAME = "PlayerData_v1"
@@ -72,6 +73,7 @@ local function applyToAttributes(player, data)
         player:SetAttribute(stat, data.Stats[stat] or 0)
     end
     player:SetAttribute("StreakCheckpoints", data.StreakCheckpoints or "")
+    player:SetAttribute("AlterEgo", data.AlterEgo or "Titan")
     local tier = require(ReplicatedStorage.Shared.Progression).streakTier(data.Stats.CurrentStreak or 0)
     player:SetAttribute("StreakStatus", tier and tier.Name or "")
 end
@@ -94,6 +96,10 @@ local function mirrorAttribute(player, data, name)
     end
     if table.find(STATS, name) and type(value) == "number" then
         data.Stats[name] = value
+        return
+    end
+    if name == "AlterEgo" and type(value) == "string" then
+        data.AlterEgo = value
         return
     end
     if name == "StreakCheckpoints" and type(value) == "string" then
