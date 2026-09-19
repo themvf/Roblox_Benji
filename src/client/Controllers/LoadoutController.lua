@@ -7,6 +7,7 @@ local ProximityPromptService = game:GetService("ProximityPromptService")
 local UserInputService = game:GetService("UserInputService")
 local StarterGui = game:GetService("StarterGui")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Screen = require(script.Parent.Parent.UI.Screen)
 local Weapons = require(ReplicatedStorage.Shared.Weapons)
 
 local LoadoutController = Knit.CreateController({ Name = "LoadoutController" })
@@ -96,12 +97,11 @@ end
 
 function LoadoutController:BuildGui()
     local player = Players.LocalPlayer
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "LoadoutGui"
-    gui.ResetOnSpawn = false
+    -- A full-screen modal. ScreenInsets = DeviceSafeInsets (set by Screen.newScreenGui) already
+    -- lets it cover the topbar while keeping content out of a notch or the home indicator, so
+    -- the legacy IgnoreGuiInset flag is not needed and would fight it.
+    local gui = Screen.newScreenGui("LoadoutGui", Screen.Layers.Modal)
     gui.Enabled = false
-    gui.IgnoreGuiInset = true
-    gui.DisplayOrder = 10
     gui.Parent = player:WaitForChild("PlayerGui")
     self.Gui = gui
 

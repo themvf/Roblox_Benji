@@ -3,6 +3,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Screen = require(script.Parent.Parent.UI.Screen)
 
 local RecapController = Knit.CreateController({ Name = "RecapController" })
 
@@ -28,11 +29,8 @@ local function label(parent, text, size, color, font, order)
 end
 
 function RecapController:BuildGui()
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "RecapGui"
-    gui.ResetOnSpawn = false
+    local gui = Screen.newScreenGui("RecapGui", Screen.Layers.Recap)
     gui.Enabled = false
-    gui.DisplayOrder = 18
     gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
     self.Gui = gui
     local panel = Instance.new("Frame")
@@ -42,6 +40,9 @@ function RecapController:BuildGui()
     panel.BackgroundColor3 = PANEL
     panel.BackgroundTransparency = 0.1
     panel.Parent = gui
+    -- 520x380 is a desktop card; scaled and capped it stays on screen on a phone in landscape.
+    Screen.autoScale(panel)
+    Screen.fitWithin(panel, 0.94, 0.9)
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 14)
     corner.Parent = panel

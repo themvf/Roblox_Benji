@@ -34,6 +34,13 @@ guns, Lune for build scripts. Read README.md for the full map of services.
 - Objective mode logic is generic; maps supply Objectives/Events/Pickups data. Never hard-code a map in a service.
 - Every tunable number lives in `Config` and is exposed as a Tuning attribute so it can be changed in Studio.
 
+## UI and screens
+All on-screen UI goes through `src/client/UI/Screen.lua`: safe-area insets, device class, a UIScale per
+panel, 44pt tap targets, one DisplayOrder table, and reserved zones (crosshair, thumbstick, jump button,
+hotbar). Never build a raw `ScreenGui` or position off a raw screen edge. World-space `BillboardGui` sizes
+go in scale (studs), never offset (pixels). Use the `roblox-ui-layout` skill (.claude/skills) before adding
+or moving any HUD, button, panel or billboard; it holds the rules and the multi-device QA gate.
+
 ## Map building
 Use the `roblox-map-building` skill (.claude/skills) before adding or editing a map layout. It holds the geometry
 audit checklist, the safety data every map must declare, and the QA gate.

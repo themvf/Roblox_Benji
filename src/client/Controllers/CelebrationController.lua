@@ -5,6 +5,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Screen = require(script.Parent.Parent.UI.Screen)
 local Celebrations = require(ReplicatedStorage.Shared.Celebrations)
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
@@ -64,10 +65,7 @@ playEmote = function(character, emote)
 end
 
 function CelebrationController:BuildGui()
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "CelebrationGui"
-    gui.ResetOnSpawn = false
-    gui.DisplayOrder = 20
+    local gui = Screen.newScreenGui("CelebrationGui", Screen.Layers.Celebration)
     gui.Enabled = false
     gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
     self.Gui = gui
@@ -82,6 +80,9 @@ function CelebrationController:BuildGui()
     wheel.Visible = false
     wheel.Parent = gui
     self.Wheel = wheel
+    -- A 340 px wheel is taller than a phone's safe area in landscape. Scale it, and keep the
+    -- petals' own tap targets at 44pt minimum (see the button sizes below).
+    Screen.autoScale(wheel)
 
     local timer = Instance.new("TextLabel")
     timer.AnchorPoint = Vector2.new(0.5, 1)
@@ -153,6 +154,9 @@ function CelebrationController:ShowWheel(favorites, seconds)
         end)
     end
     -- centre = default (first favourite); others around a ring
+    -- Petal heights are checked against Screen.MIN_TAP so the wheel stays tappable once the
+    -- UIScale on `wheel` has shrunk it for a phone.
+    local petalH = math.max(70, math.ceil(Screen.MIN_TAP / math.max(Screen.get().Scale, 0.1)))
     button(favorites[1], UDim2.fromScale(0.5, 0.5), UDim2.fromOffset(120, 120))
     local ring = {}
     for i = 2, #favorites do
@@ -160,7 +164,7 @@ function CelebrationController:ShowWheel(favorites, seconds)
     end
     for i, id in ring do
         local a = (i - 1) / #ring * math.pi * 2 - math.pi / 2
-        button(id, UDim2.new(0.5, math.cos(a) * 125, 0.5, math.sin(a) * 125), UDim2.fromOffset(110, 70))
+        button(id, UDim2.new(0.5, math.cos(a) * 125, 0.5, math.sin(a) * 125), UDim2.fromOffset(110, petalH))
     end
 
     wheel.Visible = true

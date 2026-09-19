@@ -59,11 +59,15 @@ local function makeZoneVisual(folder, zone)
     pillar.Color = TEAM_COLORS.Neutral
     pillar.Parent = folder
 
+    -- Sized in studs, not pixels: an offset-sized BillboardGui draws at the same size however
+    -- far away it is, so every zone in the map ends up as a full-size label stacked over the
+    -- HUD. Scale units shrink with distance, which is what makes the near zone read as the
+    -- near one. MaxDistance is short enough that the whole map is not labelled at once.
     local sign = Instance.new("BillboardGui")
-    sign.Size = UDim2.fromOffset(200, 70)
+    sign.Size = UDim2.fromScale(14, 5)
     sign.StudsOffset = Vector3.new(0, 10, 0)
     sign.AlwaysOnTop = true
-    sign.MaxDistance = 400
+    sign.MaxDistance = 250
     sign.Parent = ring
     local label = Instance.new("TextLabel")
     label.Size = UDim2.fromScale(1, 0.6)

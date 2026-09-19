@@ -2,6 +2,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Screen = require(script.Parent.Parent.UI.Screen)
 
 local HudController = Knit.CreateController({ Name = "HudController" })
 
@@ -67,9 +68,7 @@ end
 function HudController:KnitStart()
     spinShowcase()
     streakNameplates()
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "Hud"
-    gui.ResetOnSpawn = false
+    local gui = Screen.newScreenGui("Hud", Screen.Layers.Hud)
     gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
 
     local function label(pos)
@@ -85,9 +84,15 @@ function HudController:KnitStart()
         return l
     end
     local state = label(UDim2.fromScale(0.35, 0.02))
-    -- pickup toasts
+    state.AnchorPoint = Vector2.new(0.5, 0)
+    -- Pickup and safety toasts. They used to sit under the round state in the top centre, which
+    -- on a phone is exactly where the Convergence zone chips are and just above the crosshair.
+    -- The left edge, between the Roblox topbar and the movement thumbstick, is free on every
+    -- device, and a toast there never covers the fight.
     local toast = label(UDim2.fromScale(0.35, 0.16))
     toast.Size = UDim2.fromScale(0.3, 0.05)
+    toast.AnchorPoint = Vector2.new(0, 0)
+    toast.TextXAlignment = Enum.TextXAlignment.Left
     toast.TextColor3 = Color3.fromRGB(255, 220, 80)
     toast.Visible = false
     local toastToken = 0
@@ -132,12 +137,33 @@ function HudController:KnitStart()
     local RunService = game:GetService("RunService")
     local timer = label(UDim2.fromScale(0.42, 0.085))
     timer.Size = UDim2.fromScale(0.16, 0.06)
+    timer.AnchorPoint = Vector2.new(0.5, 0)
     timer.TextColor3 = Color3.fromRGB(255, 220, 80)
     timer.Visible = false
     local fuel = label(UDim2.fromScale(0.02, 0.9))
     fuel.Size = UDim2.fromScale(0.16, 0.05)
     fuel.TextColor3 = Color3.fromRGB(255, 150, 60)
     fuel.Visible = false
+
+    -- All four readouts are re-anchored whenever the screen changes. The rules: hang off the
+    -- safe-area inset rather than the raw screen edge, keep out of Screen.Aim (the middle
+    -- of the screen), and on touch keep out of the bottom corners, which belong to Roblox's
+    -- thumbstick, jump button and the Weapons Kit fire button.
+    Screen.onChange(function(view)
+        local topY = view.Insets.Top
+        state.Position = UDim2.new(0.5, 0, 0, topY)
+        -- AbsoluteSize is still 0 on the first frame, so derive the row height from the viewport.
+        timer.Position = UDim2.new(0.5, 0, 0, topY + math.floor(view.Viewport.Y * 0.06) + 4)
+        toast.Position = UDim2.new(0, view.Insets.Left, 0.30, 0)
+        toast.Size = UDim2.fromScale(view.Touch and 0.34 or 0.26, 0.05)
+        if view.Touch then
+            -- bottom-left is the movement thumbstick; sit above it on the same edge
+            fuel.Position = UDim2.new(0, view.Insets.Left, 0.40, 0)
+        else
+            fuel.Position = UDim2.new(0, view.Insets.Left, 1, -view.Insets.Bottom - 40)
+        end
+        fuel.Size = UDim2.fromScale(view.Touch and 0.22 or 0.16, 0.05)
+    end)
 
     local RoundService = Knit.GetService("RoundService")
     local deadline = nil

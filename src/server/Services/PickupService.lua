@@ -70,11 +70,13 @@ local function basePad(folder, name, pos, color)
 end
 
 local function icon(parent, text, color)
+    -- Stud-sized so a far pickup reads as far away instead of shouting over the touch buttons
+    -- (see the zone signs in ConvergenceService for the same reasoning).
     local bb = Instance.new("BillboardGui")
-    bb.Size = UDim2.fromOffset(120, 40)
+    bb.Size = UDim2.fromScale(4, 1.4)
     bb.StudsOffset = Vector3.new(0, 4.5, 0)
     bb.AlwaysOnTop = true
-    bb.MaxDistance = 120
+    bb.MaxDistance = 90
     bb.Parent = parent
     local l = Instance.new("TextLabel")
     l.Size = UDim2.fromScale(1, 1)

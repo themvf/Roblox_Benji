@@ -4,6 +4,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Screen = require(script.Parent.Parent.UI.Screen)
 
 local ConvergenceController = Knit.CreateController({ Name = "ConvergenceController" })
 
@@ -31,21 +32,28 @@ local function teamColor(team)
 end
 
 function ConvergenceController:BuildGui()
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "ConvergenceHud"
-    gui.ResetOnSpawn = false
+    local gui = Screen.newScreenGui("ConvergenceHud", Screen.Layers.Objective)
     gui.Enabled = false
     gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
     self.Gui = gui
 
+    -- Container for the whole objective readout. It is NOT scaled itself: a UIScale on a
+    -- full-screen frame would move the 0.5 centre line, so each panel below carries its own
+    -- UIScale (which scales about its own centre anchor) and is positioned in screen pixels.
+    local root = Instance.new("Frame")
+    root.Name = "Root"
+    root.BackgroundTransparency = 1
+    root.Size = UDim2.fromScale(1, 1)
+    root.Parent = gui
+
     -- Top bar: RED score | phase + clock | BLUE score
     local top = Instance.new("Frame")
     top.AnchorPoint = Vector2.new(0.5, 0)
-    top.Position = UDim2.new(0.5, 0, 0, 8)
     top.Size = UDim2.fromOffset(420, 54)
     top.BackgroundColor3 = PANEL
     top.BackgroundTransparency = 0.25
-    top.Parent = gui
+    top.Parent = root
+    self.TopBar = top
     corner(top, 12)
 
     local function score(x, color, align)
@@ -88,10 +96,10 @@ function ConvergenceController:BuildGui()
     -- Zone chips under the bar
     local row = Instance.new("Frame")
     row.AnchorPoint = Vector2.new(0.5, 0)
-    row.Position = UDim2.new(0.5, 0, 0, 68)
     row.Size = UDim2.fromOffset(420, 40)
     row.BackgroundTransparency = 1
-    row.Parent = gui
+    row.Parent = root
+    self.ZoneRowFrame = row
     local layout = Instance.new("UIListLayout")
     layout.FillDirection = Enum.FillDirection.Horizontal
     layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -104,7 +112,6 @@ function ConvergenceController:BuildGui()
     -- Banner
     local banner = Instance.new("TextLabel")
     banner.AnchorPoint = Vector2.new(0.5, 0)
-    banner.Position = UDim2.new(0.5, 0, 0.2, 0)
     banner.Size = UDim2.fromOffset(520, 44)
     banner.BackgroundColor3 = PANEL
     banner.BackgroundTransparency = 0.3
@@ -113,9 +120,23 @@ function ConvergenceController:BuildGui()
     banner.Font = Enum.Font.GothamBlack
     banner.TextColor3 = ACCENT
     banner.Visible = false
-    banner.Parent = gui
+    banner.Parent = root
     corner(banner, 10)
     self.Banner = banner
+
+    -- The stack is laid out top-down from the safe-area inset and re-laid out on every screen
+    -- change, so the bar, the chips and the banner never overlap each other or drift under the
+    -- topbar. The banner stays above Screen.Aim: the middle of the screen stays readable.
+    Screen.autoScale(top)
+    Screen.autoScale(row)
+    Screen.autoScale(banner)
+    Screen.onChange(function(state)
+        local k = state.Scale
+        local topY = state.Insets.Top
+        top.Position = UDim2.new(0.5, 0, 0, topY)
+        row.Position = UDim2.new(0.5, 0, 0, topY + math.floor(54 * k) + 8)
+        banner.Position = UDim2.new(0.5, 0, 0, topY + math.floor(102 * k) + 12)
+    end)
 end
 
 function ConvergenceController:Chip(name)

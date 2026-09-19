@@ -7,6 +7,7 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local AlterEgos = require(ReplicatedStorage.Shared.AlterEgos)
+local Screen = require(script.Parent.Parent.UI.Screen)
 
 local MutationController = Knit.CreateController({ Name = "MutationController" })
 
@@ -18,9 +19,7 @@ local READY = Color3.fromRGB(255, 120, 40)
 local KEYS = { Q = Enum.KeyCode.Q, E = Enum.KeyCode.E, F = Enum.KeyCode.F, C = Enum.KeyCode.C }
 
 function MutationController:BuildGui()
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "MutationHud"
-    gui.ResetOnSpawn = false
+    local gui = Screen.newScreenGui("MutationHud", Screen.Layers.Meter)
     gui.Enabled = false
     gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
     self.Gui = gui
@@ -29,6 +28,8 @@ function MutationController:BuildGui()
     frame.AnchorPoint = Vector2.new(0.5, 1)
     frame.Position = UDim2.new(0.5, 0, 1, -110)
     frame.Size = UDim2.fromOffset(320, 64)
+    -- Designed at 320x64 for a desktop window; the UIScale keeps that proportion on a phone.
+    Screen.autoScale(frame)
     frame.BackgroundColor3 = PANEL
     frame.BackgroundTransparency = 0.25
     frame.Parent = gui
@@ -114,11 +115,21 @@ function MutationController:Update()
     if not inMatch then
         return
     end
-    -- on touch the ability row is replaced by the on-screen buttons; keep the panel compact
+    -- On touch the ability row is replaced by the on-screen buttons, so the panel loses a line.
+    -- It also moves out of the bottom centre: on a phone that strip belongs to the backpack
+    -- hotbar and the jump button, and anything sitting there lands on top of the player's own
+    -- character. Top-left, under the Roblox pills, is the one strip nothing else claims.
     local touch = self:Touch()
+    local state = Screen.get()
     self.Row.Visible = not touch
     self.Frame.Size = touch and UDim2.fromOffset(320, 44) or UDim2.fromOffset(320, 64)
-    self.Frame.Position = touch and UDim2.new(0.5, 0, 1, -150) or UDim2.new(0.5, 0, 1, -110)
+    if touch then
+        self.Frame.AnchorPoint = Vector2.new(0, 0)
+        self.Frame.Position = UDim2.new(0, state.Insets.Left, 0, state.Insets.Top + 52)
+    else
+        self.Frame.AnchorPoint = Vector2.new(0.5, 1)
+        self.Frame.Position = UDim2.new(0.5, 0, 1, -110 - state.Insets.Bottom)
+    end
     local ego = AlterEgos.get(me:GetAttribute("AlterEgo") or AlterEgos.DEFAULT)
     local energy = me:GetAttribute("MutationEnergy") or 0
     local mutated = me:GetAttribute("Mutated")

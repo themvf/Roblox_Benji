@@ -3,6 +3,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Screen = require(script.Parent.Parent.UI.Screen)
 
 local ScoreboardController = Knit.CreateController({ Name = "ScoreboardController" })
 
@@ -25,11 +26,8 @@ local COLS = {
 }
 
 function ScoreboardController:BuildGui()
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "Scoreboard"
-    gui.ResetOnSpawn = false
+    local gui = Screen.newScreenGui("Scoreboard", Screen.Layers.Scoreboard)
     gui.Enabled = false
-    gui.DisplayOrder = 15
     gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
     self.Gui = gui
     local panel = Instance.new("Frame")
@@ -39,6 +37,10 @@ function ScoreboardController:BuildGui()
     panel.BackgroundColor3 = PANEL
     panel.BackgroundTransparency = 0.15
     panel.Parent = gui
+    -- The row heights below are fixed pixels: scale them with the screen and cap the panel so a
+    -- full 6-player board still fits inside a phone's safe area instead of running off the top.
+    Screen.autoScale(panel)
+    Screen.fitWithin(panel, 0.96, 0.9)
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 12)
     corner.Parent = panel

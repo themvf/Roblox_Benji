@@ -7,9 +7,9 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local AlterEgos = require(ReplicatedStorage.Shared.AlterEgos)
+local Screen = require(script.Parent.Parent.UI.Screen)
 
 local TouchController = Knit.CreateController({ Name = "TouchController" })
 
@@ -21,15 +21,16 @@ local FLY = Color3.fromRGB(90, 200, 255)
 
 local ABILITY_SHORT = { GroundSlam = "SLAM", Brace = "BRACE", Charge = "CHARGE" }
 
--- Touch device = has a touchscreen and no keyboard (a laptop with a touchscreen keeps the
--- keyboard layout). Tuning.Debug_ForceTouchUi = true shows the touch HUD anywhere, so it can be
--- checked in Studio without the device emulator.
+-- Touch device = a phone or tablet per Screen's device class (a laptop with a touchscreen keeps
+-- its keyboard layout, an iPad with a Magic Keyboard stays a tablet).
+-- Tuning.Debug_ForceTouchUi = true shows the touch HUD anywhere, so it can be checked in Studio
+-- without the device emulator.
 function TouchController.IsTouch()
     local tuning = ReplicatedStorage:FindFirstChild("Tuning")
     if tuning and tuning:GetAttribute("Debug_ForceTouchUi") == true then
         return true
     end
-    return UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+    return Screen.isTouch()
 end
 
 local function round(inst)
@@ -49,10 +50,9 @@ end
 
 -- A round button with a label, a fill that rises from the bottom (energy, fuel, cooldown
 -- progress) and a small sub label underneath the text.
-local function makeButton(parent, size, text, color)
+local function makeButton(parent, text, color)
     local b = Instance.new("TextButton")
-    b.AnchorPoint = Vector2.new(1, 1)
-    b.Size = UDim2.fromOffset(size, size)
+    b.Size = UDim2.fromOffset(Screen.MIN_TAP, Screen.MIN_TAP)
     b.BackgroundColor3 = PANEL
     b.BackgroundTransparency = 0.25
     b.AutoButtonColor = true
@@ -129,35 +129,46 @@ local function holdable(button, onChange)
 end
 
 function TouchController:BuildGui()
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "TouchHud"
-    gui.ResetOnSpawn = false
-    gui.DisplayOrder = 5
+    local gui = Screen.newScreenGui("TouchHud", Screen.Layers.Touch)
     gui.Enabled = false
     gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
     self.Gui = gui
 
-    -- Phones get ~64 px buttons, tablets ~84 px. The column sits to the left of Roblox's own
-    -- jump button, which lives in the bottom-right corner.
-    local viewport = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(812, 375)
-    local tablet = viewport.Y >= 600
-    local big = tablet and 96 or 76
-    local small = tablet and 84 or 64
-    local gap = 12
-    local rightInset = tablet and 150 or 110
+    -- Action column. It stacks *above* the bottom-right thumb cluster that Roblox's jump button
+    -- and the Weapons Kit fire button already own, so no two tap targets ever overlap, and it
+    -- uses a list layout instead of hand-computed offsets so a button appearing or disappearing
+    -- (FLY, the abilities) re-flows the rest instead of leaving a hole.
+    local column = Instance.new("Frame")
+    column.Name = "Actions"
+    column.AnchorPoint = Vector2.new(1, 1)
+    column.BackgroundTransparency = 1
+    column.AutomaticSize = Enum.AutomaticSize.XY
+    column.Size = UDim2.fromOffset(0, 0)
+    column.Parent = gui
+    self.Column = column
 
-    -- MUTATE: one big button in place of the ability cluster until the player is mutated
-    self.Mutate = makeButton(gui, big, "MUTATE", READY)
-    self.Mutate.Button.Position = UDim2.new(1, -rightInset, 1, -24)
-    self.Mutate.Button.Activated:Connect(function()
-        Knit.GetController("MutationController"):Activate()
+    local col = Instance.new("UIListLayout")
+    col.FillDirection = Enum.FillDirection.Vertical
+    col.VerticalAlignment = Enum.VerticalAlignment.Bottom
+    col.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    col.SortOrder = Enum.SortOrder.LayoutOrder
+    col.Parent = column
+    self.ColumnLayout = col
+
+    -- FLY: hold while the jetpack is equipped
+    self.Fly = makeButton(column, "FLY", FLY)
+    self.Fly.Button.LayoutOrder = 10
+    self.Fly.Sub.Text = "hold"
+    self.Fly.Button.Visible = false
+    holdable(self.Fly.Button, function(down)
+        Knit.GetController("JetpackController").TouchHold = down
     end)
 
-    -- Abilities: stacked column, only while mutated
+    -- Abilities: only while mutated, above the mutate slot they replace
     self.Abilities = {}
     for i, name in AlterEgos.ABILITY_ORDER do
-        local b = makeButton(gui, small, ABILITY_SHORT[name] or name, READY)
-        b.Button.Position = UDim2.new(1, -rightInset, 1, -24 - (i - 1) * (small + gap))
+        local b = makeButton(column, ABILITY_SHORT[name] or name, READY)
+        b.Button.LayoutOrder = 20 + i
         b.Button.Visible = false
         b.Button.Activated:Connect(function()
             Knit.GetController("MutationController"):UseAbility(name)
@@ -165,13 +176,11 @@ function TouchController:BuildGui()
         self.Abilities[name] = b
     end
 
-    -- FLY: hold while the jetpack is equipped; above the jump button
-    self.Fly = makeButton(gui, small, "FLY", FLY)
-    self.Fly.Button.Position = UDim2.new(1, -24, 1, -24 - small - 40)
-    self.Fly.Sub.Text = "hold"
-    self.Fly.Button.Visible = false
-    holdable(self.Fly.Button, function(down)
-        Knit.GetController("JetpackController").TouchHold = down
+    -- MUTATE: the most-used button, so it sits closest to the resting thumb
+    self.Mutate = makeButton(column, "MUTATE", READY)
+    self.Mutate.Button.LayoutOrder = 90
+    self.Mutate.Button.Activated:Connect(function()
+        Knit.GetController("MutationController"):Activate()
     end)
 
     local function pill(text, width)
@@ -188,23 +197,49 @@ function TouchController:BuildGui()
         local c = Instance.new("UICorner")
         c.CornerRadius = UDim.new(0, 12)
         c.Parent = b
+        -- Pills keep their design pixel size and scale with the screen.
+        Screen.autoScale(b)
         return b
     end
 
-    -- SCORES: toggles the Tab scoreboard, top-right under the match panel
-    self.Scores = pill("SCORES", 100)
+    -- SCORES: toggles the Tab scoreboard. Right edge, below the objective bar and clear of the
+    -- aim zone; the safe-area inset keeps it off a notch in landscape.
+    self.Scores = pill("SCORES", 104)
     self.Scores.AnchorPoint = Vector2.new(1, 0)
-    self.Scores.Position = UDim2.new(1, -16, 0, 100)
+
+    -- SKIP: vote to skip the celebration. Bottom centre, above the skip label.
+    self.Skip = pill("SKIP CELEBRATION", 210)
+    self.Skip.AnchorPoint = Vector2.new(0.5, 1)
+    self.Skip.Activated:Connect(function()
+        Knit.GetController("CelebrationController"):VoteSkip()
+    end)
     self.Scores.Activated:Connect(function()
         Knit.GetController("ScoreboardController"):Toggle()
     end)
 
-    -- SKIP: vote to skip the celebration
-    self.Skip = pill("SKIP CELEBRATION", 200)
-    self.Skip.AnchorPoint = Vector2.new(0.5, 1)
-    self.Skip.Position = UDim2.new(0.5, 0, 1, -84) -- above the "vote skip" label
-    self.Skip.Activated:Connect(function()
-        Knit.GetController("CelebrationController"):VoteSkip()
+    -- Every size and position below is recomputed on rotation, iPad Split View and window
+    -- resizes, so the layout is correct on the first frame and after every change.
+    Screen.onChange(function(state)
+        local big = Screen.tapSize(88)
+        local small = Screen.tapSize(72)
+        local gap = math.max(10, math.floor(12 * state.Scale))
+        self.ColumnLayout.Padding = UDim.new(0, gap)
+
+        local function size(entry, px)
+            entry.Button.Size = UDim2.fromOffset(px, px)
+        end
+        size(self.Mutate, big)
+        size(self.Fly, small)
+        for _, b in self.Abilities do
+            size(b, small)
+        end
+
+        -- Bottom of the column = top of the right-hand thumb cluster, minus a gap.
+        local thumbTop = state.ThumbRight and state.ThumbRight[2] or 1
+        self.Column.Position = UDim2.new(1, -state.Insets.Right, thumbTop, -gap)
+
+        self.Scores.Position = UDim2.new(1, -state.Insets.Right, 0, state.Insets.Top + math.floor(96 * state.Scale))
+        self.Skip.Position = UDim2.new(0.5, 0, 1, -state.Insets.Bottom - math.floor(76 * state.Scale))
     end)
 end
 
@@ -270,10 +305,9 @@ function TouchController:KnitStart()
     local function refreshEnabled()
         self.Gui.Enabled = TouchController.IsTouch()
     end
-    refreshEnabled()
-    -- a Bluetooth keyboard connecting or disconnecting mid session flips the layout
-    UserInputService:GetPropertyChangedSignal("KeyboardEnabled"):Connect(refreshEnabled)
-    UserInputService:GetPropertyChangedSignal("TouchEnabled"):Connect(refreshEnabled)
+    -- A Bluetooth keyboard connecting, a rotation or an iPad Split View resize can all flip the
+    -- device class, and Screen fires on every one of them.
+    Screen.onChange(refreshEnabled)
     local tuning = ReplicatedStorage:FindFirstChild("Tuning")
     if tuning then
         tuning:GetAttributeChangedSignal("Debug_ForceTouchUi"):Connect(refreshEnabled)
