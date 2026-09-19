@@ -46,7 +46,8 @@
           "Convergence_BotsPerTeam": 0,
           "Debug_ForceMap": "",
           "Debug_CarrierTestSafety": true,
-          "Debug_CountBotMatches": true
+          "Debug_CountBotMatches": true,
+          "Debug_ForceTouchUi": false
         }
       },
       "Uploads": {

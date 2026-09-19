@@ -15,7 +15,9 @@ JetpackController.MaxFuel = 0
 JetpackController.Active = false -- true while a jetpack tool is equipped
 
 local jumpHeld = false
+local lastJumpRequest = 0 -- JumpRequest repeats every frame while the jump input is held
 local thrusting = false
+JetpackController.TouchHold = false -- set by the touch HUD's FLY button
 local mover -- LinearVelocity while burning
 
 local function equippedJetpack()
@@ -45,6 +47,7 @@ end
 function JetpackController:KnitStart()
     UserInputService.JumpRequest:Connect(function()
         jumpHeld = true
+        lastJumpRequest = os.clock()
     end)
     UserInputService.InputEnded:Connect(function(input)
         if input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.ButtonA then
@@ -80,8 +83,11 @@ function JetpackController:KnitStart()
             end
         end
 
-        -- JumpRequest fires repeatedly while held; treat "held" as key still down
-        local holding = jumpHeld and UserInputService:IsKeyDown(Enum.KeyCode.Space)
+        -- Held = keyboard Space still down, or any jump input (touch jump button, gamepad A)
+        -- requested within the last few frames, or the touch HUD's FLY button held.
+        local holding = (jumpHeld and UserInputService:IsKeyDown(Enum.KeyCode.Space))
+            or (os.clock() - lastJumpRequest < 0.12)
+            or self.TouchHold
         local grounded = hum.FloorMaterial ~= Enum.Material.Air
 
         if holding and self.Fuel > 0 then

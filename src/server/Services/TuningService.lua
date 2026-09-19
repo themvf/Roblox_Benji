@@ -37,6 +37,9 @@ function TuningService:KnitInit()
     if tuning:GetAttribute("Debug_CountBotMatches") == nil then
         tuning:SetAttribute("Debug_CountBotMatches", true) -- dev: bot matches count for stats/streaks
     end
+    if tuning:GetAttribute("Debug_ForceTouchUi") == nil then
+        tuning:SetAttribute("Debug_ForceTouchUi", false) -- dev: show the phone/tablet touch HUD on PC
+    end
     local conv = Config.Convergence
     for _, key in Config.CONVERGENCE_TUNABLE do
         if tuning:GetAttribute("Convergence_" .. key) == nil then

@@ -449,16 +449,17 @@ function LoadoutController:PreviewEgo(id)
         end
     end
     self.NameLabel.Text = ego.Name:upper() .. "  ->  " .. ego.Mutant:upper()
+    local touch = Knit.GetController("TouchController").IsTouch()
     local lines = {
         ego.Tagline,
-        ("Mutation: %s for %ds (press %s at 100%%)"):format(
+        ("Mutation: %s for %ds (%s at 100%%)"):format(
             ego.Mutant,
             AlterEgos.Mutation.DurationSeconds,
-            AlterEgos.Mutation.ActivateKey
+            touch and "tap MUTATE" or ("press " .. AlterEgos.Mutation.ActivateKey)
         ),
-        "E  Ground Slam: area knockback, 7 s",
-        "F  Brace: frontal resistance 3 s, 8 s",
-        "C  Charge: forward rush, pushes enemies, 6 s",
+        (touch and "SLAM" or "E") .. "  Ground Slam: area knockback, 7 s",
+        (touch and "BRACE" or "F") .. "  Brace: frontal resistance 3 s, 8 s",
+        (touch and "CHARGE" or "C") .. "  Charge: forward rush, pushes enemies, 6 s",
         "Energy: kills, assists, captures, defending, bounty kills",
     }
     for i, l in self.StatLabels do

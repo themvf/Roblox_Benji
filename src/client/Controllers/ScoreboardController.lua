@@ -107,6 +107,16 @@ function ScoreboardController:Apply(rows)
     self.Panel.Size = UDim2.new(0.7, 0, 0, 16 + 24 + #rows * 28)
 end
 
+-- Touch: tap to open, tap again to close (no key to hold)
+function ScoreboardController:Toggle()
+    if self.Gui.Enabled then
+        self.Gui.Enabled = false
+    elseif self.Rows then
+        self:Apply(self.Rows)
+        self.Gui.Enabled = true
+    end
+end
+
 function ScoreboardController:KnitStart()
     self:BuildGui()
     Knit.GetService("StatsService").Scoreboard:Connect(function(rows)

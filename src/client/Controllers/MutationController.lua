@@ -32,6 +32,7 @@ function MutationController:BuildGui()
     frame.BackgroundColor3 = PANEL
     frame.BackgroundTransparency = 0.25
     frame.Parent = gui
+    self.Frame = frame
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 10)
     corner.Parent = frame
@@ -86,6 +87,7 @@ function MutationController:BuildGui()
     row.Size = UDim2.new(1, -20, 0, 18)
     row.BackgroundTransparency = 1
     row.Parent = frame
+    self.Row = row
     self.Abilities = {}
     for i, name in AlterEgos.ABILITY_ORDER do
         local l = Instance.new("TextLabel")
@@ -101,6 +103,10 @@ function MutationController:BuildGui()
     self.CooldownEnds = {}
 end
 
+function MutationController:Touch()
+    return Knit.GetController("TouchController").IsTouch()
+end
+
 function MutationController:Update()
     local me = Players.LocalPlayer
     local inMatch = me:GetAttribute("InMatch") == true
@@ -108,6 +114,11 @@ function MutationController:Update()
     if not inMatch then
         return
     end
+    -- on touch the ability row is replaced by the on-screen buttons; keep the panel compact
+    local touch = self:Touch()
+    self.Row.Visible = not touch
+    self.Frame.Size = touch and UDim2.fromOffset(320, 44) or UDim2.fromOffset(320, 64)
+    self.Frame.Position = touch and UDim2.new(0.5, 0, 1, -150) or UDim2.new(0.5, 0, 1, -110)
     local ego = AlterEgos.get(me:GetAttribute("AlterEgo") or AlterEgos.DEFAULT)
     local energy = me:GetAttribute("MutationEnergy") or 0
     local mutated = me:GetAttribute("Mutated")
@@ -126,9 +137,8 @@ function MutationController:Update()
             l.TextColor3 = cdLeft > 0 and MUTED or TEXT
         end
     else
-        self.Title.Text = energy >= AlterEgos.Energy.Cap
-                and ("MUTATION READY  press %s"):format(AlterEgos.Mutation.ActivateKey)
-            or ego.Name:upper()
+        local hint = self:Touch() and "tap MUTATE" or ("press " .. AlterEgos.Mutation.ActivateKey)
+        self.Title.Text = energy >= AlterEgos.Energy.Cap and ("MUTATION READY  " .. hint) or ego.Name:upper()
         self.Bar.Size = UDim2.fromScale(energy / AlterEgos.Energy.Cap, 1)
         self.Pct.Text = ("%d%%"):format(energy)
         local pulse = energy >= AlterEgos.Energy.Cap and (0.5 + 0.5 * math.sin(os.clock() * 6)) or 1
@@ -137,6 +147,25 @@ function MutationController:Update()
             l.Text = ("%s %s"):format(ego.Abilities[name].Key, name)
             l.TextColor3 = MUTED
         end
+    end
+end
+
+-- Shared by keyboard and the touch HUD (TouchController) so both send identical requests.
+function MutationController:Activate()
+    if not Players.LocalPlayer:GetAttribute("InMatch") then
+        return
+    end
+    Knit.GetService("MutationService"):Activate():andThen(function(ok, why)
+        if not ok and why and why ~= "not ready" then
+            Knit.GetController("ConvergenceController"):ShowBanner("Cannot mutate: " .. why, MUTED)
+        end
+    end)
+end
+
+function MutationController:UseAbility(name)
+    local me = Players.LocalPlayer
+    if me:GetAttribute("InMatch") and me:GetAttribute("Mutated") then
+        Knit.GetService("AbilityService"):Use(name)
     end
 end
 
@@ -153,7 +182,7 @@ function MutationController:KnitStart()
         conv:ShowBanner(text .. (who == Players.LocalPlayer.Name and "" or ("  (" .. who .. ")")), READY)
     end)
     mutation.Ready:Connect(function()
-        conv:ShowBanner("MUTATION READY  press Q", READY)
+        conv:ShowBanner(self:Touch() and "MUTATION READY  tap MUTATE" or "MUTATION READY  press Q", READY)
     end)
     ability.Cooldowns:Connect(function(map)
         self.CooldownEnds = map
@@ -209,18 +238,14 @@ function MutationController:KnitStart()
             return
         end
         if input.KeyCode == KEYS[AlterEgos.Mutation.ActivateKey] then
-            mutation:Activate():andThen(function(ok, why)
-                if not ok and why and why ~= "not ready" then
-                    conv:ShowBanner("Cannot mutate: " .. why, MUTED)
-                end
-            end)
+            self:Activate()
             return
         end
         if me:GetAttribute("Mutated") then
             local ego = AlterEgos.get(me:GetAttribute("AlterEgo") or AlterEgos.DEFAULT)
             for name, def in ego.Abilities do
                 if input.KeyCode == KEYS[def.Key] then
-                    ability:Use(name)
+                    self:UseAbility(name)
                 end
             end
         end

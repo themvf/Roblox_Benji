@@ -240,7 +240,7 @@ function CelebrationController:OnStart(sequence)
         self.SkipLabel.Visible = false
     else
         self.SkipLabel.Visible = true
-        self.SkipLabel.Text = "Press V to vote skip  (0 / 3)"
+        self.SkipLabel.Text = self:SkipHint() .. "  (0 / 3)"
     end
     self:RunCamera(sequence)
 end
@@ -252,6 +252,16 @@ function CelebrationController:OnEnd()
     self.SkipLabel.Visible = false
     self.Wheel.Visible = false
     self.Gui.Enabled = false
+end
+
+function CelebrationController:VoteSkip()
+    if self.SkipLabel.Visible then
+        Knit.GetService("CelebrationService"):VoteSkip()
+    end
+end
+
+function CelebrationController:SkipHint()
+    return Knit.GetController("TouchController").IsTouch() and "Tap SKIP to vote skip" or "Press V to vote skip"
 end
 
 function CelebrationController:KnitStart()
@@ -267,14 +277,14 @@ function CelebrationController:KnitStart()
         self:OnEnd()
     end)
     svc.SkipVotes:Connect(function(votes, needed)
-        self.SkipLabel.Text = ("Press V to vote skip  (%d / %d)"):format(votes, needed)
+        self.SkipLabel.Text = (self:SkipHint() .. "  (%d / %d)"):format(votes, needed)
     end)
     UserInputService.InputBegan:Connect(function(input, gp)
         if gp then
             return
         end
-        if input.KeyCode == Enum.KeyCode.V and self.SkipLabel.Visible then
-            svc:VoteSkip()
+        if input.KeyCode == Enum.KeyCode.V then
+            self:VoteSkip()
         end
     end)
 end

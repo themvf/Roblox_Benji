@@ -124,6 +124,25 @@ Pick skins at the lobby kiosk: chips under the 3D preview, coloured by tier. Ass
 `assets/skins/Shots/*.rbxm` (shot effect templates), or use the kit's built-in shot effects by name.
 A system whose asset is still `TODO` is skipped at equip with one warning, so draft skins never break the game.
 
+## Touch UI (iPhone / iPad)
+
+`TouchController` shows a touch HUD whenever the device has a touchscreen and no keyboard
+(set Tuning `Debug_ForceTouchUi = true` to preview it in Studio, or use Studio's device emulator).
+Guns keep the Weapons Kit's own fire button and drag-to-aim; movement and jump are Roblox's
+default thumbstick and jump button. The touch HUD adds:
+
+- **MUTATE** (big button left of the jump button): fills with mutation energy, pulses at 100%,
+  tap to transform. Replaced by **SLAM / BRACE / CHARGE** buttons while mutated, each with a
+  cooldown fill and seconds remaining.
+- **FLY** (above the jump button, only with a jetpack equipped): hold to burn fuel; the fill
+  shows fuel. The jump button also works as a hold-to-fly control on touch and gamepad.
+- **SCORES** (top right): tap to toggle the scoreboard. **SKIP CELEBRATION** (bottom center)
+  during the winner celebration. Katana swings on any screen tap, as before.
+- All buttons call the same controller methods as the keys, so the server-side validation and
+  cooldowns are identical on every platform. Hints ("press Q") switch to "tap MUTATE" on touch.
+- Not yet verified on a real device: overlap between the FLY button and the Weapons Kit fire
+  button on small phones. Positions are constants at the top of `TouchController:BuildGui`.
+
 ## Controls
 Mouse1 fire or swing, Mouse2 aim, R reload, 1-4 switch slots (Primary, Secondary, Melee, Utility), Shift sprint. With the Jetpack equipped, hold Jump to fly. Guns are the Weapons Kit; melee is MeleeService; utility is UtilityService.
 
