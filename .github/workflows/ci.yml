@@ -23,10 +23,10 @@ jobs:
     name: Lint, validate, build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Cache Rokit tools
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.rokit
           key: rokit-${{ runner.os }}-${{ env.ROKIT_VERSION }}-${{ hashFiles('rokit.toml') }}
@@ -55,7 +55,7 @@ jobs:
           lune --version
 
       - name: Cache Wally packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             Packages
@@ -95,7 +95,7 @@ jobs:
       # Downloadable place file from every run - useful when working from the
       # cloud, where you cannot run rojo build locally.
       - name: Upload place file
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: arena-rbxl
           path: arena.rbxl
