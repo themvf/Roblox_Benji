@@ -1,0 +1,10 @@
+# StyLua formats to LF. Without this, files committed from Windows carry CRLF,
+# `stylua --check` fails on every file on the Linux CI runner, and the diff is
+# pure noise. `eol=lf` forces LF in the working tree too (overriding
+# core.autocrlf), so local and CI agree. Rojo and Studio both read LF fine.
+* text=auto eol=lf
+
+# Roblox model files are binary - never line-ending convert or diff them.
+*.rbxm binary
+*.rbxl binary
+*.rbxlx binary
