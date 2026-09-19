@@ -9,16 +9,19 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Theme = require(script.Parent.Parent.UI.Theme)
 local Screen = require(script.Parent.Parent.UI.Screen)
 
 local MapVoteController = Knit.CreateController({ Name = "MapVoteController" })
 
-local PANEL = Color3.fromRGB(20, 22, 28)
-local CARD = Color3.fromRGB(34, 38, 48)
-local CARD_PICKED = Color3.fromRGB(52, 74, 110)
-local TEXT = Color3.fromRGB(245, 245, 250)
-local MUTED = Color3.fromRGB(160, 165, 180)
-local ACCENT = Color3.fromRGB(255, 200, 70)
+-- A card is a surface sitting on the vote panel, and a picked card is a toggled-on control, so
+-- both come from the shared surface ramp rather than adding two more near-duplicate greys.
+local PANEL = Theme.Color.Panel
+local CARD = Theme.Color.PanelRaised
+local CARD_PICKED = Theme.Color.PanelSelected
+local TEXT = Theme.Color.Text
+local MUTED = Theme.Color.TextMuted
+local ACCENT = Theme.Color.Accent
 
 local NUMBER_KEYS = { Enum.KeyCode.One, Enum.KeyCode.Two, Enum.KeyCode.Three, Enum.KeyCode.Four }
 
@@ -34,7 +37,7 @@ function MapVoteController:BuildGui()
     panel.Position = UDim2.fromScale(0.5, 0.45)
     panel.Size = UDim2.fromOffset(560, 260)
     panel.BackgroundColor3 = PANEL
-    panel.BackgroundTransparency = 0.08
+    panel.BackgroundTransparency = Theme.Transparency.Panel
     panel.Parent = gui
     -- 560x260 is a desktop card; scaled and capped it still fits a phone in landscape.
     Screen.autoScale(panel)
@@ -54,7 +57,7 @@ function MapVoteController:BuildGui()
     title.Size = UDim2.new(1, 0, 0, 28)
     title.BackgroundTransparency = 1
     title.Text = "VOTE FOR THE NEXT MAP"
-    title.TextSize = 22
+    title.TextSize = Theme.textSize(Theme.Type.Title)
     title.Font = Enum.Font.GothamBlack
     title.TextColor3 = TEXT
     title.Parent = panel
@@ -64,7 +67,7 @@ function MapVoteController:BuildGui()
     timer.Position = UDim2.fromOffset(0, 30)
     timer.Size = UDim2.new(1, 0, 0, 18)
     timer.BackgroundTransparency = 1
-    timer.TextSize = 15
+    timer.TextSize = Theme.textSize(Theme.Type.Label)
     timer.Font = Enum.Font.GothamMedium
     timer.TextColor3 = ACCENT
     timer.Parent = panel
@@ -102,13 +105,19 @@ function MapVoteController:BuildChoice(index, mapName)
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 10)
     corner.Parent = button
+    -- Outline for the picked state, invisible until this card is the one voted for.
+    local outline = Instance.new("UIStroke")
+    outline.Thickness = 3
+    outline.Color = CARD
+    outline.Transparency = 1
+    outline.Parent = button
 
     local name = Instance.new("TextLabel")
     name.Position = UDim2.fromScale(0, 0.16)
     name.Size = UDim2.new(1, 0, 0, 24)
     name.BackgroundTransparency = 1
     name.Text = mapName:upper()
-    name.TextSize = 18
+    name.TextSize = Theme.textSize(Theme.Type.Body)
     name.TextScaled = false
     name.Font = Enum.Font.GothamBold
     name.TextColor3 = TEXT
@@ -120,7 +129,7 @@ function MapVoteController:BuildChoice(index, mapName)
     key.Size = UDim2.new(1, 0, 0, 16)
     key.BackgroundTransparency = 1
     key.Text = Screen.isTouch() and "TAP" or ("PRESS " .. index)
-    key.TextSize = 12
+    key.TextSize = Theme.textSize(Theme.Type.Label)
     key.Font = Enum.Font.GothamMedium
     key.TextColor3 = MUTED
     key.Parent = button
@@ -131,7 +140,7 @@ function MapVoteController:BuildChoice(index, mapName)
     votes.Size = UDim2.new(1, 0, 0, 22)
     votes.BackgroundTransparency = 1
     votes.Text = "0"
-    votes.TextSize = 20
+    votes.TextSize = Theme.textSize(Theme.Type.Title)
     votes.Font = Enum.Font.GothamBlack
     votes.TextColor3 = ACCENT
     votes.Parent = button
@@ -148,7 +157,15 @@ function MapVoteController:Vote(index)
     end
     self.Picked = index
     for i, button in self.Choices do
-        button.BackgroundColor3 = (i == index) and CARD_PICKED or CARD
+        local picked = i == index
+        button.BackgroundColor3 = picked and CARD_PICKED or CARD
+        -- Colour is never the only signal: the picked card also takes an accent outline, so it
+        -- still reads for a colour-blind player and at a glance.
+        local outline = button:FindFirstChildOfClass("UIStroke")
+        if outline then
+            outline.Color = picked and ACCENT or CARD
+            outline.Transparency = picked and 0 or 1
+        end
     end
     Knit.GetService("MapVoteService"):Vote(index)
 end
