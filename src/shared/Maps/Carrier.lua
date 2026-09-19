@@ -40,7 +40,10 @@ return {
 
     -- ===== Testability & Safety (Spec v1) =====
     RecoveryY = -14, -- below this = water / under the hull
-    Bounds = { min = { -170, -16, -70 }, max = { 170, 90, 70 } },
+    -- Leaving this box is lethal in production, so the ceiling clears a full jetpack climb
+    -- (147 studs) from the tallest surface on the ship (the island mast at 63). check_maps
+    -- fails the map if it does not.
+    Bounds = { min = { -170, -16, -70 }, max = { 170, 220, 70 } },
     -- voids a player should never be in: between hangar walls and hull sides, and under the deck ends
     InvalidRegions = {
         { name = "PortVoid", pos = { 0, 6, -40 }, size = { 220, 16, 10 } },
@@ -48,11 +51,14 @@ return {
         { name = "BowVoid", pos = { -130, 6, 0 }, size = { 40, 16, 90 } },
         { name = "SternVoid", pos = { 130, 6, 0 }, size = { 40, 16, 90 } },
     },
-    -- legitimate places inside those boxes: the two hangar ramps and the catwalk stairs
+    -- legitimate places inside those boxes: the two hangar ramps and the four catwalk stairs.
+    -- Mirrored geometry flips x only, so every stair needs its own region at +x and -x.
     SafeRegions = {
         { pos = { -123, 8, 0 }, size = { 44, 22, 18 } },
         { pos = { 123, 8, 0 }, size = { 44, 22, 18 } },
         { pos = { -44, 14, -47 }, size = { 12, 8, 8 } },
+        { pos = { 44, 14, -47 }, size = { 12, 8, 8 } },
+        { pos = { -44, 14, 47 }, size = { 12, 8, 8 } },
         { pos = { 44, 14, 47 }, size = { 12, 8, 8 } },
     },
     SafePoints = {
@@ -73,38 +79,50 @@ return {
         { pos = { -80, 17, 52.5 }, size = { 72, 12, 1.5 } },
         { pos = { 80, 17, -52.5 }, size = { 72, 12, 1.5 } },
         { pos = { -116, 17, -52.5 }, size = { 8, 12, 1.5 } },
+        { pos = { 116, 17, -52.5 }, size = { 8, 12, 1.5 } },
+        { pos = { -116, 17, 52.5 }, size = { 8, 12, 1.5 } },
         { pos = { 116, 17, 52.5 }, size = { 8, 12, 1.5 } },
         { pos = { -44, 17, -52.5 }, size = { 8, 12, 1.5 } },
+        { pos = { 44, 17, -52.5 }, size = { 8, 12, 1.5 } },
+        { pos = { -44, 17, 52.5 }, size = { 8, 12, 1.5 } },
         { pos = { 44, 17, 52.5 }, size = { 8, 12, 1.5 } },
+        -- both overlooks sit at z -44: the Mirrored copy flips x, not z
         { pos = { -128, 29, -48.8 }, size = { 14, 10, 1 } },
-        { pos = { 128, 29, 48.8 }, size = { 14, 10, 1 } },
+        { pos = { 128, 29, -48.8 }, size = { 14, 10, 1 } },
         { pos = { -135.5, 29, -44 }, size = { 1, 10, 10 } },
-        { pos = { 135.5, 29, 44 }, size = { 1, 10, 10 } },
+        { pos = { 135.5, 29, -44 }, size = { 1, 10, 10 } },
     },
 
     -- S9 sniper outposts (telemetry)
     SniperOutposts = {
         { Name = "Island Roof", pos = { 0, 38, 42 }, radius = 9 },
+        { Name = "Bow Overlook", pos = { -128, 24, -44 }, radius = 6 },
         { Name = "Stern Overlook", pos = { 128, 24, -44 }, radius = 6 },
     },
 
     -- S11-S13 pickups
+    -- Every pickup is either on the centre line (contested) or has an x-mirror twin, so the
+    -- walk to it is the same length for both teams.
     Pickups = {
-        { kind = "weapon", weapon = "Sniper", pos = { 8, 37.5, 42 }, respawn = 75, duration = 45 },
-        { kind = "weapon", weapon = "Shotgun", pos = { -20, 1, -20 }, respawn = 60, duration = 45 },
+        { kind = "weapon", weapon = "Sniper", pos = { 0, 37.5, 42 }, respawn = 75, duration = 45 },
         { kind = "weapon", weapon = "Minigun", pos = { 0, 17, 30 }, respawn = 90, duration = 40 },
+        { kind = "weapon", weapon = "Shotgun", pos = { -20, 1, -20 }, respawn = 60, duration = 45 },
+        { kind = "weapon", weapon = "Shotgun", pos = { 20, 1, -20 }, respawn = 60, duration = 45 },
         { kind = "speed", pos = { -80, 12.8, -49 } },
-        { kind = "speed", pos = { 80, 12.8, 49 } },
+        { kind = "speed", pos = { 80, 12.8, -49 } },
         { kind = "speed", pos = { -60, 1, 24 } },
-        { kind = "speed", pos = { 60, 1, -24 } },
-        { kind = "jetpack", pos = { -110, 17, 30 }, respawn = 50, fuel = 3.5 },
-        { kind = "jetpack", pos = { 110, 17, -30 }, respawn = 50, fuel = 3.5 },
+        { kind = "speed", pos = { 60, 1, 24 } },
+        { kind = "jetpack", pos = { -110, 17, 36 }, respawn = 50, fuel = 3.5 },
+        { kind = "jetpack", pos = { 110, 17, 36 }, respawn = 50, fuel = 3.5 },
     },
 
-    -- S14 launch pads: explicit vertical speed, server trigger volume, client-applied velocity
+    -- S14 launch pads: explicit vertical speed, server trigger volume, client-applied velocity.
+    -- Both sit on the port deck edge and throw across to starboard. The second is the x-mirror
+    -- of the first, so each team flies over the same geometry; pairing them by rotation instead
+    -- put one team's arc through a parked jet.
     LaunchPads = {
         { pos = { -100, 16.3, -38 }, target = { -30, 16.3, 30 }, vy = 62, size = 8 },
-        { pos = { 100, 16.3, 38 }, target = { 30, 16.3, -30 }, vy = 62, size = 8 },
+        { pos = { 100, 16.3, -38 }, target = { 30, 16.3, 30 }, vy = 62, size = 8 },
     },
 
     Flyovers = { Interval = { 30, 60 }, Height = 90, Sound = "upload:JetPass" },
@@ -340,10 +358,12 @@ return {
             brightness = 0.8,
         },
         -- big props: jets, tractor, fuel + maintenance carts, crates, wing section cover
-        { kind = "jet", name = "DeckJet1", pos = { -88, 16, -28 }, rot = { 0, 20, 0 } },
+        -- Jets park along the starboard side. The port deck edge is the launch-pad lane and
+        -- stays clear of props: a jet at (-88, -28) put the pad arc through its tail.
+        { kind = "jet", name = "DeckJet1", pos = { -90, 16, 34 }, rot = { 0, 20, 0 } },
         { kind = "jet", name = "DeckJet2", pos = { -68, 16, 24 }, rot = { 0, -30, 0 } },
         { kind = "jet", name = "DeckJet3", pos = { -118, 16, 30 }, rot = { 0, 10, 0 } },
-        { kind = "block", name = "Tractor", pos = { -35, 17.5, 30 }, size = { 5, 3, 4 }, color = "Hazard" },
+        { kind = "block", name = "Tractor", pos = { -48, 17.5, 38 }, size = { 5, 3, 4 }, color = "Hazard" },
         { kind = "block", name = "FuelCart", pos = { -25, 17.5, -30 }, size = { 6, 3, 4 }, color = "Warning" },
         { kind = "block", name = "MaintCart", pos = { -95, 17.3, 14 }, size = { 3, 2.6, 2 }, color = "Steel" },
         { kind = "block", name = "DeckCrates", pos = { -100, 17.5, -14 }, size = { 6, 3, 10 }, color = "Crate" },
@@ -393,13 +413,14 @@ return {
         { kind = "block", name = "CatwalkSupport", pos = { -80, 6, -47 }, size = { 1, 12, 1 }, color = "Steel" },
         { kind = "block", name = "Overlook", pos = { -128, 23.5, -44 }, size = { 12, 1, 8 }, color = "Steel" },
         { kind = "block", name = "OverlookRail", pos = { -128, 25, -47.8 }, size = { 12, 2, 0.4 }, color = "Hazard" },
+        -- deck (top 16) up to the overlook (top 24): 8 stud rise over 16 studs = 30 degrees
         {
             kind = "block",
             name = "OverlookStair",
-            pos = { -120, 20, -44 },
-            size = { 10, 0.5, 5 },
+            pos = { -115, 20, -44 },
+            size = { 16, 0.5, 5 },
             color = "Steel",
-            rot = { 0, 0, -35 },
+            rot = { 0, 0, -30 },
         },
         -- hangar end: ramp from the deck opening (y 16 at x -140) down to the hangar floor (y 0 at x -106)
         {

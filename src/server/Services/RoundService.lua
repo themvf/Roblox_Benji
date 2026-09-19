@@ -115,7 +115,9 @@ local function trackKills(match)
     return conns
 end
 
-function RoundService:StartMatch(players, teamSize, mode)
+-- `votedMap` comes from the lobby map vote (MapVoteService). Without one, keep the old
+-- random-but-never-twice-in-a-row pick, so a direct call still works.
+function RoundService:StartMatch(players, teamSize, mode, votedMap)
     if self.Busy then
         return false
     end
@@ -130,15 +132,18 @@ function RoundService:StartMatch(players, teamSize, mode)
     local killConns = trackKills(match)
 
     task.spawn(function()
-        -- Map variation: random pick, never the same map twice in a row
         local MapService = Knit.GetService("MapService")
-        local choices = {}
-        for _, name in Config.Maps or { MapService.CurrentMap } do
-            if name ~= self.LastMap or #Config.Maps == 1 then
-                table.insert(choices, name)
+        local mapName = votedMap
+        if not mapName then
+            -- Map variation: random pick, never the same map twice in a row
+            local choices = {}
+            for _, name in Config.Maps or { MapService.CurrentMap } do
+                if name ~= self.LastMap or #Config.Maps == 1 then
+                    table.insert(choices, name)
+                end
             end
+            mapName = choices[math.random(#choices)]
         end
-        local mapName = choices[math.random(#choices)]
         self.LastMap = mapName
         self:Broadcast("Intermission", { Time = Config.IntermissionSeconds, Mode = mode, Map = mapName })
         MapService:Load(mapName)
