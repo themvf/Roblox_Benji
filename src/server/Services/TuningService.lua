@@ -54,19 +54,13 @@ function TuningService:EnsureSetup()
     if tuning:GetAttribute("Debug_CarrierTestSafety") == nil then
         tuning:SetAttribute("Debug_CarrierTestSafety", true)
     end
-    if tuning:GetAttribute("Debug_ForceCarrier") == nil then
-        tuning:SetAttribute("Debug_ForceCarrier", false) -- pin Convergence to the Carrier (skips rotation + vote)
-    end
-    -- pre-match map vote
-    if tuning:GetAttribute("MapVote_Enabled") == nil then
-        tuning:SetAttribute("MapVote_Enabled", true)
-    end
-    if tuning:GetAttribute("MapVote_Seconds") == nil then
-        tuning:SetAttribute("MapVote_Seconds", 15)
-    end
-    if tuning:GetAttribute("MapVote_Candidates") == nil then
-        tuning:SetAttribute("MapVote_Candidates", 3)
-    end
+    -- Debug_ForceCarrier, MapVote_Enabled, MapVote_Seconds and MapVote_Candidates used to be
+    -- seeded here and are deliberately gone: nothing in src/ has read any of them for some time.
+    -- They showed up in the Tuning Properties panel one line away from the live keys
+    -- (MapVoteOptions, MapVoteSeconds, MapVoteEnabled, Debug_ForceMap), so the obvious way to
+    -- change the ballot size was to edit MapVote_Candidates, which does nothing at all.
+    -- Removing the seed stops new places growing them; a place that already has them keeps them
+    -- until they are deleted on the Configuration by hand.
     -- PhaseSeconds cannot be an attribute (arrays are not attribute-legal), so it is exposed as
     -- two scalars. The final phase is derived from Convergence_HardCapSeconds minus phases 1/2.
     -- A legacy Phase3Seconds attribute, if present, is not used.
