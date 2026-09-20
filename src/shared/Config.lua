@@ -13,7 +13,7 @@ local Config = {
     -- Lobby map vote: once a pad fills, the players on it pick the map before the match starts.
     MapVoteEnabled = true,
     MapVoteSeconds = 12,
-    MapVoteOptions = 3, -- candidates offered; capped by how many maps the mode's rotation has
+    MapVoteOptions = 5, -- candidates offered; capped by how many maps the mode's rotation has
 
     -- Convergence (featured objective mode). Every number here is a Tuning attribute too.
     ConvergenceMaps = { "Carrier", "Forest", "Snow", "SnowFortress", "Swamp" },

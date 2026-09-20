@@ -32,7 +32,7 @@
           "StartupMap": "Forest",
           "MapVoteEnabled": true,
           "MapVoteSeconds": 12,
-          "MapVoteOptions": 3,
+          "MapVoteOptions": 5,
           "Convergence_TeamSize": 1,
           "Convergence_MinTeamSize": 1,
           "Convergence_FillWaitSeconds": 30,

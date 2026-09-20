@@ -23,7 +23,24 @@ local TEXT = Theme.Color.Text
 local MUTED = Theme.Color.TextMuted
 local ACCENT = Theme.Color.Accent
 
-local NUMBER_KEYS = { Enum.KeyCode.One, Enum.KeyCode.Two, Enum.KeyCode.Three, Enum.KeyCode.Four }
+-- One per card the ballot can show. MapVoteOptions is capped at the rotation size, so this has
+-- to keep up with the longest rotation (Convergence, five maps) or a card shows a key hint for a
+-- key nothing listens to. keyHint() below refuses to promise a binding that is not here.
+local NUMBER_KEYS = {
+    Enum.KeyCode.One,
+    Enum.KeyCode.Two,
+    Enum.KeyCode.Three,
+    Enum.KeyCode.Four,
+    Enum.KeyCode.Five,
+    Enum.KeyCode.Six,
+}
+
+local function keyHint(index)
+    if Screen.isTouch() then
+        return "TAP"
+    end
+    return NUMBER_KEYS[index] and ("PRESS " .. index) or "CLICK"
+end
 
 function MapVoteController:BuildGui()
     local gui = Screen.newScreenGui("MapVoteGui", Screen.Layers.MapVote)
@@ -35,11 +52,14 @@ function MapVoteController:BuildGui()
     panel.Name = "Panel"
     panel.AnchorPoint = Vector2.new(0.5, 0.5)
     panel.Position = UDim2.fromScale(0.5, 0.45)
-    panel.Size = UDim2.fromOffset(560, 260)
+    panel.Size = UDim2.fromOffset(880, 260)
     panel.BackgroundColor3 = PANEL
     panel.BackgroundTransparency = Theme.Transparency.Panel
     panel.Parent = gui
-    -- 560x260 is a desktop card; scaled and capped it still fits a phone in landscape.
+    -- 880x260 is the desktop size, sized for the widest ballot: five 150 px cards plus four
+    -- 12 px gaps is 798, inside the 844 px of panel left after padding. autoScale and fitWithin
+    -- shrink it from there, and the cards ride the same UIScale, so a phone in landscape gets a
+    -- smaller version of the same layout rather than a row that overflows the panel.
     Screen.autoScale(panel)
     Screen.fitWithin(panel, 0.94, 0.8)
     local corner = Instance.new("UICorner")
@@ -128,7 +148,7 @@ function MapVoteController:BuildChoice(index, mapName)
     key.Position = UDim2.fromScale(0, 0.45)
     key.Size = UDim2.new(1, 0, 0, 16)
     key.BackgroundTransparency = 1
-    key.Text = Screen.isTouch() and "TAP" or ("PRESS " .. index)
+    key.Text = keyHint(index)
     key.TextSize = Theme.textSize(Theme.Type.Label)
     key.Font = Enum.Font.GothamMedium
     key.TextColor3 = MUTED
@@ -209,7 +229,7 @@ function MapVoteController:KnitStart()
             button.Size = UDim2.fromOffset(Screen.tapSize(150), Screen.tapSize(120))
             local hint = button:FindFirstChild("Hint")
             if hint then
-                hint.Text = Screen.isTouch() and "TAP" or ("PRESS " .. i)
+                hint.Text = keyHint(i)
             end
         end
     end)
