@@ -7,6 +7,7 @@ local map = {
     WallHeight = 36,
     Seed = 1129,
     Revision = "exterior-fortress-v2",
+    Symmetry = { SniperOutposts = "rotational" },
 
     Spawns = {
         Red = {
@@ -328,6 +329,9 @@ local map = {
         },
     },
 
+    -- This battlefield is authored explicitly in Center, but the shared map
+    -- contract still requires the standard X-mirrored collection.
+    Mirrored = {},
     Center = {
         -- Spawn pockets have two exits and hard north/south line-of-sight blockers.
         {

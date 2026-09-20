@@ -205,6 +205,12 @@ end
 -- Every solid box in the built map, mirrored copies included.
 function Validate.solids(layout)
     local out = {}
+    -- MapService builds a broad terrain slab for every non-sea themed map.
+    -- Model that floor here so launch landings and perimeter barriers are
+    -- validated against the geometry players actually encounter at runtime.
+    if layout.Terrain and not layout.Terrain.Sea then
+        table.insert(out, makeBox("TerrainGround", { 0, -6, 0 }, { layout.Size * 4, 12, layout.Size * 4 }, nil))
+    end
     for _, piece in layout.Center or {} do
         pieceBoxes(out, piece, false)
     end
@@ -306,11 +312,18 @@ end
 
 -- Every entry in a list that is meant to be team-fair needs an x-mirror partner.
 -- Entries on the centre line (x ~ 0) are their own partner.
-local function checkMirrored(errors, label, list, getPos)
+local function checkMirrored(errors, label, list, getPos, symmetry)
+    if symmetry ~= nil and symmetry ~= "x" and symmetry ~= "rotational" then
+        table.insert(errors, label .. ": unsupported symmetry " .. tostring(symmetry))
+        return
+    end
     for i, entry in list or {} do
         local pos = getPos(entry)
-        if math.abs(pos[1]) > R.MirrorEpsilon then
+        if math.abs(pos[1]) > R.MirrorEpsilon or (symmetry == "rotational" and math.abs(pos[3]) > R.MirrorEpsilon) then
             local want = mirrorPos(pos)
+            if symmetry == "rotational" then
+                want[3] = -pos[3]
+            end
             local found = false
             for j, other in list do
                 if j ~= i and samePos(getPos(other), want, R.MirrorEpsilon) then
@@ -321,10 +334,11 @@ local function checkMirrored(errors, label, list, getPos)
             if not found then
                 table.insert(
                     errors,
-                    ("%s[%d] at %s has no x-mirror partner at %s (the builder mirrors x only)"):format(
+                    ("%s[%d] at %s has no %s partner at %s"):format(
                         label,
                         i,
                         fmt(pos),
+                        symmetry or "x-mirror",
                         fmt(want)
                     )
                 )
@@ -469,7 +483,13 @@ function Validate.check(layout, weapons)
         return e.pos
     end
     checkMirrored(errors, "LaunchPads", layout.LaunchPads, pos)
-    checkMirrored(errors, "SniperOutposts", layout.SniperOutposts, pos)
+    checkMirrored(
+        errors,
+        "SniperOutposts",
+        layout.SniperOutposts,
+        pos,
+        layout.Symmetry and layout.Symmetry.SniperOutposts
+    )
     checkMirrored(errors, "Pickups", layout.Pickups, pos)
     checkMirrored(errors, "Barrier", layout.Barrier, pos)
     checkMirrored(errors, "SafeRegions", layout.SafeRegions, pos)
