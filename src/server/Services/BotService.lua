@@ -238,6 +238,12 @@ local function los(bot, target)
     local params = RaycastParams.new()
     params.FilterType = Enum.RaycastFilterType.Exclude
     params.FilterDescendantsInstances = { bot.Character }
+    -- Terrain water is not cover. IgnoreWater defaults to false, so a ray that dips below a
+    -- water surface returns workspace.Terrain, the descendant test fails, and bots refuse to
+    -- trade across water that players shoot through freely. Swamp is the first map with an
+    -- objective actually in water, which makes this the difference between a fight and a
+    -- district bots will not contest.
+    params.IgnoreWater = true
     local from = bot.Root.Position + Vector3.new(0, 1.5, 0)
     local hit = workspace:Raycast(from, target.Root.Position - from, params)
     return hit ~= nil and hit.Instance:IsDescendantOf(target.Character)

@@ -54,6 +54,9 @@ local function hasLos(fromPos, character)
     params.FilterType = Enum.RaycastFilterType.Exclude
     params.FilterDescendantsInstances =
         { Players.LocalPlayer.Character, workspace:FindFirstChild("Objectives") or character }
+    -- Same defect as BotService.los: without this a bounty marker vanishes whenever the line
+    -- to the target clips a water surface, on a map whose centre objective sits in water.
+    params.IgnoreWater = true
     local hit = workspace:Raycast(fromPos, head.Position - fromPos, params)
     return hit ~= nil and hit.Instance:IsDescendantOf(character)
 end

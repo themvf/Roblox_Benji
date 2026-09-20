@@ -228,9 +228,20 @@ local function buildTerrain(layout)
     if MOUNTAIN then
         terrain:SetMaterialColor(Enum.Material.Rock, MOUNTAIN)
     end
-    terrain.WaterColor = Color3.fromRGB(70, 180, 255)
-    terrain.WaterTransparency = 0.6
-    terrain.WaterReflectance = 0.4
+    -- Water appearance is a map decision: a swamp basin and a tropical sea are not the same
+    -- colour. These were hard-coded before any layout data was read, so every map got the
+    -- same bright blue. Defaults match the old constants exactly, so existing maps that
+    -- declare no Terrain.Water render identically.
+    local water = t.Water or {}
+    terrain.WaterColor = water.Color or Color3.fromRGB(70, 180, 255)
+    terrain.WaterTransparency = water.Transparency or 0.6
+    terrain.WaterReflectance = water.Reflectance or 0.4
+    if water.WaveSize then
+        terrain.WaterWaveSize = water.WaveSize
+    end
+    if water.WaveSpeed then
+        terrain.WaterWaveSpeed = water.WaveSpeed
+    end
     if t.Sea then
         -- open water far below the structure, out to the horizon
         local level = t.SeaLevel or -30

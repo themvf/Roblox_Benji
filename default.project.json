@@ -48,8 +48,7 @@
           "Convergence_RespawnSeconds": 3.5,
           "Convergence_SpawnProtectSeconds": 2,
           "Convergence_BotsPerTeam": 5,
-          "Debug_ForceMap": "",
-          "MapVoteEnabled": true,
+          "Debug_ForceMap": "Swamp",
           "Debug_CarrierTestSafety": true,
           "Debug_CountBotMatches": true,
           "Debug_ForceTouchUi": false
