@@ -74,6 +74,9 @@ function CelebrationService.Client:SetFavorites(player, ids)
     if type(ids) ~= "table" then
         return false
     end
+    if player:GetAttribute("InMatch") or player:GetAttribute("QueueState") == "Committed" then
+        return false, "match_locked"
+    end
     local clean = {}
     for _, id in ids do
         if type(id) == "string" and Celebrations.get(id) and not table.find(clean, id) then

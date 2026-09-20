@@ -261,6 +261,22 @@ function CelebrationController:VoteSkip()
     end
 end
 
+-- Lobby-only local preview used by Customize. It deliberately plays only the motion:
+-- podium props/cameras remain match presentation and never interrupt the shared lobby.
+function CelebrationController:Preview(id)
+    local player = Players.LocalPlayer
+    if player:GetAttribute("InMatch") or player:GetAttribute("QueueState") == "Committed" then
+        return false
+    end
+    local celebration = Celebrations.get(id)
+    local motion = celebration and celebration.Systems.Motion
+    if not motion or not player.Character then
+        return false
+    end
+    playMotion(player.Character, motion)
+    return true
+end
+
 function CelebrationController:SkipHint()
     return Knit.GetController("TouchController").IsTouch() and "Tap SKIP to vote skip" or "Press V to vote skip"
 end

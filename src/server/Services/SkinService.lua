@@ -36,6 +36,21 @@ local function asset(v)
     return Uploads.resolve(v)
 end
 
+local function skinReady(skin)
+    local texture = skin.Systems.Texture
+    if texture and (texture.Body or texture.Overrides) then
+        return true
+    end
+    for _, system in skin.Systems do
+        for _, value in system do
+            if ready(value) then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 local function attrName(weapon)
     return "Skin_" .. weapon
 end
@@ -307,6 +322,12 @@ end
 
 -- Client picks a skin for a weapon (or nil to clear). Only valid registered skins are accepted.
 function SkinService.Client:SetSkin(player, weaponName, skinId)
+    if player:GetAttribute("InMatch") or player:GetAttribute("QueueState") == "Committed" then
+        return false, "match_locked"
+    end
+    if type(weaponName) ~= "string" then
+        return false, "invalid_weapon"
+    end
     if skinId == nil then
         player:SetAttribute(attrName(weaponName), nil)
     else
@@ -314,11 +335,12 @@ function SkinService.Client:SetSkin(player, weaponName, skinId)
         if not skin or skin.Weapon ~= weaponName then
             return false
         end
+        if not skinReady(skin) then
+            return false, "unavailable_item"
+        end
         player:SetAttribute(attrName(weaponName), skinId)
     end
-    if not player:GetAttribute("InMatch") then
-        Knit.GetService("WeaponService"):GiveLoadout(player)
-    end
+    Knit.GetService("WeaponService"):GiveLoadout(player)
     return true
 end
 
@@ -326,19 +348,7 @@ function SkinService.Client:GetSkins(player, weaponName)
     local out = {}
     for _, s in Skins.forWeapon(weaponName) do
         -- Ready = something will visibly change today (texture rules, or any non-TODO asset)
-        local isReady = false
-        local tex = s.Systems.Texture
-        if tex and (tex.Body or tex.Overrides) then
-            isReady = true
-        end
-        for _, sys in s.Systems do
-            for _, v in sys do
-                if ready(v) then
-                    isReady = true
-                end
-            end
-        end
-        table.insert(out, { Id = s.Id, Tier = s.Tier, Concept = s.Concept, Ready = isReady })
+        table.insert(out, { Id = s.Id, Tier = s.Tier, Concept = s.Concept, Ready = skinReady(s) })
     end
     return out, player:GetAttribute(attrName(weaponName))
 end

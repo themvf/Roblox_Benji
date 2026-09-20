@@ -172,7 +172,7 @@ function HudController:KnitStart()
     RoundService.StateChanged:Connect(function(s, data)
         local text = s
         if s == "Lobby" then
-            text = "Stand on a pad to queue"
+            text = "Choose PLAY or enter the arena gate"
         elseif data.Mode then
             text = data.Mode .. "  " .. s
         end

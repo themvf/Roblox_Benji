@@ -608,7 +608,7 @@ local function buildLobby(self, layout)
         local text = Instance.new("TextLabel")
         text.Size = UDim2.fromScale(1, 1)
         text.BackgroundTransparency = 1
-        text.Text = "WEAPONS"
+        text.Text = "ARMORY"
         text.TextScaled = true
         text.Font = Enum.Font.GothamBlack
         text.TextColor3 = pal.Accent
@@ -616,8 +616,8 @@ local function buildLobby(self, layout)
 
         local prompt = Instance.new("ProximityPrompt")
         prompt.Name = "WeaponKiosk"
-        prompt.ActionText = "Choose Loadout"
-        prompt.ObjectText = "Weapons"
+        prompt.ActionText = "Open Loadout"
+        prompt.ObjectText = "Armory"
         prompt.KeyboardKeyCode = Enum.KeyCode.E
         prompt.HoldDuration = 0
         prompt.MaxActivationDistance = 12

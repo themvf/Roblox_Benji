@@ -38,7 +38,7 @@ function AlterEgoService.Client:Select(player, id)
     if not AlterEgos.get(id) then
         return false
     end
-    if player:GetAttribute("InMatch") then
+    if player:GetAttribute("InMatch") or player:GetAttribute("QueueState") == "Committed" then
         return false -- lobby only
     end
     player:SetAttribute("AlterEgo", id)
