@@ -677,6 +677,7 @@ local function applyDecor(part, piece)
     if piece.decor then
         part.CanCollide = false
         part.CanQuery = false
+        part.CanTouch = false
         part.CastShadow = piece.shadow ~= false
     end
 end
@@ -780,6 +781,8 @@ local function placePiece(folder, prefix, piece, rng, mirror)
         local anchor = makePart(folder, name, pos, { 1, 1, 1 }, nil, PALETTE[piece.color] or GREY)
         anchor.Transparency = 1
         anchor.CanCollide = false
+        anchor.CanQuery = false
+        anchor.CanTouch = false
         local light = Instance.new("PointLight")
         light.Color = PALETTE[piece.color] or Color3.new(1, 1, 1)
         light.Range = piece.range or 40

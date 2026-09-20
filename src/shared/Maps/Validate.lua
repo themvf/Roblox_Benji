@@ -205,12 +205,6 @@ end
 -- Every solid box in the built map, mirrored copies included.
 function Validate.solids(layout)
     local out = {}
-    -- MapService builds a broad terrain slab for every non-sea themed map.
-    -- Model that floor here so launch landings and perimeter barriers are
-    -- validated against the geometry players actually encounter at runtime.
-    if layout.Terrain and not layout.Terrain.Sea then
-        table.insert(out, makeBox("TerrainGround", { 0, -6, 0 }, { layout.Size * 4, 12, layout.Size * 4 }, nil))
-    end
     for _, piece in layout.Center or {} do
         pieceBoxes(out, piece, false)
     end

@@ -1,5 +1,7 @@
 # Snow Fortress — traversal and combat
 
+> Topology superseded by [SNOW_FORTRESS_MAP_SPEC.md](SNOW_FORTRESS_MAP_SPEC.md): Blue west, Red east, exterior A/B, central C, FOUR launches and TWO diagonal upper-story ziplines. No grapple routes in this blockout. Earlier traversal inventory below is historical. FIN rules remain applicable. See [graybox v3](docs/reviews/snow-fortress/graybox-v3.md).
+
 Version 1.1 · 2026-09-20 · Dynamic finale selection/reveal implemented in working source; live verification and announcer audio asset pending. Traversal remains unimplemented. See [implementation evidence](docs/reviews/snow-fortress/implementation-status.md).
 
 Companion to [the redesign spec](SNOW_FORTRESS_REDESIGN_SPEC.md). User decisions in this document supersede the previous fixed-finale design. Locations below describe tactical roles, not approved coordinates.

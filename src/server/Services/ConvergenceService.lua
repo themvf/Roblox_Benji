@@ -381,402 +381,428 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
     end
 
     task.spawn(function()
-        -- The players agree on the map first; a forced map (/map) skips the vote.
-        mapName = Knit.GetService("MapVoteService")
-            :Pick(players, Config.ConvergenceMaps, mapName, MapService.CurrentMap)
-        local layout = require(ReplicatedStorage.Shared.Maps[mapName])
-        local plan, planError = FinalePlan.create(mapName, layout.Objectives or {}, layout.Finale)
-        if planError then
-            warn("[Convergence] finale preflight failed for " .. mapName .. ": " .. planError)
-            self:Finish(match, nil, true)
-            return
-        end
-        match.FinalePlan = plan
-        -- stats record the map that was actually voted in, so this waits for the vote
-        StatsService:StartMatch(players, "Convergence", mapName)
-        -- Map + intermission
-        MapService:Load(mapName)
-        RoundService:Broadcast(
-            "Intermission",
-            { Time = Config.IntermissionSeconds, Mode = "Convergence", Map = mapName, Vista = MapService.Vista }
-        )
-        local objectives = MapService.Objectives or {}
-        if #objectives == 0 then
-            warn("[Convergence] map " .. mapName .. " has no Objectives; aborting")
-            self:Finish(match, nil, true)
-            return
-        end
-        local folder = Instance.new("Folder")
-        folder.Name = "Objectives"
-        folder.Parent = workspace
-        for i, o in objectives do
-            local zone = {
-                Id = o.Id,
-                Name = o.Name,
-                Index = i,
-                Position = o.Position,
-                Radius = o.Radius,
-                HalfHeight = o.HalfHeight,
-                Phases = o.Phases,
-                Owner = nil,
-                Progress = 0,
-            }
-            makeZoneVisual(folder, zone)
-            table.insert(match.Zones, zone)
-        end
-        match.Folder = folder
-        task.wait(Config.IntermissionSeconds)
+        local ok, failure = xpcall(function()
+            -- QueueService already completed the vote and passed its chosen map.
+            -- MapVoteService no longer has the old blocking Pick API.
+            local layout = require(ReplicatedStorage.Shared.Maps[mapName])
+            local plan, planError = FinalePlan.create(mapName, layout.Objectives or {}, layout.Finale)
+            if planError then
+                warn("[Convergence] finale preflight failed for " .. mapName .. ": " .. planError)
+                self:Finish(match, nil, true)
+                return
+            end
+            match.FinalePlan = plan
+            -- stats record the map that was actually voted in, so this waits for the vote
+            StatsService:StartMatch(players, "Convergence", mapName)
+            -- Map + intermission
+            if not MapService:Load(mapName) then
+                error("Could not load Convergence map " .. tostring(mapName))
+            end
+            RoundService:Broadcast(
+                "Intermission",
+                { Time = Config.IntermissionSeconds, Mode = "Convergence", Map = mapName, Vista = MapService.Vista }
+            )
+            local objectives = MapService.Objectives or {}
+            if #objectives == 0 then
+                warn("[Convergence] map " .. mapName .. " has no Objectives; aborting")
+                self:Finish(match, nil, true)
+                return
+            end
+            local folder = Instance.new("Folder")
+            folder.Name = "Objectives"
+            folder.Parent = workspace
+            for i, o in objectives do
+                local zone = {
+                    Id = o.Id,
+                    Name = o.Name,
+                    Index = i,
+                    Position = o.Position,
+                    Radius = o.Radius,
+                    HalfHeight = o.HalfHeight,
+                    Phases = o.Phases,
+                    Owner = nil,
+                    Progress = 0,
+                }
+                makeZoneVisual(folder, zone)
+                table.insert(match.Zones, zone)
+            end
+            match.Folder = folder
+            task.wait(Config.IntermissionSeconds)
 
-        -- Spawn everyone, hook respawns and kills
-        local conns = {}
-        for _, p in present(match) do
-            table.insert(
-                conns,
-                p.CharacterAdded:Connect(function(character)
-                    local hum = character:WaitForChild("Humanoid")
-                    -- spawn protection
-                    local ff = Instance.new("ForceField")
-                    ff.Visible = true
-                    ff.Parent = character
-                    task.delay(rules.SpawnProtectSeconds, function()
-                        ff:Destroy()
-                    end)
-                    hum.Died:Connect(function()
-                        local killerId = character:GetAttribute("LastHitBy")
-                        local killer = killerId and Players:GetPlayerByUserId(killerId)
-                        local kteam = killer and teamOf(killer)
-                        if killer and killer ~= p and kteam and kteam ~= teamOf(p) then
-                            killer:SetAttribute("MatchKills", (killer:GetAttribute("MatchKills") or 0) + 1)
-                            match.Score[kteam] += rules.KillPoints
-                            local outpost = killer:GetAttribute("AtOutpost")
-                            if outpost and match.Telemetry.Outposts[outpost] then
-                                match.Telemetry.Outposts[outpost].Kills += 1
+            -- Spawn everyone, hook respawns and kills
+            local conns = {}
+            match.Connections = conns
+            for _, p in present(match) do
+                table.insert(
+                    conns,
+                    p.CharacterAdded:Connect(function(character)
+                        local hum = character:WaitForChild("Humanoid")
+                        -- spawn protection
+                        local ff = Instance.new("ForceField")
+                        ff.Visible = true
+                        ff.Parent = character
+                        task.delay(rules.SpawnProtectSeconds, function()
+                            ff:Destroy()
+                        end)
+                        hum.Died:Connect(function()
+                            local killerId = character:GetAttribute("LastHitBy")
+                            local killer = killerId and Players:GetPlayerByUserId(killerId)
+                            local kteam = killer and teamOf(killer)
+                            if killer and killer ~= p and kteam and kteam ~= teamOf(p) then
+                                killer:SetAttribute("MatchKills", (killer:GetAttribute("MatchKills") or 0) + 1)
+                                match.Score[kteam] += rules.KillPoints
+                                local outpost = killer:GetAttribute("AtOutpost")
+                                if outpost and match.Telemetry.Outposts[outpost] then
+                                    match.Telemetry.Outposts[outpost].Kills += 1
+                                end
                             end
-                        end
-                        local root = character:FindFirstChild("HumanoidRootPart")
-                        if root then
-                            Knit.GetService("PickupService"):NoteDeath(root.Position)
-                        end
-                        StatsService:OnKill((killer and killer ~= p) and killer or nil, p, character)
-                        task.delay(rules.RespawnSeconds, function()
-                            if match.Running and p.Parent and p:GetAttribute("InMatch") then
-                                p:LoadCharacter()
+                            local root = character:FindFirstChild("HumanoidRootPart")
+                            if root then
+                                Knit.GetService("PickupService"):NoteDeath(root.Position)
                             end
+                            StatsService:OnKill((killer and killer ~= p) and killer or nil, p, character)
+                            task.delay(rules.RespawnSeconds, function()
+                                if match.Running and p.Parent and p:GetAttribute("InMatch") then
+                                    p:LoadCharacter()
+                                end
+                            end)
                         end)
                     end)
+                )
+                p:LoadCharacter()
+            end
+            match.Running = true
+            RoundService:Broadcast("Round", { Mode = "Convergence", Score = match.Score })
+            self:FireAll(match, self.Client.Event, "Phase", { Phase = 1, Zones = 3 })
+
+            -- Signature map events: fire those whose TriggerPhase matches, kill anyone inside the region
+            local hazards = {} -- list of inside(position) functions
+            local function fireEventsForPhase(phase)
+                for _, ev in MapService.Events or {} do
+                    if ev.TriggerPhase == phase and ev.Kind == "Kraken" then
+                        -- S10: visual spectacle only in v1
+                        self:FireAll(match, self.Client.Event, "MapEventStart", { Name = ev.Name, Banner = ev.Banner })
+                        Knit.GetService("AmbientService"):Kraken(ev)
+                    elseif ev.TriggerPhase == phase then
+                        if ev.Flyover then
+                            Knit.GetService("AmbientService"):Flyover({ Low = true, Speed = 260 })
+                        end
+                        local inside = MapService:RunEvent(ev, {
+                            onWarning = function()
+                                self:FireAll(
+                                    match,
+                                    self.Client.Event,
+                                    "MapEventWarning",
+                                    { Name = ev.Name, Banner = ev.Banner, Seconds = ev.WarningSeconds }
+                                )
+                            end,
+                            onStart = function()
+                                self:FireAll(
+                                    match,
+                                    self.Client.Event,
+                                    "MapEventStart",
+                                    { Name = ev.Name, Banner = ev.Banner }
+                                )
+                            end,
+                            onEnd = function()
+                                self:FireAll(match, self.Client.Event, "MapEventEnd", { Name = ev.Name })
+                            end,
+                        })
+                        table.insert(hazards, inside)
+                    end
+                end
+            end
+            fireEventsForPhase(1)
+
+            -- Test bots: fill each team with N bots that capture, shoot and respawn
+            local botsPerTeam = rules.BotsPerTeam or 0
+            if botsPerTeam > 0 then
+                BotService:Start(botsPerTeam, rules.RespawnSeconds, function()
+                    return match.Zones
                 end)
-            )
-            p:LoadCharacter()
-        end
-        match.Running = true
-        RoundService:Broadcast("Round", { Mode = "Convergence", Score = match.Score })
-        self:FireAll(match, self.Client.Event, "Phase", { Phase = 1, Zones = 3 })
-
-        -- Signature map events: fire those whose TriggerPhase matches, kill anyone inside the region
-        local hazards = {} -- list of inside(position) functions
-        local function fireEventsForPhase(phase)
-            for _, ev in MapService.Events or {} do
-                if ev.TriggerPhase == phase and ev.Kind == "Kraken" then
-                    -- S10: visual spectacle only in v1
-                    self:FireAll(match, self.Client.Event, "MapEventStart", { Name = ev.Name, Banner = ev.Banner })
-                    Knit.GetService("AmbientService"):Kraken(ev)
-                elseif ev.TriggerPhase == phase then
-                    if ev.Flyover then
-                        Knit.GetService("AmbientService"):Flyover({ Low = true, Speed = 260 })
-                    end
-                    local inside = MapService:RunEvent(ev, {
-                        onWarning = function()
-                            self:FireAll(
-                                match,
-                                self.Client.Event,
-                                "MapEventWarning",
-                                { Name = ev.Name, Banner = ev.Banner, Seconds = ev.WarningSeconds }
-                            )
-                        end,
-                        onStart = function()
-                            self:FireAll(
-                                match,
-                                self.Client.Event,
-                                "MapEventStart",
-                                { Name = ev.Name, Banner = ev.Banner }
-                            )
-                        end,
-                        onEnd = function()
-                            self:FireAll(match, self.Client.Event, "MapEventEnd", { Name = ev.Name })
-                        end,
-                    })
-                    table.insert(hazards, inside)
-                end
             end
-        end
-        fireEventsForPhase(1)
 
-        -- Test bots: fill each team with N bots that capture, shoot and respawn
-        local botsPerTeam = rules.BotsPerTeam or 0
-        if botsPerTeam > 0 then
-            BotService:Start(botsPerTeam, rules.RespawnSeconds, function()
-                return match.Zones
-            end)
-        end
+            -- Main loop
+            local lastSnap = 0
+            local warned = {}
+            while match.Running do
+                task.wait(TICK)
+                local dt = TICK
+                local phaseCount = #(rules.PhaseSeconds or { 180, 180, 180 })
 
-        -- Main loop
-        local lastSnap = 0
-        local warned = {}
-        while match.Running do
-            task.wait(TICK)
-            local dt = TICK
-            local phaseCount = #(rules.PhaseSeconds or { 180, 180, 180 })
-
-            -- zones
-            local liveOwned = { Red = 0, Blue = 0 }
-            for _, zone in match.Zones do
-                local live = zoneLive(match, zone, match.Phase)
-                if not live and not zone.Closed then
-                    zone.Closed = true
-                    zone.Capturing = nil
-                    paintZone(zone)
-                    self:FireAll(match, self.Client.Event, "ZoneClosed", { Zone = zone.Name, Index = zone.Index })
+                -- zones
+                local liveOwned = { Red = 0, Blue = 0 }
+                for _, zone in match.Zones do
+                    local live = zoneLive(match, zone, match.Phase)
+                    if not live and not zone.Closed then
+                        zone.Closed = true
+                        zone.Capturing = nil
+                        paintZone(zone)
+                        self:FireAll(match, self.Client.Event, "ZoneClosed", { Zone = zone.Name, Index = zone.Index })
+                    end
+                    if live and not zone.Closed then
+                        local counts = playersIn(zone, teamOf)
+                        local botCounts = BotService:CountInZone(zone)
+                        counts.Red += botCounts.Red
+                        counts.Blue += botCounts.Blue
+                        local ev = stepZone(zone, counts, rules, dt)
+                        if ev == "Captured" then
+                            self:FireAll(
+                                match,
+                                self.Client.Event,
+                                "ZoneCaptured",
+                                { Zone = zone.Name, Team = zone.Owner, Index = zone.Index }
+                            )
+                            StatsService:OnCapture(zone, playersInside(zone, zone.Owner))
+                        elseif ev == "Neutralized" then
+                            self:FireAll(
+                                match,
+                                self.Client.Event,
+                                "ZoneNeutralized",
+                                { Zone = zone.Name, Index = zone.Index }
+                            )
+                            StatsService:OnStop(zone, playersInside(zone, nil))
+                        end
+                        paintZone(zone)
+                        if zone.Owner and not zone.Contested then
+                            liveOwned[zone.Owner] += 1
+                        end
+                    end
                 end
-                if live and not zone.Closed then
-                    local counts = playersIn(zone, teamOf)
-                    local botCounts = BotService:CountInZone(zone)
-                    counts.Red += botCounts.Red
-                    counts.Blue += botCounts.Blue
-                    local ev = stepZone(zone, counts, rules, dt)
-                    if ev == "Captured" then
+
+                -- Score from held zones. A CONTESTED zone pays nobody: zone.Contested was computed
+                -- every tick and the scoring loop never read it, so walking onto an enemy point froze
+                -- their capture bar while they kept banking full income and the attacker earned
+                -- nothing until a total wipe. With no decay and empty-hold scoring on top, holding
+                -- was close to unbreakable. Contesting now costs the holder immediately.
+                match.Score.Red += liveOwned.Red * rules.PointsPerZonePerSecond * dt
+                match.Score.Blue += liveOwned.Blue * rules.PointsPerZonePerSecond * dt
+
+                -- clocks
+                if not match.Overtime then
+                    match.TimeLeft = math.max(0, match.TimeLeft - dt)
+                    match.PhaseTimeLeft -= dt
+                    -- closing warning for the zone(s) that will not survive the next phase
+                    if
+                        match.Phase < phaseCount
+                        and match.PhaseTimeLeft <= rules.ZoneCloseWarningSeconds
+                        and not (match.FinalePlan and match.Phase == 1)
+                    then
+                        for _, zone in match.Zones do
+                            if
+                                not zone.Closed
+                                and not zoneLive(match, zone, match.Phase + 1)
+                                and not warned[zone.Name]
+                            then
+                                warned[zone.Name] = true
+                                self:FireAll(
+                                    match,
+                                    self.Client.Event,
+                                    "ZoneClosing",
+                                    { Zone = zone.Name, Index = zone.Index, Seconds = rules.ZoneCloseWarningSeconds }
+                                )
+                                local v = zone.Visual
+                                if v then
+                                    TweenService
+                                        :Create(
+                                            v.Pillar,
+                                            TweenInfo.new(
+                                                0.5,
+                                                Enum.EasingStyle.Sine,
+                                                Enum.EasingDirection.InOut,
+                                                30,
+                                                true
+                                            ),
+                                            { Transparency = 0.2 }
+                                        )
+                                        :Play()
+                                end
+                            end
+                        end
+                    end
+                    -- In the final phase there is no next phase to advance to, so PhaseTimeLeft
+                    -- used to run negative for the rest of the match: the clock clamped to 0:00 and
+                    -- PhaseSeconds (540) silently under-declared the real 720 s match by 180 s.
+                    -- The final phase now simply IS the remaining match time, so it is truthful.
+                    if match.Phase >= phaseCount then
+                        match.PhaseTimeLeft = match.TimeLeft
+                    end
+                    if match.PhaseTimeLeft <= 0 and match.Phase < phaseCount then
+                        match.Telemetry.ScoreByPhase[match.Phase] =
+                            { Red = math.floor(match.Score.Red), Blue = math.floor(match.Score.Blue) }
+                        match.Phase += 1
+                        match.PhaseTimeLeft = rules.PhaseSeconds[match.Phase]
+                        -- Close atomically with the phase transition, retaining survivor ownership/progress.
+                        local revealed = match.FinalePlan and match.Phase == 2 and FinalePlan.reveal(match.FinalePlan)
+                        local finalZone
+                        for _, zone in match.Zones do
+                            if not zoneLive(match, zone, match.Phase) and not zone.Closed then
+                                zone.Closed = true
+                                zone.Capturing = nil
+                                self:FireAll(
+                                    match,
+                                    self.Client.Event,
+                                    "ZoneClosed",
+                                    { Zone = zone.Name, Index = zone.Index }
+                                )
+                            end
+                            zone.IsFinal = FinalePlan.visibleFinal(match.FinalePlan, match.Phase) == zone.Id
+                                and zone.Id ~= nil
+                            if zone.IsFinal then
+                                finalZone = zone
+                            end
+                            paintZone(zone)
+                        end
                         self:FireAll(
                             match,
                             self.Client.Event,
-                            "ZoneCaptured",
-                            { Zone = zone.Name, Team = zone.Owner, Index = zone.Index }
+                            "Phase",
+                            { Phase = match.Phase, Zones = phaseCount - match.Phase + 1 }
                         )
-                        StatsService:OnCapture(zone, playersInside(zone, zone.Owner))
-                    elseif ev == "Neutralized" then
-                        self:FireAll(
-                            match,
-                            self.Client.Event,
-                            "ZoneNeutralized",
-                            { Zone = zone.Name, Index = zone.Index }
-                        )
-                        StatsService:OnStop(zone, playersInside(zone, nil))
-                    end
-                    paintZone(zone)
-                    if zone.Owner and not zone.Contested then
-                        liveOwned[zone.Owner] += 1
+                        fireEventsForPhase(match.Phase)
+                        if revealed and finalZone then
+                            self:FireAll(match, self.Client.Event, "FinaleRevealed", {
+                                MatchId = match.Id,
+                                Id = finalZone.Id,
+                                Name = finalZone.Name,
+                                Index = finalZone.Index,
+                            })
+                        end
+                        self:FireAll(match, self.Client.State, self:Snapshot(match))
                     end
                 end
-            end
 
-            -- Score from held zones. A CONTESTED zone pays nobody: zone.Contested was computed
-            -- every tick and the scoring loop never read it, so walking onto an enemy point froze
-            -- their capture bar while they kept banking full income and the attacker earned
-            -- nothing until a total wipe. With no decay and empty-hold scoring on top, holding
-            -- was close to unbreakable. Contesting now costs the holder immediately.
-            match.Score.Red += liveOwned.Red * rules.PointsPerZonePerSecond * dt
-            match.Score.Blue += liveOwned.Blue * rules.PointsPerZonePerSecond * dt
+                -- S22 telemetry: sniper outpost occupancy (players + bots)
+                for _, o in MapService.SniperOutposts or {} do
+                    match.Telemetry.Outposts[o.Name] = match.Telemetry.Outposts[o.Name] or { Seconds = 0, Kills = 0 }
+                    for _, p in present(match) do
+                        local root = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+                        if root and (root.Position - o.Position).Magnitude <= o.Radius then
+                            match.Telemetry.Outposts[o.Name].Seconds += dt
+                            p:SetAttribute("AtOutpost", o.Name)
+                        elseif root and p:GetAttribute("AtOutpost") == o.Name then
+                            p:SetAttribute("AtOutpost", nil)
+                        end
+                    end
+                end
 
-            -- clocks
-            if not match.Overtime then
-                match.TimeLeft = math.max(0, match.TimeLeft - dt)
-                match.PhaseTimeLeft -= dt
-                -- closing warning for the zone(s) that will not survive the next phase
-                if
-                    match.Phase < phaseCount
-                    and match.PhaseTimeLeft <= rules.ZoneCloseWarningSeconds
-                    and not (match.FinalePlan and match.Phase == 1)
-                then
-                    for _, zone in match.Zones do
-                        if not zone.Closed and not zoneLive(match, zone, match.Phase + 1) and not warned[zone.Name] then
-                            warned[zone.Name] = true
-                            self:FireAll(
-                                match,
-                                self.Client.Event,
-                                "ZoneClosing",
-                                { Zone = zone.Name, Index = zone.Index, Seconds = rules.ZoneCloseWarningSeconds }
-                            )
-                            local v = zone.Visual
-                            if v then
-                                TweenService
-                                    :Create(
-                                        v.Pillar,
-                                        TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 30, true),
-                                        { Transparency = 0.2 }
-                                    )
-                                    :Play()
+                -- Lethal map-event regions
+                if #hazards > 0 then
+                    for _, p in present(match) do
+                        local root = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+                        local hum = p.Character and p.Character:FindFirstChildOfClass("Humanoid")
+                        if root and hum and hum.Health > 0 then
+                            for _, inside in hazards do
+                                if inside(root.Position) then
+                                    hum:TakeDamage(hum.MaxHealth * 0.6 * dt) -- lethal in under 2 s
+                                    break
+                                end
                             end
                         end
                     end
                 end
-                -- In the final phase there is no next phase to advance to, so PhaseTimeLeft
-                -- used to run negative for the rest of the match: the clock clamped to 0:00 and
-                -- PhaseSeconds (540) silently under-declared the real 720 s match by 180 s.
-                -- The final phase now simply IS the remaining match time, so it is truthful.
-                if match.Phase >= phaseCount then
-                    match.PhaseTimeLeft = match.TimeLeft
+                if match.Overtime then
+                    match.OvertimeLeft -= dt
                 end
-                if match.PhaseTimeLeft <= 0 and match.Phase < phaseCount then
-                    match.Telemetry.ScoreByPhase[match.Phase] =
-                        { Red = math.floor(match.Score.Red), Blue = math.floor(match.Score.Blue) }
-                    match.Phase += 1
-                    match.PhaseTimeLeft = rules.PhaseSeconds[match.Phase]
-                    -- Close atomically with the phase transition, retaining survivor ownership/progress.
-                    local revealed = match.FinalePlan and match.Phase == 2 and FinalePlan.reveal(match.FinalePlan)
-                    local finalZone
+
+                -- win checks
+                local winner
+                if match.Score.Red >= rules.ScoreToWin then
+                    winner = "Red"
+                elseif match.Score.Blue >= rules.ScoreToWin then
+                    winner = "Blue"
+                end
+                local timeUp = (not match.Overtime and match.TimeLeft <= 0)
+                    or (match.Overtime and match.OvertimeLeft <= 0)
+                if not winner and timeUp then
+                    -- overtime: final zone contested or trailing team has progress on it
+                    local final
                     for _, zone in match.Zones do
-                        if not zoneLive(match, zone, match.Phase) and not zone.Closed then
-                            zone.Closed = true
-                            zone.Capturing = nil
-                            self:FireAll(
-                                match,
-                                self.Client.Event,
-                                "ZoneClosed",
-                                { Zone = zone.Name, Index = zone.Index }
-                            )
+                        if not zone.Closed then
+                            final = zone
                         end
-                        zone.IsFinal = FinalePlan.visibleFinal(match.FinalePlan, match.Phase) == zone.Id
-                            and zone.Id ~= nil
-                        if zone.IsFinal then
-                            finalZone = zone
+                    end
+                    local trailing = match.Score.Red < match.Score.Blue and "Red" or "Blue"
+                    local extend = final
+                        and not match.Overtime
+                        and (
+                            final.Contested
+                            or (final.Capturing == trailing and final.Progress > 0)
+                            or (final.Owner == otherTeam(trailing) and final.Progress < 100)
+                        )
+                    if extend then
+                        match.Overtime = true
+                        match.OvertimeLeft = rules.OvertimeMaxSeconds
+                        self:FireAll(match, self.Client.Event, "Overtime", {})
+                    elseif
+                        not (
+                            match.Overtime
+                            and final
+                            and (final.Contested or final.Capturing)
+                            and match.OvertimeLeft > 0
+                        )
+                    then
+                        -- resolved (or overtime exhausted): decide the winner
+                        if match.Score.Red ~= match.Score.Blue then
+                            winner = match.Score.Red > match.Score.Blue and "Red" or "Blue"
+                        elseif final and final.Owner then
+                            winner = final.Owner
+                        else
+                            winner = nil -- draw
                         end
-                        paintZone(zone)
+                        match.Running = false
                     end
-                    self:FireAll(
-                        match,
-                        self.Client.Event,
-                        "Phase",
-                        { Phase = match.Phase, Zones = phaseCount - match.Phase + 1 }
-                    )
-                    fireEventsForPhase(match.Phase)
-                    if revealed and finalZone then
-                        self:FireAll(match, self.Client.Event, "FinaleRevealed", {
-                            MatchId = match.Id,
-                            Id = finalZone.Id,
-                            Name = finalZone.Name,
-                            Index = finalZone.Index,
-                        })
+                end
+                if winner then
+                    match.Running = false
+                    match.Winner = winner
+                end
+
+                -- team-left abort
+                local red, blue = 0, 0
+                for _, p in present(match) do
+                    if p:GetAttribute("Team") == "Red" then
+                        red += 1
+                    else
+                        blue += 1
                     end
+                end
+                if red == 0 or blue == 0 then
+                    match.Running = false
+                    match.Aborted = true
+                end
+
+                -- match score credit + bounty pings + scoreboard
+                StatsService:Tick(dt, match.Zones, insideZone)
+                match.PingClock = (match.PingClock or 0) + dt
+                if match.PingClock >= 75 then
+                    match.PingClock = 0
+                    StatsService:PingBounties(match.Zones)
+                end
+                match.BoardClock = (match.BoardClock or 0) + dt
+                if match.BoardClock >= 1 then
+                    match.BoardClock = 0
+                    StatsService:BroadcastScoreboard()
+                end
+
+                -- snapshot to clients
+                if os.clock() - lastSnap >= 0.25 then
+                    lastSnap = os.clock()
                     self:FireAll(match, self.Client.State, self:Snapshot(match))
                 end
             end
 
-            -- S22 telemetry: sniper outpost occupancy (players + bots)
-            for _, o in MapService.SniperOutposts or {} do
-                match.Telemetry.Outposts[o.Name] = match.Telemetry.Outposts[o.Name] or { Seconds = 0, Kills = 0 }
-                for _, p in present(match) do
-                    local root = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
-                    if root and (root.Position - o.Position).Magnitude <= o.Radius then
-                        match.Telemetry.Outposts[o.Name].Seconds += dt
-                        p:SetAttribute("AtOutpost", o.Name)
-                    elseif root and p:GetAttribute("AtOutpost") == o.Name then
-                        p:SetAttribute("AtOutpost", nil)
-                    end
-                end
+            for _, c in conns do
+                c:Disconnect()
             end
-
-            -- Lethal map-event regions
-            if #hazards > 0 then
-                for _, p in present(match) do
-                    local root = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
-                    local hum = p.Character and p.Character:FindFirstChildOfClass("Humanoid")
-                    if root and hum and hum.Health > 0 then
-                        for _, inside in hazards do
-                            if inside(root.Position) then
-                                hum:TakeDamage(hum.MaxHealth * 0.6 * dt) -- lethal in under 2 s
-                                break
-                            end
-                        end
-                    end
-                end
-            end
-            if match.Overtime then
-                match.OvertimeLeft -= dt
-            end
-
-            -- win checks
-            local winner
-            if match.Score.Red >= rules.ScoreToWin then
-                winner = "Red"
-            elseif match.Score.Blue >= rules.ScoreToWin then
-                winner = "Blue"
-            end
-            local timeUp = (not match.Overtime and match.TimeLeft <= 0) or (match.Overtime and match.OvertimeLeft <= 0)
-            if not winner and timeUp then
-                -- overtime: final zone contested or trailing team has progress on it
-                local final
-                for _, zone in match.Zones do
-                    if not zone.Closed then
-                        final = zone
-                    end
-                end
-                local trailing = match.Score.Red < match.Score.Blue and "Red" or "Blue"
-                local extend = final
-                    and not match.Overtime
-                    and (
-                        final.Contested
-                        or (final.Capturing == trailing and final.Progress > 0)
-                        or (final.Owner == otherTeam(trailing) and final.Progress < 100)
-                    )
-                if extend then
-                    match.Overtime = true
-                    match.OvertimeLeft = rules.OvertimeMaxSeconds
-                    self:FireAll(match, self.Client.Event, "Overtime", {})
-                elseif
-                    not (match.Overtime and final and (final.Contested or final.Capturing) and match.OvertimeLeft > 0)
-                then
-                    -- resolved (or overtime exhausted): decide the winner
-                    if match.Score.Red ~= match.Score.Blue then
-                        winner = match.Score.Red > match.Score.Blue and "Red" or "Blue"
-                    elseif final and final.Owner then
-                        winner = final.Owner
-                    else
-                        winner = nil -- draw
-                    end
-                    match.Running = false
-                end
-            end
-            if winner then
-                match.Running = false
-                match.Winner = winner
-            end
-
-            -- team-left abort
-            local red, blue = 0, 0
-            for _, p in present(match) do
-                if p:GetAttribute("Team") == "Red" then
-                    red += 1
-                else
-                    blue += 1
-                end
-            end
-            if red == 0 or blue == 0 then
-                match.Running = false
-                match.Aborted = true
-            end
-
-            -- match score credit + bounty pings + scoreboard
-            StatsService:Tick(dt, match.Zones, insideZone)
-            match.PingClock = (match.PingClock or 0) + dt
-            if match.PingClock >= 75 then
-                match.PingClock = 0
-                StatsService:PingBounties(match.Zones)
-            end
-            match.BoardClock = (match.BoardClock or 0) + dt
-            if match.BoardClock >= 1 then
-                match.BoardClock = 0
-                StatsService:BroadcastScoreboard()
-            end
-
-            -- snapshot to clients
-            if os.clock() - lastSnap >= 0.25 then
-                lastSnap = os.clock()
-                self:FireAll(match, self.Client.State, self:Snapshot(match))
+            self:Finish(match, match.Winner, match.Aborted)
+        end, debug.traceback)
+        if not ok then
+            warn("[Convergence] match failed: " .. tostring(failure))
+            if self.Match == match then
+                self:Finish(match, nil, true)
             end
         end
-
-        for _, c in conns do
-            c:Disconnect()
-        end
-        self:Finish(match, match.Winner, match.Aborted)
     end)
     return true
 end
@@ -843,6 +869,11 @@ local function printMapTelemetry(match)
 end
 
 function ConvergenceService:Finish(match, winner, aborted)
+    match.Running = false
+    for _, connection in match.Connections or {} do
+        connection:Disconnect()
+    end
+    match.Connections = nil
     BotService:Stop()
     if match.Telemetry then
         printMapTelemetry(match)

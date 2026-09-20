@@ -1,5 +1,11 @@
 # Snow Fortress — design packet
 
+## Approved art direction and current build
+
+[Art direction 01](art-direction-01.md) is approved and implemented as `alpine-art-v2`. The reference image remains concept art. Current build: `builds/SnowFortress-alpine-art-v2.rbxl`; the user will test in Studio.
+
+> Current authority: [user sketch and specification](../../../SNOW_FORTRESS_MAP_SPEC.md), plus the approved upstairs C, full second floor, and protected two-story outposts. Current inventory: four launches, two zips, two outposts, no grapples. Earlier district and traversal proposals below are historical where they conflict. Art expansion is approved; visual quality and device performance await playtesting.
+
 Updated 2026-09-20 · Author: Codex · G0/G1 in progress
 
 ## Identity and established decisions

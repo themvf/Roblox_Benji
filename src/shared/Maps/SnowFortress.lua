@@ -1,769 +1,304 @@
--- Snow Fortress: ground-first Convergence battlefield.
--- Contextual traversal uses the shared TraversalService; ground access stays primary.
+-- Authoritative topology: SNOW_FORTRESS_MAP_SPEC.md and the user's drawing.
+-- North = -Z, Blue = west (-X), Red = east (+X). GRAYBOX ONLY.
+-- Dimensions are blockout hypotheses; topology is locked pending designer review.
 local map = {
     Name = "SnowFortress",
-    Finale = { EligibleIds = { "gate", "yard", "keep" } },
+    Revision = "alpine-art-v2",
     Size = 500,
-    WallHeight = 36,
+    WallHeight = 12,
     Seed = 1129,
-    Revision = "exterior-fortress-v2",
-    Symmetry = { SniperOutposts = "rotational" },
-
-    Spawns = {
-        Red = {
-            { -210, 2, -20 },
-            { -210, 2, -12 },
-            { -210, 2, -4 },
-            { -210, 2, 4 },
-            { -210, 2, 12 },
-            { -210, 2, 20 },
-        },
-        Blue = {
-            { 210, 2, -20 },
-            { 210, 2, -12 },
-            { 210, 2, -4 },
-            { 210, 2, 4 },
-            { 210, 2, 12 },
-            { 210, 2, 20 },
-        },
-    },
-
+    Finale = { EligibleIds = { "gate", "yard", "keep" } },
+    Spawns = { Blue = {}, Red = {} },
     Objectives = {
         {
             Id = "gate",
-            Name = "Gate Courtyard",
-            pos = { -22, 1, -122 },
+            Name = "A — North Field",
+            pos = { 0, 0.2, -128 },
             radius = 18,
-            halfHeight = 9,
+            halfHeight = 7,
             Phases = { 1, 2, 3 },
         },
         {
             Id = "yard",
-            Name = "Service Yard",
-            pos = { -22, 1, 122 },
+            Name = "B — South Field",
+            pos = { 0, 0.2, 128 },
             radius = 18,
-            halfHeight = 9,
+            halfHeight = 7,
             Phases = { 1, 2, 3 },
         },
-        { Id = "keep", Name = "Command Keep", pos = { 58, 1, 0 }, radius = 17, halfHeight = 9, Phases = { 1, 2, 3 } },
+        {
+            Id = "keep",
+            Name = "C — Fortress Upper Floor",
+            pos = { 0, 18.2, 0 },
+            radius = 18,
+            halfHeight = 7,
+            Phases = { 1, 2, 3 },
+        },
     },
-    Vista = { pos = { -225, 58, -205 }, look = { 20, 8, 0 }, seconds = 3 },
-
+    Vista = { pos = { -225, 80, -190 }, look = { 0, 8, 0 }, seconds = 3 },
     SafetyAlwaysOn = true,
     RecoveryY = -8,
-    Bounds = { min = { -245, -12, -215 }, max = { 245, 105, 215 } },
+    Bounds = { min = { -245, -12, -185 }, max = { 245, 85, 185 } },
     InvalidRegions = {},
-    SafeRegions = {
-        { name = "Red Spawn Pocket", pos = { -210, 8, 0 }, size = { 52, 24, 70 } },
-        { name = "Blue Spawn Pocket", pos = { 210, 8, 0 }, size = { 52, 24, 70 } },
-        { name = "Keep Interior", pos = { 58, 10, 0 }, size = { 70, 30, 76 } },
-    },
+    SafeRegions = {},
     SafePoints = {
-        { name = "Red Staging", pos = { -195, 1, 0 } },
-        { name = "Blue Staging", pos = { 195, 1, 0 } },
-        { name = "Gate Courtyard", pos = { -22, 1, -122 } },
-        { name = "Service Yard", pos = { -22, 1, 122 } },
-        { name = "Command Keep West", pos = { 30, 1, 0 } },
-        { name = "Command Keep East", pos = { 86, 1, 0 } },
+        { name = "Blue exterior", pos = { -200, 1, 0 } },
+        { name = "Red exterior", pos = { 200, 1, 0 } },
+        { name = "North field", pos = { 0, 1, -128 } },
+        { name = "South field", pos = { 0, 1, 128 } },
+        { name = "Fortress upper centre", pos = { 0, 19, 0 } },
+        { name = "Upper landing southwest", pos = { -60, 19, 46 } },
+        { name = "Upper landing northeast", pos = { 60, 19, -46 } },
     },
     Barrier = {
-        { pos = { 0, 6, -216.5 }, size = { 490, 12, 1.5 } },
-        { pos = { 0, 6, 216.5 }, size = { 490, 12, 1.5 } },
-        { pos = { -246.5, 6, 0 }, size = { 1.5, 12, 430 } },
-        { pos = { 246.5, 6, 0 }, size = { 1.5, 12, 430 } },
+        { pos = { 0, 6, -186.5 }, size = { 490, 12, 1.5 } },
+        { pos = { 0, 6, 186.5 }, size = { 490, 12, 1.5 } },
+        { pos = { -246.5, 6, 0 }, size = { 1.5, 12, 370 } },
+        { pos = { 246.5, 6, 0 }, size = { 1.5, 12, 370 } },
     },
-
-    -- Generic ground-route records: both spawn sides have an authored approach
-    -- to every district, plus independent north/south flanks into each finale.
-    GroundRoutes = {
-        {
-            Id = "gate-west-breach",
-            DistrictId = "gate",
-            Side = "Red",
-            Kind = "direct",
-            From = { -190, 1, -24 },
-            To = { -22, 1, -122 },
-            Waypoints = { { -190, 1, -24 }, { -125, 1, -70 }, { -70, 1, -108 }, { -22, 1, -122 } },
-        },
-        {
-            Id = "gate-east-ridge",
-            DistrictId = "gate",
-            Side = "Blue",
-            Kind = "covered",
-            From = { 190, 1, -24 },
-            To = { -22, 1, -122 },
-            Waypoints = { { 190, 1, -24 }, { 130, 1, -72 }, { 55, 1, -106 }, { -22, 1, -122 } },
-        },
-        {
-            Id = "yard-west-service",
-            DistrictId = "yard",
-            Side = "Red",
-            Kind = "covered",
-            From = { -190, 1, 24 },
-            To = { -22, 1, 122 },
-            Waypoints = { { -190, 1, 24 }, { -128, 1, 78 }, { -72, 1, 112 }, { -22, 1, 122 } },
-        },
-        {
-            Id = "yard-east-loading",
-            DistrictId = "yard",
-            Side = "Blue",
-            Kind = "direct",
-            From = { 190, 1, 24 },
-            To = { -22, 1, 122 },
-            Waypoints = { { 190, 1, 24 }, { 128, 1, 78 }, { 52, 1, 112 }, { -22, 1, 122 } },
-        },
-        {
-            Id = "keep-west-arc",
-            DistrictId = "keep",
-            Side = "Red",
-            Kind = "direct",
-            From = { -190, 1, 0 },
-            To = { 30, 1, -18 },
-            Waypoints = { { -190, 1, 0 }, { -112, 1, -34 }, { -30, 1, -32 }, { 30, 1, -18 } },
-        },
-        {
-            Id = "keep-east-arc",
-            DistrictId = "keep",
-            Side = "Blue",
-            Kind = "direct",
-            From = { 190, 1, 0 },
-            To = { 86, 1, 18 },
-            Waypoints = { { 190, 1, 0 }, { 142, 1, 38 }, { 105, 1, 32 }, { 86, 1, 18 } },
-        },
-        {
-            Id = "gate-south-flank",
-            DistrictId = "gate",
-            Side = "Both",
-            Kind = "flank",
-            From = { -84, 1, -42 },
-            To = { -22, 1, -122 },
-            Waypoints = { { -84, 1, -42 }, { -98, 1, -90 }, { -66, 1, -144 }, { -22, 1, -122 } },
-        },
-        {
-            Id = "gate-north-flank",
-            DistrictId = "gate",
-            Side = "Both",
-            Kind = "sheltered",
-            From = { 80, 1, -52 },
-            To = { -22, 1, -122 },
-            Waypoints = { { 80, 1, -52 }, { 72, 1, -148 }, { 22, 1, -158 }, { -22, 1, -122 } },
-        },
-        {
-            Id = "yard-north-flank",
-            DistrictId = "yard",
-            Side = "Both",
-            Kind = "flank",
-            From = { -84, 1, 42 },
-            To = { -22, 1, 122 },
-            Waypoints = { { -84, 1, 42 }, { -98, 1, 90 }, { -66, 1, 144 }, { -22, 1, 122 } },
-        },
-        {
-            Id = "yard-south-flank",
-            DistrictId = "yard",
-            Side = "Both",
-            Kind = "sheltered",
-            From = { 80, 1, 52 },
-            To = { -22, 1, 122 },
-            Waypoints = { { 80, 1, 52 }, { 72, 1, 148 }, { 22, 1, 158 }, { -22, 1, 122 } },
-        },
-        {
-            Id = "keep-south-entry",
-            DistrictId = "keep",
-            Side = "Both",
-            Kind = "covered",
-            From = { 6, 1, 82 },
-            To = { 58, 1, 34 },
-            Waypoints = { { 6, 1, 82 }, { 30, 1, 54 }, { 58, 1, 34 } },
-        },
-        {
-            Id = "keep-north-entry",
-            DistrictId = "keep",
-            Side = "Both",
-            Kind = "covered",
-            From = { 6, 1, -82 },
-            To = { 58, 1, -34 },
-            Waypoints = { { 6, 1, -82 }, { 30, 1, -54 }, { 58, 1, -34 } },
-        },
+    -- Plain terrain floor only: suppress generic opaque greybox boundary walls.
+    Terrain = { GroundMaterial = Enum.Material.Concrete, GroundColor = Color3.fromRGB(155, 158, 163) },
+    Palette = {
+        Floor = Color3.fromRGB(180, 184, 190),
+        Wall = Color3.fromRGB(102, 110, 122),
+        Cover = Color3.fromRGB(122, 130, 140),
+        Upper = Color3.fromRGB(154, 165, 180),
+        Ramp = Color3.fromRGB(200, 204, 212),
     },
-
+    Environment = {
+        ClockTime = 12,
+        Brightness = 2,
+        Ambient = Color3.fromRGB(160, 160, 160),
+        OutdoorAmbient = Color3.fromRGB(170, 170, 170),
+        FogStart = 2000,
+        FogEnd = 3000,
+        FogColor = Color3.fromRGB(190, 195, 205),
+        Atmosphere = { Density = 0, Haze = 0, Glare = 0, Color = Color3.fromRGB(255, 255, 255) },
+        SunRays = 0,
+        Bloom = 0,
+        Saturation = 0,
+        Contrast = 0,
+        Tint = Color3.fromRGB(255, 255, 255),
+    },
+    Center = {},
+    Mirrored = {},
+    Symmetry = { SniperOutposts = "rotational" },
+    GroundRoutes = {},
     SniperOutposts = {
         {
-            Id = "west-signal",
-            Name = "West Signal Outpost",
-            pos = { -132, 9, -154 },
+            Id = "northwest",
+            Name = "Northwest Outpost",
+            pos = { -145, 19, -126 },
             radius = 12,
-            GroundRouteId = "gate-south-flank",
+            GroundRouteId = "blue-north",
         },
         {
-            Id = "east-relay",
-            Name = "East Relay Outpost",
-            pos = { 132, 9, 154 },
+            Id = "southeast",
+            Name = "Southeast Outpost",
+            pos = { 145, 19, 126 },
             radius = 12,
-            GroundRouteId = "yard-east-loading",
+            GroundRouteId = "red-south",
         },
     },
-    LaunchPads = {
-        {
-            Id = "west-wall-hop",
-            pos = { -118, 0.3, 52 },
-            target = { -46, 1, 92 },
-            vy = 62,
-            size = 8,
-            GroundAlternative = "yard-west-service",
-        },
-        {
-            Id = "east-wall-hop",
-            pos = { 118, 0.3, -52 },
-            target = { 46, 1, -92 },
-            vy = 62,
-            size = 8,
-            GroundAlternative = "gate-east-ridge",
-        },
-    },
-    -- Shared traversal service builds prompts and movement from these endpoints.
+    LaunchPads = {},
     ZipLines = {
         {
-            Id = "west-ridge-to-gate",
-            From = { -154, 10, -142 },
-            To = { -76, 5, -132 },
-            GroundAlternative = "gate-south-flank",
-            Purpose = "Cross the exposed west gate approach without skipping the courtyard entrance",
+            Id = "southwest-upper",
+            From = { -150, 4, 130 },
+            To = { -60, 24, 46 },
+            GroundAlternative = "blue-centre",
+            Purpose = "Southwest exterior to second story",
         },
         {
-            Id = "west-service-connector",
-            From = { -150, 9, 116 },
-            To = { -82, 5, 142 },
-            GroundAlternative = "yard-west-service",
-            Purpose = "Trade a visible ride for a second Service Yard entry angle",
-        },
-        {
-            Id = "east-ridge-to-gate",
-            From = { 154, 10, -142 },
-            To = { 78, 5, -132 },
-            GroundAlternative = "gate-east-ridge",
-            Purpose = "Challenge the north approach from outside the Blue spawn pocket",
-        },
-        {
-            Id = "east-service-connector",
-            From = { 150, 9, 116 },
-            To = { 82, 5, 142 },
-            GroundAlternative = "yard-east-loading",
-            Purpose = "Reach the Service Yard flank while remaining visible from the relay outpost",
+            Id = "northeast-upper",
+            From = { 150, 4, -130 },
+            To = { 60, 24, -46 },
+            GroundAlternative = "red-centre",
+            Purpose = "Northeast exterior to second story",
         },
     },
-    GrappleAnchors = {
-        {
-            Id = "gate-west-wall",
-            From = { -86, 1, -154 },
-            To = { -56, 7, -142 },
-            GroundAlternative = "gate-south-flank",
-            Purpose = "Counter the west outpost and gate wall",
-        },
-        {
-            Id = "gate-east-wall",
-            From = { 70, 1, -156 },
-            To = { 42, 7, -142 },
-            GroundAlternative = "gate-east-ridge",
-            Purpose = "Offer a readable alternate wall access point",
-        },
-        {
-            Id = "yard-loading-crane",
-            From = { -68, 1, 154 },
-            To = { -38, 8, 146 },
-            GroundAlternative = "yard-north-flank",
-            Purpose = "Counter dense loading-yard cover",
-        },
-        {
-            Id = "keep-balcony",
-            From = { 28, 1, 30 },
-            To = { 48, 12, 22 },
-            GroundAlternative = "keep-south-entry",
-            Purpose = "Provide the single inner elevated shortcut",
-        },
-    },
-
-    Environment = {
-        ClockTime = 13.2,
-        Brightness = 2.2,
-        Ambient = Color3.fromRGB(145, 158, 182),
-        OutdoorAmbient = Color3.fromRGB(178, 193, 218),
-        FogColor = Color3.fromRGB(224, 234, 248),
-        FogStart = 330,
-        FogEnd = 1450,
-        Atmosphere = { Density = 0.25, Haze = 1.2, Glare = 0.04, Color = Color3.fromRGB(224, 234, 248) },
-        SunRays = 0.07,
-        Bloom = 0.14,
-        Saturation = -0.06,
-        Contrast = 0.16,
-        Tint = Color3.fromRGB(244, 248, 255),
-    },
-    Palette = {
-        Concrete = Color3.fromRGB(68, 76, 90),
-        ConcreteDark = Color3.fromRGB(38, 45, 56),
-        Steel = Color3.fromRGB(126, 137, 153),
-        Gate = Color3.fromRGB(181, 143, 88),
-        Service = Color3.fromRGB(105, 132, 106),
-        Command = Color3.fromRGB(105, 108, 132),
-        Cover = Color3.fromRGB(89, 98, 112),
-        Hazard = Color3.fromRGB(244, 153, 52),
-        Lamp = Color3.fromRGB(255, 225, 166),
-        Marker = Color3.fromRGB(255, 230, 80),
-        Mountain = Color3.fromRGB(166, 181, 207),
-    },
-    Terrain = {
-        GroundMaterial = Enum.Material.Snow,
-        GroundColor = Color3.fromRGB(235, 242, 250),
-        Hills = {
-            { -170, -13, -95, 24 },
-            { -168, -13, 94, 25 },
-            { 172, -13, -96, 24 },
-            { 170, -13, 96, 25 },
-            { -18, -16, -190, 20 },
-            { -20, -16, 190, 20 },
-        },
-        Mountains = {
-            { 0, -90, -520, 250 },
-            { 0, -90, 520, 250 },
-            { -520, -100, 0, 260 },
-            { 520, -100, 0, 260 },
-        },
-    },
-
-    -- This battlefield is authored explicitly in Center, but the shared map
-    -- contract still requires the standard X-mirrored collection.
-    Mirrored = {},
-    Center = {
-        -- Spawn pockets have two exits and hard north/south line-of-sight blockers.
-        {
-            kind = "block",
-            name = "RedSpawnBack",
-            pos = { -226, 6, 0 },
-            size = { 4, 12, 68 },
-            color = "ConcreteDark",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "RedSpawnNorth",
-            pos = { -205, 4, -34 },
-            size = { 46, 8, 4 },
-            color = "Concrete",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "RedSpawnSouth",
-            pos = { -205, 4, 34 },
-            size = { 46, 8, 4 },
-            color = "Concrete",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "BlueSpawnBack",
-            pos = { 226, 6, 0 },
-            size = { 4, 12, 68 },
-            color = "ConcreteDark",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "BlueSpawnNorth",
-            pos = { 205, 4, -34 },
-            size = { 46, 8, 4 },
-            color = "Concrete",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "BlueSpawnSouth",
-            pos = { 205, 4, 34 },
-            size = { 46, 8, 4 },
-            color = "Concrete",
-            material = "Concrete",
-        },
-
-        -- Gate Courtyard: open mid-range ground and two offset breaches.
-        {
-            kind = "block",
-            name = "GateApron",
-            pos = { -22, 0.15, -122 },
-            size = { 112, 0.3, 82 },
-            color = "Gate",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "Gatehouse",
-            pos = { -22, 8, -165 },
-            size = { 54, 16, 12 },
-            color = "ConcreteDark",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "GatePylonW",
-            pos = { -72, 7, -126 },
-            size = { 9, 14, 34 },
-            color = "Concrete",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "GatePylonE",
-            pos = { 28, 7, -118 },
-            size = { 9, 14, 34 },
-            color = "Concrete",
-            material = "Concrete",
-        },
-        { kind = "block", name = "GateCoverW", pos = { -48, 3, -104 }, size = { 16, 6, 6 }, color = "Cover" },
-        { kind = "block", name = "GateCoverE", pos = { 5, 3, -139 }, size = { 16, 6, 6 }, color = "Cover" },
-        { kind = "beacon", name = "GateBeacon", pos = { -22, 18, -165 }, color = "Gate" },
-
-        -- Service Yard: dense staggered cover and four open approach edges.
-        {
-            kind = "block",
-            name = "ServiceApron",
-            pos = { -22, 0.15, 122 },
-            size = { 116, 0.3, 86 },
-            color = "Service",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "ServiceHall",
-            pos = { -48, 8, 165 },
-            size = { 50, 16, 12 },
-            color = "ConcreteDark",
-            material = "Metal",
-        },
-        {
-            kind = "block",
-            name = "LoadingBay",
-            pos = { 25, 6, 157 },
-            size = { 32, 12, 18 },
-            color = "Concrete",
-            material = "Metal",
-        },
-        { kind = "block", name = "ServiceCrateA", pos = { -58, 3, 105 }, size = { 12, 6, 12 }, color = "Cover" },
-        { kind = "block", name = "ServiceCrateB", pos = { -22, 3, 140 }, size = { 15, 6, 9 }, color = "Cover" },
-        { kind = "block", name = "ServiceCrateC", pos = { 12, 3, 111 }, size = { 10, 6, 16 }, color = "Cover" },
-        { kind = "block", name = "ServiceCrateD", pos = { 38, 3, 137 }, size = { 12, 6, 10 }, color = "Cover" },
-        { kind = "beacon", name = "ServiceBeacon", pos = { -48, 18, 165 }, color = "Service" },
-
-        -- Command Keep: four ground doors and one exposed balcony shortcut.
-        {
-            kind = "block",
-            name = "KeepFloor",
-            pos = { 58, 0.15, 0 },
-            size = { 74, 0.3, 78 },
-            color = "Command",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "KeepNorthW",
-            pos = { 39, 7, -38 },
-            size = { 28, 14, 4 },
-            color = "ConcreteDark",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "KeepNorthE",
-            pos = { 81, 7, -38 },
-            size = { 22, 14, 4 },
-            color = "ConcreteDark",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "KeepSouthW",
-            pos = { 35, 7, 38 },
-            size = { 20, 14, 4 },
-            color = "ConcreteDark",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "KeepSouthE",
-            pos = { 77, 7, 38 },
-            size = { 30, 14, 4 },
-            color = "ConcreteDark",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "KeepWestN",
-            pos = { 21, 7, -24 },
-            size = { 4, 14, 24 },
-            color = "ConcreteDark",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "KeepWestS",
-            pos = { 21, 7, 24 },
-            size = { 4, 14, 24 },
-            color = "ConcreteDark",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "KeepEastN",
-            pos = { 95, 7, -24 },
-            size = { 4, 14, 24 },
-            color = "ConcreteDark",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "KeepEastS",
-            pos = { 95, 7, 24 },
-            size = { 4, 14, 24 },
-            color = "ConcreteDark",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "KeepCore",
-            pos = { 58, 5, 0 },
-            size = { 16, 10, 18 },
-            color = "Cover",
-            material = "Concrete",
-        },
-        {
-            kind = "block",
-            name = "KeepBalcony",
-            pos = { 58, 11.5, 22 },
-            size = { 28, 1, 10 },
-            color = "Steel",
-            material = "Metal",
-        },
-        { kind = "beacon", name = "KeepBeacon", pos = { 58, 21, 0 }, color = "Command" },
-
-        -- Exactly two outposts, each with a ground ramp and rear shield.
-        {
-            kind = "block",
-            name = "WestOutpostDeck",
-            pos = { -132, 7.5, -154 },
-            size = { 24, 1, 18 },
-            color = "Steel",
-            material = "Metal",
-        },
-        {
-            kind = "block",
-            name = "WestOutpostRamp",
-            pos = { -146, 3.6, -154 },
-            size = { 18, 1, 10 },
-            rot = { 0, 0, -25 },
-            color = "Steel",
-            material = "Metal",
-        },
-        {
-            kind = "block",
-            name = "WestOutpostShield",
-            pos = { -120, 10, -154 },
-            size = { 2, 6, 18 },
-            color = "ConcreteDark",
-        },
-        {
-            kind = "block",
-            name = "EastOutpostDeck",
-            pos = { 132, 7.5, 154 },
-            size = { 24, 1, 18 },
-            color = "Steel",
-            material = "Metal",
-        },
-        {
-            kind = "block",
-            name = "EastOutpostRamp",
-            pos = { 146, 3.6, 154 },
-            size = { 18, 1, 10 },
-            rot = { 0, 0, -25 },
-            color = "Steel",
-            material = "Metal",
-        },
-        {
-            kind = "block",
-            name = "EastOutpostShield",
-            pos = { 120, 10, 154 },
-            size = { 2, 6, 18 },
-            color = "ConcreteDark",
-        },
-
-        -- Exterior cover breaks long sightlines without sealing a lane.
-        { kind = "block", name = "WestNorthCoverA", pos = { -158, 3, -62 }, size = { 18, 6, 8 }, color = "Cover" },
-        { kind = "block", name = "WestNorthCoverB", pos = { -112, 3, -96 }, size = { 10, 6, 18 }, color = "Cover" },
-        { kind = "block", name = "WestSouthCoverA", pos = { -158, 3, 62 }, size = { 18, 6, 8 }, color = "Cover" },
-        { kind = "block", name = "WestSouthCoverB", pos = { -112, 3, 96 }, size = { 10, 6, 18 }, color = "Cover" },
-        { kind = "block", name = "EastNorthCoverA", pos = { 158, 3, -62 }, size = { 18, 6, 8 }, color = "Cover" },
-        { kind = "block", name = "EastNorthCoverB", pos = { 112, 3, -96 }, size = { 10, 6, 18 }, color = "Cover" },
-        { kind = "block", name = "EastSouthCoverA", pos = { 158, 3, 62 }, size = { 18, 6, 8 }, color = "Cover" },
-        { kind = "block", name = "EastSouthCoverB", pos = { 112, 3, 96 }, size = { 10, 6, 18 }, color = "Cover" },
+    -- No grapple routes in the new authoritative sketch.
+    GrappleAnchors = {},
+    ReviewViews = {
+        { Name = "01-overhead", Eye = { 0, 470, 0 }, Look = { 0, 0, 0 }, Up = { 0, 0, -1 } },
+        { Name = "02-blue-spawn", Eye = { -210, 6, 0 }, Look = { 0, 10, 0 } },
+        { Name = "03-red-spawn", Eye = { 210, 6, 0 }, Look = { 0, 10, 0 } },
+        { Name = "04-capture-a", Eye = { 0, 6, -143 }, Look = { 0, 8, -35 } },
+        { Name = "05-capture-b", Eye = { 0, 6, 143 }, Look = { 0, 8, 35 } },
+        { Name = "06-capture-c", Eye = { -16, 24, 16 }, Look = { 18, 22, -18 } },
+        { Name = "07-northwest-outpost", Eye = { -145, 24, -126 }, Look = { 0, 20, 0 } },
+        { Name = "08-southeast-outpost", Eye = { 145, 24, 126 }, Look = { 0, 20, 0 } },
+        { Name = "09-southwest-zip", Eye = { -162, 7, 142 }, Look = { -60, 20, 46 } },
+        { Name = "10-northeast-zip", Eye = { 162, 7, -142 }, Look = { 60, 20, -46 } },
+        { Name = "11-second-story", Eye = { -61, 24, 43 }, Look = { 60, 19, -43 } },
+        { Name = "12-ground-entrances", Eye = { -115, 60, -105 }, Look = { 0, 3, 0 } },
     },
 }
 
--- Assemble a consistent fortress kit. Geometry remains map-owned; no mode logic.
-local function block(name, pos, size, color, material)
+local function block(name, pos, size, color, rot)
     table.insert(map.Center, {
         kind = "block",
         name = name,
         pos = pos,
         size = size,
-        color = color or "Concrete",
-        material = material or "Slate",
+        color = color or "Wall",
+        material = "SmoothPlastic",
+        rot = rot,
     })
 end
 
--- Four wall sections per side leave three 32-stud ground gates. Snow caps,
--- buttresses and corner towers give the perimeter a recognizable silhouette.
+-- Ground floor top at 4. Full upper floor at 18 except two stairwell slots.
+block("ExteriorFloor", { 0, -0.5, 0 }, { 490, 1, 370 }, "Floor")
+block("FortressGround", { 0, 2, 0 }, { 140, 4, 110 }, "Floor")
+block("UpperCentre", { 0, 17.5, 0 }, { 66, 1, 110 }, "Upper")
 for _, side in { -1, 1 } do
-    for index, section in { { -154, 48 }, { -56, 80 }, { 56, 80 }, { 154, 48 } } do
-        block("Curtain" .. side .. "_" .. index, { side * 104, 9, section[1] }, { 6, 18, section[2] })
+    block("UpperOuter" .. side, { side * 58.5, 17.5, 0 }, { 23, 1, 110 }, "Upper")
+    block("UpperBeforeStair" .. side, { side * 40, 17.5, -side * 27 }, { 14, 1, 56 }, "Upper")
+    block("UpperAfterStair" .. side, { side * 40, 17.5, side * 46 }, { 14, 1, 18 }, "Upper")
+    -- Split low walls around cardinal doors and launch corridors at z +/-30.
+    for _, z in { -48, -15, 15, 48 } do
+        block("SideWall" .. side .. "_" .. z, { side * 69, 8, z }, { 2, 8, 10 })
+    end
+    for _, x in { -42, 42 } do
+        block("EndWall" .. side .. "_" .. x, { x, 8, side * 54 }, { 54, 8, 2 })
+        block("Support" .. side .. "_" .. x, { x, 10.5, side * 46 }, { 3, 13, 3 })
+    end
+    -- Guard only the stairwell sides and low end; the upper exit stays open.
+    for _, edge in { -1, 1 } do
+        block("StairRail" .. side .. edge, { side * 40 + edge * 7.5, 20, side * 19 }, { 1, 4, 36 })
+    end
+    block("StairBackRail" .. side, { side * 40, 20, side * 0.5 }, { 16, 4, 1 })
+end
+
+-- Four cardinal ramps: 4-stud rise, 20-degree incline, 24-stud width.
+local angle = 20
+local run = 4 / math.tan(math.rad(angle))
+local length = math.sqrt(run * run + 4 * 4)
+block("RampWest", { -70 - run / 2, 1.75, 0 }, { length, 0.5, 24 }, "Ramp", { 0, 0, angle })
+block("RampEast", { 70 + run / 2, 1.75, 0 }, { length, 0.5, 24 }, "Ramp", { 0, 0, -angle })
+block("RampNorth", { 0, 1.75, -55 - run / 2 }, { length, 0.5, 24 }, "Ramp", { 0, 90, -angle })
+block("RampSouth", { 0, 1.75, 55 + run / 2 }, { length, 0.5, 24 }, "Ramp", { 0, 90, angle })
+
+-- Two straightforward stairs connect both upper landings to the ground floor.
+-- Each rises through its dedicated floor cutout, never through an overhead slab.
+for _, side in { -1, 1 } do
+    for step = 1, 14 do
         block(
-            "WallSnow" .. side .. "_" .. index,
-            { side * 104, 18.3, section[1] },
-            { 7, 0.6, section[2] },
-            "Snow",
-            "Snow"
+            "UpperStair" .. side .. "_" .. step,
+            { side * 40, 4 + step / 2, side * (1 + step * 2.5) },
+            { 10, step, 2.5 },
+            "Ramp"
         )
     end
-    for _, z in { -112, 0, 112 } do
-        block("GateLintel" .. side .. "_" .. z, { side * 104, 19, z }, { 8, 4, 32 }, "Steel", "Metal")
-        for _, edge in { -1, 1 } do
-            block("GatePier" .. side .. "_" .. z .. "_" .. edge, { side * 104, 10, z + edge * 18 }, { 10, 20, 5 })
-        end
-    end
-    block("EndWall" .. side, { 0, 9, side * 178 }, { 208, 18, 6 })
-    block("EndSnow" .. side, { 0, 18.3, side * 178 }, { 208, 0.6, 7 }, "Snow", "Snow")
-    for _, x in { -104, 104 } do
-        block("Tower" .. side .. "_" .. x, { x, 14, side * 178 }, { 18, 28, 18 }, "ConcreteDark")
-        block("TowerCrown" .. side .. "_" .. x, { x, 28, side * 178 }, { 22, 2, 22 }, "Steel", "Metal")
-        block("TowerSnow" .. side .. "_" .. x, { x, 29.3, side * 178 }, { 22, 0.6, 22 }, "Snow", "Snow")
-    end
-    -- A front screen splits each staging pocket into two protected exits.
-    block("SpawnScreen" .. side, { side * 185, 6, 0 }, { 4, 12, 26 })
-end
-map.Palette.Snow = Color3.fromRGB(235, 242, 250)
-
--- Keep lies on the centre line: neither exterior spawn gets a short direct run.
--- Gate and yard remain offset, with opposing-side route timings to be playtested.
-for _, piece in map.Center do
-    if piece.name == "GatePylonW" or piece.name == "GatePylonE" then
-        piece.pos[3] = -150
-        piece.size[3] = 18
-    end
-    if piece.name:sub(1, 4) == "Keep" then
-        piece.pos[1] -= 58
-    end
-end
-map.Objectives[3].pos[1] = 0
-map.SafeRegions[3].pos[1] = 0
-map.SafePoints[5].pos[1] = -28
-map.SafePoints[6].pos[1] = 28
-for _, route in map.GroundRoutes do
-    if route.DistrictId ~= "keep" and route.Side ~= "Both" then
-        local side = route.Side == "Red" and -1 or 1
-        local direction = route.DistrictId == "gate" and -1 or 1
-        route.From = { side * 190, 1, direction * 24 }
-        route.Waypoints = {
-            route.From,
-            { side * 150, 1, direction * 112 },
-            { side * 104, 1, direction * 112 },
-            { side * 82, 1, direction * 122 },
-            route.To,
-        }
-    end
-    if route.DistrictId == "keep" then
-        route.To[1] -= 58
-        -- Re-author these lanes to pass through the actual centre gates and doors.
-        if route.Side == "Red" then
-            route.Waypoints = { { -190, 1, -24 }, { -160, 1, 0 }, { -104, 1, 0 }, { -28, 1, 0 } }
-        elseif route.Side == "Blue" then
-            route.Waypoints = { { 190, 1, 24 }, { 160, 1, 0 }, { 104, 1, 0 }, { 28, 1, 0 } }
-        else
-            for _, point in route.Waypoints do
-                point[1] -= 58
-            end
-        end
-        route.From = route.Waypoints[1]
-        route.To = route.Waypoints[#route.Waypoints]
-    end
 end
 
--- Replace the detached, wrongly sloped outpost ramps with two stair approaches.
--- One-stud rises over 2.5-stud treads; top meets the eight-stud deck.
-for index = #map.Center, 1, -1 do
-    if map.Center[index].name:find("OutpostRamp") then
-        table.remove(map.Center, index)
+for _, team in { "Blue", "Red" } do
+    local side = team == "Blue" and -1 or 1
+    for index = 1, 6 do
+        table.insert(map.Spawns[team], { side * 210, 0, (index - 3.5) * 8 })
     end
-end
-for _, outpost in map.SniperOutposts do
-    local x, z = outpost.pos[1], outpost.pos[3]
+    -- Open exterior staging. A detached screen interrupts spawn shooting lanes;
+    -- no enclosing bunker or fortified starting structure.
+    block(team .. "SightlineScreen", { side * 179, 7, 0 }, { 3, 14, 58 })
     for _, direction in { -1, 1 } do
-        for step = 1, 8 do
+        table.insert(map.LaunchPads, {
+            Id = team .. (direction == -1 and "-north-launch" or "-south-launch"),
+            pos = { side * 115, 0.3, direction * 30 },
+            target = { side * 48, 6.5, direction * 30 },
+            vy = 62,
+            size = 8,
+            GroundAlternative = team:lower() .. "-centre",
+        })
+        table.insert(map.GroundRoutes, {
+            Id = team:lower() .. (direction == -1 and "-north" or "-south"),
+            DistrictId = direction == -1 and "gate" or "yard",
+            Side = team,
+            Kind = "covered",
+            From = { side * 210, 1, direction * 24 },
+            To = { 0, 1, direction * 128 },
+            Waypoints = {
+                { side * 210, 1, direction * 24 },
+                { side * 180, 1, direction * 48 },
+                { side * 95, 1, direction * 95 },
+                { 0, 1, direction * 128 },
+            },
+        })
+        block("ApproachCover" .. team .. direction, { side * 130, 3, direction * 70 }, { 16, 6, 8 }, "Cover")
+    end
+    table.insert(map.GroundRoutes, {
+        Id = team:lower() .. "-centre",
+        DistrictId = "keep",
+        Side = team,
+        Kind = "direct",
+        From = { side * 210, 1, 0 },
+        To = { 0, 5, 0 },
+        Waypoints = {
+            { side * 210, 1, 0 },
+            { side * 190, 1, 38 },
+            { side * 160, 1, 38 },
+            { side * 95, 1, 0 },
+            { side * 70, 5, 0 },
+            { 0, 5, 0 },
+        },
+    })
+end
+
+for _, direction in { -1, 1 } do
+    table.insert(map.GroundRoutes, {
+        Id = direction == -1 and "north-ramp" or "south-ramp",
+        DistrictId = "keep",
+        Side = "Both",
+        Kind = "direct",
+        From = { 0, 1, direction * 128 },
+        To = { 0, 5, 0 },
+        Waypoints = { { 0, 1, direction * 128 }, { 0, 1, direction * 72 }, { 0, 5, direction * 54 }, { 0, 5, 0 } },
+    })
+    -- Sketch's NE/SW walls stand beside, not across, the diagonal zip routes.
+    block("ZipSightlineWall" .. direction, { direction * 115, 7, -direction * 141 }, { 3, 14, 36 })
+end
+
+for _, post in map.SniperOutposts do
+    local x, z = post.pos[1], post.pos[3]
+    block(post.Id .. "LowerFloor", { x, 0.5, z }, { 28, 1, 26 }, "Floor")
+    block(post.Id .. "Deck", { x, 17.5, z }, { 28, 1, 26 }, "Upper")
+    block(post.Id .. "Roof", { x, 29.5, z }, { 30, 1, 28 })
+    for _, direction in { -1, 1 } do
+        for step = 1, 18 do
             block(
-                outpost.Id .. "Stair" .. direction .. "_" .. step,
-                { x, step / 2, z + direction * (29 - step * 2.5) },
-                { 9, step, 2.5 },
-                "Steel",
-                "Metal"
+                post.Id .. "Stair" .. direction .. "_" .. step,
+                { x + direction * (59 - step * 2.5), step / 2, z },
+                { 2.5, step, 10 },
+                "Ramp"
             )
         end
+        -- Lower-level shelter; two open side doors beneath the firing deck.
+        block(post.Id .. "LowerWall" .. direction, { x, 8.5, z + direction * 12 }, { 28, 15, 2 })
+        -- Upper firing slit: sill top 21.5, header bottom 25.5, roof at 29.
+        block(post.Id .. "Sill" .. direction, { x, 19.75, z + direction * 12 }, { 28, 3.5, 2 }, "Cover")
+        block(post.Id .. "Header" .. direction, { x, 27.25, z + direction * 12 }, { 28, 3.5, 2 })
+        block(post.Id .. "WindowDivider" .. direction, { x, 23.5, z + direction * 12 }, { 4, 4, 2 })
+        for _, corner in { -1, 1 } do
+            block(post.Id .. "Corner" .. direction .. corner, { x + direction * 13, 15, z + corner * 10 }, { 2, 28, 6 })
+        end
+    end
+    -- Keep the original spawn-facing shield, now tall enough for the upper deck.
+    local towardsSpawn = z < 0 and 1 or -1
+    block(post.Id .. "SpawnShield", { x, 23.5, z + towardsSpawn * 12 }, { 28, 11, 2 })
+end
+
+-- Ordinary approaches to C continue up an existing stair, then onto its floor.
+for _, route in map.GroundRoutes do
+    if route.DistrictId == "keep" then
+        local side = route.Side == "Blue" and -1 or 1
+        table.insert(route.Waypoints, { side * 40, 5, 0 })
+        table.insert(route.Waypoints, { side * 40, 19, side * 40 })
+        table.insert(route.Waypoints, { 0, 19, side * 40 })
+        table.insert(route.Waypoints, { 0, 19, 0 })
+        route.To = { 0, 19, 0 }
     end
 end
 
--- Low zip origins are reachable from ground and pass through the open gates.
-for _, line in map.ZipLines do
-    local side = line.From[1] < 0 and -1 or 1
-    local z = line.From[3] < 0 and -112 or 112
-    line.From = { side * 150, 4, z }
-    line.To = { side * 76, 4, z }
-end
-for index, pad in map.LaunchPads do
-    local side = index == 1 and -1 or 1
-    local z = 0
-    pad.pos = { side * 150, 0.3, z }
-    pad.target = { side * 76, 1, z }
-    pad.GroundAlternative = index == 1 and "keep-west-arc" or "keep-east-arc"
-end
--- The straight cable travels through the open gate, below its 17-stud lintel.
--- Grapples terminate on real ledges rather than floating points.
-for index, anchor in map.GrappleAnchors do
-    if anchor.Id == "keep-balcony" then
-        anchor.From = { -28, 4, 22 }
-        anchor.To = { -10, 15, 22 }
-    else
-        local x, z = anchor.To[1], anchor.To[3]
-        local height = anchor.To[2] - 3
-        anchor.From[2] = 4
-        block("GrappleLedge" .. index, { x, height - 0.5, z }, { 14, 1, 10 }, "Steel", "Metal")
-        for step = 1, height do
-            block(
-                "GrappleStep" .. index .. "_" .. step,
-                { x + 8 + (height - step) * 2.5, step / 2, z },
-                { 2.5, step, 8 },
-                "Steel",
-                "Metal"
-            )
-        end
-    end
-end
-for step = 1, 12 do
-    block("KeepBalconyStep" .. step, { -19, step / 2, -11 + step * 2.5 }, { 8, step, 2.5 }, "Steel", "Metal")
-end
-block("KeepBalconyJoin", { -14, 11.5, 22 }, { 10, 1, 10 }, "Steel", "Metal")
-
--- Architectural detail is grouped into large readable shapes, not tiny clutter.
-for _, z in { -178, 178 } do
-    for x = -80, 80, 20 do
-        block("Buttress" .. x .. "_" .. z, { x, 10, z }, { 4, 20, 10 })
-        block("Battlement" .. x .. "_" .. z, { x, 20, z }, { 8, 4, 7 })
-    end
-end
-block("KeepSignalTower", { 0, 20, 0 }, { 12, 20, 12 }, "ConcreteDark")
-block("KeepSignalCrown", { 0, 31, 0 }, { 16, 2, 16 }, "Steel", "Metal")
-block("KeepSignalSnow", { 0, 32.3, 0 }, { 16, 0.6, 16 }, "Snow", "Snow")
+local AlpineFortress = require(script.Parent.Parent.MapArt.AlpineFortress)
+AlpineFortress.applyMap(map)
 
 return map

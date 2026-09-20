@@ -1,5 +1,7 @@
 # Snow Fortress — Convergence redesign specification
 
+> Topology superseded by the user's [authoritative sketch specification](SNOW_FORTRESS_MAP_SPEC.md). Use [graybox v3](docs/reviews/snow-fortress/graybox-v3.md) for current implementation and testing. Older district positions, team orientation and traversal counts below are historical; finale rules remain applicable.
+
 Version 1.1 · 2026-09-20 · Status: implementation underway; see [implementation status](docs/reviews/snow-fortress/implementation-status.md) for verified work and remaining gates.
 
 The user has locked opposite exterior starts, district combat identities, server-selected eligible finales without consecutive repeats, a phase-2 reveal, and bounded traversal. See [Traversal and Combat](FORTRESS_TRAVERSAL_AND_COMBAT_SPEC.md) for the authoritative FIN-01–05 selection/reveal contract. These decisions supersede the original fixed Command Keep finale.
