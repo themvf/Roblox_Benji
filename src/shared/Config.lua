@@ -16,7 +16,7 @@ local Config = {
     MapVoteOptions = 3, -- candidates offered; capped by how many maps the mode's rotation has
 
     -- Convergence (featured objective mode). Every number here is a Tuning attribute too.
-    ConvergenceMaps = { "Carrier", "Forest", "Snow", "SnowFortress" },
+    ConvergenceMaps = { "Carrier", "Forest", "Snow", "SnowFortress", "Swamp" },
     Convergence = {
         TeamSize = 1, -- TESTING: design target is 6 (set Convergence_TeamSize in Tuning or here)
         MinTeamSize = 1, -- TESTING: design fallback is 4
