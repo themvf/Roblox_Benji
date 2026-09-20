@@ -81,7 +81,12 @@ local function applyStats(tool, name, stats)
     setValue(config, "StartupTime", "NumberValue", stats.EquipTime)
     setValue(config, "MinSpread", "NumberValue", stats.Spread * 0.5)
     setValue(config, "MaxSpread", "NumberValue", stats.Spread)
-    setValue(config, "FullDamageDistance", "NumberValue", stats.DropoffStart == math.huge and 100000 or stats.DropoffStart)
+    setValue(
+        config,
+        "FullDamageDistance",
+        "NumberValue",
+        stats.DropoffStart == math.huge and 100000 or stats.DropoffStart
+    )
     setValue(config, "ZeroDamageDistance", "NumberValue", zeroDistance(stats))
     setValue(config, "BulletSpeed", "NumberValue", 20000) -- effectively hitscan, like Rivals
     setValue(config, "GravityFactor", "NumberValue", 0)
@@ -207,12 +212,24 @@ local function buildJetpack()
     body.Parent = pack
     pack.PrimaryPart = body
     for i, x in { -0.5, 0.5 } do
-        local tank = part("Tank" .. i, Vector3.new(0.55, 1.9, 0.55), Color3.fromRGB(255, 120, 40), Enum.Material.SmoothPlastic, Enum.PartType.Cylinder)
+        local tank = part(
+            "Tank" .. i,
+            Vector3.new(0.55, 1.9, 0.55),
+            Color3.fromRGB(255, 120, 40),
+            Enum.Material.SmoothPlastic,
+            Enum.PartType.Cylinder
+        )
         tank.Anchored = true
         tank.CFrame = body.CFrame * CFrame.new(x, 0, 0.1) * CFrame.Angles(0, 0, math.rad(90))
         tank.Parent = pack
         weld(body, tank, CFrame.new(x, 0, 0.1) * CFrame.Angles(0, 0, math.rad(90)))
-        local nozzle = part("Nozzle" .. i, Vector3.new(0.35, 0.35, 0.35), Color3.fromRGB(60, 60, 70), Enum.Material.Metal, Enum.PartType.Cylinder)
+        local nozzle = part(
+            "Nozzle" .. i,
+            Vector3.new(0.35, 0.35, 0.35),
+            Color3.fromRGB(60, 60, 70),
+            Enum.Material.Metal,
+            Enum.PartType.Cylinder
+        )
         nozzle.Anchored = true
         nozzle.CFrame = body.CFrame * CFrame.new(x, -1.15, 0.1) * CFrame.Angles(0, 0, math.rad(90))
         nozzle.Parent = pack

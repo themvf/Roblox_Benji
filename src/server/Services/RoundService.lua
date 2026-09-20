@@ -237,14 +237,22 @@ function RoundService:KnitStart()
             local name = msg:match("^/map%s+(%a+)")
             if name then
                 local tuning = ReplicatedStorage:FindFirstChild("Tuning")
-                local pretty = name:sub(1, 1):upper() .. name:sub(2):lower()
-                if tuning and (pretty == "Off" or pretty == "None") then
+                local lower = name:lower()
+                -- match the real module name case-insensitively: title-casing breaks SnowFortress
+                local found
+                for _, m in ReplicatedStorage.Shared.Maps:GetChildren() do
+                    if m.Name:lower() == lower then
+                        found = m.Name
+                        break
+                    end
+                end
+                if tuning and (lower == "off" or lower == "none") then
                     tuning:SetAttribute("Debug_ForceMap", "")
                     Knit.GetService("SafetyService").Client.Notice:Fire(player, "Map override off: normal rotation")
-                elseif tuning and ReplicatedStorage.Shared.Maps:FindFirstChild(pretty) then
-                    tuning:SetAttribute("Debug_ForceMap", pretty)
+                elseif tuning and found then
+                    tuning:SetAttribute("Debug_ForceMap", found)
                     Knit.GetService("SafetyService").Client.Notice
-                        :Fire(player, "Next Convergence map forced to: " .. pretty)
+                        :Fire(player, "Next Convergence map forced to: " .. found)
                 else
                     Knit.GetService("SafetyService").Client.Notice:Fire(player, "Unknown map: " .. name)
                 end

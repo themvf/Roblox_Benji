@@ -244,7 +244,7 @@ local function los(bot, target)
 end
 
 local function inZone(pos, z)
-    return flat(z.Position - pos).Magnitude <= z.Radius
+    return flat(z.Position - pos).Magnitude <= z.Radius and math.abs(pos.Y - z.Position.Y) <= (z.HalfHeight or 12)
 end
 
 -- S9 target scoring
@@ -1029,7 +1029,7 @@ function BotService:CountInZone(zone)
     for _, b in self.Bots do
         if b.Alive and b.Character.Parent and b.Root then
             local d = b.Root.Position - zone.Position
-            if flat(d).Magnitude <= zone.Radius and math.abs(d.Y) <= 12 then
+            if flat(d).Magnitude <= zone.Radius and math.abs(d.Y) <= (zone.HalfHeight or 12) then
                 counts[b.Team] += 1
             end
         end

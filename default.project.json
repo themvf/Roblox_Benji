@@ -47,8 +47,8 @@
           "Convergence_ZoneCloseWarningSeconds": 15,
           "Convergence_RespawnSeconds": 3.5,
           "Convergence_SpawnProtectSeconds": 2,
-          "Convergence_BotsPerTeam": 0,
-          "Debug_ForceMap": "",
+          "Convergence_BotsPerTeam": 5,
+          "Debug_ForceMap": "SnowFortress",
           "Debug_CarrierTestSafety": true,
           "Debug_CountBotMatches": true,
           "Debug_ForceTouchUi": false

@@ -259,7 +259,7 @@ function TouchController:Update()
     if jet.Active and jet.MaxFuel > 0 then
         local frac = jet.Fuel / jet.MaxFuel
         self.Fly.Fill.Size = UDim2.fromScale(1, frac)
-        self.Fly.Sub.Text = ("%d%%"):format(100 * frac)
+        self.Fly.Sub.Text = ("HOLD %d%%"):format(100 * frac)
         self.Fly.Ring.Transparency = jet.Fuel > 0 and 0.2 or 0.8
     end
 
@@ -279,7 +279,7 @@ function TouchController:Update()
     self.Mutate.Button.Visible = not mutated
     if not mutated then
         self.Mutate.Fill.Size = UDim2.fromScale(1, energy / AlterEgos.Energy.Cap)
-        self.Mutate.Sub.Text = ready and "TAP!" or ("%d%%"):format(energy)
+        self.Mutate.Sub.Text = ready and "READY" or ("%d%%"):format(100 * energy / AlterEgos.Energy.Cap)
         self.Mutate.Label.TextColor3 = ready and TEXT or MUTED
         local pulse = ready and (0.5 + 0.5 * math.sin(os.clock() * 6)) or 0
         self.Mutate.Ring.Transparency = ready and (0.6 - 0.6 * pulse) or 0.7
@@ -294,7 +294,7 @@ function TouchController:Update()
             local cdLeft = math.max(0, cdEnd - nowServer)
             local progress = def.Cooldown > 0 and 1 - math.min(1, cdLeft / def.Cooldown) or 1
             b.Fill.Size = UDim2.fromScale(1, progress)
-            b.Sub.Text = cdLeft > 0 and ("%.1f"):format(cdLeft) or "READY"
+            b.Sub.Text = cdLeft > 0 and ("%.1fs"):format(cdLeft) or "READY"
             b.Label.TextColor3 = cdLeft > 0 and MUTED or TEXT
             b.Ring.Transparency = cdLeft > 0 and 0.7 or 0.1
         end

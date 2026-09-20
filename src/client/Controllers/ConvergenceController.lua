@@ -3,9 +3,12 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
+local SoundService = game:GetService("SoundService")
+local Debris = game:GetService("Debris")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Screen = require(script.Parent.Parent.UI.Screen)
 local Theme = require(script.Parent.Parent.UI.Theme)
+local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
 local ConvergenceController = Knit.CreateController({ Name = "ConvergenceController" })
 
@@ -18,6 +21,7 @@ local CLOSED = Theme.Team.Closed
 local PANEL = Theme.Color.Panel
 local TEXT = Theme.Color.Text
 local ACCENT = Theme.Color.Accent
+local MUTED_ACCENT = Color3.fromRGB(150, 140, 110)
 
 local function corner(inst, r)
     local c = Instance.new("UICorner")
@@ -50,6 +54,8 @@ function ConvergenceController:BuildGui()
     root.Parent = gui
 
     -- Top bar: RED score | phase + clock | BLUE score
+    -- One line, not three: "RED 47 | PHASE 1 . 1:24 | 0 BLUE". Vertical space at the top of the
+    -- screen is sightline, and the player is usually aiming through it.
     local top = Instance.new("Frame")
     top.AnchorPoint = Vector2.new(0.5, 0)
     top.Size = UDim2.fromOffset(420, 54)
@@ -75,24 +81,27 @@ function ConvergenceController:BuildGui()
     self.RedScore = score(0.03, RED, Enum.TextXAlignment.Left)
     self.BlueScore = score(0.67, BLUE, Enum.TextXAlignment.Right)
 
+    -- phase is context, the clock is the thing you glance at: one line, clock weighted heavier
     local mid = Instance.new("TextLabel")
-    mid.Position = UDim2.new(0.33, 0, 0, 4)
-    mid.Size = UDim2.new(0.34, 0, 0, 22)
+    mid.Position = UDim2.new(0.30, 0, 0, 0)
+    mid.Size = UDim2.new(0.40, 0, 1, 0)
     mid.BackgroundTransparency = 1
     mid.Text = "PHASE 1"
     mid.TextSize = Theme.textSize(Theme.Type.Label)
     mid.Font = Enum.Font.GothamBold
-    mid.TextColor3 = ACCENT
+    mid.TextColor3 = MUTED_ACCENT
+    mid.TextXAlignment = Enum.TextXAlignment.Left
     mid.Parent = top
     self.PhaseLabel = mid
     local clock = Instance.new("TextLabel")
-    clock.Position = UDim2.new(0.33, 0, 0, 24)
-    clock.Size = UDim2.new(0.34, 0, 0, 26)
+    clock.Position = UDim2.new(0.30, 0, 0, 0)
+    clock.Size = UDim2.new(0.40, 0, 1, 0)
     clock.BackgroundTransparency = 1
     clock.Text = "3:00"
     clock.TextSize = Theme.textSize(Theme.Type.Title)
     clock.Font = Enum.Font.GothamBlack
     clock.TextColor3 = TEXT
+    clock.TextXAlignment = Enum.TextXAlignment.Right
     clock.Parent = top
     self.Clock = clock
 
@@ -110,21 +119,43 @@ function ConvergenceController:BuildGui()
     layout.SortOrder = Enum.SortOrder.LayoutOrder
     layout.Parent = row
     self.ZoneRow = row
+    local final = Instance.new("TextLabel")
+    final.Name = "FinalDistrict"
+    final.AnchorPoint = Vector2.new(0.5, 0)
+    final.Position = UDim2.new(0.5, 0, 0, 88)
+    final.Size = UDim2.new(0.8, 0, 0, 38)
+    final.BackgroundColor3 = PANEL
+    final.BackgroundTransparency = 0.1
+    final.TextColor3 = ACCENT
+    final.Font = Enum.Font.GothamBold
+    final.TextSize = 16
+    final.TextWrapped = true
+    final.Visible = false
+    final.Parent = gui
+    corner(final, 8)
+    self.FinalLabel = final
     self.Chips = {}
 
     -- Banner
+    -- Announcements sit ABOVE the crosshair, carry no panel behind them, and leave quickly.
+    -- A dark rectangle parked in the middle of the screen is a sight blocker; a stroked word is not.
     local banner = Instance.new("TextLabel")
     banner.AnchorPoint = Vector2.new(0.5, 0)
     banner.Size = UDim2.fromOffset(520, 44)
-    banner.BackgroundColor3 = PANEL
-    banner.BackgroundTransparency = Theme.Transparency.Panel
+    banner.BackgroundTransparency = 1
     banner.Text = ""
     banner.TextSize = Theme.textSize(Theme.Type.Title)
     banner.Font = Enum.Font.GothamBlack
     banner.TextColor3 = ACCENT
     banner.Visible = false
     banner.Parent = root
-    corner(banner, 10)
+    banner.TextWrapped = true
+    local stroke = Instance.new("UIStroke") -- legibility against snow without a container
+    stroke.Thickness = 2
+    stroke.Color = Color3.fromRGB(12, 14, 18)
+    stroke.Transparency = 0.15
+    stroke.Parent = banner
+    self.BannerStroke = stroke
     self.Banner = banner
 
     -- The stack is laid out top-down from the safe-area inset and re-laid out on every screen
@@ -142,26 +173,90 @@ function ConvergenceController:BuildGui()
     end)
 end
 
-function ConvergenceController:Chip(name)
-    local chip = self.Chips[name]
+-- Banner form of the same vocabulary: square, diamond, circle, bar. Keeps a banner a single
+-- TextLabel while still never naming an objective.
+local GLYPH_CHAR = { "\u{25A0}", "\u{25C6}", "\u{25CF}", "\u{25AE}" }
+
+local function glyphChar(index)
+    return GLYPH_CHAR[index or 0] or "\u{25CF}"
+end
+
+-- shared with other controllers (bounty pings) so there is one vocabulary, not two
+function ConvergenceController:GlyphChar(index)
+    return glyphChar(index)
+end
+
+-- The 2D twin of the world glyph (ConvergenceService.GLYPH_SHAPE): square, diamond, circle.
+-- Objectives carry no names anywhere, so the HUD has to teach the same vocabulary the world uses.
+local LETTER = { "A", "B", "C", "D" }
+
+local function glyphIcon(parent, index, size)
+    local holder = Instance.new("Frame")
+    holder.Name = "Glyph"
+    holder.BackgroundTransparency = 1
+    holder.Size = UDim2.fromOffset(size, size)
+    holder.Parent = parent
+
+    -- A/B/C, not a shape to decode. The shape vocabulary stays on the physical objectives in the
+    -- world, where it is the object; in the HUD a letter is understood with no learning at all.
+    local shape = Instance.new("TextLabel")
+    shape.Name = "Shape"
+    shape.AnchorPoint = Vector2.new(0.5, 0.5)
+    shape.Position = UDim2.fromScale(0.5, 0.5)
+    shape.Size = UDim2.fromOffset(size, size)
+    shape.BackgroundTransparency = 1
+    shape.Text = LETTER[index] or tostring(index)
+    shape.TextSize = math.floor(size * 0.95)
+    shape.Font = Enum.Font.GothamBlack
+    shape.TextColor3 = Color3.new(1, 1, 1)
+    shape.Parent = holder
+    return holder, shape
+end
+
+-- pip row: the same count the world shows under each objective
+local function pipRow(parent, index, dotSize)
+    local row = Instance.new("Frame")
+    row.Name = "Pips"
+    row.BackgroundTransparency = 1
+    row.Size = UDim2.fromOffset(index * (dotSize + 2), dotSize)
+    row.Parent = parent
+    local layout = Instance.new("UIListLayout")
+    layout.FillDirection = Enum.FillDirection.Horizontal
+    layout.Padding = UDim.new(0, 2)
+    layout.Parent = row
+    local dots = {}
+    for i = 1, index do
+        local d = Instance.new("Frame")
+        d.Name = "Pip" .. i
+        d.Size = UDim2.fromOffset(dotSize, dotSize)
+        d.BackgroundColor3 = Color3.new(1, 1, 1)
+        d.BorderSizePixel = 0
+        d.LayoutOrder = i
+        d.Parent = row
+        local c = Instance.new("UICorner")
+        c.CornerRadius = UDim.new(0.5, 0)
+        c.Parent = d
+        table.insert(dots, d)
+    end
+    return row, dots
+end
+
+function ConvergenceController:Chip(index)
+    local chip = self.Chips[index]
     if chip then
         return chip
     end
     local f = Instance.new("Frame")
-    f.Size = UDim2.fromOffset(130, 40)
+    f.Size = UDim2.fromOffset(56, 38)
     f.BackgroundColor3 = PANEL
     f.BackgroundTransparency = Theme.Transparency.Panel
     f.LayoutOrder = #self.ZoneRow:GetChildren()
     f.Parent = self.ZoneRow
     corner(f, 8)
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, 0, 0, 22)
-    label.BackgroundTransparency = 1
-    label.Text = name
-    label.TextSize = Theme.textSize(Theme.Type.Label)
-    label.Font = Enum.Font.GothamBold
-    label.TextColor3 = TEXT
-    label.Parent = f
+    local holder, shape = glyphIcon(f, index, 22)
+    holder.Position = UDim2.fromOffset(4, 2)
+    local pips, dots = pipRow(f, index, 4)
+    pips.Visible = false -- the letter is the identity; pips were belt and braces
     local back = Instance.new("Frame")
     back.Position = UDim2.new(0.08, 0, 0, 26)
     back.Size = UDim2.new(0.84, 0, 0, 8)
@@ -179,12 +274,24 @@ function ConvergenceController:Chip(name)
     stroke.Thickness = 2
     stroke.Color = NEUTRAL
     stroke.Parent = f
-    chip = { Frame = f, Label = label, Bar = bar, Stroke = stroke }
-    self.Chips[name] = chip
+    chip = { Frame = f, Shape = shape, Dots = dots, Bar = bar, Stroke = stroke }
+    local badge = Instance.new("TextLabel")
+    badge.Position = UDim2.fromOffset(24, 3)
+    badge.Size = UDim2.fromOffset(30, 17)
+    badge.BackgroundTransparency = 1
+    badge.Text = "FINAL"
+    badge.TextSize = 9
+    badge.Font = Enum.Font.GothamBlack
+    badge.TextColor3 = ACCENT
+    badge.Visible = false
+    badge.Parent = f
+    chip.FinalBadge = badge
+    self.Chips[index] = chip
     return chip
 end
 
 function ConvergenceController:Apply(snap)
+    self.ActiveMatchId = snap.MatchId
     self.Gui.Enabled = true
     self.RedScore.Text = tostring(math.floor(snap.Score.Red))
     self.BlueScore.Text = tostring(math.floor(snap.Score.Blue))
@@ -199,18 +306,73 @@ function ConvergenceController:Apply(snap)
                 zonesLive += 1
             end
         end
-        self.PhaseLabel.Text = ("PHASE %d   %d ZONE%s"):format(snap.Phase, zonesLive, zonesLive == 1 and "" or "S")
-        self.Clock.Text = ("%d:%02d"):format(math.floor(left / 60), math.floor(left % 60))
+        self.PhaseLabel.Text = ("PHASE %d"):format(snap.Phase) -- the chips below already show how many are live
+        -- Show the MATCH clock, not the phase clock. snap.TimeLeft was transmitted every tick and
+        -- read by no client file, while the phase clock clamped to 0:00 for the whole final phase.
+        -- How long the match has left is the thing a player actually needs; phase changes announce
+        -- themselves with a banner.
+        local matchLeft = math.max(0, snap.TimeLeft or left)
+        self.Clock.Text = ("%d:%02d"):format(math.floor(matchLeft / 60), math.floor(matchLeft % 60))
     end
-    for _, z in snap.Zones do
-        local chip = self:Chip(z.Name)
+    self.FinalLabel.Visible = false
+    for i, z in snap.Zones do
+        local chip = self:Chip(z.Index or i)
         local color = z.Closed and CLOSED or teamColor(z.Owner)
         chip.Stroke.Color = z.Contested and ACCENT or color
-        chip.Label.TextColor3 = z.Closed and CLOSED or TEXT
-        chip.Label.Text = z.Closed and (z.Name .. " (closed)") or z.Name
+        chip.Stroke.Thickness = z.IsFinal and 4 or 2
+        chip.FinalBadge.Visible = z.IsFinal == true
+        if z.IsFinal then
+            self.FinalLabel.Visible = true
+            self.FinalLabel.Text = snap.Phase == 2
+                    and ("FINAL: " .. z.Name:upper() .. "  •  2 DISTRICTS STILL ACTIVE")
+                or ("FINAL DISTRICT ACTIVE: " .. z.Name:upper())
+        end
+        -- closed reads as a dimmed, hollow glyph, matching how the world pillar goes dim
+        chip.Shape.TextColor3 = z.Closed and CLOSED or color
+        chip.Shape.TextTransparency = z.Closed and 0.45 or 0
+        for _, d in chip.Dots do
+            d.BackgroundColor3 = z.Closed and CLOSED or color
+            d.BackgroundTransparency = z.Closed and 0.45 or 0
+        end
         chip.Bar.BackgroundColor3 = teamColor(z.Capturing or z.Owner)
         chip.Bar.Size = UDim2.fromScale(z.Closed and 0 or math.clamp((z.Progress or 0) / 100, 0, 1), 1)
         chip.Frame.BackgroundTransparency = z.Closed and 0.6 or 0.25
+    end
+end
+
+function ConvergenceController:RevealFinale(data)
+    if self.RevealedMatchId == data.MatchId or (self.ActiveMatchId and data.MatchId < self.ActiveMatchId) then
+        return
+    end
+    self.RevealedMatchId = data.MatchId
+    self.FinalLabel.Text = "FINAL: " .. data.Name:upper() .. "  •  2 DISTRICTS STILL ACTIVE"
+    self.FinalLabel.Visible = true
+    self:ShowBanner("FINAL DISTRICT: " .. data.Name:upper(), ACCENT)
+    local soundId = Uploads.resolve("upload:FinaleReveal_" .. data.Id) or Uploads.resolve("upload:FinaleReveal")
+    if soundId then
+        local sound = Instance.new("Sound")
+        sound.SoundId = soundId
+        sound.Volume = 0.7
+        sound.Parent = SoundService
+        sound:Play()
+        Debris:AddItem(sound, 12)
+    end
+    local tuning = ReplicatedStorage:FindFirstChild("Tuning")
+    if tuning and tuning:GetAttribute("UI_ReducedMotion") == true then
+        return -- persistent text and marker carry the reveal without motion or audio
+    end
+    local folder = workspace:FindFirstChild("Objectives")
+    for _, object in folder and folder:GetChildren() or {} do
+        if object:IsA("BasePart") and object:GetAttribute("ObjectiveId") == data.Id then
+            local pulse = Instance.new("Highlight")
+            pulse.Adornee = object
+            pulse.FillTransparency = 1
+            pulse.OutlineColor = ACCENT
+            pulse.OutlineTransparency = 0
+            pulse.Parent = object
+            TweenService:Create(pulse, TweenInfo.new(1.5), { OutlineTransparency = 1 }):Play()
+            Debris:AddItem(pulse, 1.6)
+        end
     end
 end
 
@@ -220,19 +382,20 @@ function ConvergenceController:ShowBanner(text, color)
     b.TextColor3 = color or ACCENT
     b.Visible = true
     b.TextTransparency = 0
-    b.BackgroundTransparency = Theme.Transparency.Panel
+    self.BannerStroke.Transparency = 0.15
     if self.BannerToken then
         self.BannerToken = self.BannerToken + 1
     else
         self.BannerToken = 1
     end
     local token = self.BannerToken
-    task.delay(2.2, function()
+    task.delay(1.5, function()
         if self.BannerToken ~= token then
             return
         end
-        TweenService:Create(b, TweenInfo.new(0.4), { TextTransparency = 1, BackgroundTransparency = 1 }):Play()
-        task.delay(0.4, function()
+        TweenService:Create(b, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
+        TweenService:Create(self.BannerStroke, TweenInfo.new(0.3), { Transparency = 1 }):Play()
+        task.delay(0.3, function()
             if self.BannerToken == token then
                 b.Visible = false
             end
@@ -247,14 +410,16 @@ function ConvergenceController:KnitStart()
         self:Apply(snap)
     end)
     svc.Event:Connect(function(kind, data)
-        if kind == "ZoneCaptured" then
-            self:ShowBanner((data.Team or ""):upper() .. " CAPTURED " .. data.Zone:upper(), teamColor(data.Team))
+        if kind == "FinaleRevealed" then
+            self:RevealFinale(data)
+        elseif kind == "ZoneCaptured" then
+            self:ShowBanner((data.Team or ""):upper() .. " CAPTURED " .. glyphChar(data.Index), teamColor(data.Team))
         elseif kind == "ZoneNeutralized" then
-            self:ShowBanner(data.Zone:upper() .. " NEUTRALIZED", NEUTRAL)
+            self:ShowBanner(glyphChar(data.Index) .. " NEUTRALIZED", NEUTRAL)
         elseif kind == "ZoneClosing" then
-            self:ShowBanner(data.Zone:upper() .. " CLOSING IN " .. data.Seconds .. "s", ACCENT)
+            self:ShowBanner(glyphChar(data.Index) .. " CLOSING IN " .. data.Seconds .. "s", ACCENT)
         elseif kind == "ZoneClosed" then
-            self:ShowBanner(data.Zone:upper() .. " CLOSED", CLOSED)
+            self:ShowBanner(glyphChar(data.Index) .. " CLOSED", CLOSED)
         elseif kind == "Phase" then
             self:ShowBanner(
                 ("PHASE %d   %d ZONE%s"):format(data.Phase, data.Zones, data.Zones == 1 and "" or "S"),

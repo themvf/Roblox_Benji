@@ -39,6 +39,9 @@ function TuningService:EnsureSetup()
         tuning.Name = "Tuning"
         tuning.Parent = ReplicatedStorage
     end
+    if tuning:GetAttribute("UI_ReducedMotion") == nil then
+        tuning:SetAttribute("UI_ReducedMotion", false)
+    end
     for _, key in TUNABLE do
         if tuning:GetAttribute(key) == nil then
             tuning:SetAttribute(key, Config[key])
@@ -50,6 +53,61 @@ function TuningService:EnsureSetup()
     end
     if tuning:GetAttribute("Debug_CarrierTestSafety") == nil then
         tuning:SetAttribute("Debug_CarrierTestSafety", true)
+    end
+    if tuning:GetAttribute("Debug_ForceCarrier") == nil then
+        tuning:SetAttribute("Debug_ForceCarrier", false) -- pin Convergence to the Carrier (skips rotation + vote)
+    end
+    -- pre-match map vote
+    if tuning:GetAttribute("MapVote_Enabled") == nil then
+        tuning:SetAttribute("MapVote_Enabled", true)
+    end
+    if tuning:GetAttribute("MapVote_Seconds") == nil then
+        tuning:SetAttribute("MapVote_Seconds", 15)
+    end
+    if tuning:GetAttribute("MapVote_Candidates") == nil then
+        tuning:SetAttribute("MapVote_Candidates", 3)
+    end
+    -- PhaseSeconds cannot be an attribute (arrays are not attribute-legal), so it is exposed as
+    -- two scalars. The final phase is derived from Convergence_HardCapSeconds minus phases 1/2.
+    -- A legacy Phase3Seconds attribute, if present, is not used.
+    local phases = Config.Convergence.PhaseSeconds or { 180, 180, 180 }
+    for i = 1, 2 do
+        local key = ("Convergence_Phase%dSeconds"):format(i)
+        if tuning:GetAttribute(key) == nil then
+            tuning:SetAttribute(key, phases[i] or 180)
+        end
+    end
+    -- arena camera framing (CameraController) -- experiment, tune while moving
+    for key, default in
+        {
+            Camera_ArenaFraming = true,
+            Camera_Zoom = 14,
+            Camera_MinZoom = 10,
+            Camera_MaxZoom = 20,
+            Camera_HeightOffset = 1.5,
+        }
+    do
+        if tuning:GetAttribute(key) == nil then
+            tuning:SetAttribute(key, default)
+        end
+    end
+    -- combat readability (ReadabilityService): restrained team outline + effect taming
+    for key, default in
+        {
+            Readability_Outline = true,
+            Readability_OutlineTransparency = 0.55,
+            Readability_FillTransparency = 0.93,
+            Readability_TameEffects = true,
+            Readability_MaxParticleRate = 15,
+            Readability_MaxParticleSize = 1.5,
+            Readability_MaxTrailLifetime = 0.4,
+            Readability_MaxLightBrightness = 1,
+            Readability_MaxLightRange = 8,
+        }
+    do
+        if tuning:GetAttribute(key) == nil then
+            tuning:SetAttribute(key, default)
+        end
     end
     if tuning:GetAttribute("Debug_CountBotMatches") == nil then
         tuning:SetAttribute("Debug_CountBotMatches", true) -- dev: bot matches count for stats/streaks

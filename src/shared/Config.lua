@@ -16,7 +16,7 @@ local Config = {
     MapVoteOptions = 3, -- candidates offered; capped by how many maps the mode's rotation has
 
     -- Convergence (featured objective mode). Every number here is a Tuning attribute too.
-    ConvergenceMaps = { "Carrier", "Forest", "Snow" },
+    ConvergenceMaps = { "Carrier", "Forest", "Snow", "SnowFortress" },
     Convergence = {
         TeamSize = 1, -- TESTING: design target is 6 (set Convergence_TeamSize in Tuning or here)
         MinTeamSize = 1, -- TESTING: design fallback is 4
@@ -33,7 +33,7 @@ local Config = {
         ZoneCloseWarningSeconds = 15,
         RespawnSeconds = 3.5,
         SpawnProtectSeconds = 2,
-        BotsPerTeam = 0, -- test bots per team (chat: /bots N)
+        BotsPerTeam = 5, -- TESTING: one human + five bots per team (chat: /bots N)
     },
 }
 
@@ -74,6 +74,17 @@ function Config.GetConvergence()
             end
         end
     end
+    -- The first two phases are tunable; the final phase consumes the remaining match cap.
+    -- Reject non-finite/invalid phase overrides and reserve at least one second per phase.
+    local function positive(value, fallback)
+        return type(value) == "number" and value == value and value < math.huge and value > 0 and value or fallback
+    end
+    out.HardCapSeconds = math.max(3, positive(out.HardCapSeconds, Config.Convergence.HardCapSeconds))
+    local first = overrides and overrides:GetAttribute("Convergence_Phase1Seconds")
+    local second = overrides and overrides:GetAttribute("Convergence_Phase2Seconds")
+    first = math.clamp(positive(first, Config.Convergence.PhaseSeconds[1]), 1, out.HardCapSeconds - 2)
+    second = math.clamp(positive(second, Config.Convergence.PhaseSeconds[2]), 1, out.HardCapSeconds - first - 1)
+    out.PhaseSeconds = { first, second, out.HardCapSeconds - first - second }
     return out
 end
 

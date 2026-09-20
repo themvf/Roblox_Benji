@@ -133,7 +133,10 @@ function StatsService:OnCapture(zone, playersInside)
             e.LifeCaptures += 1
             self:CheckObjectiveBounty(e)
             if e.Bounty then
-                self.Client.Bounty:FireAll("Ping", { Target = p.Name, Zone = zone.Name, Reason = "capturing" })
+                self.Client.Bounty:FireAll(
+                    "Ping",
+                    { Target = p.Name, Zone = zone.Name, Index = zone.Index, Reason = "capturing" }
+                )
             end
         end
     end
@@ -304,10 +307,12 @@ function StatsService:PingBounties(zones)
                         nearest, nd = z, d
                     end
                 end
-                self.Client.Bounty:FireAll(
-                    "Ping",
-                    { Target = p.Name, Zone = nearest and nearest.Name or "unknown", Reason = "near" }
-                )
+                self.Client.Bounty:FireAll("Ping", {
+                    Target = p.Name,
+                    Zone = nearest and nearest.Name or "unknown",
+                    Index = nearest and nearest.Index,
+                    Reason = "near",
+                })
             end
         end
     end

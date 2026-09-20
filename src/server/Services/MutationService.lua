@@ -194,11 +194,16 @@ function MutationService:Transform(player)
     setScale(character, ego.Scale)
     fx(character, ego.Color)
     playSound(character:FindFirstChild("HumanoidRootPart") or character, "upload:Mutate", 1)
+    -- The fill carries the ALTER EGO identity, the outline carries the TEAM. ReadabilityService
+    -- stands its team outline down while MutantGlow exists (two Highlights on one model fight),
+    -- so without this a mutated player lost all team colour -- and with one alter ego in the
+    -- roster both teams' mutants were the same orange. One Highlight, both facts.
+    local TEAM_TINT = { Red = Color3.fromRGB(255, 70, 70), Blue = Color3.fromRGB(70, 140, 255) }
     local hl = Instance.new("Highlight")
     hl.Name = "MutantGlow"
     hl.FillColor = ego.Color
     hl.FillTransparency = 0.75
-    hl.OutlineColor = ego.Color
+    hl.OutlineColor = TEAM_TINT[player:GetAttribute("Team")] or ego.Color
     hl.OutlineTransparency = 0
     hl.Parent = character
     local torso = character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso")

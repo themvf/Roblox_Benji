@@ -3,6 +3,10 @@
 Rivals-style Roblox arena shooter, pivoting to objective play (Convergence). Rojo + Wally + Knit, Weapons Kit for
 guns, Lune for build scripts. Read README.md for the full map of services.
 
+For Snow Fortress work, use [SNOW_FORTRESS_REDESIGN_SPEC.md](SNOW_FORTRESS_REDESIGN_SPEC.md).
+Snow Fortress is a Convergence map. Resolve its running-place/source mapping and effective Rojo tuning before implementation;
+the spec records baseline discrepancies, preserved screenshots, and ordered design/verification gates.
+
 ## Toolchain
 - Tools come from Rokit (`rokit.toml`): rojo 7.7, wally, stylua, selene, lune. Run them from the project root.
 - `rojo serve` owns one terminal tab; run checks in another tab or Rojo stops.
@@ -24,6 +28,12 @@ guns, Lune for build scripts. Read README.md for the full map of services.
   system-wide, which otherwise makes `stylua --check src` fail on every file locally while CI passes.
 
 ## Editing rules that avoid wasted turns
+- For every new map, mode, or major redesign, follow [GAME_BUILD_WORKFLOW.md](GAME_BUILD_WORKFLOW.md)
+  and create/update its design packet from `docs/templates/DESIGN_PACKET_TEMPLATE.md`.
+  Record decisions, storyboard, shared-component ownership, and acceptance evidence; reuse existing specs.
+  Honor prior user authorization and continue routine work without redundant approval requests.
+- For new game modes, abilities, and UI, read [ROBLOX_BEST_PRACTICES.md](ROBLOX_BEST_PRACTICES.md).
+  Use its feature checklist and distinguish implemented patterns from pending device/playtest verification.
 - StyLua reformats after every write. Never string-match code that StyLua may wrap (long tables, calls with
   many args); anchor patches on short unique lines or use the Edit tool after reading the current text.
 - Bash heredocs mangle `\n` inside Lua strings. Write Lua with the Write tool, not via heredoc.

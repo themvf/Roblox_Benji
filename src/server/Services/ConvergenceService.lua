@@ -9,6 +9,15 @@ local TweenService = game:GetService("TweenService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Palette = require(ReplicatedStorage.Shared.Palette)
 local Config = require(ReplicatedStorage.Shared.Config)
+local FinalePlan = require(script.Parent.Parent.FinalePlan)
+local matchSerial = 0
+
+local function zoneLive(match, zone, phase)
+    if match.FinalePlan then
+        return FinalePlan.live(match.FinalePlan, zone.Id, phase)
+    end
+    return table.find(zone.Phases, phase) ~= nil
+end
 local BotService
 local StatsService
 
@@ -23,8 +32,18 @@ local ConvergenceService = Knit.CreateService({
 local TEAM_COLORS = {
     Red = Palette.Ui.Red,
     Blue = Palette.Ui.Blue,
-    Neutral = Color3.fromRGB(220, 220, 225),
+    Neutral = Color3.fromRGB(140, 150, 168), -- muted slate, NOT white: white neon + bloom blows out
     Closed = Color3.fromRGB(70, 70, 75),
+}
+
+-- One shape per objective index: cube, diamond (a cube stood on its corner), sphere. Distinct in
+-- silhouette from any angle, and each has an exact 2D equivalent the HUD draws (square, diamond,
+-- circle) so the world and the HUD teach the same vocabulary.
+local GLYPH_SHAPE = {
+    [1] = { shape = Enum.PartType.Block, tilt = false },
+    [2] = { shape = Enum.PartType.Block, tilt = true },
+    [3] = { shape = Enum.PartType.Ball, tilt = false },
+    [4] = { shape = Enum.PartType.Cylinder, tilt = false },
 }
 
 local TICK = 0.25
@@ -35,18 +54,43 @@ ConvergenceService.Busy = false
 
 local function makeZoneVisual(folder, zone)
     local pos = zone.Position
+    -- Ownership is carried by the PERIMETER, not by flooding the floor. A saturated filled disc
+    -- the size of a capture zone can occupy a large share of the screen, and once a team owns a
+    -- point that one surface drowns out every other use of their colour. The fill stays as a
+    -- faint tint for "this is the area"; the edge does the talking.
     local ring = Instance.new("Part")
     ring.Name = "Ring_" .. zone.Name
     ring.Shape = Enum.PartType.Cylinder
     ring.Anchored = true
     ring.CanCollide = false
     ring.CanQuery = false
-    ring.Material = Enum.Material.Neon
-    ring.Transparency = 0.45
+    ring.Material = Enum.Material.SmoothPlastic -- not Neon: a neon floor blooms
+    ring.Transparency = 0.88
     ring.Size = Vector3.new(0.4, zone.Radius * 2, zone.Radius * 2)
     ring.CFrame = CFrame.new(pos + Vector3.new(0, 0.2, 0)) * CFrame.Angles(0, 0, math.rad(90))
     ring.Color = TEAM_COLORS.Neutral
     ring.Parent = folder
+
+    -- Perimeter built from segments: Roblox has no torus, and a slightly larger disc behind the
+    -- first would just be more floor. 48 segments reads as a clean circle at any distance.
+    local SEGMENTS = 48
+    local rim = {}
+    local seglen = (2 * math.pi * zone.Radius) / SEGMENTS * 1.15 -- overlap so there are no gaps
+    for i = 1, SEGMENTS do
+        local angle = (i / SEGMENTS) * math.pi * 2
+        local seg = Instance.new("Part")
+        seg.Name = "Rim" .. i
+        seg.Anchored = true
+        seg.CanCollide = false
+        seg.CanQuery = false
+        seg.Material = Enum.Material.Neon
+        seg.Size = Vector3.new(seglen, 0.35, 0.9)
+        seg.CFrame = CFrame.new(pos + Vector3.new(math.cos(angle) * zone.Radius, 0.25, math.sin(angle) * zone.Radius))
+            * CFrame.Angles(0, -angle, 0)
+        seg.Color = TEAM_COLORS.Neutral
+        seg.Parent = folder
+        table.insert(rim, seg)
+    end
 
     local pillar = Instance.new("Part")
     pillar.Name = "Pillar_" .. zone.Name
@@ -54,34 +98,39 @@ local function makeZoneVisual(folder, zone)
     pillar.CanCollide = false
     pillar.CanQuery = false
     pillar.Material = Enum.Material.Neon
-    pillar.Transparency = 0.75
-    pillar.Size = Vector3.new(1.5, 60, 1.5)
+    pillar.Transparency = 0.86
+    pillar.Size = Vector3.new(1, 46, 1)
     pillar.CFrame = CFrame.new(pos + Vector3.new(0, 30, 0))
     pillar.Color = TEAM_COLORS.Neutral
     pillar.Parent = folder
 
-    -- Sized in studs, not pixels: an offset-sized BillboardGui draws at the same size however
-    -- far away it is, so every zone in the map ends up as a full-size label stacked over the
-    -- HUD. Scale units shrink with distance, which is what makes the near zone read as the
-    -- near one. MaxDistance is short enough that the whole map is not labelled at once.
+    -- No name sign: the zone identifies itself by SHAPE and by how many pips it carries, so it
+    -- reads the same in every language and at any distance. Shape and pip count are redundant
+    -- encodings of the same index, which keeps it legible for colour-blind players too.
+    local glyph = Instance.new("Part")
+    glyph.Name = "Glyph_" .. zone.Name
+    glyph.Anchored = true
+    glyph.CanCollide = false
+    glyph.CanQuery = false
+    glyph.Material = Enum.Material.Neon
+    local g = GLYPH_SHAPE[zone.Index] or GLYPH_SHAPE[3]
+    glyph.Shape = g.shape
+    glyph.Size = Vector3.new(4.5, 4.5, 4.5)
+    glyph.CFrame = CFrame.new(pos + Vector3.new(0, 13, 0))
+        * (g.tilt and CFrame.Angles(math.rad(45), 0, math.rad(45)) or CFrame.identity)
+    glyph.Color = TEAM_COLORS.Neutral
+    glyph.Parent = folder
+
+    -- capture progress stays, as a bar with no text
     local sign = Instance.new("BillboardGui")
-    sign.Size = UDim2.fromScale(14, 5)
-    sign.StudsOffset = Vector3.new(0, 10, 0)
+    sign.Size = UDim2.fromOffset(200, 24)
+    sign.StudsOffset = Vector3.new(0, 6.5, 0)
     sign.AlwaysOnTop = true
     sign.MaxDistance = 250
     sign.Parent = ring
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.fromScale(1, 0.6)
-    label.BackgroundTransparency = 1
-    label.Text = zone.Name
-    label.TextScaled = true
-    label.Font = Enum.Font.GothamBlack
-    label.TextColor3 = Color3.new(1, 1, 1)
-    Palette.worldText(label)
-    label.Parent = sign
     local barBack = Instance.new("Frame")
-    barBack.Position = UDim2.fromScale(0.1, 0.68)
-    barBack.Size = UDim2.fromScale(0.8, 0.2)
+    barBack.Position = UDim2.fromScale(0.1, 0.3)
+    barBack.Size = UDim2.fromScale(0.8, 0.4)
     barBack.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
     barBack.BorderSizePixel = 0
     barBack.Parent = sign
@@ -91,7 +140,26 @@ local function makeZoneVisual(folder, zone)
     bar.BorderSizePixel = 0
     bar.Parent = barBack
 
-    zone.Visual = { Ring = ring, Pillar = pillar, Bar = bar, Label = label }
+    local finalSign = Instance.new("BillboardGui")
+    finalSign.Name = "FinalDistrict"
+    finalSign.Size = UDim2.fromOffset(220, 44)
+    finalSign.StudsOffset = Vector3.new(0, 5, 0)
+    finalSign.AlwaysOnTop = true
+    finalSign.MaxDistance = 650
+    finalSign.Enabled = false
+    finalSign.Parent = glyph
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.fromScale(1, 1)
+    label.BackgroundColor3 = Color3.fromRGB(20, 22, 28)
+    label.BackgroundTransparency = 0.1
+    label.TextColor3 = Color3.fromRGB(255, 220, 120)
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = 16
+    label.TextWrapped = true
+    label.Text = "FINAL DISTRICT\n" .. zone.Name
+    label.Parent = finalSign
+    glyph:SetAttribute("ObjectiveId", zone.Id)
+    zone.Visual = { Ring = ring, Rim = rim, Pillar = pillar, Bar = bar, Glyph = glyph, FinalSign = finalSign }
 end
 
 local function paintZone(zone)
@@ -108,13 +176,24 @@ local function paintZone(zone)
         color = TEAM_COLORS.Neutral
     end
     v.Ring.Color = color
+    v.FinalSign.Enabled = zone.IsFinal == true and not zone.Closed
+    v.Ring.Transparency = zone.Closed and 0.95 or 0.88 -- the fill never gets loud, owned or not
+    for _, seg in v.Rim or {} do
+        seg.Color = color
+        seg.Transparency = zone.Closed and 0.8 or 0
+    end
     v.Pillar.Color = color
-    v.Pillar.Transparency = zone.Closed and 0.95 or (zone.Contested and 0.5 or 0.75)
+    v.Pillar.Transparency = zone.Closed and 0.97 or (zone.Contested and 0.66 or 0.86)
     -- bar shows progress toward Capturing team (or owner when idle)
     local team = zone.Capturing or zone.Owner
     v.Bar.BackgroundColor3 = team and TEAM_COLORS[team] or TEAM_COLORS.Neutral
     v.Bar.Size = UDim2.fromScale(math.clamp(zone.Progress / 100, 0, 1), 1)
-    v.Label.Text = zone.Closed and (zone.Name .. "  CLOSED") or zone.Name
+    -- the glyph carries ownership; a closed zone goes dim and hollow rather than saying "CLOSED"
+    if v.Glyph then
+        v.Glyph.Color = color
+        v.Glyph.Transparency = zone.Closed and 0.75 or 0
+        v.Glyph.Material = zone.Closed and Enum.Material.Glass or Enum.Material.Neon
+    end
 end
 
 -- ===== match =====
@@ -128,7 +207,7 @@ local function playersIn(zone, teamOf)
             local hum = p.Character and p.Character:FindFirstChildOfClass("Humanoid")
             if root and hum and hum.Health > 0 then
                 local d = root.Position - zone.Position
-                if Vector3.new(d.X, 0, d.Z).Magnitude <= zone.Radius and math.abs(d.Y) <= 12 then
+                if Vector3.new(d.X, 0, d.Z).Magnitude <= zone.Radius and math.abs(d.Y) <= (zone.HalfHeight or 12) then
                     counts[team] += 1
                 end
             end
@@ -198,16 +277,21 @@ function ConvergenceService:Snapshot(match)
     local zones = {}
     for _, z in match.Zones do
         table.insert(zones, {
+            Id = z.Id,
             Name = z.Name,
             Owner = z.Owner,
             Capturing = z.Capturing,
             Progress = z.Progress,
             Contested = z.Contested,
             Closed = z.Closed,
-            Live = table.find(z.Phases, match.Phase) ~= nil,
+            Index = z.Index,
+            Live = zoneLive(match, z, match.Phase),
+            IsFinal = FinalePlan.visibleFinal(match.FinalePlan, match.Phase) == z.Id and z.Id ~= nil,
         })
     end
     return {
+        MatchId = match.Id,
+        FinalDistrictId = FinalePlan.visibleFinal(match.FinalePlan, match.Phase),
         Score = match.Score,
         Phase = match.Phase,
         PhaseTimeLeft = match.PhaseTimeLeft,
@@ -247,7 +331,9 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
     local rules = Config.GetConvergence()
     local MapService = Knit.GetService("MapService")
 
+    matchSerial += 1
     local match = {
+        Id = matchSerial,
         Players = players,
         Score = { Red = 0, Blue = 0 },
         Telemetry = { Outposts = {}, ScoreByPhase = {}, AreaTime = {} },
@@ -271,7 +357,6 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
         end
         return nil
     end
-    StatsService:StartMatch(players, "Convergence", mapName)
     Knit.GetService("MutationService"):StartMatch(players)
     Knit.GetService("AbilityService"):ResetTelemetry()
 
@@ -283,7 +368,7 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
             return false
         end
         local d = root.Position - zone.Position
-        return Vector3.new(d.X, 0, d.Z).Magnitude <= zone.Radius and math.abs(d.Y) <= 12
+        return Vector3.new(d.X, 0, d.Z).Magnitude <= zone.Radius and math.abs(d.Y) <= (zone.HalfHeight or 12)
     end
     local function playersInside(zone, team)
         local out = {}
@@ -296,6 +381,19 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
     end
 
     task.spawn(function()
+        -- The players agree on the map first; a forced map (/map) skips the vote.
+        mapName = Knit.GetService("MapVoteService")
+            :Pick(players, Config.ConvergenceMaps, mapName, MapService.CurrentMap)
+        local layout = require(ReplicatedStorage.Shared.Maps[mapName])
+        local plan, planError = FinalePlan.create(mapName, layout.Objectives or {}, layout.Finale)
+        if planError then
+            warn("[Convergence] finale preflight failed for " .. mapName .. ": " .. planError)
+            self:Finish(match, nil, true)
+            return
+        end
+        match.FinalePlan = plan
+        -- stats record the map that was actually voted in, so this waits for the vote
+        StatsService:StartMatch(players, "Convergence", mapName)
         -- Map + intermission
         MapService:Load(mapName)
         RoundService:Broadcast(
@@ -311,11 +409,14 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
         local folder = Instance.new("Folder")
         folder.Name = "Objectives"
         folder.Parent = workspace
-        for _, o in objectives do
+        for i, o in objectives do
             local zone = {
+                Id = o.Id,
                 Name = o.Name,
+                Index = i,
                 Position = o.Position,
                 Radius = o.Radius,
+                HalfHeight = o.HalfHeight,
                 Phases = o.Phases,
                 Owner = nil,
                 Progress = 0,
@@ -429,12 +530,12 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
             -- zones
             local liveOwned = { Red = 0, Blue = 0 }
             for _, zone in match.Zones do
-                local live = table.find(zone.Phases, match.Phase) ~= nil
+                local live = zoneLive(match, zone, match.Phase)
                 if not live and not zone.Closed then
                     zone.Closed = true
                     zone.Capturing = nil
                     paintZone(zone)
-                    self:FireAll(match, self.Client.Event, "ZoneClosed", { Zone = zone.Name })
+                    self:FireAll(match, self.Client.Event, "ZoneClosed", { Zone = zone.Name, Index = zone.Index })
                 end
                 if live and not zone.Closed then
                     local counts = playersIn(zone, teamOf)
@@ -443,41 +544,55 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                     counts.Blue += botCounts.Blue
                     local ev = stepZone(zone, counts, rules, dt)
                     if ev == "Captured" then
-                        self:FireAll(match, self.Client.Event, "ZoneCaptured", { Zone = zone.Name, Team = zone.Owner })
+                        self:FireAll(
+                            match,
+                            self.Client.Event,
+                            "ZoneCaptured",
+                            { Zone = zone.Name, Team = zone.Owner, Index = zone.Index }
+                        )
                         StatsService:OnCapture(zone, playersInside(zone, zone.Owner))
                     elseif ev == "Neutralized" then
-                        self:FireAll(match, self.Client.Event, "ZoneNeutralized", { Zone = zone.Name })
+                        self:FireAll(
+                            match,
+                            self.Client.Event,
+                            "ZoneNeutralized",
+                            { Zone = zone.Name, Index = zone.Index }
+                        )
                         StatsService:OnStop(zone, playersInside(zone, nil))
                     end
                     paintZone(zone)
-                    if zone.Owner then
+                    if zone.Owner and not zone.Contested then
                         liveOwned[zone.Owner] += 1
                     end
                 end
             end
 
-            -- score from held zones
+            -- Score from held zones. A CONTESTED zone pays nobody: zone.Contested was computed
+            -- every tick and the scoring loop never read it, so walking onto an enemy point froze
+            -- their capture bar while they kept banking full income and the attacker earned
+            -- nothing until a total wipe. With no decay and empty-hold scoring on top, holding
+            -- was close to unbreakable. Contesting now costs the holder immediately.
             match.Score.Red += liveOwned.Red * rules.PointsPerZonePerSecond * dt
             match.Score.Blue += liveOwned.Blue * rules.PointsPerZonePerSecond * dt
 
             -- clocks
             if not match.Overtime then
-                match.TimeLeft -= dt
+                match.TimeLeft = math.max(0, match.TimeLeft - dt)
                 match.PhaseTimeLeft -= dt
                 -- closing warning for the zone(s) that will not survive the next phase
-                if match.Phase < phaseCount and match.PhaseTimeLeft <= rules.ZoneCloseWarningSeconds then
+                if
+                    match.Phase < phaseCount
+                    and match.PhaseTimeLeft <= rules.ZoneCloseWarningSeconds
+                    and not (match.FinalePlan and match.Phase == 1)
+                then
                     for _, zone in match.Zones do
-                        if
-                            not zone.Closed
-                            and not table.find(zone.Phases, match.Phase + 1)
-                            and not warned[zone.Name]
-                        then
+                        if not zone.Closed and not zoneLive(match, zone, match.Phase + 1) and not warned[zone.Name] then
                             warned[zone.Name] = true
                             self:FireAll(
                                 match,
                                 self.Client.Event,
                                 "ZoneClosing",
-                                { Zone = zone.Name, Seconds = rules.ZoneCloseWarningSeconds }
+                                { Zone = zone.Name, Index = zone.Index, Seconds = rules.ZoneCloseWarningSeconds }
                             )
                             local v = zone.Visual
                             if v then
@@ -492,11 +607,39 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                         end
                     end
                 end
+                -- In the final phase there is no next phase to advance to, so PhaseTimeLeft
+                -- used to run negative for the rest of the match: the clock clamped to 0:00 and
+                -- PhaseSeconds (540) silently under-declared the real 720 s match by 180 s.
+                -- The final phase now simply IS the remaining match time, so it is truthful.
+                if match.Phase >= phaseCount then
+                    match.PhaseTimeLeft = match.TimeLeft
+                end
                 if match.PhaseTimeLeft <= 0 and match.Phase < phaseCount then
                     match.Telemetry.ScoreByPhase[match.Phase] =
                         { Red = math.floor(match.Score.Red), Blue = math.floor(match.Score.Blue) }
                     match.Phase += 1
                     match.PhaseTimeLeft = rules.PhaseSeconds[match.Phase]
+                    -- Close atomically with the phase transition, retaining survivor ownership/progress.
+                    local revealed = match.FinalePlan and match.Phase == 2 and FinalePlan.reveal(match.FinalePlan)
+                    local finalZone
+                    for _, zone in match.Zones do
+                        if not zoneLive(match, zone, match.Phase) and not zone.Closed then
+                            zone.Closed = true
+                            zone.Capturing = nil
+                            self:FireAll(
+                                match,
+                                self.Client.Event,
+                                "ZoneClosed",
+                                { Zone = zone.Name, Index = zone.Index }
+                            )
+                        end
+                        zone.IsFinal = FinalePlan.visibleFinal(match.FinalePlan, match.Phase) == zone.Id
+                            and zone.Id ~= nil
+                        if zone.IsFinal then
+                            finalZone = zone
+                        end
+                        paintZone(zone)
+                    end
                     self:FireAll(
                         match,
                         self.Client.Event,
@@ -504,6 +647,15 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                         { Phase = match.Phase, Zones = phaseCount - match.Phase + 1 }
                     )
                     fireEventsForPhase(match.Phase)
+                    if revealed and finalZone then
+                        self:FireAll(match, self.Client.Event, "FinaleRevealed", {
+                            MatchId = match.Id,
+                            Id = finalZone.Id,
+                            Name = finalZone.Name,
+                            Index = finalZone.Index,
+                        })
+                    end
+                    self:FireAll(match, self.Client.State, self:Snapshot(match))
                 end
             end
 

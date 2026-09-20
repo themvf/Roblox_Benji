@@ -10,7 +10,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Debris = game:GetService("Debris")
 local Knit = require(ReplicatedStorage.Packages.Knit)
-local Palette = require(ReplicatedStorage.Shared.Palette)
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
 local PickupService = Knit.CreateService({
@@ -49,6 +48,32 @@ end
 resetStats()
 
 -- ===== visuals (S16 consistent language) =====
+-- SYSTEM-WIDE RULE: ground markers communicate through their PERIMETER, not a saturated fill.
+-- A neon disc reads as "look at me" when it only needs to say "something is here", and at pad
+-- sizes it dominates the combat scene exactly the way the old objective disc did. Objectives,
+-- pickups and launch pads all follow this now.
+local function rimRing(folder, name, pos, radius, color, segments)
+    local out = {}
+    local n = segments or 28
+    local seglen = (2 * math.pi * radius) / n * 1.2
+    for i = 1, n do
+        local angle = (i / n) * math.pi * 2
+        local seg = Instance.new("Part")
+        seg.Name = name .. "Rim" .. i
+        seg.Anchored = true
+        seg.CanCollide = false
+        seg.CanQuery = false
+        seg.Material = Enum.Material.Neon
+        seg.Color = color
+        seg.Size = Vector3.new(seglen, 0.3, 0.55)
+        seg.CFrame = CFrame.new(pos + Vector3.new(math.cos(angle) * radius, 0.22, math.sin(angle) * radius))
+            * CFrame.Angles(0, -angle, 0)
+        seg.Parent = folder
+        table.insert(out, seg)
+    end
+    return out
+end
+
 local function basePad(folder, name, pos, color)
     local pad = Instance.new("Part")
     pad.Name = name
@@ -56,39 +81,44 @@ local function basePad(folder, name, pos, color)
     pad.Anchored = true
     pad.CanCollide = false
     pad.CanQuery = false
-    pad.Material = Enum.Material.Neon
+    pad.Material = Enum.Material.SmoothPlastic -- fill is context, not signal
     pad.Color = color
-    pad.Transparency = 0.3
+    pad.Transparency = 0.82
     pad.Size = Vector3.new(0.3, 5, 5)
     pad.CFrame = CFrame.new(pos + Vector3.new(0, 0.2, 0)) * CFrame.Angles(0, 0, math.rad(90))
     pad.Parent = folder
+    rimRing(folder, name, pos, 2.5, color)
     local light = Instance.new("PointLight")
     light.Color = color
-    light.Range = 14
-    light.Brightness = 1.5
+    light.Range = 9
+    light.Brightness = 0.8
     light.Parent = pad
     return pad
 end
 
-local function icon(parent, text, color)
-    -- Stud-sized so a far pickup reads as far away instead of shouting over the touch buttons
-    -- (see the zone signs in ConvergenceService for the same reasoning).
+-- No word floats over a pickup: the 3D model on the pad already says what it is. All this adds
+-- is a respawn bar, which fills as the pickup comes back and hides once it is ready.
+local function timerBadge(parent, color)
     local bb = Instance.new("BillboardGui")
-    bb.Size = UDim2.fromScale(4, 1.4)
-    bb.StudsOffset = Vector3.new(0, 4.5, 0)
+    bb.Name = "RespawnBar"
+    bb.Size = UDim2.fromOffset(70, 8)
+    bb.StudsOffset = Vector3.new(0, 4.2, 0)
     bb.AlwaysOnTop = true
-    bb.MaxDistance = 90
+    bb.MaxDistance = 120
+    bb.Enabled = false
     bb.Parent = parent
-    local l = Instance.new("TextLabel")
-    l.Size = UDim2.fromScale(1, 1)
-    l.BackgroundTransparency = 1
-    l.Text = text
-    l.TextScaled = true
-    l.Font = Enum.Font.GothamBlack
-    l.TextColor3 = color
-    Palette.worldText(l)
-    l.Parent = bb
-    return l
+    local back = Instance.new("Frame")
+    back.Size = UDim2.fromScale(1, 1)
+    back.BackgroundColor3 = Color3.fromRGB(24, 26, 32)
+    back.BorderSizePixel = 0
+    back.Parent = bb
+    local fill = Instance.new("Frame")
+    fill.Name = "Fill"
+    fill.Size = UDim2.fromScale(0, 1)
+    fill.BackgroundColor3 = color
+    fill.BorderSizePixel = 0
+    fill.Parent = back
+    return bb, fill
 end
 
 local function weaponModel(name)
@@ -162,7 +192,7 @@ local function makePickup(folder, spec, index)
     local color = COLORS[kind] or Color3.new(1, 1, 1)
     local pos = Vector3.new(spec.pos[1], spec.pos[2], spec.pos[3])
     local pad = basePad(folder, ("Pickup_%s_%d"):format(kind, index), pos, color)
-    local label = icon(pad, kind == "weapon" and (spec.weapon or "WEAPON"):upper() or kind:upper(), color)
+    local badge, badgeFill = timerBadge(pad, color)
     local model
     if kind == "weapon" then
         model = weaponModel(spec.weapon)
@@ -190,7 +220,8 @@ local function makePickup(folder, spec, index)
         Spec = spec,
         Pad = pad,
         Model = model,
-        Label = label,
+        Badge = badge,
+        BadgeFill = badgeFill,
         Pos = pos,
         Ready = true,
         Respawn = spec.respawn or defaults.Respawn or 30,
@@ -208,10 +239,14 @@ local function setReady(pickup, ready, secondsLeft)
             end
         end
     end
-    if not ready and secondsLeft then
-        pickup.Label.Text = ("%ds"):format(math.ceil(secondsLeft))
-    elseif ready then
-        pickup.Label.Text = pickup.Kind == "weapon" and (pickup.Spec.weapon or "WEAPON"):upper() or pickup.Kind:upper()
+    -- the bar fills toward ready, then disappears; the model coming back is the real signal
+    if pickup.Badge then
+        pickup.Badge.Enabled = not ready
+        if not ready and secondsLeft then
+            local total = pickup.Respawn or 30
+            local done = math.clamp((total - secondsLeft) / total, 0, 1)
+            pickup.BadgeFill.Size = UDim2.fromScale(done, 1)
+        end
     end
 end
 
@@ -355,6 +390,8 @@ local function makeLaunchPad(self, folder, spec, index)
     pad.CanCollide = true
     pad.Material = Enum.Material.Neon
     pad.Color = COLORS.pad
+    pad.Material = Enum.Material.SmoothPlastic
+    pad.Transparency = 0.7 -- the chevrons carry the meaning, not the slab
     pad.Size = Vector3.new(size, 0.6, size)
     pad.CFrame = CFrame.new(pos + Vector3.new(0, 0.3, 0))
     pad.Parent = folder
@@ -373,16 +410,15 @@ local function makeLaunchPad(self, folder, spec, index)
         ) * CFrame.Angles(math.rad(-90), 0, 0)
         chev.Parent = folder
     end
-    icon(pad, "LAUNCH", COLORS.pad)
     local land = Instance.new("Part")
     land.Name = "LandingZone" .. index
     land.Shape = Enum.PartType.Cylinder
     land.Anchored = true
     land.CanCollide = false
     land.CanQuery = false
-    land.Material = Enum.Material.Neon
+    land.Material = Enum.Material.SmoothPlastic
     land.Color = COLORS.pad
-    land.Transparency = 0.6
+    land.Transparency = 0.88 -- perimeter does the work; see rimRing
     land.Size = Vector3.new(0.2, 8, 8)
     land.CFrame = CFrame.new(target + Vector3.new(0, 0.3, 0)) * CFrame.Angles(0, 0, math.rad(90))
     land.Parent = folder
@@ -401,7 +437,7 @@ local function makeLaunchPad(self, folder, spec, index)
         outline.Size = trig.Half * 2
         outline.CFrame = CFrame.new(trig.Center)
         outline.Parent = folder
-        local v, flight = launchVelocity(pos, target, spec.vy or 62)
+        local v = launchVelocity(pos, target, spec.vy or 62)
         -- direction arrow: a thin neon rod along the initial velocity
         local arrow = Instance.new("Part")
         arrow.Anchored = true
@@ -413,7 +449,6 @@ local function makeLaunchPad(self, folder, spec, index)
         arrow.CFrame = CFrame.lookAt(pos + Vector3.new(0, 2, 0), pos + Vector3.new(0, 2, 0) + v.Unit * 12)
             * CFrame.new(0, 0, -6)
         arrow.Parent = folder
-        icon(land, ("LAND %.1fs"):format(flight), COLORS.pad)
     end
     table.insert(self.LaunchPads, { Spec = spec, Pos = pos, Target = target, Trigger = trig, Pad = pad, Cooldown = {} })
 end

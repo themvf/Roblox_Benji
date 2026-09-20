@@ -40,6 +40,10 @@ function SafetyService:TestAids()
     return t ~= nil and t:GetAttribute("Debug_CarrierTestSafety") == true
 end
 
+function SafetyService:Enabled(layout)
+    return (layout and layout.SafetyAlwaysOn == true) or self:TestAids()
+end
+
 local function v3(t)
     return Vector3.new(t[1], t[2], t[3])
 end
@@ -50,11 +54,79 @@ local function inBox(pos, box)
 end
 
 -- ===== S2 perimeter barrier =====
+local BARRIER_HEIGHT = 12
+local BARRIER_THICKNESS = 1.5
+local BARRIER_OFFSET = 1.5 -- studs outside the edge
+
+-- Snow Fortress D3: expand one enclosure declaration into its wall segments.
+-- `around = {pos, size}` is the walkable footprint (pos.y is the floor, size.y is ignored); walls
+-- stand `offset` studs outside each edge. `gaps` are ranges along the side's own axis relative to
+-- the footprint centre, so a launch pad landing is declared on the edge that owns it rather than
+-- as a slab someone has to remember not to author.
+local function expandEnclosure(enc, out)
+    local c, s = v3(enc.around.pos), v3(enc.around.size)
+    local height = enc.height or BARRIER_HEIGHT
+    local thick = enc.thickness or BARRIER_THICKNESS
+    local offset = enc.offset or BARRIER_OFFSET
+    local y = c.Y + height / 2
+    local halfX, halfZ = s.X / 2, s.Z / 2
+
+    for _, side in { "-x", "+x", "-z", "+z" } do
+        local alongX = side == "-z" or side == "+z"
+        local span = alongX and halfX or halfZ
+
+        local cuts = {}
+        for _, g in enc.gaps or {} do
+            if g.side == side then
+                local from, to = math.max(g.from, -span), math.min(g.to, span)
+                if to > from then
+                    table.insert(cuts, { from, to })
+                end
+            end
+        end
+        table.sort(cuts, function(a, b)
+            return a[1] < b[1]
+        end)
+
+        -- walls fill the runs between the cuts
+        local runs, cursor = {}, -span
+        for _, cut in cuts do
+            if cut[1] > cursor then
+                table.insert(runs, { cursor, cut[1] })
+            end
+            cursor = math.max(cursor, cut[2])
+        end
+        if cursor < span then
+            table.insert(runs, { cursor, span })
+        end
+
+        for _, run in runs do
+            local mid, len = (run[1] + run[2]) / 2, run[2] - run[1]
+            if alongX then
+                local z = c.Z + (side == "+z" and halfZ + offset or -(halfZ + offset))
+                table.insert(out, { pos = { c.X + mid, y, z }, size = { len, height, thick } })
+            else
+                local x = c.X + (side == "+x" and halfX + offset or -(halfX + offset))
+                table.insert(out, { pos = { x, y, c.Z + mid }, size = { thick, height, len } })
+            end
+        end
+    end
+end
+
 function SafetyService:BuildBarrier(layout, folder)
-    if not self:TestAids() or not layout.Barrier then
+    if not self:Enabled(layout) then
         return
     end
-    for i, seg in layout.Barrier do
+    -- flat segments (Carrier) and enclosures (Snow Fortress) both end up as the same parts
+    local segments = {}
+    for _, seg in layout.Barrier or {} do
+        table.insert(segments, seg)
+    end
+    for _, enc in layout.BarrierEnclosures or {} do
+        expandEnclosure(enc, segments)
+    end
+
+    for i, seg in segments do
         local p = Instance.new("Part")
         p.Name = "SafetyBarrier" .. i
         p.Anchored = true
@@ -164,7 +236,7 @@ function SafetyService:KnitStart()
             task.wait(CHECK)
             local MapService = Knit.GetService("MapService")
             local layout = MapService.Layout
-            if not layout then
+            if not layout or not self:Enabled(layout) then
                 continue
             end
             for _, player in Players:GetPlayers() do
@@ -177,6 +249,7 @@ function SafetyService:KnitStart()
                     and hum.Health > 0
                     and player:GetAttribute("InMatch")
                     and not character:GetAttribute("Launched")
+                    and not character:GetAttribute("TraversalState")
                 then
                     local why = reason(layout, root.Position)
                     if why then

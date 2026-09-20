@@ -36,6 +36,8 @@ local MARKER = Color3.fromRGB(255, 240, 80)
 local MOUNTAIN = nil
 local PALETTE = {} -- full palette table for blocks that name a colour
 
+local PREFABS = {}
+
 local function applyPalette(pal)
     PALETTE = pal or {}
     if not pal then
@@ -266,6 +268,40 @@ local function applyLighting(env)
     Lighting.EnvironmentDiffuseScale = 0.6
     Lighting.EnvironmentSpecularScale = 0.4
 
+    -- Lighting.LightingStyle and Lighting.PrioritizeLightingQuality are NOT set here on purpose.
+    -- Both are Security.Write = RobloxScriptSecurity in the API dump, so a game script cannot write
+    -- them -- an assignment throws, and wrapping it in pcall only hides that it never took effect.
+    -- They are place-level settings: set them in Studio's Properties panel on Lighting (both are
+    -- Security.Read = None, so they are visible there). Lighting.Technology is Read and Write
+    -- RobloxScriptSecurity, which is why it does not appear in the panel at all.
+    -- Verify with: lune run tools/roblox_api.luau property Lighting LightingStyle
+    --
+    -- What we CAN do is read them back and complain, so a map that needs Realistic lighting fails
+    -- loudly in Studio instead of just looking wrong. Read is unrestricted on both.
+    if env.RequireLightingStyle and Lighting.LightingStyle ~= env.RequireLightingStyle then
+        warn(
+            ("[MapService] this map needs Lighting.LightingStyle = %s, place is %s. "):format(
+                env.RequireLightingStyle.Name,
+                Lighting.LightingStyle.Name
+            ) .. "Not script-writable (RobloxScriptSecurity) -- set it on Lighting in Studio."
+        )
+    end
+    if
+        env.RequirePrioritizeLightingQuality ~= nil
+        and Lighting.PrioritizeLightingQuality ~= env.RequirePrioritizeLightingQuality
+    then
+        warn(
+            ("[MapService] this map needs Lighting.PrioritizeLightingQuality = %s, place is %s. "):format(
+                tostring(env.RequirePrioritizeLightingQuality),
+                tostring(Lighting.PrioritizeLightingQuality)
+            ) .. "Not script-writable (RobloxScriptSecurity) -- set it on Lighting in Studio."
+        )
+    end
+
+    if env.ShadowSoftness then
+        Lighting.ShadowSoftness = env.ShadowSoftness -- Security.Write = None: this one is scriptable
+    end
+
     for _, child in Lighting:GetChildren() do
         if child:IsA("Atmosphere") or child:IsA("PostEffect") then
             child:Destroy()
@@ -339,7 +375,26 @@ local function buildLobby(self, layout)
     end
 
     for _, piece in layout.Pieces do
-        makePart(folder, piece.name, at(piece.pos), piece.size, piece.rot, pal[piece.color] or GREY)
+        local part = makePart(folder, piece.name, at(piece.pos), piece.size, piece.rot, pal[piece.color] or GREY)
+        -- accent strips are the only emissive surfaces in the room, so they read as signal
+        if piece.color == "Accent" or (piece.color == "Ego" and piece.name:find("Ring")) then
+            part.Material = Enum.Material.Neon
+        end
+    end
+
+    -- One controlled light per destination instead of a uniformly blown-out floor. The room
+    -- should read as three lit places in a dark hall, which is what makes the hierarchy legible.
+    for _, spec in layout.Lights or {} do
+        local anchor = makePart(folder, spec.name, at(spec.pos), { 1, 1, 1 }, nil, pal[spec.color] or GREY)
+        anchor.Transparency = 1
+        anchor.CanCollide = false
+        anchor.CanQuery = false
+        local light = Instance.new("PointLight")
+        light.Color = pal[spec.color] or Color3.new(1, 1, 1)
+        light.Range = spec.range or 30
+        light.Brightness = spec.brightness or 1.5
+        light.Shadows = true
+        light.Parent = anchor
     end
 
     -- Each mode pad is two halves: stand on the RED half to be Red, BLUE half to be Blue.
@@ -603,12 +658,89 @@ end
 
 -- ===== Builder =====
 
-local function placePiece(folder, prefix, piece, rng, mirrored)
-    local pos = mirrored and { -piece.pos[1], piece.pos[2], piece.pos[3] } or piece.pos
-    local rot = piece.rot
-    if mirrored and rot then
-        rot = { rot[1], -rot[2], -rot[3] }
+-- mirror: nil = place as authored, "x" = flip across X (the Red/Blue team mirror),
+-- "z" = flip across Z (the two wings of an asymmetric map, same team both sides).
+-- Reflecting one axis negates the rotations about the other two, so an X-mirror keeps rot.x
+-- and a Z-mirror keeps rot.z. A ramp moved between the two tables does not survive the move.
+local function mirrorOf(pos, rot, mirror)
+    if mirror == "x" then
+        return { -pos[1], pos[2], pos[3] }, rot and { rot[1], -rot[2], -rot[3] } or nil
+    elseif mirror == "z" then
+        return { pos[1], pos[2], -pos[3] }, rot and { -rot[1], -rot[2], rot[3] } or nil
     end
+    return pos, rot
+end
+
+-- Dressing never changes the map players move and shoot through: a piece marked `decor`
+-- is visual only, so a detail pass cannot invalidate the geometry audit or block a bullet.
+local function applyDecor(part, piece)
+    if piece.decor then
+        part.CanCollide = false
+        part.CanQuery = false
+        part.CastShadow = piece.shadow ~= false
+    end
+end
+
+local function tintOf(piece)
+    if type(piece.color) == "string" then
+        return PALETTE[piece.color] or GREY
+    elseif typeof(piece.color) == "Color3" then
+        return piece.color
+    end
+    return GREY
+end
+
+-- A prefab is an assembly authored once in layout.Prefabs and stamped many times: a buttress,
+-- a railing run, a lamp. Children are local to the instance, so moving the instance moves the
+-- whole thing. Mirroring reflects the instance AND each child on the same axis, so a mirrored
+-- assembly is a true mirror rather than a translated copy.
+local function placePrefab(folder, name, inst, mirror)
+    local def = PREFABS[inst.prefab]
+    if not def then
+        warn("[MapService] unknown prefab " .. tostring(inst.prefab))
+        return
+    end
+    local basePos, baseRot = mirrorOf(inst.pos, inst.rot, mirror)
+    local baseCF = cframe(basePos, baseRot)
+    local scale = inst.scale or 1
+    for i, child in def do
+        local cPos, cRot = mirrorOf(child.pos, child.rot, mirror)
+        local worldCF = baseCF * cframe({ cPos[1] * scale, cPos[2] * scale, cPos[3] * scale }, cRot)
+        local childName = name .. "_" .. (child.name or tostring(i))
+        if child.kind == "light" then
+            local anchor = makePart(folder, childName, { 0, 0, 0 }, { 1, 1, 1 }, nil, tintOf(child))
+            anchor.CFrame = worldCF
+            anchor.Transparency = 1
+            anchor.CanCollide = false
+            anchor.CanQuery = false
+            local light = Instance.new("PointLight")
+            light.Color = tintOf(child)
+            light.Range = child.range or 24
+            light.Brightness = child.brightness or 1.2
+            light.Shadows = true
+            light.Parent = anchor
+        else
+            local size = { child.size[1] * scale, child.size[2] * scale, child.size[3] * scale }
+            local part = makePart(
+                folder,
+                childName,
+                { 0, 0, 0 },
+                size,
+                nil,
+                tintOf(child),
+                child.material and Enum.Material[child.material] or nil
+            )
+            part.CFrame = worldCF
+            if child.transparency then
+                part.Transparency = child.transparency
+            end
+            applyDecor(part, child)
+        end
+    end
+end
+
+local function placePiece(folder, prefix, piece, rng, mirror)
+    local pos, rot = mirrorOf(piece.pos, piece.rot, mirror)
     local name = prefix .. (piece.name or piece.kind)
     local kind = piece.kind or "block"
     if kind == "block" then
@@ -618,12 +750,19 @@ local function placePiece(folder, prefix, piece, rng, mirrored)
         elseif typeof(piece.color) == "Color3" then
             tint = piece.color
         else
-            tint = mirrored and Color3.fromRGB(140, 160, 190) or Color3.fromRGB(190, 140, 140)
+            tint = mirror == "x" and Color3.fromRGB(140, 160, 190) or Color3.fromRGB(190, 140, 140)
             if prefix == "" then
                 tint = Color3.fromRGB(190, 190, 120)
             end
         end
-        makePart(folder, name, pos, piece.size, rot, tint, piece.material and Enum.Material[piece.material] or nil)
+        local part =
+            makePart(folder, name, pos, piece.size, rot, tint, piece.material and Enum.Material[piece.material] or nil)
+        if piece.transparency then
+            part.Transparency = piece.transparency
+        end
+        applyDecor(part, piece)
+    elseif kind == "prefab" then
+        placePrefab(folder, name, piece, mirror)
     elseif kind == "rock" then
         makeRock(folder, name, pos, piece.size, rot, rng)
     elseif kind == "log" then
@@ -820,7 +959,7 @@ function MapService:Build(layout)
             end
         end
     end
-
+    print(("[MapBuild] %s / %s"):format(layout.Name, layout.Revision or "default"))
     local old = workspace:FindFirstChild("Map")
     if old then
         old:Destroy()
@@ -832,6 +971,7 @@ function MapService:Build(layout)
     local rng = Random.new(layout.Seed or 0)
     local themed = layout.Terrain ~= nil
     applyPalette(layout.Palette)
+    PREFABS = layout.Prefabs or {}
 
     self.Layout = layout
     self.Vista = layout.Vista
@@ -844,12 +984,20 @@ function MapService:Build(layout)
     end
     -- gameplay pickups / launch pads and the living-world layer
     Knit.GetService("PickupService"):Build(layout)
+    Knit.GetService("TraversalService"):Build(layout)
     Knit.GetService("AmbientService"):Build(layout)
 
     -- Objectives for ConvergenceService (absolute positions)
     self.Objectives = {}
     for _, o in layout.Objectives or {} do
-        table.insert(self.Objectives, { Name = o.Name, Position = v3(o.pos), Radius = o.radius, Phases = o.Phases })
+        table.insert(self.Objectives, {
+            Id = o.Id,
+            Name = o.Name,
+            Position = v3(o.pos),
+            Radius = o.radius,
+            HalfHeight = o.halfHeight or 12,
+            Phases = o.Phases,
+        })
     end
 
     if themed then
@@ -884,11 +1032,16 @@ function MapService:Build(layout)
     end
 
     for _, piece in layout.Center or {} do
-        placePiece(folder, "", piece, rng, false)
+        placePiece(folder, "", piece, rng, nil)
     end
     for _, piece in layout.Mirrored or {} do
-        placePiece(folder, "Red_", piece, rng, false)
-        placePiece(folder, "Blue_", piece, rng, true)
+        placePiece(folder, "Red_", piece, rng, nil)
+        placePiece(folder, "Blue_", piece, rng, "x")
+    end
+    -- Asymmetric maps (Snow Fortress) are symmetric about Z instead: author one wing, mirror to the other.
+    for _, piece in layout.MirroredZ or {} do
+        placePiece(folder, "N_", piece, rng, nil)
+        placePiece(folder, "S_", piece, rng, "z")
     end
     if layout.Trees then
         scatterTrees(folder, layout, rng)
@@ -906,7 +1059,7 @@ function MapService:Build(layout)
             local pad = makePart(
                 folder,
                 team .. "Spawn" .. i,
-                { p[1], 0.25, p[3] },
+                { p[1], p[2] + 0.25, p[3] },
                 { 6, 0.5, 6 },
                 nil,
                 TEAM_COLORS[team],

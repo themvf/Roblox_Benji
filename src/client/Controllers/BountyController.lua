@@ -71,7 +71,7 @@ function BountyController:KnitStart()
             )
         elseif kind == "Ping" then
             local verb = data.Reason == "capturing" and "capturing" or "near"
-            conv:ShowBanner(("Target %s %s %s"):format(data.Target, verb, data.Zone), ACCENT)
+            conv:ShowBanner(("Target %s %s %s"):format(data.Target, verb, conv:GlyphChar(data.Index)), ACCENT)
         elseif kind == "Claimed" then
             conv:ShowBanner(
                 ("BOUNTY CLAIMED: %s by %s%s"):format(

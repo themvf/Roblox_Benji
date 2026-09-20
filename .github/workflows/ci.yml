@@ -72,6 +72,12 @@ jobs:
       - name: Selene
         run: selene src
 
+      - name: Convergence finale and baseline regressions
+        run: |
+          lune run tools/check_finale_plan.luau
+          lune run tools/check_fortress_baseline.luau
+          lune run tools/check_fortress_layout.luau
+
       - name: Validate skins
         run: lune run tools/check_skins.luau
 

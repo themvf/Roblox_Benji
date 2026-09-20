@@ -15,6 +15,12 @@ when one team is eliminated or the timer runs out, first team to 5 rounds wins.
 4. Test with Test > Clients and Servers (2+ players). Everyone spawns in the lobby; stand on the RED or BLUE half of the big gold CONVERGENCE pad (or a DUEL side pad) to queue on that team; friends stand on the same half.
 
 ## Layout
+For planning and delivery, use the [game build workflow](GAME_BUILD_WORKFLOW.md): a standard question set, player storyboard, component reuse contract, and evidence gates for every map and mode.
+
+For new modes and interfaces, follow the [Roblox game mode and UI playbook](ROBLOX_BEST_PRACTICES.md), including its reusable feature checklist and mobile acceptance criteria.
+
+The [Snow Fortress redesign specification](SNOW_FORTRESS_REDESIGN_SPEC.md) defines the Convergence map's exterior battlefield, objective spacing, art direction, weapon/HUD changes, and ordered implementation gates. It includes preserved screenshots and a copyable agent handoff; implementation and device verification remain pending.
+
 - `src/server/Services`   Knit services. QueueService watches the lobby pads, MapVoteService runs the lobby map vote, RoundService runs a match, MapService builds arena + lobby, WeaponService hooks the Weapons Kit.
 - `src/client/Controllers` input handling and HUD
 - `src/shared`             Config, map layouts, and Rivals weapon stats
@@ -28,7 +34,7 @@ when one team is eliminated or the timer runs out, first team to 5 rounds wins.
 - `src/server/ProfileStore.luau` MadStudioRoblox ProfileStore (vendored); DataService saves loadout, favourites, skins, stats
 
 ## Editing in Studio (no code)
-TuningService creates two Studio-owned objects the first time the game runs; Rojo never touches them:
+TuningService fills missing tuning values and upload helpers. `default.project.json` also declares these containers and specific Tuning attributes, so inspect the Rojo project as well as Studio's effective values:
 - `ReplicatedStorage.Tuning`  a Configuration with attributes (RoundSeconds, RoundsToWin, IntermissionSeconds,
   RespawnSeconds). Change them in the Properties panel; they apply to the next round or match.
 - `ReplicatedStorage.Uploads` a folder for assets you upload: add a Decal, Sound or Animation, name it, and
@@ -70,8 +76,11 @@ who reached 100 and never activated, ability uses and hits). Numbers live in `Sh
 - Not yet (Phase 3-4 by design): cross-match streak bounties with currency, rivalry ledger, weekly boards.
 
 ## Modes
-- **Convergence (featured)**: 6v6 objective battle, starts at 4v4 after a 30 s wait. (Currently set to 1v1 for
-  testing via `Convergence_TeamSize` / `Convergence_MinTeamSize` on Tuning; set 6 / 4 to restore.) Three capture zones close
+- **Convergence (featured)**: 6v6 objective battle, starts at 4v4 after a 30 s wait. (The intended testing preset queues one
+  human per side, then adds five bots per team for 6v6. Config and the Rojo project now both request five bots;
+  confirm the effective Studio attributes and live roster when testing. Bots spawn after matchmaking and do not count toward
+  the human queue. To restore production settings, set `Convergence_TeamSize` / `Convergence_MinTeamSize`
+  to 6 / 4 and `Convergence_BotsPerTeam` to 0 on Tuning.) Three capture zones close
   3 -> 2 -> 1 over three 3-minute phases; held zones score 1/s, kills 5; first to 1200 or highest at the 12-minute
   cap, with up to 60 s overtime if the final zone is in play. Respawns 5 s with 2 s protection. Capture: 8 s solo
   from neutral, +50% per teammate (max 3), enemy points neutralize first, contested freezes, empty holds.

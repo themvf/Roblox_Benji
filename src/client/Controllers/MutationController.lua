@@ -15,9 +15,38 @@ local MutationController = Knit.CreateController({ Name = "MutationController" }
 local PANEL = Theme.Color.Panel
 local TEXT = Theme.Color.Text
 local MUTED = Theme.Color.TextMuted
+local LOCKED = Theme.Color.TextMuted
 local READY = Theme.Color.Energy
 
 local KEYS = { Q = Enum.KeyCode.Q, E = Enum.KeyCode.E, F = Enum.KeyCode.F, C = Enum.KeyCode.C }
+
+-- Titan charge reads as a STATE, not a percentage. The player should feel the approach, so the
+-- widget changes character at thresholds rather than only growing a bar:
+--   0-49   dormant  -- quiet, muted, easy to ignore
+--   50-74  stirring -- the label wakes up, the bar warms
+--   75-99  surging  -- slow pulse, stroke appears, it starts asking for attention
+--   100    ready    -- unmistakable, fast pulse
+local STAGES = {
+    { at = 100, name = "ready", label = Color3.fromRGB(255, 240, 180), bar = Color3.fromRGB(255, 226, 120), pulse = 7 },
+    { at = 75, name = "surging", label = Color3.fromRGB(255, 200, 110), bar = Color3.fromRGB(255, 170, 60), pulse = 3 },
+    {
+        at = 50,
+        name = "stirring",
+        label = Color3.fromRGB(215, 175, 120),
+        bar = Color3.fromRGB(215, 130, 55),
+        pulse = 0,
+    },
+    { at = 0, name = "dormant", label = Color3.fromRGB(140, 145, 158), bar = Color3.fromRGB(120, 110, 105), pulse = 0 },
+}
+
+local function stageFor(pct: number)
+    for _, st in STAGES do
+        if pct >= st.at then
+            return st
+        end
+    end
+    return STAGES[#STAGES]
+end
 
 function MutationController:BuildGui()
     local gui = Screen.newScreenGui("MutationHud", Screen.Layers.Meter)
@@ -35,6 +64,12 @@ function MutationController:BuildGui()
     frame.BackgroundTransparency = Theme.Transparency.Panel
     frame.Parent = gui
     self.Frame = frame
+    local fstroke = Instance.new("UIStroke")
+    fstroke.Thickness = 2
+    fstroke.Color = Color3.fromRGB(255, 170, 60)
+    fstroke.Transparency = 1 -- invisible until the charge starts surging
+    fstroke.Parent = frame
+    self.FrameStroke = fstroke
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 10)
     corner.Parent = frame
@@ -147,17 +182,46 @@ function MutationController:Update()
             l.Text = cdLeft > 0 and ("%s %s %.1f"):format(def.Key, name, cdLeft)
                 or ("%s %s READY"):format(def.Key, name)
             l.TextColor3 = cdLeft > 0 and MUTED or TEXT
+            l.TextTransparency = 0
         end
+        self.Title.TextColor3 = READY
+        self.Title.TextSize = 17
+        self.FrameStroke.Transparency = 0.2
     else
+        local pct = (energy / AlterEgos.Energy.Cap) * 100
+        local stage = stageFor(pct)
+        -- Below "surging" this is a strip, not a panel: label + bar + number, no ability row.
+        -- The abilities do not exist yet, so they should not be occupying screen at 18%.
+        local compact = stage.name == "dormant" or stage.name == "stirring"
+        self.Row.Visible = not touch and not compact
+        self.Frame.Size = compact and UDim2.fromOffset(212, 34) or UDim2.fromOffset(268, 58)
+        self.Frame.Position = touch and UDim2.new(0.5, 0, 1, -196) or UDim2.new(0.5, 0, 1, -164)
+        self.Frame.BackgroundTransparency = compact and 0.3 or 0.12
         local hint = self:Touch() and "tap MUTATE" or ("press " .. AlterEgos.Mutation.ActivateKey)
-        self.Title.Text = energy >= AlterEgos.Energy.Cap and ("MUTATION READY  " .. hint) or ego.Name:upper()
+        self.Title.Text = stage.name == "ready" and ("MUTATION READY  " .. hint) or ego.Name:upper()
+        self.Title.TextColor3 = stage.label
+        self.Title.TextSize = stage.name == "dormant" and 14 or (stage.name == "stirring" and 15 or 17)
         self.Bar.Size = UDim2.fromScale(energy / AlterEgos.Energy.Cap, 1)
+        self.Bar.BackgroundColor3 = stage.bar
         self.Pct.Text = ("%d%%"):format(energy)
-        local pulse = energy >= AlterEgos.Energy.Cap and (0.5 + 0.5 * math.sin(os.clock() * 6)) or 1
-        self.Bar.BackgroundTransparency = 1 - pulse
+        self.Pct.TextColor3 = stage.label
+
+        -- pulse rate is the anticipation: nothing until 75, slow while surging, fast when ready
+        if stage.pulse > 0 then
+            local wave = 0.5 + 0.5 * math.sin(os.clock() * stage.pulse)
+            self.Bar.BackgroundTransparency = 0.35 * (1 - wave)
+            self.FrameStroke.Transparency = 0.45 + 0.45 * (1 - wave)
+        else
+            self.Bar.BackgroundTransparency = 0
+            self.FrameStroke.Transparency = 1
+        end
+
+        -- Abilities are NOT available until the transformation exists. Showing them live-looking
+        -- next to a half-full meter reads as "you have these now", which is a lie.
         for name, l in self.Abilities do
-            l.Text = ("%s %s"):format(ego.Abilities[name].Key, name)
-            l.TextColor3 = MUTED
+            l.Text = ("%s  %s"):format(ego.Abilities[name].Key, name)
+            l.TextColor3 = LOCKED
+            l.TextTransparency = 0.45
         end
     end
 end
