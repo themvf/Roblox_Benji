@@ -390,6 +390,32 @@ for _, post in map.SniperOutposts do
     block(post.Id .. "DoorHeader", { x + entry * 13, 27.5, z }, { 2, 4, 10 })
 end
 
+-- Ice rock decor, first pass. Two Creator Store models placed side by side so their
+-- look and scale can be compared in the map before settling on one. Props never
+-- collide and never answer a raycast, so these cannot change cover or sightlines --
+-- they sit clear of the objective radii and the ground routes regardless.
+-- Jagged Ice Rock 139945743433812, ICE ROCK 72083045344532.
+for _, rock in
+    {
+        { asset = 139945743433812, pos = { -92, 0, -152 }, yaw = 20, scale = 1 },
+        { asset = 139945743433812, pos = { -64, 0, -170 }, yaw = 145, scale = 1.4 },
+        { asset = 139945743433812, pos = { 74, 0, -158 }, yaw = 250, scale = 0.8 },
+        { asset = 72083045344532, pos = { -80, 0, 152 }, yaw = 60, scale = 1 },
+        { asset = 72083045344532, pos = { 66, 0, 166 }, yaw = 200, scale = 1.4 },
+        { asset = 72083045344532, pos = { 98, 0, 140 }, yaw = 320, scale = 0.8 },
+    }
+do
+    table.insert(map.Center, {
+        kind = "prop",
+        name = ("IceRock%d_%d"):format(rock.asset % 1000, rock.pos[3]),
+        assetId = rock.asset,
+        pos = rock.pos,
+        rot = { 0, rock.yaw, 0 },
+        scale = rock.scale,
+        decor = true,
+    })
+end
+
 local AlpineFortress = require(script.Parent.Parent.MapArt.AlpineFortress)
 AlpineFortress.applyMap(map)
 
