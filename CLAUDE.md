@@ -12,7 +12,7 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - `rojo serve` owns one terminal tab; run checks in another tab or Rojo stops.
 - Before committing: `stylua src && selene src && rojo build -o /tmp/arena.rbxl`. Zero warnings is the bar.
 - Build gates: `lune run tools/check_skins.luau`, `lune run tools/check_celebrations.luau`,
-  `lune run tools/check_maps.luau`,
+  `lune run tools/check_maps.luau`, `lune run tools/check_assets.luau`,
   `lune run tools/build_weapons.luau` (regenerates weapon tools from `src/shared/Weapons`).
 - Lune scripts need datatypes imported from the roblox lib (`local Vector3 = roblox.Vector3` etc.).
 
@@ -26,6 +26,21 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
   gets a playable `.rbxl`, since `rojo build` needs `Packages/` from `wally install`.
 - Line endings are LF everywhere (`.gitattributes`, `eol=lf`). Git for Windows sets `core.autocrlf=true`
   system-wide, which otherwise makes `stylua --check src` fail on every file locally while CI passes.
+
+## External art: appraise before you build
+- **Any** model, scan or scenery pack gets appraised before a pipeline is pointed at it:
+  `blender -b -noaudio --python tools/blender/appraise_asset.py -- --source "<file>" --record assets/<kind>/<name>/appraisal.json`
+  Then fill in `decision`, stating what the asset is for. `check_assets` fails until you do.
+- Ask what the asset is *of* and the viewpoint it was authored for. That is not the same
+  question as what you want it for, and the mismatch is expensive: a top-down scan of a flat
+  ice plain was decimated, exaggerated, tiled, uploaded three times and placed as a mountain
+  range before anyone measured whether it could be one. It could not.
+- Destination decides the tool. A prop seen from any angle is a mesh (`tools/blender/scene_kit.py`).
+  A horizon is a rendered skybox (`tools/blender/make_sky_range.py`) -- nothing distant should be
+  geometry. Ground the player stands on is `Terrain` data in the map module.
+- Roblox's 10,000-triangle cap is **per mesh**, so tile breadth rather than decimating it away.
+  Past roughly 90% reduction the silhouette is gone, and silhouette is most of what reads at distance.
+- Full checklist and the four failed attempts: [docs/design/ASSET_INTAKE_AND_LESSONS.md](docs/design/ASSET_INTAKE_AND_LESSONS.md).
 
 ## Editing rules that avoid wasted turns
 - For every new map, mode, or major redesign, follow [GAME_BUILD_WORKFLOW.md](GAME_BUILD_WORKFLOW.md)

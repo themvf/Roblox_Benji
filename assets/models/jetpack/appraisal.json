@@ -1,0 +1,26 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-09-21",
+  "source": "Titan Cameraman Jetpack.obj",
+  "sourceSha256": "db8672011a1ff2e62553459861c19c5a88bbfd99d21161415de6639cdb212b2e",
+  "measurements": {
+    "triangles": 3984,
+    "size": [
+      6.921,
+      1.565,
+      4.406
+    ],
+    "reliefRatio": 0.2262,
+    "openEdges": 7724,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle."
+  ],
+  "decision": "In-game prop: the jetpack pack worn on the torso, seen from every angle at close range. Closed enough, 3,984 triangles so no decimation, fits in one mesh. Built by scene_kit at 4 studs of wingspan with a centred pivot, dressed onto the greybox Body by MeshDressing so a missing upload degrades instead of erroring."
+}

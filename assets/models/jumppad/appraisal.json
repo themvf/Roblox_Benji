@@ -1,0 +1,27 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-09-21",
+  "source": "jumpPad.fbx",
+  "sourceSha256": "09a8ea2d4075f8504937f9c1248735c0ee991bb307df579c308bbeb07cd72bec",
+  "measurements": {
+    "triangles": 972,
+    "size": [
+      0.546,
+      0.546,
+      0.029
+    ],
+    "reliefRatio": 0.0526,
+    "openEdges": 0,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "TextureUVs",
+      "UVMap"
+    ]
+  },
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle."
+  ],
+  "decision": "In-game prop: the launch pad, seen from above and at close range. 972 triangles, watertight, no decimation. Built by scene_kit at 8 studs square with an underside pivot so centring the part on the launch position rests it on the floor. Flat relief of 0.05 is correct here and means it can never double as scenery."
+}

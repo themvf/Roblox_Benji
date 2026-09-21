@@ -23,6 +23,9 @@ The verdict is advice, not a gate. Read the numbers.
 """
 
 import argparse
+import datetime
+import hashlib
+import json
 import math
 import os
 import sys
@@ -54,6 +57,7 @@ def main():
     ap = argparse.ArgumentParser(prog="appraise_asset")
     ap.add_argument("--source", required=True)
     ap.add_argument("--texture")
+    ap.add_argument("--record", help="write the appraisal to this JSON path; check_assets requires one")
     args = ap.parse_args(argv)
 
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -159,6 +163,51 @@ def main():
     for line in verdicts:
         print("  " + line)
     print("")
+
+    if args.record:
+        # The record is what tools/check_assets.luau enforces. `decision` is left
+        # blank on purpose: an author has to state what the asset is FOR, which is
+        # the step whose absence caused four rounds of rework on the Snow Fortress
+        # horizon. The gate fails until it is filled in.
+        digest = hashlib.sha256()
+        with open(args.source, "rb") as handle:
+            for chunk in iter(lambda: handle.read(1 << 20), b""):
+                digest.update(chunk)
+        record = {
+            "tool": "tools/blender/appraise_asset.py",
+            "appraisedOn": datetime.date.today().isoformat(),
+            "source": os.path.basename(args.source),
+            "sourceSha256": digest.hexdigest(),
+            "measurements": {
+                "triangles": tris,
+                "size": [round(v, 3) for v in span],
+                "reliefRatio": round(relief, 4),
+                "openEdges": open_edges,
+                "nonManifoldEdges": nonmanifold,
+                "oneSided": bool(one_sided),
+                "uvLayers": uvs,
+            },
+            "verdict": verdicts,
+            "decision": "",
+        }
+        existing = {}
+        if os.path.exists(args.record):
+            try:
+                with open(args.record, encoding="utf-8") as handle:
+                    existing = json.load(handle)
+            except ValueError:
+                existing = {}
+        # Never silently discard a decision someone already wrote.
+        if existing.get("decision"):
+            record["decision"] = existing["decision"]
+        os.makedirs(os.path.dirname(args.record) or ".", exist_ok=True)
+        with open(args.record, "w", encoding="utf-8") as handle:
+            json.dump(record, handle, indent=2)
+            handle.write(chr(10))
+        print("recorded %s" % args.record)
+        if not record["decision"]:
+            print("  decision is empty -- state what this asset is for, or check_assets fails")
+        print("")
 
 
 main()

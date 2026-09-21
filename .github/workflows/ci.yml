@@ -88,6 +88,10 @@ jobs:
       - name: Validate maps
         run: lune run tools/check_maps.luau
 
+      # Every built asset must carry an appraisal that states what it is for.
+      - name: Validate asset appraisals
+        run: lune run tools/check_assets.luau
+
       # build_weapons is deterministic, so regenerating must leave the tree clean.
       # A diff here means someone edited src/shared/Weapons without rebuilding.
       - name: Weapon tools are up to date

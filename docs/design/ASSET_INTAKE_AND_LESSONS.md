@@ -13,8 +13,14 @@ whether it can be that thing at all.
 Before any modelling, placement or pipeline work:
 
 ```bash
-blender -b -noaudio --python tools/blender/appraise_asset.py -- --source "<file>"
+blender -b -noaudio --python tools/blender/appraise_asset.py --     --source "<file>" --record assets/<kind>/<name>/appraisal.json
 ```
+
+`--record` writes the measurements, the verdict and an empty `decision` field. Fill
+that field in with what the asset is for. **`lune run tools/check_assets.luau` fails
+until you do**, and it runs in CI, so this is not a step an agent can skip or a
+reviewer has to remember. That is the whole point: the four rounds below happened
+because the check was advice, not a gate.
 
 It measures triangles, relief ratio, open boundary edges, one-sidedness and UVs,
 and says what the asset is fit for. On the glacier scan it prints, immediately:
@@ -104,7 +110,8 @@ never asked to carry.
 
 ## 7. Intake checklist
 
-- [ ] Run `appraise_asset.py`. Read the numbers, not just the verdict.
+- [ ] Run `appraise_asset.py --record`. Read the numbers, not just the verdict.
+- [ ] Fill in `decision`. `check_assets` fails until it is there.
 - [ ] State what the asset is _of_ and the viewpoint it was authored for.
 - [ ] State where it will be seen from in game, and how far away.
 - [ ] Check whether an existing map or service already solves this.
