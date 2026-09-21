@@ -9,6 +9,7 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local Palette = require(ReplicatedStorage.Shared.Palette)
 local Config = require(ReplicatedStorage.Shared.Config)
 local TweenService = game:GetService("TweenService")
+local InsertService = game:GetService("InsertService")
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
 local FortressArt = require(script.Parent.Parent.FortressArt)
@@ -277,6 +278,35 @@ end
 -- distant scenery in this project should be. See tools/blender/make_sky_range.py.
 local SKY_FACES = { "Up", "Dn", "Lf", "Rt", "Ft", "Bk" }
 
+-- Open Cloud can only mint Decal assets for images, and Sky wants the image *inside*
+-- the decal, not the decal itself -- pointing a face at a decal id renders nothing at
+-- all. Unwrap it by loading the asset and reading the Decal's Texture. Cached per id,
+-- because six faces times every map build is six web calls otherwise.
+local skyImage = {}
+
+local function imageForFace(ref)
+    local cached = skyImage[ref]
+    if cached ~= nil then
+        return cached
+    end
+    local numeric = tonumber(tostring(ref):match("(%d+)"))
+    local resolved = nil
+    if numeric then
+        local ok, model = pcall(function()
+            return InsertService:LoadAsset(numeric)
+        end)
+        if ok and model then
+            local decal = model:FindFirstChildWhichIsA("Decal", true)
+            if decal and decal.Texture ~= "" then
+                resolved = decal.Texture
+            end
+        end
+    end
+    -- An id that is already an image has no decal to unwrap, so it is used as given.
+    skyImage[ref] = resolved or ref
+    return skyImage[ref]
+end
+
 local function applySky(env)
     local existing = Lighting:FindFirstChildOfClass("Sky")
     local spec = env.Sky
@@ -292,7 +322,7 @@ local function applySky(env)
                 spec = nil
                 break
             end
-            ids[face] = id
+            ids[face] = imageForFace(id)
         end
     end
     -- Say what happened either way. A skybox that silently declines to apply looks
@@ -309,7 +339,7 @@ local function applySky(env)
         end
         return
     end
-    print(("[MapSky] applied 6 faces, Ft = %s"):format(tostring(ids.Ft)))
+    print(("[MapSky] applied 6 faces, Ft image = %s"):format(tostring(ids.Ft)))
     local skybox = existing or Instance.new("Sky")
     for _, face in SKY_FACES do
         skybox["Skybox" .. face] = ids[face]
