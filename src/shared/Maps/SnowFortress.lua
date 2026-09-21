@@ -71,9 +71,21 @@ local map = {
         Ramp = Color3.fromRGB(200, 204, 212),
     },
     Environment = {
-        -- No Sky declared on purpose: the horizon is chosen in Studio by dropping a
-        -- skybox into Lighting, and applySky leaves whatever it finds alone. Generated
-        -- ranges were tried and were not good enough; see ASSET_INTAKE_AND_LESSONS.md.
+        -- "Snowy Sky Box" by @DonTheBears, Creator Store asset 2029216718, found under
+        -- Visual Effects / Sky and Atmosphere -- the category that holds real Sky
+        -- objects rather than skyboxes faked out of parts. Six distinct face images,
+        -- which is what a continuous range needs; a skybox repeating one image on all
+        -- four sides cannot be one. Two generated ranges were tried first and neither
+        -- was good enough; see docs/design/ASSET_INTAKE_AND_LESSONS.md.
+        Sky = {
+            Ft = "rbxassetid://2029211409",
+            Bk = "rbxassetid://2029210131",
+            Lf = "rbxassetid://2029212393",
+            Rt = "rbxassetid://2029212849",
+            Up = "rbxassetid://2029213271",
+            Dn = "rbxassetid://2029210773",
+            CelestialBodiesShown = true,
+        },
         ClockTime = 12,
         Brightness = 2,
         Ambient = Color3.fromRGB(160, 160, 160),

@@ -186,3 +186,26 @@ meant to be seen from any angle, which is exactly what it is for. Reach for
 
 Orphaned uploads, superseded and safe to delete from the Roblox inventory:
 134061547604589, 115957483177465, 122603760493454.
+
+
+## 7. The horizon is a bought skybox, not a generated one
+
+Two generated ranges were tried after the glacier scan was abandoned. Cones with
+cloud noise read as blobby lumps; pushing Voronoi displacement hard enough to carve
+ridgelines shattered them into foil. What shipped is "Snowy Sky Box" by
+@DonTheBears, Creator Store asset 2029216718, found in about a minute.
+
+The filter that matters when looking: **Visual Effects / Sky and Atmosphere**. That
+category holds real `Sky` objects. Free-text searching "skybox" also returns models
+that fake one out of six giant textured parts, which put geometry back inside the
+playable space -- the exact failure this whole exercise was escaping. Two tells: a
+real Sky has a blank store thumbnail because there is no model to render, and on
+insert it lands in `Lighting` with nothing added to `Workspace`.
+
+A skybox repeating one image on all four sides cannot be a continuous range. Six
+distinct face ids is the signature of one that is.
+
+`make_sky_range.py` and `stitch_skybox.py` stay in the repo. They work, and the
+stitch check is worth having for any skybox. They are simply outclassed by art made
+for the job, and reaching for them before looking at what already exists cost far
+more than the search did.
