@@ -262,6 +262,10 @@ for _, post in map.SniperOutposts do
     block(post.Id .. "LowerFloor", { x, 0.5, z }, { 28, 1, 26 }, "Floor")
     block(post.Id .. "Deck", { x, 17.5, z }, { 28, 1, 26 }, "Upper")
     block(post.Id .. "Roof", { x, 29.5, z }, { 30, 1, 28 })
+    -- Geometry is load-bearing here: check_fortress_layout's head-clearance test
+    -- passes with exactly zero margin at a 1-stud rise on a 2.5-stud run, so both
+    -- steepening and lengthening the treads trip it. The stair that used to run at
+    -- the Blue spawn is removed outright below, which is the real fix.
     for _, direction in { -1, 1 } do
         for step = 1, 18 do
             block(
@@ -342,5 +346,8 @@ end
 
 local AlpineFortress = require(script.Parent.Parent.MapArt.AlpineFortress)
 AlpineFortress.applyMap(map)
+
+local GlacierBackdrop = require(script.Parent.Parent.MapArt.GlacierBackdrop)
+GlacierBackdrop.applyMap(map)
 
 return map

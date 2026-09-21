@@ -11,6 +11,7 @@ local RunService = game:GetService("RunService")
 local Debris = game:GetService("Debris")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
+local MeshDressing = require(ReplicatedStorage.Shared.MeshDressing)
 
 local PickupService = Knit.CreateService({
     Name = "PickupService",
@@ -384,47 +385,61 @@ local function makeLaunchPad(self, folder, spec, index)
     local size = spec.size or 8
     local debug = Knit.GetService("SafetyService"):TestAids()
 
+    local dir = Vector3.new(target.X - pos.X, 0, target.Z - pos.Z).Unit
+
     local pad = Instance.new("Part")
     pad.Name = "LaunchPad" .. index
     pad.Anchored = true
     pad.CanCollide = true
-    pad.Material = Enum.Material.Fabric
-    pad.Color = Color3.fromRGB(28, 35, 45)
-    pad.Shape = Enum.PartType.Cylinder
-    pad.Size = Vector3.new(0.6, size, size)
-    pad.CFrame = CFrame.new(pos + Vector3.new(0, 0.3, 0)) * CFrame.Angles(0, 0, math.pi / 2)
     pad.Parent = folder
-    -- Padded circular frame, exposed springs and legs read as a trampoline.
-    for i = 1, 16 do
-        local angle = i * math.pi / 8
-        local radial = Vector3.new(math.cos(angle), 0, math.sin(angle))
-        local rim = Instance.new("Part")
-        rim.Name = "TrampolinePadding"
-        rim.Size = Vector3.new(size * 0.21, 0.65, 0.75)
-        rim.CFrame =
-            CFrame.lookAt(pos + radial * (size / 2 + 0.1) + Vector3.new(0, 0.5, 0), pos + Vector3.new(0, 0.5, 0))
-        rim.Color, rim.Material = COLORS.pad, Enum.Material.SmoothPlastic
-        rim.Anchored, rim.CanCollide, rim.CanQuery = true, false, false
-        rim.Parent = folder
-        local spring = Instance.new("Part")
-        spring.Name = "TrampolineSpring"
-        spring.Size = Vector3.new(0.15, 0.15, 0.65)
-        spring.CFrame =
-            CFrame.lookAt(pos + radial * (size / 2 - 0.35) + Vector3.new(0, 0.65, 0), pos + Vector3.new(0, 0.65, 0))
-        spring.Material, spring.Color = Enum.Material.Metal, Color3.fromRGB(170, 180, 190)
-        spring.Anchored, spring.CanCollide, spring.CanQuery = true, false, false
-        spring.Parent = folder
-    end
-    for _, x in { -1, 1 } do
-        for _, z in { -1, 1 } do
-            local leg = Instance.new("Part")
-            leg.Name = "TrampolineLeg"
-            leg.Size = Vector3.new(0.35, 0.6, 0.35)
-            leg.Position = pos + Vector3.new(x * size * 0.32, 0, z * size * 0.32)
-            leg.Anchored, leg.CanCollide, leg.CanQuery = true, false, false
-            leg.Material = Enum.Material.Metal
-            leg.Color = Color3.fromRGB(100, 110, 120)
-            leg.Parent = folder
+
+    -- The mesh is authored 8 studs square, so it scales with the layout's `size`.
+    -- A SpecialMesh hangs its own origin on the part's centre and this mesh's origin
+    -- is its underside, so centring the part on `pos` rests the pad on the floor.
+    local dressed = MeshDressing.apply(pad, "upload:JumpPadMesh", "upload:JumpPadTexture", Vector3.one * (size / 8))
+    if dressed then
+        pad.Size = Vector3.new(size, 0.6, size)
+        pad.CFrame = CFrame.lookAt(pos, pos + dir)
+    else
+        -- Greybox until the mesh is uploaded: a padded circular frame, exposed springs
+        -- and legs that read as a trampoline. These are siblings of the pad rather than
+        -- children, so a dressed pad simply never builds them.
+        pad.Material = Enum.Material.Fabric
+        pad.Color = Color3.fromRGB(28, 35, 45)
+        pad.Shape = Enum.PartType.Cylinder
+        pad.Size = Vector3.new(0.6, size, size)
+        pad.CFrame = CFrame.new(pos + Vector3.new(0, 0.3, 0)) * CFrame.Angles(0, 0, math.pi / 2)
+        for i = 1, 16 do
+            local angle = i * math.pi / 8
+            local radial = Vector3.new(math.cos(angle), 0, math.sin(angle))
+            local rim = Instance.new("Part")
+            rim.Name = "TrampolinePadding"
+            rim.Size = Vector3.new(size * 0.21, 0.65, 0.75)
+            rim.CFrame =
+                CFrame.lookAt(pos + radial * (size / 2 + 0.1) + Vector3.new(0, 0.5, 0), pos + Vector3.new(0, 0.5, 0))
+            rim.Color, rim.Material = COLORS.pad, Enum.Material.SmoothPlastic
+            rim.Anchored, rim.CanCollide, rim.CanQuery = true, false, false
+            rim.Parent = folder
+            local spring = Instance.new("Part")
+            spring.Name = "TrampolineSpring"
+            spring.Size = Vector3.new(0.15, 0.15, 0.65)
+            spring.CFrame =
+                CFrame.lookAt(pos + radial * (size / 2 - 0.35) + Vector3.new(0, 0.65, 0), pos + Vector3.new(0, 0.65, 0))
+            spring.Material, spring.Color = Enum.Material.Metal, Color3.fromRGB(170, 180, 190)
+            spring.Anchored, spring.CanCollide, spring.CanQuery = true, false, false
+            spring.Parent = folder
+        end
+        for _, x in { -1, 1 } do
+            for _, z in { -1, 1 } do
+                local leg = Instance.new("Part")
+                leg.Name = "TrampolineLeg"
+                leg.Size = Vector3.new(0.35, 0.6, 0.35)
+                leg.Position = pos + Vector3.new(x * size * 0.32, 0, z * size * 0.32)
+                leg.Anchored, leg.CanCollide, leg.CanQuery = true, false, false
+                leg.Material = Enum.Material.Metal
+                leg.Color = Color3.fromRGB(100, 110, 120)
+                leg.Parent = folder
+            end
         end
     end
     local land = Instance.new("Part")
