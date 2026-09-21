@@ -8,7 +8,11 @@ local Config = {
     RespawnSeconds = 3, -- lobby respawn only; in a Duel you wait for the next round
     Teams = { "Red", "Blue" },
     Maps = { "Forest", "Snow", "Arena" }, -- Duel rotation
-    StartupMap = "Forest", -- module under Shared/Maps built at server start, before the first match
+    -- Module under Shared/Maps built at server start, before the first match. Also
+    -- what Studio's Run (F8) shows, since Run starts the server with no character:
+    -- point this at whatever map you are working on to inspect it with a free
+    -- camera and no second player. Design default is "Forest".
+    StartupMap = "SnowFortress",
 
     -- Lobby map vote: once a pad fills, the players on it pick the map before the match starts.
     MapVoteEnabled = true,
