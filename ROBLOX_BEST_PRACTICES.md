@@ -4,7 +4,7 @@ Use this guide when adding a mode, ability, map integration, or player interface
 
 Use [GAME_BUILD_WORKFLOW.md](GAME_BUILD_WORKFLOW.md) and its design packet template to apply these practices consistently. That workflow owns planning/storyboards/gates; this guide owns technical patterns, and individual specs own feature requirements.
 
-Reviewed: 2026-09-20. **Implemented reference** means the pattern exists in this repository; it does not mean every device or gameplay case has been verified. **Recommended standard** means new work should meet it; existing code may still need improvements. Numeric UI targets below are project starting points, not Roblox platform requirements.
+Reviewed: 2026-09-21. **Implemented reference** means the pattern exists in this repository; it does not mean every device or gameplay case has been verified. **Recommended standard** means new work should meet it; existing code may still need improvements. Numeric UI targets below are project starting points, not Roblox platform requirements.
 
 Implementation update: the separate Snow Fortress worktree was located and its source integrated into `codex/snow-fortress-redesign`. The corrected income/clock/outline behavior and consistent bot preset are now in working source; runtime verification remains pending. Historical checkout warnings below refer to the original `7c83270` baseline. Consult the [implementation ledger](docs/reviews/snow-fortress/implementation-status.md) for current status.
 
@@ -136,6 +136,8 @@ stylua --check src
 selene src
 lune run tools/check_skins.luau
 lune run tools/check_celebrations.luau
+lune run tools/check_maps.luau
+lune run tools/check_assets.luau
 lune run tools/build_weapons.luau
 git diff --exit-code -- assets
 rojo build -o "$env:TEMP\Roblox_Benji-check.rbxl"
@@ -159,13 +161,73 @@ Build/lint gates cannot verify tap reach, overlaps, gameplay balance, or multipl
 
 For contested-scoring regression coverage, own a point, bring an enemy into it, and verify that point stops contributing income while contested. Isolate other point income and kills before interpreting total score. Then remove the enemy and verify income resumes.
 
-## 9. Copy this checklist into each feature plan
+## 9. Source environment art by destination
+
+**Implemented reference:** `tools/blender/appraise_asset.py`, `tools/check_assets.luau`,
+`tools/blender/scene_kit.py`, `Environment.Sky` in `src/shared/Maps/SnowFortress.lua`.
+Full account of what failed and why: [docs/design/ASSET_INTAKE_AND_LESSONS.md](docs/design/ASSET_INTAKE_AND_LESSONS.md).
+
+Appraise any bought or scanned asset before pointing a pipeline at it, and record the
+decision. `check_assets` fails a package whose `appraisal.json` has an empty
+`decision`, and it runs in CI, so this is a gate rather than advice.
+
+```powershell
+blender -b -noaudio --python tools/blender/appraise_asset.py -- `
+    --source "<file>" --record assets/<kind>/<name>/appraisal.json
+```
+
+Ask what the asset is *of* and the viewpoint it was authored for. That is not the
+same question as what you want it for, and the gap between them is expensive: a
+top-down scan of a flat ice plain was decimated, exaggerated, tiled, uploaded three
+times and placed as a mountain range before anyone measured whether it could be one.
+
+| Destination | Use | Not |
+| --- | --- | --- |
+| Prop seen from any angle | mesh via `scene_kit.py` | — |
+| Horizon or anything distant | a `Sky`, chosen from the Creator Store | geometry of any kind |
+| Ground the player stands on | `Terrain` data in the map module | a decimated scan |
+
+**Recommended standard:** nothing distant should be geometry. A skybox costs no
+parts, no triangles and no LOD, cannot be mis-oriented, and has no seams or plate
+edges. Roblox terrain `FillBall` is native and cheap but fills *balls*: fine for
+scenery nobody looks at, not for an aesthetic.
+
+Buy the horizon rather than generating it. Two generated ranges were tried and both
+lost to a Creator Store asset found in about a minute. When looking, filter to
+**Visual Effects / Sky and Atmosphere** — that category holds real `Sky` objects,
+while free-text "skybox" also returns models that fake one out of six giant textured
+parts, putting geometry back inside the playable space.
+
+| Check | Real `Sky` | Faked from parts |
+| --- | --- | --- |
+| Store thumbnail | blank, nothing to render | a rendered preview |
+| On insert | appears under `Lighting` | appears in `Workspace` |
+| Face ids | six distinct images | one image repeated on four sides |
+
+Numbers that decide things, all measurable before any pipeline work:
+
+- Roblox caps a mesh at **10,000 triangles and 2048 studs per axis**. The cap is
+  **per mesh**, so tile breadth rather than decimating it away. Past roughly 90%
+  reduction the silhouette is gone, and silhouette is most of what reads at distance.
+- A relief ratio (height ÷ longest horizontal) under about **0.2** reads flat at any
+  distance. Vertical exaggeration raises it but stretches the texture bake with it.
+- A finite heightfield is a sheet with a cliff on every edge and no underside. No
+  rotation or placement hides either.
+
+**Recommended standard:** verify an export against the file, not the viewer. Blender's
+importer converts axes on the way in, so a mesh exported with its height on the wrong
+axis looks correct in every preview and lies on its side in game. Read the GLB's
+`POSITION` accessor min/max, and stitch skybox faces with
+`tools/blender/stitch_skybox.py` before uploading.
+
+## 10. Copy this checklist into each feature plan
 
 ```markdown
 ### Feature: <name>
 - Player objective and success feedback:
 - Server-owned state and allowed transitions:
 - Shared definitions / map requirements:
+- External art appraised, destination chosen, `appraisal.json` decision recorded:
 - Action names and touch / keyboard / gamepad bindings:
 - Button labels, status text, hold behavior, placement:
 - Tuning defaults, valid ranges, override names, application timing:
