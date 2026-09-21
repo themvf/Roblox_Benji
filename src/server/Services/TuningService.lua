@@ -42,9 +42,22 @@ function TuningService:EnsureSetup()
     if tuning:GetAttribute("UI_ReducedMotion") == nil then
         tuning:SetAttribute("UI_ReducedMotion", false)
     end
+    -- A saved attribute wins over Shared/Config forever, because seeding only fills
+    -- a nil. That is the point -- Studio tuning should survive a sync -- but it also
+    -- means editing Config.lua can look like it did nothing at all. Say so once at
+    -- startup for anything that disagrees, naming both values.
     for _, key in TUNABLE do
-        if tuning:GetAttribute(key) == nil then
+        local current = tuning:GetAttribute(key)
+        if current == nil then
             tuning:SetAttribute(key, Config[key])
+        elseif current ~= Config[key] then
+            print(
+                ("[Tuning] %s = %s (overriding Config's %s). Clear the attribute on "):format(
+                    key,
+                    tostring(current),
+                    tostring(Config[key])
+                ) .. "ReplicatedStorage.Tuning to follow the file again."
+            )
         end
     end
     -- dev switches (Carrier Testability & Safety Fix Spec v1)
