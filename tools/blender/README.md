@@ -9,6 +9,21 @@ manifest. Every step is config, not code, so a new asset is an entry in
 | `scene_kit.py` | scale, exaggerate, re-pivot, decimate, tile, retexture, export |
 | `preview_scene.py` | render the built asset at map scale from a player's eye |
 | `resize_textures.py` | downscale maps to 1024 and flip DirectX normals |
+| `make_sky_range.py` | generate a mountain horizon and render it as skybox faces |
+| `appraise_asset.py` | **run this first**: says what a source asset is fit for |
+
+Start every new asset with the appraisal, which answers "prop, skybox, terrain or
+nothing" in one command. See
+[ASSET_INTAKE_AND_LESSONS.md](../../docs/design/ASSET_INTAKE_AND_LESSONS.md).
+
+```bash
+blender -b -noaudio --python tools/blender/appraise_asset.py -- --source "<file>"
+```
+
+**Pick the right one.** A prop the player sees from any angle -- a weapon, a pack, a
+pad -- is a mesh, so it goes through `scene_kit`. A horizon is a skybox, so it goes
+through `make_sky_range`. Nothing distant should be geometry; see
+"Backdrops" below for why that took four attempts to learn.
 
 Upload with `tools/roblox/upload_asset.ps1`; see
 [ROBLOX_BLENDER_ASSET_PIPELINE_SPEC.md](../../docs/design/ROBLOX_BLENDER_ASSET_PIPELINE_SPEC.md)
@@ -89,3 +104,43 @@ Use `=` on any argument whose value starts with `-`, or argparse reads it as a f
   tile so `decimate`/`tile` can be retuned.
 - Blender headless cannot use EEVEE (no GPU context); these scripts use Cycles CPU,
   and set camera clip planes from the scene size so map-scale renders are not empty.
+
+## Backdrops
+
+A horizon belongs in a skybox, not in the world. Rendered offline it carries no
+triangle or texture budget at all, so it can be far more detailed than any in-game
+mesh, and by the time Roblox sees it, it is six flat images: nothing to
+mis-orient, no seams, no LOD, no parts.
+
+```bash
+blender -b -noaudio --python tools/blender/make_sky_range.py --     --out assets/sky/snowfortress --faces ft --size 900 --samples 40   # preview one face
+blender -b -noaudio --python tools/blender/make_sky_range.py --     --out assets/sky/snowfortress --size 1024 --samples 64             # all six
+```
+
+Then upload each PNG as a Decal and hang the ids on the map's `Environment.Sky`:
+
+```bash
+powershell -File tools/roblox/upload_asset.ps1 -File assets/sky/snowfortress_ft.png
+```
+
+`MapService.applySky` builds the `Sky` instance. If any one face fails to resolve
+it removes the skybox entirely rather than showing five faces and a hole.
+
+### Three approaches that did not work, and why
+
+- **A bought terrain scan as mesh geometry.** It is authored to be viewed from
+  directly above. Its texture is an orthographic bake, so from the side it smears;
+  the silhouette that sells a mountain does not survive the decimation an in-game
+  mesh needs (712,818 triangles to 16,873 here); and a heightfield is a finite sheet
+  with a cliff on every edge -- measured at 38-53% of relief on average, up to 100% --
+  which no rotation or placement hides.
+- **Vertical exaggeration to rescue it.** Relief ratio below roughly 0.2 reads flat
+  at any distance. Pushing 0.119 to 0.476 helped the profile and stretched the bake
+  further. `Solidify` to close the open underside shredded the scan's non-manifold
+  geometry outright.
+- **Roblox terrain `FillBall`.** Native and cheap, and what Carrier, Forest and Swamp
+  use -- but it fills *balls*. Smooth domes with no detail. Fine for scenery nobody
+  looks at, not for an aesthetic.
+
+Generating the silhouette sidesteps all of it, because the shape is the only thing
+that actually matters at that distance and it is the one thing a scan will not give.

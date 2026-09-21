@@ -56,38 +56,12 @@ local map = {
         { pos = { -246.5, 6, 0 }, size = { 1.5, 12, 370 } },
         { pos = { 246.5, 6, 0 }, size = { 1.5, 12, 370 } },
     },
-    -- Scenic horizon built the way Carrier, Forest and Swamp build theirs: native
-    -- terrain spheres, not meshes. Terrain textures correctly from every angle, has
-    -- real LOD, costs no MeshParts, and has no plate edge to hide -- all of which a
-    -- top-down terrain scan viewed from the side gets wrong. Each entry is
-    -- {x, y, z, radius} and a sphere's top is y + radius, so these peak at +110..130
-    -- on a ring 760-790 studs out: clear of the barrier at 246.5, and inside the
-    -- ground slab buildTerrain lays out to Size * 4.
+    -- The horizon is a skybox (tools/blender/make_sky_range.py), not geometry:
+    -- FillBall domes read as bald mounds and a terrain scan smears when seen from
+    -- the side. Terrain here is only the snowfield the arena sits on.
     Terrain = {
         GroundMaterial = Enum.Material.Snow,
         GroundColor = Color3.fromRGB(226, 233, 240),
-        MountainMaterial = Enum.Material.Glacier,
-        MountainColor = Color3.fromRGB(198, 214, 228),
-        Mountains = {
-            { 0, -150, -760, 280 },
-            { -560, -140, -610, 250 },
-            { -790, -170, -40, 290 },
-            { -540, -130, 600, 240 },
-            { 40, -160, 780, 270 },
-            { 590, -140, 620, 255 },
-            { 780, -175, 30, 295 },
-            { 560, -135, -590, 245 },
-        },
-        -- A nearer, lower row so the horizon reads with depth rather than as one
-        -- wall of spheres. Checked against the barrier: the closest of these clears
-        -- y = 0 only within 110 studs of its centre, and the nearest centre is 270
-        -- studs from the corner of the playable box.
-        Hills = {
-            { -360, -70, -430, 130 },
-            { 420, -60, 380, 120 },
-            { -430, -65, 360, 125 },
-            { 380, -75, -400, 135 },
-        },
     },
     Palette = {
         Floor = Color3.fromRGB(180, 184, 190),
@@ -97,6 +71,18 @@ local map = {
         Ramp = Color3.fromRGB(200, 204, 212),
     },
     Environment = {
+        -- Painted horizon from tools/blender/make_sky_range.py. Six Decal ids, one
+        -- per cube face. Costs no parts and no triangles, and MapService.applySky
+        -- drops the whole skybox if any single face fails to resolve rather than
+        -- leaving five faces and a hole.
+        Sky = {
+            Ft = "rbxassetid://134525398331750",
+            Bk = "rbxassetid://101292815824582",
+            Lf = "rbxassetid://122801675363023",
+            Rt = "rbxassetid://76597931998535",
+            Up = "rbxassetid://106438932865634",
+            Dn = "rbxassetid://86029593823829",
+        },
         ClockTime = 12,
         Brightness = 2,
         Ambient = Color3.fromRGB(160, 160, 160),

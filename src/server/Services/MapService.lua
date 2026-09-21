@@ -272,6 +272,42 @@ local function buildTerrain(layout)
     end
 end
 
+-- Skybox faces, in Roblox's own naming. A horizon painted here costs no parts and
+-- no triangles, cannot be mis-oriented and has no geometry seams -- which is what
+-- distant scenery in this project should be. See tools/blender/make_sky_range.py.
+local SKY_FACES = { "Up", "Dn", "Lf", "Rt", "Ft", "Bk" }
+
+local function applySky(env)
+    local existing = Lighting:FindFirstChildOfClass("Sky")
+    local spec = env.Sky
+    local ids = {}
+    if spec then
+        for _, face in SKY_FACES do
+            local id = Uploads.resolve(spec[face])
+            if not id then
+                -- Five faces and a hole is worse than the stock sky, so a partial
+                -- upload degrades all the way back rather than part of the way.
+                spec = nil
+                break
+            end
+            ids[face] = id
+        end
+    end
+    if not spec then
+        if existing then
+            existing:Destroy()
+        end
+        return
+    end
+    local skybox = existing or Instance.new("Sky")
+    for _, face in SKY_FACES do
+        skybox["Skybox" .. face] = ids[face]
+    end
+    skybox.CelestialBodiesShown = spec.CelestialBodiesShown == true
+    skybox.StarCount = spec.StarCount or 0
+    skybox.Parent = Lighting
+end
+
 local function applyLighting(env)
     Lighting.ClockTime = env.ClockTime
     Lighting.Brightness = env.Brightness
@@ -1100,6 +1136,7 @@ function MapService:Build(layout)
 
     if layout.Environment then
         applyLighting(layout.Environment)
+        applySky(layout.Environment)
     end
 
     -- Studio's template place adds these; the map provides its own

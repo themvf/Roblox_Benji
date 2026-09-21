@@ -15,7 +15,12 @@ import urllib.request
 import uuid
 
 BASE = "https://apis.roblox.com/assets/v1/"
-MIME = {".glb": "model/gltf-binary", ".fbx": "model/fbx"}
+MIME = {".glb": "model/gltf-binary", ".fbx": "model/fbx",
+        ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg"}
+# Open Cloud picks the asset type, not the file extension; an image must be
+# declared as a Decal or it is rejected.
+ASSET_TYPE = {".glb": "Model", ".fbx": "Model",
+              ".png": "Decal", ".jpg": "Decal", ".jpeg": "Decal"}
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -45,10 +50,13 @@ def main():
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--description", default="Snow Fortress authored Blender architecture review kit",
                         help="Asset description; defaults to the entrance kit wording.")
+    parser.add_argument("--name", help="Display name; defaults to the file stem.")
+    parser.add_argument("--asset-type", choices=sorted(set(ASSET_TYPE.values())),
+                        help="Override the type inferred from the extension.")
     args = parser.parse_args()
     file = args.file.resolve()
     if file.suffix.lower() not in MIME:
-        raise RuntimeError("This uploader accepts self-contained GLB or FBX files")
+        raise RuntimeError("This uploader accepts self-contained GLB or FBX meshes, or PNG/JPEG images")
     data = file.read_bytes()
     if not 0 < len(data) <= 20_000_000:
         raise RuntimeError("File must be nonempty and no larger than 20 MB")
@@ -89,10 +97,11 @@ def main():
         if not receipt.get("operation"):
             raise RuntimeError("Earlier upload outcome is uncertain. Inspect Roblox inventory before any new upload. Receipt: " + str(receipt_path))
     else:
-        metadata = {"assetType": "Model", "displayName": file.stem,
+        metadata = {"assetType": args.asset_type or ASSET_TYPE[file.suffix.lower()],
+                    "displayName": args.name or file.stem,
                     "description": args.description,
                     "creationContext": {"creator": {owner_type + "Id": owner_id}}}
-        body, boundary = multipart(metadata, "model" + file.suffix.lower(), data, MIME[file.suffix.lower()])
+        body, boundary = multipart(metadata, "upload" + file.suffix.lower(), data, MIME[file.suffix.lower()])
         receipt = {"file": str(file), "sha256": hashlib.sha256(data).hexdigest(),
                    "ownerType": owner_type, "ownerId": owner_id, "status": "submitted-outcome-unknown"}
         # Record intent before POST. A lost response must not create duplicate uploads.
