@@ -24,6 +24,9 @@ Validate.KINDS = {
     helicopter = { solid = true, sized = false },
     steam = { solid = false, sized = false },
     radar = { solid = false, sized = false },
+    -- A Creator Store model placed by asset id. Decor only: it is somebody else's
+    -- mesh, so no gate can audit its shape, and it is never allowed to collide.
+    prop = { solid = false, sized = false, asset = true },
 }
 
 -- Composite props, copied from MapService.placePiece. Offsets are local to the piece's
@@ -383,6 +386,14 @@ function Validate.check(layout, weapons)
             end
             if type(piece.color) == "string" and layout.Palette and layout.Palette[piece.color] == nil then
                 err("%s: color %q is not a Palette key", where, piece.color)
+            end
+            if Validate.KINDS[kind] and Validate.KINDS[kind].asset then
+                if type(piece.assetId) ~= "number" or piece.assetId <= 0 then
+                    err("%s: prop needs a numeric `assetId` from the Creator Store", where)
+                end
+                if piece.scale ~= nil and (type(piece.scale) ~= "number" or piece.scale <= 0) then
+                    err("%s: prop `scale` must be a positive number", where)
+                end
             end
             -- ramps: a thin slab with roll. Too steep stalls characters.
             if piece.rot and piece.size and #piece.size == 3 and piece.size[2] <= 2 then

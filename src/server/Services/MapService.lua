@@ -833,6 +833,30 @@ local function placePrefab(folder, name, inst, mirror)
     end
 end
 
+-- A specific Creator Store model, placed as map decor. Loaded once per asset id and
+-- cached, because a map can place the same rock twenty times and LoadAsset yields
+-- and hits the network. A failed load warns once and leaves the prop out rather than
+-- taking the build down with it.
+local propTemplates = {}
+
+local function propTemplate(assetId)
+    if type(assetId) ~= "number" then
+        return nil
+    end
+    local cached = propTemplates[assetId]
+    if cached == nil then
+        local ok, model = pcall(function()
+            return InsertService:LoadAsset(assetId)
+        end)
+        cached = (ok and model) or false
+        propTemplates[assetId] = cached
+        if not cached then
+            warn(("[MapService] prop asset %d could not be loaded; it will be missing"):format(assetId))
+        end
+    end
+    return cached or nil
+end
+
 local function placePiece(folder, prefix, piece, rng, mirror)
     local pos, rot = mirrorOf(piece.pos, piece.rot, mirror)
     local name = prefix .. (piece.name or piece.kind)
@@ -865,6 +889,34 @@ local function placePiece(folder, prefix, piece, rng, mirror)
         makeStump(folder, name, pos, piece.size)
     elseif kind == "grove" then
         makeGrove(folder, pos, piece.size, piece.count, rng)
+    elseif kind == "prop" then
+        -- Decor only: never collidable, never in a raycast, never touchable. A prop is
+        -- somebody else's mesh, so the layout gates cannot audit its shape -- letting
+        -- it block movement or bullets would put geometry into the fight that nothing
+        -- checks. If a prop should be cover, author a block beside it and let that
+        -- carry the collision, where clearBody can see it.
+        local template = propTemplate(piece.assetId)
+        if template then
+            local model = template:Clone()
+            for _, d in model:GetDescendants() do
+                if d:IsA("BasePart") then
+                    d.Anchored = true
+                    d.CanCollide = false
+                    d.CanQuery = false
+                    d.CanTouch = false
+                end
+            end
+            model.Name = name
+            if piece.scale and piece.scale ~= 1 and model:IsA("Model") then
+                model:ScaleTo(piece.scale)
+            end
+            local cf = CFrame.new(pos[1], pos[2], pos[3])
+            if rot then
+                cf = cf * CFrame.Angles(math.rad(rot[1]), math.rad(rot[2]), math.rad(rot[3]))
+            end
+            model:PivotTo(cf)
+            model.Parent = folder
+        end
     elseif kind == "marker" then
         local strip =
             makePart(folder, name, { pos[1], pos[2] + 0.15, pos[3] }, piece.size, rot, MARKER, Enum.Material.Neon)
