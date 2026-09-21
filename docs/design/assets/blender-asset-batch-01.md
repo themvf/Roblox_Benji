@@ -125,15 +125,24 @@ placements cost one load. Dropping a Model named `GlacierScenery` into
 `ReplicatedStorage.Uploads` still overrides the id, so the look can be retuned in
 Studio without a code change.
 
-The jetpack and jump pad still want their Uploads entries, because they dress an
-existing welded part rather than being placed wholesale:
+The jetpack and jump pad need no Studio step either. Open Cloud only mints Model
+assets, and a Model id cannot be assigned to `SpecialMesh.MeshId`, so a dressed prop
+needs the Model as an *instance* to read the mesh off. Rather than leave that as a
+hand-placement in `ReplicatedStorage.Uploads` that somebody has to remember,
+`Uploads.FALLBACK_ASSETS` records the ids and the server loads the Models itself
+through `InsertService:LoadAsset`, cached, on the server only.
 
-1. Insert the asset by ID (Toolbox → Inventory).
-2. Rename the inserted Model to the Uploads entry name above.
-3. Park it under `ReplicatedStorage.Uploads`.
+| Name | Fallback asset |
+| --- | --- |
+| `JetpackMesh` | 73494627185081 |
+| `JumpPadMesh` | 101685278186013 |
 
-Rojo leaves that folder alone because it is outside the project tree, so these survive
-syncs and publishes. Until they exist those two call sites stay greybox.
+An instance placed in `ReplicatedStorage.Uploads` still wins, so the art can be
+swapped in Studio without a code change, and a failed load warns once and leaves the
+greybox in place rather than erroring.
+
+`LoadAsset` requires the place to be owned by the account that owns the assets
+(3678531109). Under a group-owned place it will fail and both props stay greybox.
 
 ## 5. Not yet verified — needs a running match
 

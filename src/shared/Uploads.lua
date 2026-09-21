@@ -7,8 +7,46 @@
 -- Rojo leaves the Uploads folder alone because it is not part of the project tree, so edits
 -- made in Studio survive syncs and publishes.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local InsertService = game:GetService("InsertService")
+local RunService = game:GetService("RunService")
 
 local Uploads = {}
+
+-- Open Cloud only mints Model assets, and a Model id cannot be assigned to
+-- SpecialMesh.MeshId, so a dressed prop needs the Model as an *instance* to read the
+-- mesh off. Placing one by hand in ReplicatedStorage.Uploads is a Studio step that
+-- Rojo cannot do for you, which leaves the game greybox until somebody remembers.
+-- These ids let the server load the same Models itself, so a fresh clone of the repo
+-- renders correctly with no manual step. An instance in Uploads still wins, so the
+-- art can be swapped in Studio without a code change.
+Uploads.FALLBACK_ASSETS = {
+    JetpackMesh = 73494627185081,
+    JumpPadMesh = 101685278186013,
+}
+
+-- LoadAsset yields and can fail: the place must be owned by the account that owns
+-- the asset, and there may be no network. Cache the outcome either way so a failure
+-- is not retried on every dressing call.
+local loaded = {}
+
+local function loadFallback(name)
+    local assetId = Uploads.FALLBACK_ASSETS[name]
+    if not assetId or not RunService:IsServer() then
+        return nil
+    end
+    local cached = loaded[assetId]
+    if cached == nil then
+        local ok, model = pcall(function()
+            return InsertService:LoadAsset(assetId)
+        end)
+        cached = (ok and model) or false
+        loaded[assetId] = cached
+        if not cached then
+            warn(("Uploads: asset %d for %q could not be loaded; %s stays greybox"):format(assetId, name, name))
+        end
+    end
+    return cached or nil
+end
 
 Uploads.FOLDER_NAME = "Uploads"
 
@@ -64,7 +102,7 @@ function Uploads.model(name)
     if inst and (inst:IsA("Model") or inst:IsA("BasePart")) then
         return inst
     end
-    return nil
+    return loadFallback(name)
 end
 
 function Uploads.isReady(ref)
