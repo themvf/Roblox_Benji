@@ -24,9 +24,6 @@ Validate.KINDS = {
     helicopter = { solid = true, sized = false },
     steam = { solid = false, sized = false },
     radar = { solid = false, sized = false },
-    -- Backdrop geometry cloned from an Uploads model. Never solid, never sized here:
-    -- the mesh carries its own dimensions, and it must sit outside Bounds.
-    scenery = { solid = false, sized = false, backdrop = true },
 }
 
 -- Composite props, copied from MapService.placePiece. Offsets are local to the piece's
@@ -386,26 +383,6 @@ function Validate.check(layout, weapons)
             end
             if type(piece.color) == "string" and layout.Palette and layout.Palette[piece.color] == nil then
                 err("%s: color %q is not a Palette key", where, piece.color)
-            end
-            -- Backdrop scenery is decoration players must never reach. Its pivot has to
-            -- land outside the playable box, or it is arena geometry wearing a costume.
-            if Validate.KINDS[kind] and Validate.KINDS[kind].backdrop then
-                local hasModel = type(piece.model) == "string" and piece.model ~= ""
-                if not hasModel and type(piece.assetId) ~= "number" then
-                    err("%s: scenery needs an Uploads `model` name or a numeric `assetId`", where)
-                end
-                local b = layout.Bounds
-                if b and type(piece.pos) == "table" and #piece.pos == 3 then
-                    local inside = true
-                    for axis = 1, 3 do
-                        if piece.pos[axis] < b.min[axis] or piece.pos[axis] > b.max[axis] then
-                            inside = false
-                        end
-                    end
-                    if inside then
-                        err("%s: scenery pivot is inside Bounds; backdrops stay outside them", where)
-                    end
-                end
             end
             -- ramps: a thin slab with roll. Too steep stalls characters.
             if piece.rot and piece.size and #piece.size == 3 and piece.size[2] <= 2 then

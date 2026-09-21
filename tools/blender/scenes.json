@@ -12,29 +12,12 @@
     "  decimate    target triangle count before tiling",
     "  tile        [nx, ny] bisect grid; every tile must clear 10k triangles",
     "  pivot       center | bottom | top | origin",
-    "  up          which Blender axis is up after import: x|y|z (default z).",
-    "              An OBJ authored Z-up arrives Y-up; most FBX arrive Z-up.",
+    "  up          which Blender axis is up after import: x|y|z (default z). It is",
+    "              normalised onto Blender Z before export, because export_yup maps",
+    "              Blender Z to glTF Y and Roblox reads glTF as Y-up.",
     "Run: blender -b -noaudio --python tools/blender/scene_kit.py -- --asset <name>"
   ],
   "assets": {
-    "glacier": {
-      "description": "Glacial Iceflats scenic backdrop (scenery, never playable)",
-      "source": "MapLocations/rocky-glacier-snowy-landscape-terrain/source/GlacialIceflats_obj.obj",
-      "out": "assets/models/glacier/Glacier.glb",
-      "textures": "assets/models/glacier/textures",
-      "exaggerate": 4.0,
-      "fit": {
-        "axis": "x",
-        "size": 2400
-      },
-      "decimate": 16000,
-      "tile": [
-        2,
-        2
-      ],
-      "pivot": "center",
-      "up": "y"
-    },
     "jetpack": {
       "description": "Titan Cameraman jetpack pack, worn on the torso",
       "source": "Jetpacks/gearspec-titan-cameraman-jetpack/source/Titan Cameraman Jetpack.obj",

@@ -9,7 +9,6 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local Palette = require(ReplicatedStorage.Shared.Palette)
 local Config = require(ReplicatedStorage.Shared.Config)
 local TweenService = game:GetService("TweenService")
-local InsertService = game:GetService("InsertService")
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
 local FortressArt = require(script.Parent.Parent.FortressArt)
@@ -227,8 +226,12 @@ local function buildTerrain(layout)
     if t.GroundColor then
         terrain:SetMaterialColor(t.GroundMaterial, t.GroundColor)
     end
-    if MOUNTAIN then
-        terrain:SetMaterialColor(Enum.Material.Rock, MOUNTAIN)
+    -- An arctic map wants Glacier, not Rock. Default stays Rock with the module
+    -- colour, so maps that declare neither render exactly as before.
+    local mountainMaterial = t.MountainMaterial or Enum.Material.Rock
+    local mountainColor = t.MountainColor or MOUNTAIN
+    if mountainColor then
+        terrain:SetMaterialColor(mountainMaterial, mountainColor)
     end
     -- Water appearance is a map decision: a swamp basin and a tropical sea are not the same
     -- colour. These were hard-coded before any layout data was read, so every map got the
@@ -260,7 +263,7 @@ local function buildTerrain(layout)
         terrain:FillBall(Vector3.new(h[1], h[2], h[3]), h[4], t.GroundMaterial)
     end
     for _, m in t.Mountains or {} do
-        terrain:FillBall(Vector3.new(m[1], m[2], m[3]), m[4], Enum.Material.Rock)
+        terrain:FillBall(Vector3.new(m[1], m[2], m[3]), m[4], mountainMaterial)
     end
     if t.Lake then
         local x, z, rx, rz, depth = table.unpack(t.Lake)
@@ -753,37 +756,6 @@ local function placePrefab(folder, name, inst, mirror)
     end
 end
 
--- Backdrop source: a model a designer dropped into Uploads wins, so Studio can
--- override without a code change; otherwise load the uploaded asset by id.
--- LoadAsset yields and can fail (asset not owned by this place, or no network), so
--- it is wrapped and the outcome cached -- a backdrop is placed several times, and a
--- failed load must not retry once per placement.
-local sceneryCache = {}
-local function sceneryTemplate(piece)
-    local placed = Uploads.model(piece.model)
-    if placed then
-        return placed
-    end
-    local id = piece.assetId
-    if type(id) ~= "number" then
-        return nil
-    end
-    local cached = sceneryCache[id]
-    if cached ~= nil then
-        return cached or nil
-    end
-    local ok, loaded = pcall(function()
-        return InsertService:LoadAsset(id)
-    end)
-    if not ok or not loaded then
-        sceneryCache[id] = false
-        warn(("MapService: scenery asset %d could not be loaded; backdrop skipped"):format(id))
-        return nil
-    end
-    sceneryCache[id] = loaded
-    return loaded
-end
-
 local function placePiece(folder, prefix, piece, rng, mirror)
     local pos, rot = mirrorOf(piece.pos, piece.rot, mirror)
     local name = prefix .. (piece.name or piece.kind)
@@ -816,30 +788,6 @@ local function placePiece(folder, prefix, piece, rng, mirror)
         makeStump(folder, name, pos, piece.size)
     elseif kind == "grove" then
         makeGrove(folder, pos, piece.size, piece.count, rng)
-    elseif kind == "scenery" then
-        -- Distant backdrop. It is scenery and nothing else: never collides, never
-        -- answers a raycast, never touches. Placement must sit outside map.Bounds so
-        -- it cannot be reached, and the safety sweep never sees it as standable.
-        local template = sceneryTemplate(piece)
-        if template then
-            local model = template:Clone()
-            for _, d in model:GetDescendants() do
-                if d:IsA("BasePart") then
-                    d.Anchored = true
-                    d.CanCollide = false
-                    d.CanQuery = false
-                    d.CanTouch = false
-                    d.CastShadow = piece.castShadow == true
-                end
-            end
-            model.Name = name
-            local cf = CFrame.new(pos[1], pos[2], pos[3])
-            if rot then
-                cf = cf * CFrame.Angles(math.rad(rot[1]), math.rad(rot[2]), math.rad(rot[3]))
-            end
-            model:PivotTo(cf)
-            model.Parent = folder
-        end
     elseif kind == "marker" then
         local strip =
             makePart(folder, name, { pos[1], pos[2] + 0.15, pos[3] }, piece.size, rot, MARKER, Enum.Material.Neon)

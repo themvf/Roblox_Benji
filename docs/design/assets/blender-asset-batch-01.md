@@ -1,4 +1,7 @@
-# Asset batch 01: glacier backdrop, Titan jetpack, jump pad
+# Asset batch 01: Titan jetpack, jump pad
+
+> The glacier backdrop was part of this batch and has been withdrawn. See
+> "Why the glacier backdrop was dropped" at the end.
 
 Status: **exports and wiring complete, live-gameplay verification outstanding.**
 Follows [ROBLOX_BLENDER_ASSET_PIPELINE_SPEC.md](../ROBLOX_BLENDER_ASSET_PIPELINE_SPEC.md).
@@ -146,3 +149,31 @@ syncs and publishes. Until they exist those two call sites stay greybox.
    white arctic map. This may need a hue shift on the base colour to belong.
 5. **Frame time on phones.** 15 backdrop tiles plus a dressed pad per launch pad is new
    per-frame cost that has not been measured on a low-end device.
+
+
+## 6. Why the glacier backdrop was dropped
+
+The Glacial Iceflats scan was processed, uploaded three times and placed as a mesh
+ring before being abandoned. It was the wrong tool, and the reasons are worth
+keeping so the next backdrop does not repeat them.
+
+- **A terrain scan is baked for top-down viewing.** Its texture is an orthographic
+  bake, so seen from the side it smears, and the silhouette is whatever survives
+  decimation -- here 712,818 triangles down to 16,873.
+- **Its relief ratio is 0.119.** Below roughly 0.2 a heightfield reads as a flat
+  plate at any distance. Forcing 4x vertical exaggeration reached 0.476 but
+  stretched the bake further.
+- **A finite heightfield is a plate with a cliff on every edge.** Measured, those
+  edges run 38-53% of relief on average and up to 100%, so no rotation hides them
+  and no placement is free of them.
+- **Roblox already solves this natively.** Carrier, Forest and Swamp all declare
+  `Terrain.Mountains` as `FillBall` spheres. Terrain textures correctly from every
+  angle, carries real LOD, costs no MeshParts and has no edges. Snow Fortress now
+  does the same, with `Enum.Material.Glacier` and a nearer row of `Hills` for depth.
+
+The mesh pipeline itself was not the mistake: the jetpack and jump pad are props
+meant to be seen from any angle, which is exactly what it is for. Reach for
+`tools/blender/scene_kit.py` for props, and for terrain data for horizons.
+
+Orphaned uploads, superseded and safe to delete from the Roblox inventory:
+134061547604589, 115957483177465, 122603760493454.

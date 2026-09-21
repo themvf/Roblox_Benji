@@ -4,8 +4,7 @@ Color3 = roblox.Color3
 Enum = roblox.Enum
 
 local art = require("../src/shared/MapArt/AlpineFortress")
-local glacier = require("../src/shared/MapArt/GlacierBackdrop")
-script = { Parent = { Parent = { MapArt = { AlpineFortress = art, GlacierBackdrop = glacier } } } }
+script = { Parent = { Parent = { MapArt = { AlpineFortress = art } } } }
 local luneRequire = require
 require = function(target)
     if type(target) == "table" then
