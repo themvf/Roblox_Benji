@@ -62,6 +62,15 @@ edge of the plate is a cliff that no rotation hides -- hence a ring pushed well 
 with a flat snow plain filling the foreground, and eight plates rather than four,
 because four leaves a visible gap at each diagonal.
 
+**The outposts watch their own objective.** Each upper firing room now has a window
+on the inward X face and on the inward Z face, with a solid backstop on the outward
+Z face. Ray-casting the authored solids from 18 firing positions per outpost puts
+objective A clear from the northwest post 18/18 and B clear from the southeast post
+17/18, with zero open lanes to either enemy spawn across 108 samples each. Closing
+those lanes needed the sightline screens widened from 58 to 66 studs: the objective
+and the enemy spawn sit only about 18 degrees apart from an outpost, so no aperture
+at the wall can separate them and the restriction has to sit downrange.
+
 **The jump pad's pivot is deliberate.** A `SpecialMesh` hangs its mesh origin on the
 part's centre, so exporting with an underside pivot and centring the part on the
 layout position rests the pad on the floor. The greybox slab needed a +0.3 lift
@@ -96,7 +105,7 @@ All three are uploaded and moderation-approved, as user 3678531109, via
 | --- | --- | --- |
 | `JetpackPack.glb` | 73494627185081 | `JetpackMesh` |
 | `JumpPad.glb` | 101685278186013 | `JumpPadMesh` |
-| `Glacier.glb` | 115957483177465 | `GlacierScenery` |
+| `Glacier.glb` | 122603760493454 | `GlacierScenery` |
 
 Receipts, keyed by content hash, are in `%LOCALAPPDATA%/RobloxCodex/uploads`. Re-running
 an upload of identical bytes resumes the receipt instead of creating a duplicate asset.
@@ -107,7 +116,7 @@ MeshParts, not a bare mesh id. `MeshDressing` handles both: given an Uploads ent
 is a Model it reads the mesh and texture off the first MeshPart inside, so nothing has
 to be copied out by hand.
 
-The glacier backdrop needs no Studio step: `MapService` loads asset 115957483177465
+The glacier backdrop needs no Studio step: `MapService` loads asset 122603760493454
 through `InsertService:LoadAsset` at build time, caching the outcome so four ring
 placements cost one load. Dropping a Model named `GlacierScenery` into
 `ReplicatedStorage.Uploads` still overrides the id, so the look can be retuned in

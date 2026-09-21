@@ -25,6 +25,7 @@ would breach a Roblox limit, rather than leaving that to a failed import later.
 
 import argparse
 import json
+import math
 import os
 import sys
 
@@ -94,6 +95,20 @@ def join(objs, name):
 
 
 # --- operations ----------------------------------------------------------
+
+
+def op_orient(ob, up):
+    """Rotate so the source's up axis becomes Blender Z, then bake it.
+
+    Everything downstream assumes a Z-up scene: `export_yup` maps Blender Z to
+    glTF Y, which is what Roblox reads as up. Skipping this step exports a file
+    whose height is on glTF Z, and the asset then lies on its side in game -- which
+    is exactly what happened to the glacier, whose OBJ source arrives Y-up."""
+    if up == 2:
+        return
+    ob.rotation_euler = (math.radians(90), 0, 0) if up == 1 else (0, math.radians(-90), 0)
+    select([ob])
+    bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
 
 
 def op_exaggerate(ob, factor, up):
@@ -273,6 +288,10 @@ def build(name, spec, out_override=None):
     # are not the world axes. Bake that in before anything indexes an axis,
     # otherwise a local-Y scale silently lands on world Z.
     apply_transform(ob)
+    # From here on the scene is Z-up regardless of how the source arrived, so every
+    # axis-indexed operation below can assume it.
+    op_orient(ob, up)
+    up = 2
     op_exaggerate(ob, spec.get("exaggerate"), up)
     fit = spec.get("fit")
     if fit:

@@ -50,7 +50,7 @@ function Art.applyMap(map)
             kind = "scenery",
             name = ("GlacierBackdrop%03d"):format(degrees),
             model = "GlacierScenery",
-            assetId = 115957483177465,
+            assetId = 122603760493454,
             pos = { math.cos(radians) * RING_RADIUS, RING_Y, math.sin(radians) * RING_RADIUS },
             rot = { 0, degrees, 0 },
             decor = true,

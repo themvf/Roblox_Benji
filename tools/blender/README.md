@@ -74,6 +74,12 @@ Use `=` on any argument whose value starts with `-`, or argparse reads it as a f
   without it a local-Y scale silently lands on world Z.
 - **An OBJ authored Z-up arrives Y-up**; most FBX arrive Z-up. Hence the `up` field.
   If `exaggerate` makes an asset wider instead of taller, `up` is wrong.
+- **`up` must be normalised to Blender Z before export, not just used for indexing.**
+  `export_yup` maps Blender Z to glTF Y; an asset still sitting on Blender Y exports
+  with its height on glTF Z and then lies on its side in Roblox. `scene_kit` does
+  this now, but it is worth checking a new asset's GLB directly -- read the POSITION
+  accessor min/max and confirm the height is on y. Blender's own viewport will not
+  show the problem, because its importer converts back on the way in.
 - **A heightfield has a cliff at every edge.** No rotation hides it, so a backdrop
   plate belongs far out with a flat plain filling the foreground, not close in.
 - **Relief ratio under about 0.2 reads flat** from any distance. `scene_kit` prints

@@ -200,7 +200,12 @@ for _, team in { "Blue", "Red" } do
     end
     -- Open exterior staging. A detached screen interrupts spawn shooting lanes;
     -- no enclosing bunker or fortified starting structure.
-    block(team .. "SightlineScreen", { side * 179, 7, 0 }, { 3, 14, 58 })
+    -- Half-length 33, not 29: opening the outposts' inward window exposes a lane to
+    -- the enemy spawn point at z -20, whose rays cross this screen at |z| ~30. The
+    -- objective and the spawn sit only ~18 degrees apart from an outpost, so no
+    -- aperture at the outpost wall can separate them; the restriction has to be
+    -- downrange. 33 still leaves 5 studs clear of the centre route detour at z 38.
+    block(team .. "SightlineScreen", { side * 179, 7, 0 }, { 3, 14, 66 })
     for _, direction in { -1, 1 } do
         table.insert(map.LaunchPads, {
             Id = team .. (direction == -1 and "-north-launch" or "-south-launch"),
@@ -267,6 +272,10 @@ for _, post in map.SniperOutposts do
     -- passes with exactly zero margin at a 1-stud rise on a 2.5-stud run, so both
     -- steepening and lengthening the treads trip it. The stair that used to run at
     -- the Blue spawn is removed outright below, which is the real fix.
+    -- The map interior is +Z from the northwest post at z -126 and -Z from the
+    -- southeast one, so the sign of the post's own z picks the face worth glazing
+    -- and rotational symmetry falls out of it.
+    local inward = z < 0 and 1 or -1
     for _, direction in { -1, 1 } do
         for step = 1, 18 do
             block(
@@ -278,20 +287,22 @@ for _, post in map.SniperOutposts do
         end
         -- Lower-level shelter; two open side doors beneath the firing deck.
         block(post.Id .. "LowerWall" .. direction, { x, 8.5, z + direction * 12 }, { 28, 15, 2 })
-        -- Upper firing slit: sill top 21.5, header bottom 25.5, roof at 29.
-        block(post.Id .. "Sill" .. direction, { x, 19.75, z + direction * 12 }, { 28, 3.5, 2 }, "Cover")
-        block(post.Id .. "Header" .. direction, { x, 27.25, z + direction * 12 }, { 28, 3.5, 2 })
-        block(post.Id .. "WindowDivider" .. direction, { x, 23.5, z + direction * 12 }, { 4, 4, 2 })
+        -- Only the inward Z face earns a window: sill top 21.5, header bottom 25.5,
+        -- roof at 29. The outward face looks at the dead strip between the outpost
+        -- and the boundary, so it is a solid backstop. Building both a slit and a
+        -- full-height wall on the same face, as the old SpawnShield did, left two
+        -- solids coplanar at the same z and the same 2-stud thickness.
+        if direction == inward then
+            block(post.Id .. "Sill" .. direction, { x, 19.75, z + direction * 12 }, { 28, 3.5, 2 }, "Cover")
+            block(post.Id .. "Header" .. direction, { x, 27.25, z + direction * 12 }, { 28, 3.5, 2 })
+            block(post.Id .. "WindowDivider" .. direction, { x, 23.5, z + direction * 12 }, { 4, 4, 2 })
+        else
+            block(post.Id .. "UpperBackstop", { x, 23.5, z + direction * 12 }, { 28, 11, 2 })
+        end
         for _, corner in { -1, 1 } do
             block(post.Id .. "Corner" .. direction .. corner, { x + direction * 13, 15, z + corner * 10 }, { 2, 28, 6 })
         end
     end
-    -- Solid wall on the Z face pointing away from the map. It used to sit on the
-    -- inward face, which blinded the outpost toward the objectives it exists to
-    -- watch. The lane into an enemy spawn is already cut by the sightline screens
-    -- at x +/-179, so the inward face does not need blocking here.
-    local outward = z < 0 and -1 or 1
-    block(post.Id .. "BackWall", { x, 23.5, z + outward * 12 }, { 28, 11, 2 })
 end
 
 -- Ordinary approaches to C continue up an existing stair, then onto its floor.

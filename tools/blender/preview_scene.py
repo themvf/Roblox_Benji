@@ -59,11 +59,9 @@ def import_placed(path, x, y, z, yaw):
         bpy.ops.object.join()
     ob = bpy.context.view_layer.objects.active
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-    # scene_kit exports with export_yup, so the file is Y-up like Roblox, and the
-    # glTF importer hands it back that way. Blender's world is Z-up, so bake the
-    # conversion in before placing, or the asset stands on its side.
-    ob.rotation_euler = (math.radians(90), 0, 0)
-    bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+    # scene_kit exports correct Y-up files, so Blender's glTF importer lands them
+    # Z-up here and no compensation is needed. If an asset renders on its side, the
+    # file itself is wrong -- check its manifest `up` rather than patching it here.
     ob.rotation_euler = (0, 0, math.radians(-yaw))  # Roblox yaw about Y is -Z in Blender
     ob.location = to_blender(x, y, z)
     # The importer's leftover empties are harmless and do not render. Removing them
