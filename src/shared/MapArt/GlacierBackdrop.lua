@@ -1,38 +1,66 @@
 -- Scenic glacier horizon. Backdrop only: it is never playable, never collidable and
 -- never standable, so it changes no route, sightline or capture volume.
 --
--- The mesh is the decimated GlacialIceflats scan (tools/blender/process_assets.py),
--- 2400 x 286 x 2400 studs with a centred pivot, uploaded as asset 134061547604589
--- and loaded by id at build time. Dropping a model named GlacierScenery into
--- ReplicatedStorage.Uploads overrides the id, so the look can be retuned in Studio
--- without a code change. If neither resolves the map builds as it does today.
+-- The mesh is the decimated GlacialIceflats scan (tools/blender/scene_kit.py),
+-- exaggerated 4x vertically so its relief ratio is 0.476 rather than the source's
+-- 0.119: below about 0.2 a heightfield reads as a flat plate, not as mountains.
+-- 2400 x 1146 x 2400 studs with a centred pivot, uploaded and loaded by asset id.
+-- Dropping a model named GlacierScenery into ReplicatedStorage.Uploads overrides
+-- the id, so the look can be retuned in Studio without a code change.
+--
+-- Placement rule learned the hard way: this is a finite heightfield, so every edge
+-- of the plate is a cliff, and no rotation hides that (measured edge heights run
+-- 38-53% of relief on average and up to 100%). Putting a plate near the arena
+-- therefore always shows a wall. Instead the ring sits far out and a flat snow
+-- plain fills the foreground, so the plates read as mountains rising from a
+-- snowfield and their low ground is simply hidden beneath it.
+
 local Art = {}
 
--- Four rings placed just outside the playable box. Snow Fortress bounds are
--- x +/-245 and z +/-185, so a 2400-stud tile centred 1500 out on x (1400 on z)
--- keeps its nearest edge at 300 (200 on z) -- clear of the barrier with margin.
--- Sunk to y = -60 the ridge line tops out at +83, just under the 85 ceiling.
-local RING = {
-    { name = "West", pos = { -1500, -60, 0 }, rot = { 0, 0, 0 } },
-    { name = "East", pos = { 1500, -60, 0 }, rot = { 0, 180, 0 } },
-    { name = "North", pos = { 0, -60, -1400 }, rot = { 0, 90, 0 } },
-    { name = "South", pos = { 0, -60, 1400 }, rot = { 0, 270, 0 } },
-}
+-- Eight plates on a ring, not four. Four leaves a gap at each diagonal that is
+-- plainly visible from inside the arena; at 45-degree spacing the 2400-stud plates
+-- overlap (adjacent centres are 1684 apart) and the horizon closes.
+-- Radius 2200 puts the nearest backdrop geometry about 755 studs from the arena
+-- edge with peaks near 20 degrees of elevation: present, not looming.
+local RING_RADIUS = 2200
+local RING_Y = 300 -- plate spans -273..873, so roughly three quarters clears the plain
+local RING_COUNT = 8
+local PLAIN = 9000 -- flat snowfield; the plates' low ground hides beneath it
 
 function Art.applyMap(map)
-    for _, ring in RING do
+    -- The snowfield goes down first so the plates rise out of it. It sits just
+    -- below the arena floor, is never collidable in practice because the barrier
+    -- keeps players inside, and is marked decor so the art pass leaves it alone.
+    table.insert(map.Center, {
+        kind = "block",
+        name = "BackdropPlain",
+        pos = { 0, -2.5, 0 },
+        size = { PLAIN, 3, PLAIN },
+        color = "Floor",
+        material = "Snow",
+        decor = true,
+    })
+    for index = 0, RING_COUNT - 1 do
+        local degrees = index * (360 / RING_COUNT)
+        local radians = math.rad(degrees)
+        -- Yaw tracks the bearing so each plate presents a different face inward;
+        -- the source is one square heightfield, and eight unrotated copies of it
+        -- would read as an obvious repeat.
         table.insert(map.Center, {
             kind = "scenery",
-            name = "GlacierBackdrop" .. ring.name,
+            name = ("GlacierBackdrop%03d"):format(degrees),
             model = "GlacierScenery",
-            assetId = 134061547604589,
-            pos = ring.pos,
-            rot = ring.rot,
+            assetId = 115957483177465,
+            pos = { math.cos(radians) * RING_RADIUS, RING_Y, math.sin(radians) * RING_RADIUS },
+            rot = { 0, degrees, 0 },
             decor = true,
         })
     end
-    -- A distant ice horizon only reads if the fog stops hiding it. The map's own
-    -- FogEnd of 3000 already clears the farthest ridge at ~2700 studs.
+    -- Fog has to clear the farthest ridge at RING_DISTANCE + 1200, or the backdrop
+    -- is paid for and then hidden. The arena is under 600 studs across, so pushing
+    -- FogStart out this far changes nothing inside it.
+    map.Environment.FogStart = 3000
+    map.Environment.FogEnd = 12000
     return map
 end
 

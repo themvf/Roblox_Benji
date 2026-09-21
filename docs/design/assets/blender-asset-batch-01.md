@@ -16,15 +16,15 @@ Roblox upload. Section 5 is the part a human has to close.
 | Source | `MapLocations/rocky-glacier-snowy-landscape-terrain` | `Jetpacks/gearspec-titan-cameraman-jetpack` | `Snow Fortress/v2701-jumppad-2018-spring-ue4jam` |
 | Source form | OBJ, 712,818 tris | OBJ + MTL, 3,984 tris | FBX, 972 tris |
 | Export | `assets/models/glacier/Glacier.glb` | `assets/models/jetpack/JetpackPack.glb` | `assets/models/jumppad/JumpPad.glb` |
-| Exported tris | 40,087 over 15 tiles, max 5,858 | 3,984 | 972 |
-| Exported size (studs) | 2400 x 286 x 2400 | 4.0 x 2.55 x 0.91 | 8.0 x 0.42 x 8.0 |
+| Exported tris | 16,873 over 4 tiles, max 5,381 | 3,984 | 972 |
+| Exported size (studs) | 2400 x 1146 x 2400, 4x vertical exaggeration | 4.0 x 2.55 x 0.91 | 8.0 x 0.42 x 8.0 |
 | Pivot | bbox centre | bbox centre | underside centre |
 | Textures | 4033² -> 1024² (diffuse, roughness, normal) | 512² diffuse, unchanged | 2048² -> 1024², 5 maps |
 
-Reproduce any of them with:
+Reproduce any of them from tools/blender/scenes.json with:
 
 ```bash
-blender -b -noaudio --python tools/blender/process_assets.py -- jumppad "<src>" assets/models/jumppad/JumpPad.glb assets/models/jumppad/textures
+blender -b -noaudio --python tools/blender/scene_kit.py -- --asset jumppad
 ```
 
 ## 2. Decisions worth knowing
@@ -53,6 +53,14 @@ exactly zero margin at the authored 1-stud rise on a 2.5-stud run, so any steepe
 trips it; the only shortening that still passes is a 2.25-stud run, worth 4.5 studs.
 enclosed-fortress-v3 removes the spawn-facing stair outright, which was the real
 problem, so the shortening was reverted rather than fought for.
+
+**The glacier is exaggerated 4x vertically.** The source scan has 286 studs of
+relief over 2400, a ratio of 0.119; below roughly 0.2 a heightfield reads as a flat
+plate at any distance, which is why the first attempt looked like slabs rather than
+mountains. At 0.476 it reads as a range. It is also a finite heightfield, so every
+edge of the plate is a cliff that no rotation hides -- hence a ring pushed well out
+with a flat snow plain filling the foreground, and eight plates rather than four,
+because four leaves a visible gap at each diagonal.
 
 **The jump pad's pivot is deliberate.** A `SpecialMesh` hangs its mesh origin on the
 part's centre, so exporting with an underside pivot and centring the part on the
@@ -88,7 +96,7 @@ All three are uploaded and moderation-approved, as user 3678531109, via
 | --- | --- | --- |
 | `JetpackPack.glb` | 73494627185081 | `JetpackMesh` |
 | `JumpPad.glb` | 101685278186013 | `JumpPadMesh` |
-| `Glacier.glb` | 134061547604589 | `GlacierScenery` |
+| `Glacier.glb` | 115957483177465 | `GlacierScenery` |
 
 Receipts, keyed by content hash, are in `%LOCALAPPDATA%/RobloxCodex/uploads`. Re-running
 an upload of identical bytes resumes the receipt instead of creating a duplicate asset.
@@ -99,7 +107,7 @@ MeshParts, not a bare mesh id. `MeshDressing` handles both: given an Uploads ent
 is a Model it reads the mesh and texture off the first MeshPart inside, so nothing has
 to be copied out by hand.
 
-The glacier backdrop needs no Studio step: `MapService` loads asset 134061547604589
+The glacier backdrop needs no Studio step: `MapService` loads asset 115957483177465
 through `InsertService:LoadAsset` at build time, caching the outcome so four ring
 placements cost one load. Dropping a Model named `GlacierScenery` into
 `ReplicatedStorage.Uploads` still overrides the id, so the look can be retuned in

@@ -70,6 +70,7 @@ local map = {
         Brightness = 2,
         Ambient = Color3.fromRGB(160, 160, 160),
         OutdoorAmbient = Color3.fromRGB(170, 170, 170),
+        -- GlacierBackdrop widens these so the ridge line is not fogged out.
         FogStart = 2000,
         FogEnd = 3000,
         FogColor = Color3.fromRGB(190, 195, 205),
@@ -285,9 +286,12 @@ for _, post in map.SniperOutposts do
             block(post.Id .. "Corner" .. direction .. corner, { x + direction * 13, 15, z + corner * 10 }, { 2, 28, 6 })
         end
     end
-    -- Keep the original spawn-facing shield, now tall enough for the upper deck.
-    local towardsSpawn = z < 0 and 1 or -1
-    block(post.Id .. "SpawnShield", { x, 23.5, z + towardsSpawn * 12 }, { 28, 11, 2 })
+    -- Solid wall on the Z face pointing away from the map. It used to sit on the
+    -- inward face, which blinded the outpost toward the objectives it exists to
+    -- watch. The lane into an enemy spawn is already cut by the sightline screens
+    -- at x +/-179, so the inward face does not need blocking here.
+    local outward = z < 0 and -1 or 1
+    block(post.Id .. "BackWall", { x, 23.5, z + outward * 12 }, { 28, 11, 2 })
 end
 
 -- Ordinary approaches to C continue up an existing stair, then onto its floor.
@@ -341,7 +345,12 @@ for _, post in map.SniperOutposts do
     for _, side in { -1, 1 } do
         block(post.Id .. "LowerEnd" .. side, { x + side * 13, 9, z }, { 2, 16, 26 })
     end
-    block(post.Id .. "UpperBack", { x - entry * 13, 23.5, z }, { 2, 11, 26 })
+    -- The face opposite the door looks over the map, so it is a firing window, not
+    -- a wall: same sill/header split as the Z faces, leaving a slit at y 21.5..25.5.
+    local watch = x - entry * 13
+    block(post.Id .. "WatchSill", { watch, 19.75, z }, { 2, 3.5, 26 }, "Cover")
+    block(post.Id .. "WatchHeader", { watch, 27.25, z }, { 2, 3.5, 26 })
+    block(post.Id .. "WatchDivider", { watch, 23.5, z }, { 2, 4, 4 })
     for _, side in { -1, 1 } do
         block(post.Id .. "DoorJamb" .. side, { x + entry * 13, 23.5, z + side * 9 }, { 2, 11, 8 })
     end
