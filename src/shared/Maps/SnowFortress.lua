@@ -76,12 +76,12 @@ local map = {
         -- drops the whole skybox if any single face fails to resolve rather than
         -- leaving five faces and a hole.
         Sky = {
-            Ft = "rbxassetid://134525398331750",
-            Bk = "rbxassetid://101292815824582",
-            Lf = "rbxassetid://122801675363023",
-            Rt = "rbxassetid://76597931998535",
-            Up = "rbxassetid://106438932865634",
-            Dn = "rbxassetid://86029593823829",
+            Ft = "rbxassetid://101373830899985",
+            Bk = "rbxassetid://106113729279759",
+            Lf = "rbxassetid://127133479050985",
+            Rt = "rbxassetid://106888607243943",
+            Up = "rbxassetid://90343087754702",
+            Dn = "rbxassetid://124273916652969",
         },
         ClockTime = 12,
         Brightness = 2,

@@ -31,8 +31,12 @@ FACES = {
     "bk": (math.radians(90), 0, math.radians(180)),
     "lf": (math.radians(90), 0, math.radians(90)),
     "rt": (math.radians(90), 0, math.radians(-90)),
-    "up": (0, 0, 0),
-    "dn": (math.radians(180), 0, 0),
+    # A Blender camera at (0,0,0) looks along -Z, which is DOWN. So the zenith view
+    # needs the 180 flip and the nadir view is the unrotated one -- the obvious
+    # reading of these two is backwards, and shipping it swapped puts ground
+    # overhead and sky underfoot.
+    "up": (math.radians(180), 0, 0),
+    "dn": (0, 0, 0),
 }
 
 
