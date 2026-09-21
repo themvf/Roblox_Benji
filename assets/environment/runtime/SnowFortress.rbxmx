@@ -1,0 +1,182 @@
+<roblox version="4">
+  <Item class="Folder" referent="0">
+    <Properties>
+      <string name="Name">SnowFortress</string>
+    </Properties>
+    <Item class="MeshPart" referent="1">
+      <Properties>
+        <string name="Name">Portal</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+        <Content name="MeshContent">
+          <uri>rbxassetid://97514947286513</uri>
+        </Content>
+        <Vector3 name="size">
+          <X>29.199997</X>
+          <Y>19.027695</Y>
+          <Z>5.524994</Z>
+        </Vector3>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="2">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <Content name="ColorMapContent">
+            <uri>rbxassetid://107517388365642</uri>
+          </Content>
+          <Content name="MetalnessMapContent">
+            <uri>rbxassetid://81206348446212</uri>
+          </Content>
+          <Content name="NormalMapContent">
+            <uri>rbxassetid://103003809608425</uri>
+          </Content>
+          <Content name="RoughnessMapContent">
+            <uri>rbxassetid://138739624425386</uri>
+          </Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="3">
+      <Properties>
+        <string name="Name">WallBay</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+        <Content name="MeshContent">
+          <uri>rbxassetid://76541940970822</uri>
+        </Content>
+        <Vector3 name="size">
+          <X>10</X>
+          <Y>13</Y>
+          <Z>3.449997</Z>
+        </Vector3>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="4">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <Content name="ColorMapContent">
+            <uri>rbxassetid://139917916851753</uri>
+          </Content>
+          <Content name="MetalnessMapContent">
+            <uri>rbxassetid://130198819519587</uri>
+          </Content>
+          <Content name="NormalMapContent">
+            <uri>rbxassetid://130646524800666</uri>
+          </Content>
+          <Content name="RoughnessMapContent">
+            <uri>rbxassetid://88147658806080</uri>
+          </Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="5">
+      <Properties>
+        <string name="Name">Pier</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+        <Content name="MeshContent">
+          <uri>rbxassetid://81731499308896</uri>
+        </Content>
+        <Vector3 name="size">
+          <X>6.149994</X>
+          <Y>21.045319</Y>
+          <Z>5.449997</Z>
+        </Vector3>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="6">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <Content name="ColorMapContent">
+            <uri>rbxassetid://79584707714479</uri>
+          </Content>
+          <Content name="MetalnessMapContent">
+            <uri>rbxassetid://76184438733569</uri>
+          </Content>
+          <Content name="NormalMapContent">
+            <uri>rbxassetid://140539039530413</uri>
+          </Content>
+          <Content name="RoughnessMapContent">
+            <uri>rbxassetid://112946414818366</uri>
+          </Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="7">
+      <Properties>
+        <string name="Name">Parapet</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+        <Content name="MeshContent">
+          <uri>rbxassetid://130291006075346</uri>
+        </Content>
+        <Vector3 name="size">
+          <X>10</X>
+          <Y>3.650055</Y>
+          <Z>3.550003</Z>
+        </Vector3>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="8">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <Content name="ColorMapContent">
+            <uri>rbxassetid://119777457502069</uri>
+          </Content>
+          <Content name="MetalnessMapContent">
+            <uri>rbxassetid://136236996377801</uri>
+          </Content>
+          <Content name="NormalMapContent">
+            <uri>rbxassetid://136812887790775</uri>
+          </Content>
+          <Content name="RoughnessMapContent">
+            <uri>rbxassetid://93705998232102</uri>
+          </Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="9">
+      <Properties>
+        <string name="Name">Floor</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+        <Content name="MeshContent">
+          <uri>rbxassetid://86285295257538</uri>
+        </Content>
+        <Vector3 name="size">
+          <X>10</X>
+          <Y>1.0200043</Y>
+          <Z>10</Z>
+        </Vector3>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="10">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <Content name="ColorMapContent">
+            <uri>rbxassetid://106966321066648</uri>
+          </Content>
+          <Content name="MetalnessMapContent">
+            <uri>rbxassetid://120719746464732</uri>
+          </Content>
+          <Content name="NormalMapContent">
+            <uri>rbxassetid://103613136663634</uri>
+          </Content>
+          <Content name="RoughnessMapContent">
+            <uri>rbxassetid://72517354362782</uri>
+          </Content>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+</roblox>

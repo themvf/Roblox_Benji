@@ -3,7 +3,7 @@
 -- Dimensions are blockout hypotheses; topology is locked pending designer review.
 local map = {
     Name = "SnowFortress",
-    Revision = "alpine-art-v2",
+    Revision = "enclosed-fortress-v3",
     Size = 500,
     WallHeight = 12,
     Seed = 1129,
@@ -105,16 +105,16 @@ local map = {
         {
             Id = "southwest-upper",
             From = { -150, 4, 130 },
-            To = { -60, 24, 46 },
+            To = { -55, 38, 50 },
             GroundAlternative = "blue-centre",
-            Purpose = "Southwest exterior to second story",
+            Purpose = "Southwest exterior to roof hatch",
         },
         {
             Id = "northeast-upper",
             From = { 150, 4, -130 },
-            To = { 60, 24, -46 },
+            To = { 55, 38, -50 },
             GroundAlternative = "red-centre",
-            Purpose = "Northeast exterior to second story",
+            Purpose = "Northeast exterior to roof hatch",
         },
     },
     -- No grapple routes in the new authoritative sketch.
@@ -203,8 +203,8 @@ for _, team in { "Blue", "Red" } do
     for _, direction in { -1, 1 } do
         table.insert(map.LaunchPads, {
             Id = team .. (direction == -1 and "-north-launch" or "-south-launch"),
-            pos = { side * 115, 0.3, direction * 30 },
-            target = { side * 48, 6.5, direction * 30 },
+            pos = { side * 125, 0.3, direction * 30 },
+            target = { side * 84, 2, direction * 5 },
             vy = 62,
             size = 8,
             GroundAlternative = team:lower() .. "-centre",
@@ -296,6 +296,48 @@ for _, route in map.GroundRoutes do
         table.insert(route.Waypoints, { 0, 19, 0 })
         route.To = { 0, 19, 0 }
     end
+end
+
+-- Enclosed shell: ground access is exclusively through the four ramp doors.
+for _, side in { -1, 1 } do
+    for _, wing in { -1, 1 } do
+        block("GroundClosure" .. side .. wing, { side * 69, 10.5, wing * 31.5 }, { 2, 13, 23 }, "Wall")
+    end
+    block("UpperWallX" .. side, { side * 69, 25, 0 }, { 2, 14, 110 }, "Wall")
+    block("UpperWallZ" .. side, { 0, 25, side * 54 }, { 140, 14, 2 }, "Wall")
+end
+-- Roof top 33. Two 10x10 hatches provide drops into the second storey.
+map.RoofHatches = { { -55, 33, 40 }, { 55, 33, -40 } }
+for x = -65, 65, 10 do
+    for z = -50, 50, 10 do
+        if not ((x == -55 and z == 40) or (x == 55 and z == -40)) then
+            block("FortressRoof" .. x .. "_" .. z, { x, 32.5, z }, { 10, 1, 10 }, "Upper")
+        end
+    end
+end
+for _, hatch in map.RoofHatches do
+    for _, edge in { -1, 1 } do
+        block("HatchRim" .. hatch[1] .. edge, { hatch[1] + edge * 5.25, 33.2, hatch[3] }, { 0.5, 0.4, 10 }, "ArtAmber")
+    end
+end
+-- Each outpost has one exterior staircase and one upper doorway, with firing windows.
+for _, post in map.SniperOutposts do
+    local x, z = post.pos[1], post.pos[3]
+    local entry = x < 0 and 1 or -1
+    for i = #map.Center, 1, -1 do
+        local prefix = post.Id .. "Stair" .. -entry .. "_"
+        if map.Center[i].name:sub(1, #prefix) == prefix then
+            table.remove(map.Center, i)
+        end
+    end
+    for _, side in { -1, 1 } do
+        block(post.Id .. "LowerEnd" .. side, { x + side * 13, 9, z }, { 2, 16, 26 })
+    end
+    block(post.Id .. "UpperBack", { x - entry * 13, 23.5, z }, { 2, 11, 26 })
+    for _, side in { -1, 1 } do
+        block(post.Id .. "DoorJamb" .. side, { x + entry * 13, 23.5, z + side * 9 }, { 2, 11, 8 })
+    end
+    block(post.Id .. "DoorHeader", { x + entry * 13, 27.5, z }, { 2, 4, 10 })
 end
 
 local AlpineFortress = require(script.Parent.Parent.MapArt.AlpineFortress)

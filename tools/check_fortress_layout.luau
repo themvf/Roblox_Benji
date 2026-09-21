@@ -122,12 +122,35 @@ for _, pad in map.LaunchPads do
         assert(distance2(pad.target, objective.pos) > objective.radius + 8, "launch pad lands in an objective")
     end
 end
+assert(#map.RoofHatches == 2, "two roof drops required")
+for _, hatch in map.RoofHatches do
+    for _, piece in map.Center do
+        if piece.name:match("^FortressRoof") then
+            assert(
+                not (
+                        math.abs(hatch[1] - piece.pos[1]) < piece.size[1] / 2
+                        and math.abs(hatch[3] - piece.pos[3]) < piece.size[3] / 2
+                    ),
+                "roof seals drop hatch"
+            )
+        end
+    end
+end
+for _, post in map.SniperOutposts do
+    local count = 0
+    for _, piece in map.Center do
+        if piece.name:match("^" .. post.Id .. "Stair") then
+            count += 1
+        end
+    end
+    assert(count == 18, "outpost needs exactly one 18-step staircase")
+end
 for _, line in map.ZipLines do
     checkAlternative(line, "zip line")
     assert(line.From and line.To and line.Purpose, "zip line needs endpoints and purpose")
     assertPointInBounds(line.From, line.Id .. " origin")
     assertPointInBounds(line.To, line.Id .. " landing")
-    assert(line.To[2] >= 21, "zip must reach second story")
+    assert(line.To[2] >= 36, "zip must clear enclosed fortress roof")
     assert(line.From[1] * line.From[3] < 0, "zip must start southwest or northeast")
 end
 for _, anchor in map.GrappleAnchors do

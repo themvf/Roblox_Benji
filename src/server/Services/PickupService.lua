@@ -388,27 +388,44 @@ local function makeLaunchPad(self, folder, spec, index)
     pad.Name = "LaunchPad" .. index
     pad.Anchored = true
     pad.CanCollide = true
-    pad.Material = Enum.Material.Neon
-    pad.Color = COLORS.pad
-    pad.Material = Enum.Material.SmoothPlastic
-    pad.Transparency = 0.7 -- the chevrons carry the meaning, not the slab
-    pad.Size = Vector3.new(size, 0.6, size)
-    pad.CFrame = CFrame.new(pos + Vector3.new(0, 0.3, 0))
+    pad.Material = Enum.Material.Fabric
+    pad.Color = Color3.fromRGB(28, 35, 45)
+    pad.Shape = Enum.PartType.Cylinder
+    pad.Size = Vector3.new(0.6, size, size)
+    pad.CFrame = CFrame.new(pos + Vector3.new(0, 0.3, 0)) * CFrame.Angles(0, 0, math.pi / 2)
     pad.Parent = folder
-    local dir = Vector3.new(target.X - pos.X, 0, target.Z - pos.Z).Unit
-    for i = 1, 3 do
-        local chev = Instance.new("WedgePart")
-        chev.Anchored = true
-        chev.CanCollide = false
-        chev.CanQuery = false
-        chev.Material = Enum.Material.Neon
-        chev.Color = Color3.new(0.1, 0.1, 0.1)
-        chev.Size = Vector3.new(size * 0.5, 0.2, 1.2)
-        chev.CFrame = CFrame.lookAt(
-            pos + Vector3.new(0, 0.71, 0) + dir * (i - 2) * 1.8,
-            pos + Vector3.new(0, 0.71, 0) + dir * 10
-        ) * CFrame.Angles(math.rad(-90), 0, 0)
-        chev.Parent = folder
+    -- Padded circular frame, exposed springs and legs read as a trampoline.
+    for i = 1, 16 do
+        local angle = i * math.pi / 8
+        local radial = Vector3.new(math.cos(angle), 0, math.sin(angle))
+        local rim = Instance.new("Part")
+        rim.Name = "TrampolinePadding"
+        rim.Size = Vector3.new(size * 0.21, 0.65, 0.75)
+        rim.CFrame =
+            CFrame.lookAt(pos + radial * (size / 2 + 0.1) + Vector3.new(0, 0.5, 0), pos + Vector3.new(0, 0.5, 0))
+        rim.Color, rim.Material = COLORS.pad, Enum.Material.SmoothPlastic
+        rim.Anchored, rim.CanCollide, rim.CanQuery = true, false, false
+        rim.Parent = folder
+        local spring = Instance.new("Part")
+        spring.Name = "TrampolineSpring"
+        spring.Size = Vector3.new(0.15, 0.15, 0.65)
+        spring.CFrame =
+            CFrame.lookAt(pos + radial * (size / 2 - 0.35) + Vector3.new(0, 0.65, 0), pos + Vector3.new(0, 0.65, 0))
+        spring.Material, spring.Color = Enum.Material.Metal, Color3.fromRGB(170, 180, 190)
+        spring.Anchored, spring.CanCollide, spring.CanQuery = true, false, false
+        spring.Parent = folder
+    end
+    for _, x in { -1, 1 } do
+        for _, z in { -1, 1 } do
+            local leg = Instance.new("Part")
+            leg.Name = "TrampolineLeg"
+            leg.Size = Vector3.new(0.35, 0.6, 0.35)
+            leg.Position = pos + Vector3.new(x * size * 0.32, 0, z * size * 0.32)
+            leg.Anchored, leg.CanCollide, leg.CanQuery = true, false, false
+            leg.Material = Enum.Material.Metal
+            leg.Color = Color3.fromRGB(100, 110, 120)
+            leg.Parent = folder
+        end
     end
     local land = Instance.new("Part")
     land.Name = "LandingZone" .. index

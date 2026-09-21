@@ -158,10 +158,11 @@ function MutationController:Update()
     local touch = self:Touch()
     local state = Screen.get()
     self.Row.Visible = not touch
-    self.Frame.Size = touch and UDim2.fromOffset(320, 44) or UDim2.fromOffset(320, 64)
+    self.Frame.Size = touch and UDim2.fromOffset(230, 44) or UDim2.fromOffset(320, 64)
     if touch then
         self.Frame.AnchorPoint = Vector2.new(0, 0)
-        self.Frame.Position = UDim2.new(0, state.Insets.Left, 0, state.Insets.Top + 52)
+        self.Frame.Position =
+            UDim2.new(0, state.Insets.Left, 0, state.Insets.Top + (state.Viewport.X < 600 and 138 or 42))
     else
         self.Frame.AnchorPoint = Vector2.new(0.5, 1)
         self.Frame.Position = UDim2.new(0.5, 0, 1, -110 - state.Insets.Bottom)

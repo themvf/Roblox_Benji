@@ -11,6 +11,7 @@ local Config = require(ReplicatedStorage.Shared.Config)
 local TweenService = game:GetService("TweenService")
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
+local FortressArt = require(script.Parent.Parent.FortressArt)
 
 -- The startup map is Config.StartupMap (Tuning attribute StartupMap). This is the last resort
 -- if that name does not resolve, so the server still comes up with a playable arena.
@@ -1047,6 +1048,9 @@ function MapService:Build(layout)
 
     for _, piece in layout.Center or {} do
         placePiece(folder, "", piece, rng, nil)
+    end
+    if layout.Name == "SnowFortress" then
+        FortressArt.Build(folder)
     end
     for _, piece in layout.Mirrored or {} do
         placePiece(folder, "Red_", piece, rng, nil)

@@ -123,12 +123,12 @@ function ConvergenceController:BuildGui()
     final.Name = "FinalDistrict"
     final.AnchorPoint = Vector2.new(0.5, 0)
     final.Position = UDim2.new(0.5, 0, 0, 88)
-    final.Size = UDim2.new(0.8, 0, 0, 38)
+    final.Size = UDim2.fromOffset(320, 28)
     final.BackgroundColor3 = PANEL
     final.BackgroundTransparency = 0.1
     final.TextColor3 = ACCENT
     final.Font = Enum.Font.GothamBold
-    final.TextSize = 16
+    final.TextSize = 12
     final.TextWrapped = true
     final.Visible = false
     final.Parent = gui
@@ -169,7 +169,11 @@ function ConvergenceController:BuildGui()
         local topY = state.Insets.Top
         top.Position = UDim2.new(0.5, 0, 0, topY)
         row.Position = UDim2.new(0.5, 0, 0, topY + math.floor(54 * k) + 8)
-        banner.Position = UDim2.new(0.5, 0, 0, topY + math.floor(102 * k) + 12)
+        final.Size = UDim2.fromOffset(math.min(320, state.Viewport.X - 32), 28)
+        final.Position = UDim2.new(0.5, 0, 0, topY + math.floor(94 * k) + 10)
+        banner.Size = UDim2.fromOffset(state.Touch and 300 or 520, state.Touch and 28 or 44)
+        banner.TextSize = state.Touch and 14 or Theme.textSize(Theme.Type.Title)
+        banner.Position = UDim2.new(0.5, 0, 0, topY + math.floor(94 * k) + 42)
     end)
 end
 
@@ -323,9 +327,7 @@ function ConvergenceController:Apply(snap)
         chip.FinalBadge.Visible = z.IsFinal == true
         if z.IsFinal then
             self.FinalLabel.Visible = true
-            self.FinalLabel.Text = snap.Phase == 2
-                    and ("FINAL: " .. z.Name:upper() .. "  •  2 DISTRICTS STILL ACTIVE")
-                or ("FINAL DISTRICT ACTIVE: " .. z.Name:upper())
+            self.FinalLabel.Text = "FINAL: " .. z.Name:upper()
         end
         -- closed reads as a dimmed, hollow glyph, matching how the world pillar goes dim
         chip.Shape.TextColor3 = z.Closed and CLOSED or color
@@ -345,7 +347,7 @@ function ConvergenceController:RevealFinale(data)
         return
     end
     self.RevealedMatchId = data.MatchId
-    self.FinalLabel.Text = "FINAL: " .. data.Name:upper() .. "  •  2 DISTRICTS STILL ACTIVE"
+    self.FinalLabel.Text = "FINAL: " .. data.Name:upper()
     self.FinalLabel.Visible = true
     self:ShowBanner("FINAL DISTRICT: " .. data.Name:upper(), ACCENT)
     local soundId = Uploads.resolve("upload:FinaleReveal_" .. data.Id) or Uploads.resolve("upload:FinaleReveal")

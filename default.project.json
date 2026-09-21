@@ -59,6 +59,11 @@
         "$ignoreUnknownInstances": true
       }
     },
+    "ServerStorage": {
+      "EnvironmentArt": {
+        "$path": "assets/environment/runtime"
+      }
+    },
     "ServerScriptService": {
       "Server": {
         "$path": "src/server"

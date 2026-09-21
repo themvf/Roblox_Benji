@@ -1,5 +1,9 @@
 # Snow Fortress — art direction 01
 
+## Blender architectural kit — prepared for import
+
+The [entrance kit](../../../assets/environment/snow-fortress/entrance-kit-v1/README.md) contains seven original mesh modules, an editable Blender scene, baked PBR textures, FBX/GLB exports, player-height renders and a Studio review assembler. It develops a substantial entrance and adjacent interior at the existing 20-by-13-stud doorway scale. Export round trips and geometry checks passed. The kit has **not** been imported into Studio or installed in Convergence; the running source still uses the procedural art pass below. The taller piers and deeper structural modules require deliberate collision/route integration, followed by in-engine visual and mobile performance review.
+
 ## Full-map application — alpine-art-v2
 
 User approved expansion from the entrance study. The reusable AlpineFortress treatment now applies slate/steel/concrete across the fortress, all four entrance treatments, both floors and stairways, protected outposts, cover and sightline walls. Snow covers exterior ground and thin caps on existing roofs/walls/cover. Warm local lights mark entrances and outpost shelter; clear cool daylight and zero bloom preserve contrast. No decorative mountains, imported meshes, extra cover or new routes were added.

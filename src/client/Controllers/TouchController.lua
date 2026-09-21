@@ -36,7 +36,7 @@ end
 
 local function round(inst)
     local c = Instance.new("UICorner")
-    c.CornerRadius = UDim.new(1, 0)
+    c.CornerRadius = UDim.new(0, 12)
     c.Parent = inst
 end
 
@@ -148,8 +148,9 @@ function TouchController:BuildGui()
     column.Parent = gui
     self.Column = column
 
-    local col = Instance.new("UIListLayout")
-    col.FillDirection = Enum.FillDirection.Vertical
+    local col = Instance.new("UIGridLayout")
+    col.FillDirection = Enum.FillDirection.Horizontal
+    col.FillDirectionMaxCells = 2
     col.VerticalAlignment = Enum.VerticalAlignment.Bottom
     col.HorizontalAlignment = Enum.HorizontalAlignment.Right
     col.SortOrder = Enum.SortOrder.LayoutOrder
@@ -178,7 +179,7 @@ function TouchController:BuildGui()
     end
 
     -- MUTATE: the most-used button, so it sits closest to the resting thumb
-    self.Mutate = makeButton(column, "MUTATE", READY)
+    self.Mutate = makeButton(column, "TITAN", READY)
     self.Mutate.Button.LayoutOrder = 90
     self.Mutate.Button.Activated:Connect(function()
         Knit.GetController("MutationController"):Activate()
@@ -221,23 +222,10 @@ function TouchController:BuildGui()
     -- Every size and position below is recomputed on rotation, iPad Split View and window
     -- resizes, so the layout is correct on the first frame and after every change.
     Screen.onChange(function(state)
-        local big = Screen.tapSize(88)
-        local small = Screen.tapSize(72)
-        local gap = math.max(10, math.floor(12 * state.Scale))
-        self.ColumnLayout.Padding = UDim.new(0, gap)
-
-        local function size(entry, px)
-            entry.Button.Size = UDim2.fromOffset(px, px)
-        end
-        size(self.Mutate, big)
-        size(self.Fly, small)
-        for _, b in self.Abilities do
-            size(b, small)
-        end
-
-        -- Bottom of the column = top of the right-hand thumb cluster, minus a gap.
-        local thumbTop = state.ThumbRight and state.ThumbRight[2] or 1
-        self.Column.Position = UDim2.new(1, -state.Insets.Right, thumbTop, -gap)
+        local width = math.clamp(math.floor(state.Viewport.X * 0.145), 80, 116)
+        self.ColumnLayout.CellSize = UDim2.fromOffset(width, 52)
+        self.ColumnLayout.CellPadding = UDim2.fromOffset(8, 8)
+        self.Column.Position = UDim2.new(1, -state.Insets.Right, 1, -state.Insets.Bottom - 164)
 
         self.Scores.Position = UDim2.new(1, -state.Insets.Right, 0, state.Insets.Top + math.floor(96 * state.Scale))
         self.Skip.Position = UDim2.new(0.5, 0, 1, -state.Insets.Bottom - math.floor(76 * state.Scale))

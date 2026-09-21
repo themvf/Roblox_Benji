@@ -142,10 +142,10 @@ local function makeZoneVisual(folder, zone)
 
     local finalSign = Instance.new("BillboardGui")
     finalSign.Name = "FinalDistrict"
-    finalSign.Size = UDim2.fromOffset(220, 44)
+    finalSign.Size = UDim2.fromOffset(116, 24)
     finalSign.StudsOffset = Vector3.new(0, 5, 0)
     finalSign.AlwaysOnTop = true
-    finalSign.MaxDistance = 650
+    finalSign.MaxDistance = 180
     finalSign.Enabled = false
     finalSign.Parent = glyph
     local label = Instance.new("TextLabel")
@@ -154,9 +154,9 @@ local function makeZoneVisual(folder, zone)
     label.BackgroundTransparency = 0.1
     label.TextColor3 = Color3.fromRGB(255, 220, 120)
     label.Font = Enum.Font.GothamBold
-    label.TextSize = 16
+    label.TextSize = 12
     label.TextWrapped = true
-    label.Text = "FINAL DISTRICT\n" .. zone.Name
+    label.Text = "FINAL OBJECTIVE"
     label.Parent = finalSign
     glyph:SetAttribute("ObjectiveId", zone.Id)
     zone.Visual = { Ring = ring, Rim = rim, Pillar = pillar, Bar = bar, Glyph = glyph, FinalSign = finalSign }
