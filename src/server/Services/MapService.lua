@@ -281,24 +281,35 @@ local function applySky(env)
     local existing = Lighting:FindFirstChildOfClass("Sky")
     local spec = env.Sky
     local ids = {}
+    local missing = nil
     if spec then
         for _, face in SKY_FACES do
             local id = Uploads.resolve(spec[face])
             if not id then
                 -- Five faces and a hole is worse than the stock sky, so a partial
                 -- upload degrades all the way back rather than part of the way.
+                missing = face
                 spec = nil
                 break
             end
             ids[face] = id
         end
     end
+    -- Say what happened either way. A skybox that silently declines to apply looks
+    -- identical to one that was never wired, and telling those apart from the
+    -- outside cost a long round of guessing.
     if not spec then
+        if missing then
+            warn(("[MapSky] %s face is unresolved; falling back to the default sky"):format(missing))
+        else
+            print("[MapSky] map declares no Sky" .. (existing and "; removing the place's own" or ""))
+        end
         if existing then
             existing:Destroy()
         end
         return
     end
+    print(("[MapSky] applied 6 faces, Ft = %s"):format(tostring(ids.Ft)))
     local skybox = existing or Instance.new("Sky")
     for _, face in SKY_FACES do
         skybox["Skybox" .. face] = ids[face]
