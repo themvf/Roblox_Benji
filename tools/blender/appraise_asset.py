@@ -133,8 +133,20 @@ def main():
         verdicts.append("  underside and an edge cliff, and its bake smears. Use it viewed from")
         verdicts.append("  above, or as a source inside a skybox render, never as side-on geometry.")
     if tris > TRI_LIMIT and (1 - TRI_LIMIT / tris) > SILHOUETTE_RISK:
-        verdicts.append("Too dense for in-game geometry without losing its shape. If the shape is")
-        verdicts.append("  the point, render it to a skybox instead, where detail is free.")
+        verdicts.append("Too dense to survive as ONE mesh.")
+        if one_sided or relief < FLAT_RELIEF:
+            verdicts.append("  If it is meant to be seen from a distance, render it to a skybox,")
+            verdicts.append("  where detail is free.")
+        # The cap is per mesh, not per asset. Ground the player walks on should be
+        # tiled, not crushed: decimating to one mesh throws away detail that tiling
+        # would have kept for free.
+        for keep in (0.25, 0.50):
+            need = math.ceil(tris * keep / TRI_LIMIT)
+            verdicts.append("  Tiling instead: %d meshes keeps %d%% of the detail (%s triangles);"
+                            % (need, keep * 100, format(int(tris * keep), ",")))
+        verdicts.append("  the 10,000 cap is PER MESH, so `tile` beats `decimate` for anything")
+        verdicts.append("  broad that the player gets close to. Weigh the part count against")
+        verdicts.append("  your device budget.")
     if not open_edges and relief >= FLAT_RELIEF and tris <= TRI_LIMIT * 4:
         verdicts.append("Good prop candidate: closed, has depth, and decimates gently.")
         verdicts.append("  Build it with tools/blender/scene_kit.py.")
