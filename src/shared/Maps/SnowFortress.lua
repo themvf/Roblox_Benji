@@ -325,9 +325,13 @@ for _, hatch in map.RoofHatches do
     end
 end
 -- Each outpost has one exterior staircase and one upper doorway, with firing windows.
+-- The stair faces its own team's spawn, so the approach from spawn climbs straight
+-- into the firing room: the northwest outpost sits on Blue's side at x -145, so its
+-- stair and door are on the -X face. `entry` is that face, and the opposite stair is
+-- the one removed.
 for _, post in map.SniperOutposts do
     local x, z = post.pos[1], post.pos[3]
-    local entry = x < 0 and 1 or -1
+    local entry = x < 0 and -1 or 1
     for i = #map.Center, 1, -1 do
         local prefix = post.Id .. "Stair" .. -entry .. "_"
         if map.Center[i].name:sub(1, #prefix) == prefix then

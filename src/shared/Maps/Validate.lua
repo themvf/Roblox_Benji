@@ -390,8 +390,9 @@ function Validate.check(layout, weapons)
             -- Backdrop scenery is decoration players must never reach. Its pivot has to
             -- land outside the playable box, or it is arena geometry wearing a costume.
             if Validate.KINDS[kind] and Validate.KINDS[kind].backdrop then
-                if type(piece.model) ~= "string" or piece.model == "" then
-                    err("%s: scenery needs a `model` name to clone from Uploads", where)
+                local hasModel = type(piece.model) == "string" and piece.model ~= ""
+                if not hasModel and type(piece.assetId) ~= "number" then
+                    err("%s: scenery needs an Uploads `model` name or a numeric `assetId`", where)
                 end
                 local b = layout.Bounds
                 if b and type(piece.pos) == "table" and #piece.pos == 3 then

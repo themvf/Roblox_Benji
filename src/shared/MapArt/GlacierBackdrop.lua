@@ -2,9 +2,10 @@
 -- never standable, so it changes no route, sightline or capture volume.
 --
 -- The mesh is the decimated GlacialIceflats scan (tools/blender/process_assets.py),
--- 2400 x 286 x 2400 studs with a centred pivot, imported in Studio as
--- ReplicatedStorage.Uploads.GlacierScenery. Until that model exists the map builds
--- exactly as it does today, because the scenery kind skips a missing upload.
+-- 2400 x 286 x 2400 studs with a centred pivot, uploaded as asset 134061547604589
+-- and loaded by id at build time. Dropping a model named GlacierScenery into
+-- ReplicatedStorage.Uploads overrides the id, so the look can be retuned in Studio
+-- without a code change. If neither resolves the map builds as it does today.
 local Art = {}
 
 -- Four rings placed just outside the playable box. Snow Fortress bounds are
@@ -24,6 +25,7 @@ function Art.applyMap(map)
             kind = "scenery",
             name = "GlacierBackdrop" .. ring.name,
             model = "GlacierScenery",
+            assetId = 134061547604589,
             pos = ring.pos,
             rot = ring.rot,
             decor = true,

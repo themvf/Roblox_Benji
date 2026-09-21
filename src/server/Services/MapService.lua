@@ -9,6 +9,7 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local Palette = require(ReplicatedStorage.Shared.Palette)
 local Config = require(ReplicatedStorage.Shared.Config)
 local TweenService = game:GetService("TweenService")
+local InsertService = game:GetService("InsertService")
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
 local FortressArt = require(script.Parent.Parent.FortressArt)
@@ -752,6 +753,37 @@ local function placePrefab(folder, name, inst, mirror)
     end
 end
 
+-- Backdrop source: a model a designer dropped into Uploads wins, so Studio can
+-- override without a code change; otherwise load the uploaded asset by id.
+-- LoadAsset yields and can fail (asset not owned by this place, or no network), so
+-- it is wrapped and the outcome cached -- a backdrop is placed several times, and a
+-- failed load must not retry once per placement.
+local sceneryCache = {}
+local function sceneryTemplate(piece)
+    local placed = Uploads.model(piece.model)
+    if placed then
+        return placed
+    end
+    local id = piece.assetId
+    if type(id) ~= "number" then
+        return nil
+    end
+    local cached = sceneryCache[id]
+    if cached ~= nil then
+        return cached or nil
+    end
+    local ok, loaded = pcall(function()
+        return InsertService:LoadAsset(id)
+    end)
+    if not ok or not loaded then
+        sceneryCache[id] = false
+        warn(("MapService: scenery asset %d could not be loaded; backdrop skipped"):format(id))
+        return nil
+    end
+    sceneryCache[id] = loaded
+    return loaded
+end
+
 local function placePiece(folder, prefix, piece, rng, mirror)
     local pos, rot = mirrorOf(piece.pos, piece.rot, mirror)
     local name = prefix .. (piece.name or piece.kind)
@@ -788,7 +820,7 @@ local function placePiece(folder, prefix, piece, rng, mirror)
         -- Distant backdrop. It is scenery and nothing else: never collides, never
         -- answers a raycast, never touches. Placement must sit outside map.Bounds so
         -- it cannot be reached, and the safety sweep never sees it as standable.
-        local template = Uploads.model(piece.model)
+        local template = sceneryTemplate(piece)
         if template then
             local model = template:Clone()
             for _, d in model:GetDescendants() do

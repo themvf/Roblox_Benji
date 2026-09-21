@@ -42,7 +42,12 @@ replacing them. The mesh's intake turbines sit at x ~ +/-0.57 studs, close enoug
 existing +/-0.5 nozzle anchors that the flames should still read as coming from them --
 this is the single measurement most worth checking in-game.
 
-**The outpost stairs were left alone.** An earlier revision of this branch shortened
+**The outpost stairs face their own spawn.** Each outpost keeps the staircase on its
+own team's side, so the approach from spawn climbs straight into the firing room, and
+the upper doorway moved with it. The northwest outpost sits on Blue's side at x -145,
+so its stair spans x -202.8 to -157.8 and its door is the -X face.
+
+**An earlier revision shortened the stairs instead.** An earlier revision of this branch shortened
 them from 45 to 27 studs. `check_fortress_layout`'s head-clearance test passes with
 exactly zero margin at the authored 1-stud rise on a 2.5-stud run, so any steepening
 trips it; the only shortening that still passes is a 2.25-stud run, worth 4.5 studs.
@@ -94,14 +99,21 @@ MeshParts, not a bare mesh id. `MeshDressing` handles both: given an Uploads ent
 is a Model it reads the mesh and texture off the first MeshPart inside, so nothing has
 to be copied out by hand.
 
-Remaining Studio step, once per asset:
+The glacier backdrop needs no Studio step: `MapService` loads asset 134061547604589
+through `InsertService:LoadAsset` at build time, caching the outcome so four ring
+placements cost one load. Dropping a Model named `GlacierScenery` into
+`ReplicatedStorage.Uploads` still overrides the id, so the look can be retuned in
+Studio without a code change.
 
-1. Insert the asset by ID (Toolbox → Inventory, or `InsertService:LoadAsset`).
+The jetpack and jump pad still want their Uploads entries, because they dress an
+existing welded part rather than being placed wholesale:
+
+1. Insert the asset by ID (Toolbox → Inventory).
 2. Rename the inserted Model to the Uploads entry name above.
-3. Park it under `ReplicatedStorage.Uploads`, creating that folder if absent.
+3. Park it under `ReplicatedStorage.Uploads`.
 
-Rojo leaves the `Uploads` folder alone because it is outside the project tree, so these
-survive syncs and publishes. Until they exist every call site stays greybox.
+Rojo leaves that folder alone because it is outside the project tree, so these survive
+syncs and publishes. Until they exist those two call sites stay greybox.
 
 ## 5. Not yet verified — needs a running match
 
