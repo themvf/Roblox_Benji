@@ -783,6 +783,30 @@ local function placePiece(folder, prefix, piece, rng, mirror)
         makeStump(folder, name, pos, piece.size)
     elseif kind == "grove" then
         makeGrove(folder, pos, piece.size, piece.count, rng)
+    elseif kind == "scenery" then
+        -- Distant backdrop. It is scenery and nothing else: never collides, never
+        -- answers a raycast, never touches. Placement must sit outside map.Bounds so
+        -- it cannot be reached, and the safety sweep never sees it as standable.
+        local template = Uploads.model(piece.model)
+        if template then
+            local model = template:Clone()
+            for _, d in model:GetDescendants() do
+                if d:IsA("BasePart") then
+                    d.Anchored = true
+                    d.CanCollide = false
+                    d.CanQuery = false
+                    d.CanTouch = false
+                    d.CastShadow = piece.castShadow == true
+                end
+            end
+            model.Name = name
+            local cf = CFrame.new(pos[1], pos[2], pos[3])
+            if rot then
+                cf = cf * CFrame.Angles(math.rad(rot[1]), math.rad(rot[2]), math.rad(rot[3]))
+            end
+            model:PivotTo(cf)
+            model.Parent = folder
+        end
     elseif kind == "marker" then
         local strip =
             makePart(folder, name, { pos[1], pos[2] + 0.15, pos[3] }, piece.size, rot, MARKER, Enum.Material.Neon)

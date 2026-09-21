@@ -262,12 +262,15 @@ for _, post in map.SniperOutposts do
     block(post.Id .. "LowerFloor", { x, 0.5, z }, { 28, 1, 26 }, "Floor")
     block(post.Id .. "Deck", { x, 17.5, z }, { 28, 1, 26 }, "Upper")
     block(post.Id .. "Roof", { x, 29.5, z }, { 30, 1, 28 })
+    -- 18 treads, 1-stud rise on a 1.5-stud run: 27 studs of run, landing flush on the
+    -- deck top at 18. The earlier 2.5-stud run made each stair 45 studs long, so the
+    -- outward one reached x -201.5 -- 8.5 studs short of the Blue spawn line at -210.
     for _, direction in { -1, 1 } do
         for step = 1, 18 do
             block(
                 post.Id .. "Stair" .. direction .. "_" .. step,
-                { x + direction * (59 - step * 2.5), step / 2, z },
-                { 2.5, step, 10 },
+                { x + direction * (41 - step * 1.5), step / 2, z },
+                { 1.5, step, 10 },
                 "Ramp"
             )
         end
@@ -300,5 +303,8 @@ end
 
 local AlpineFortress = require(script.Parent.Parent.MapArt.AlpineFortress)
 AlpineFortress.applyMap(map)
+
+local GlacierBackdrop = require(script.Parent.Parent.MapArt.GlacierBackdrop)
+GlacierBackdrop.applyMap(map)
 
 return map

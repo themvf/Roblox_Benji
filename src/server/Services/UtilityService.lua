@@ -5,6 +5,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Weapons = require(ReplicatedStorage.Shared.Weapons)
+local MeshDressing = require(ReplicatedStorage.Shared.MeshDressing)
 
 local UtilityService = Knit.CreateService({
     Name = "UtilityService",
@@ -66,7 +67,35 @@ function UtilityService.Client:SetThrusting(player, on)
     character:SetAttribute("Thrusting", on == true or nil)
 end
 
+-- Dress the shared templates once, before anything clones them: the worn pack and
+-- the kiosk preview are both copies of these, so they inherit the mesh for free.
+-- The Blender export is 4 studs of wingspan with a centred pivot, matching the weld
+-- offset the greybox Body already used, so Scale stays at 1.
+local function dressTemplates()
+    local tools = ReplicatedStorage:FindFirstChild("WeaponTools")
+    local tool = tools and tools:FindFirstChild("Jetpack")
+    if not tool then
+        return
+    end
+    for _, name in { "Pack", "Jetpack" } do
+        local model = tool:FindFirstChild(name)
+        local body = model and model:FindFirstChild("Body")
+        if body and MeshDressing.apply(body, "upload:JetpackMesh", "upload:JetpackTexture") then
+            -- The tanks and nozzles are inside the mesh now, but the nozzles carry the
+            -- Flame attachments that SetThrusting toggles, so hide them, never remove.
+            local hidden = {}
+            for _, part in model:GetDescendants() do
+                if part:IsA("BasePart") and part ~= body then
+                    table.insert(hidden, part)
+                end
+            end
+            MeshDressing.hide(hidden)
+        end
+    end
+end
+
 function UtilityService:KnitStart()
+    dressTemplates()
     local function watch(player)
         player.CharacterAdded:Connect(function(character)
             character.ChildAdded:Connect(function(child)

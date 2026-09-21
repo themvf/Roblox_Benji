@@ -53,6 +53,20 @@ function Uploads.resolve(ref)
     return nil
 end
 
+-- Some uploads are whole models rather than a single id: a Blender scene imported
+-- through Studio's 3D Importer lands as a Model of MeshParts. Callers clone it.
+function Uploads.model(name)
+    if type(name) ~= "string" or name == "" then
+        return nil
+    end
+    local folder = Uploads.folder()
+    local inst = folder and folder:FindFirstChild(name)
+    if inst and (inst:IsA("Model") or inst:IsA("BasePart")) then
+        return inst
+    end
+    return nil
+end
+
 function Uploads.isReady(ref)
     return Uploads.resolve(ref) ~= nil
 end

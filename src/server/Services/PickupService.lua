@@ -11,6 +11,7 @@ local RunService = game:GetService("RunService")
 local Debris = game:GetService("Debris")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
+local MeshDressing = require(ReplicatedStorage.Shared.MeshDressing)
 
 local PickupService = Knit.CreateService({
     Name = "PickupService",
@@ -396,7 +397,20 @@ local function makeLaunchPad(self, folder, spec, index)
     pad.CFrame = CFrame.new(pos + Vector3.new(0, 0.3, 0))
     pad.Parent = folder
     local dir = Vector3.new(target.X - pos.X, 0, target.Z - pos.Z).Unit
-    for i = 1, 3 do
+
+    -- The mesh is authored 8 studs square with its pivot on the underside, so it
+    -- scales with the layout's `size` and sits on the floor rather than half in it.
+    local dressed = MeshDressing.apply(pad, "upload:JumpPadMesh", "upload:JumpPadTexture", Vector3.one * (size / 8))
+    if dressed then
+        pad.Transparency = 0 -- the slab was translucent only because it was greybox
+        -- A SpecialMesh hangs its own origin on the part's centre, and this mesh's
+        -- origin is its underside, so centring the part on `pos` rests the pad on the
+        -- floor. The greybox slab needed +0.3 because its origin was its middle.
+        pad.CFrame = CFrame.lookAt(pos, pos + dir)
+    end
+
+    -- Chevrons point the way while the pad is greybox; the mesh carries its own.
+    for i = 1, (dressed and 0 or 3) do
         local chev = Instance.new("WedgePart")
         chev.Anchored = true
         chev.CanCollide = false
