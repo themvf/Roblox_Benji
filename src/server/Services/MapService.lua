@@ -329,13 +329,13 @@ local function applySky(env)
     -- identical to one that was never wired, and telling those apart from the
     -- outside cost a long round of guessing.
     if not spec then
+        -- A map that declares no Sky leaves whatever the place has alone. Destroying
+        -- it would mean a skybox chosen in Studio -- which is how you actually shop
+        -- for one -- gets wiped on every build.
         if missing then
-            warn(("[MapSky] %s face is unresolved; falling back to the default sky"):format(missing))
+            warn(("[MapSky] %s face is unresolved; leaving the place's own sky"):format(missing))
         else
-            print("[MapSky] map declares no Sky" .. (existing and "; removing the place's own" or ""))
-        end
-        if existing then
-            existing:Destroy()
+            print("[MapSky] map declares no Sky; leaving the place's own")
         end
         return
     end

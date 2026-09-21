@@ -71,18 +71,9 @@ local map = {
         Ramp = Color3.fromRGB(200, 204, 212),
     },
     Environment = {
-        -- Painted horizon from tools/blender/make_sky_range.py. Six Decal ids, one
-        -- per cube face. Costs no parts and no triangles, and MapService.applySky
-        -- drops the whole skybox if any single face fails to resolve rather than
-        -- leaving five faces and a hole.
-        Sky = {
-            Ft = "rbxassetid://101373830899985",
-            Bk = "rbxassetid://106113729279759",
-            Lf = "rbxassetid://127133479050985",
-            Rt = "rbxassetid://106888607243943",
-            Up = "rbxassetid://90343087754702",
-            Dn = "rbxassetid://124273916652969",
-        },
+        -- No Sky declared on purpose: the horizon is chosen in Studio by dropping a
+        -- skybox into Lighting, and applySky leaves whatever it finds alone. Generated
+        -- ranges were tried and were not good enough; see ASSET_INTAKE_AND_LESSONS.md.
         ClockTime = 12,
         Brightness = 2,
         Ambient = Color3.fromRGB(160, 160, 160),
