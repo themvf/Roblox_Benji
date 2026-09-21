@@ -1,11 +1,14 @@
 param(
     [string]$File = 'assets/environment/snow-fortress/entrance-kit-v1/exports/SnowFortress_ReviewSlice.glb',
-    [switch]$DryRun
+    [switch]$DryRun,
+    [string]$Description
 )
 $ErrorActionPreference = 'Stop'
 $scriptPath = Join-Path $PSScriptRoot 'upload_asset.py'
+$extra = @()
+if ($PSBoundParameters.ContainsKey('Description')) { $extra = @('--description', $Description) }
 if ($DryRun) {
-    & python $scriptPath --file $File --dry-run
+    & python $scriptPath --file $File --dry-run @extra
     exit $LASTEXITCODE
 }
 $credentialPath = Join-Path $env:LOCALAPPDATA 'RobloxCodex/asset-upload.clixml'
@@ -21,7 +24,7 @@ try {
     $env:ROBLOX_OPEN_CLOUD_API_KEY = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($secretPointer)
     $env:ROBLOX_CREATOR_TYPE = $credential.CreatorType
     $env:ROBLOX_CREATOR_ID = $credential.CreatorId
-    & python $scriptPath --file $File
+    & python $scriptPath --file $File @extra
     $uploadExitCode = $LASTEXITCODE
 } finally {
     [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($secretPointer)

@@ -43,6 +43,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", required=True, type=Path)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--description", default="Snow Fortress authored Blender architecture review kit",
+                        help="Asset description; defaults to the entrance kit wording.")
     args = parser.parse_args()
     file = args.file.resolve()
     if file.suffix.lower() not in MIME:
@@ -88,7 +90,7 @@ def main():
             raise RuntimeError("Earlier upload outcome is uncertain. Inspect Roblox inventory before any new upload. Receipt: " + str(receipt_path))
     else:
         metadata = {"assetType": "Model", "displayName": file.stem,
-                    "description": "Snow Fortress authored Blender architecture review kit",
+                    "description": args.description,
                     "creationContext": {"creator": {owner_type + "Id": owner_id}}}
         body, boundary = multipart(metadata, "model" + file.suffix.lower(), data, MIME[file.suffix.lower()])
         receipt = {"file": str(file), "sha256": hashlib.sha256(data).hexdigest(),

@@ -74,25 +74,34 @@ before anything is uploaded.
   from `Uploads`, forces `CanCollide`/`CanQuery`/`CanTouch` off on every part.
 - `src/shared/MapArt/GlacierBackdrop.lua` (new) places the four rings.
 
-## 4. Upload checklist (Studio)
+## 4. Uploads
 
-Import each GLB with the 3D Importer, then create these under
-`ReplicatedStorage.Uploads`. `StringValue` entries hold a `rbxassetid://...`.
+All three are uploaded and moderation-approved, as user 3678531109, via
+`tools/roblox/upload_asset.ps1`:
 
-| Name | Type | Holds |
+| Asset | Roblox asset ID | Uploads entry name |
 | --- | --- | --- |
-| `JetpackMesh` | StringValue | mesh ID from `JetpackPack.glb` |
-| `JetpackTexture` | StringValue | `Handle1_diff.png` |
-| `JumpPadMesh` | StringValue | mesh ID from `JumpPad.glb` |
-| `JumpPadTexture` | StringValue | `JumpPad_Base_Color.png` |
-| `GlacierScenery` | Model | the imported `Glacier.glb` model, all 15 tiles |
+| `JetpackPack.glb` | 73494627185081 | `JetpackMesh` |
+| `JumpPad.glb` | 101685278186013 | `JumpPadMesh` |
+| `Glacier.glb` | 134061547604589 | `GlacierScenery` |
 
-Only the maps Roblox can consume today are committed: colour, normal and the pad's
-emissive. Metalness, roughness and AO are regenerated on demand with
-`tools/blender/resize_textures.py` rather than stored as unused binaries.
+Receipts, keyed by content hash, are in `%LOCALAPPDATA%/RobloxCodex/uploads`. Re-running
+an upload of identical bytes resumes the receipt instead of creating a duplicate asset.
 
-`GlacierScenery` is a Model, not an ID: the backdrop is cloned wholesale so it needs
-no per-tile IDs. Rojo leaves the `Uploads` folder alone, so these survive syncs.
+Open Cloud's Assets API only mints **Model** assets; there is no mesh asset type, and
+the uploader hardcodes `assetType: "Model"`. So each of these is a Model containing
+MeshParts, not a bare mesh id. `MeshDressing` handles both: given an Uploads entry that
+is a Model it reads the mesh and texture off the first MeshPart inside, so nothing has
+to be copied out by hand.
+
+Remaining Studio step, once per asset:
+
+1. Insert the asset by ID (Toolbox → Inventory, or `InsertService:LoadAsset`).
+2. Rename the inserted Model to the Uploads entry name above.
+3. Park it under `ReplicatedStorage.Uploads`, creating that folder if absent.
+
+Rojo leaves the `Uploads` folder alone because it is outside the project tree, so these
+survive syncs and publishes. Until they exist every call site stays greybox.
 
 ## 5. Not yet verified — needs a running match
 
