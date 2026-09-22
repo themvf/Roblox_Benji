@@ -45,26 +45,95 @@ RATIO_TOLERANCE = 1.02
 
 GLB_MAGIC = b"glTF"
 CHUNK_JSON = 0x4E4F534A
+CHUNK_BIN = 0x004E4942
+
+# What Roblox's importer will read. Anything else has to be converted, and the
+# conversion is not optional: a generator that writes WebP puts EXT_texture_webp
+# in extensionsRequired, and a loader without that extension must refuse the whole
+# file rather than just dropping the texture.
+NATIVE_MIMES = ("image/png", "image/jpeg")
+FOREIGN_TEXTURE_EXTENSIONS = {"EXT_texture_webp", "EXT_texture_avif", "KHR_texture_basisu"}
 
 
 # --- reading -------------------------------------------------------------
 
 
-def read_doc(path):
-    """Return the glTF JSON for a .glb or .gltf file."""
+def read_glb(path):
+    """Return (glTF JSON, binary chunk). The chunk is None for a .gltf."""
     with open(path, "rb") as handle:
         if handle.read(4) != GLB_MAGIC:
             handle.seek(0)
-            return json.loads(handle.read().decode("utf-8"))
+            return json.loads(handle.read().decode("utf-8")), None
         handle.seek(12)  # magic, version, total length
+        doc = blob = None
         while True:
             header = handle.read(8)
             if len(header) < 8:
-                raise SystemExit("%s: GLB has no JSON chunk" % path)
+                break
             length, kind = struct.unpack("<II", header)
             payload = handle.read(length)
             if kind == CHUNK_JSON:
-                return json.loads(payload.decode("utf-8"))
+                doc = json.loads(payload.decode("utf-8"))
+            elif kind == CHUNK_BIN:
+                blob = payload
+        if doc is None:
+            raise SystemExit("%s: GLB has no JSON chunk" % path)
+        return doc, blob
+
+
+def read_doc(path):
+    return read_glb(path)[0]
+
+
+def image_size(data):
+    """(width, height) from a PNG, JPEG or WebP header, or None if unreadable."""
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        return struct.unpack(">II", data[16:24])
+    if data[:2] == b"\xff\xd8":  # JPEG: walk segments to a start-of-frame marker
+        i = 2
+        while i + 9 < len(data):
+            if data[i] != 0xFF:
+                i += 1
+                continue
+            marker = data[i + 1]
+            if 0xC0 <= marker <= 0xCF and marker not in (0xC4, 0xC8, 0xCC):
+                height, width = struct.unpack(">HH", data[i + 5:i + 9])
+                return width, height
+            i += 2 + struct.unpack(">H", data[i + 2:i + 4])[0]
+        return None
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        kind = data[12:16]
+        if kind == b"VP8X":
+            return (int.from_bytes(data[24:27], "little") + 1,
+                    int.from_bytes(data[27:30], "little") + 1)
+        if kind == b"VP8 ":
+            width, height = struct.unpack("<HH", data[26:30])
+            return width & 0x3FFF, height & 0x3FFF
+        if kind == b"VP8L":
+            bits = int.from_bytes(data[21:25], "little")
+            return (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1
+    return None
+
+
+def texture_info(doc, blob):
+    """[(mimeType, (width, height) or None)] for every embedded image."""
+    views = doc.get("bufferViews", [])
+    out = []
+    for image in doc.get("images", []):
+        size = None
+        if blob is not None and "bufferView" in image:
+            view = views[image["bufferView"]]
+            start = view.get("byteOffset", 0)
+            size = image_size(blob[start:start + view["byteLength"]])
+        out.append((image.get("mimeType", "?"), size))
+    return out
+
+
+def foreign_textures(doc):
+    """True when a texture is in a format Roblox's importer will not read."""
+    if set(doc.get("extensionsRequired", [])) & FOREIGN_TEXTURE_EXTENSIONS:
+        return True
+    return any(i.get("mimeType") not in NATIVE_MIMES for i in doc.get("images", []))
 
 
 def mesh_triangles(doc):
@@ -90,8 +159,9 @@ def mesh_triangles(doc):
 
 
 def report(path, label="file"):
-    """Print the per-mesh triangle table and return the worst count."""
-    counts = mesh_triangles(read_doc(path))
+    """Print the per-mesh triangle table and the textures, return the worst count."""
+    doc, blob = read_glb(path)
+    counts = mesh_triangles(doc)
     worst = max((n for _, n in counts), default=0)
     print("  %-8s %s (%.2f MB)" % (label, os.path.basename(path), os.path.getsize(path) / 1e6))
     for name, count in counts:
@@ -100,6 +170,11 @@ def report(path, label="file"):
     if len(counts) > 1:
         print("           %-28s %9s tris (%d meshes)"
               % ("total", format(sum(n for _, n in counts), ","), len(counts)))
+    for mime, size in texture_info(doc, blob):
+        shape = "%dx%d" % size if size else "size unknown"
+        native = "" if mime in NATIVE_MIMES else "  NOT READABLE BY ROBLOX"
+        over = "  OVER %d" % TEXTURE_LIMIT if size and max(size) > TEXTURE_LIMIT else ""
+        print("           %-28s %9s  %s%s%s" % ("texture", shape, mime, native, over))
     return worst
 
 
@@ -137,6 +212,19 @@ def optimize(src, dst, tris=None, texture=None, error=None, lock_border=False):
     with tempfile.TemporaryDirectory() as work:
         current = welded = os.path.join(work, "welded.glb")
         cli("weld", src, current)
+
+        # Do this before anything else touches textures. glTF-Transform's own
+        # `resize` handles PNG and JPEG only, so on a WebP file it is a silent
+        # no-op -- the run reports success and the texture is untouched. An
+        # image-to-3D generator writing WebP is the common case, not the odd one.
+        if foreign_textures(read_doc(current)):
+            out = os.path.join(work, "native.glb")
+            # --formats defaults to "png", which means "re-compress textures that
+            # are ALREADY png" and quietly does nothing to a WebP one. "*" is what
+            # makes this a conversion rather than a no-op.
+            cli("png", current, out, "--formats", "*")
+            print("           textures -> PNG (the source format is one Roblox cannot read)")
+            current = welded = out
 
         if tris and worst > tris:
             # One global vertex ratio is applied to every mesh, so aim it at the

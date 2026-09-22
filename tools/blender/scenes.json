@@ -41,6 +41,20 @@
       },
       "pivot": "center"
     },
+    "helicopter": {
+      "description": "TRELLIS.2 crashed helicopter, roof of the Snow Fortress",
+      "source": "Vehicles/sample_2026-09-22T182453.134.glb",
+      "out": "assets/models/helicopter/CrashedHelicopter.glb",
+      "fit": {
+        "axis": "x",
+        "size": 34
+      },
+      "decimate": 9000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      }
+    },
     "jumppad": {
       "description": "UE4-jam jump pad, sits on the floor at the launch position",
       "source": "Snow Fortress/v2701-jumppad-2018-spring-ue4jam/source/jumpPad.fbx",
