@@ -839,15 +839,6 @@ end
 -- cached, because a map can place the same rock twenty times and LoadAsset yields
 -- and hits the network. A failed load warns once and leaves the prop out rather than
 -- taking the build down with it.
--- Looked up by name rather than indexed off Enum directly, because indexing an Enum
--- with a name it does not have throws rather than returning nil.
-local PROP_FIDELITY = {
-    Default = Enum.CollisionFidelity.Default,
-    Hull = Enum.CollisionFidelity.Hull,
-    Box = Enum.CollisionFidelity.Box,
-    PreciseConvexDecomposition = Enum.CollisionFidelity.PreciseConvexDecomposition,
-}
-
 local propTemplates = {}
 
 local function propTemplate(assetId)
@@ -926,13 +917,16 @@ local function placePiece(folder, prefix, piece, rng, mirror)
                     d.CanCollide = solid
                     d.CanQuery = solid
                     d.CanTouch = false
-                    if solid and d:IsA("MeshPart") then
-                        -- Default wraps a hollow shape in a coarse hull, which would fill
-                        -- a cabin in and let nobody stand in it. Precise keeps the
-                        -- concavity, at a one-off bake cost when the mesh loads.
-                        d.CollisionFidelity = PROP_FIDELITY[piece.fidelity or "PreciseConvexDecomposition"]
-                            or Enum.CollisionFidelity.Default
-                    end
+                    -- CollisionFidelity is deliberately NOT set here. It carries plugin
+                    -- security, so a server script writing it throws "lacking capability
+                    -- Plugin", and because that happens inside the build it took the
+                    -- whole map down and fell it back to Arena -- a greybox, on a map
+                    -- that had looked fine a moment earlier.
+                    --
+                    -- A prop therefore keeps whatever fidelity it was imported with, and
+                    -- Open Cloud gives no control over import settings either, so a
+                    -- collidable prop is roughly its hull: solid to stand on and walk
+                    -- around, approximate up close. Author a block where shape matters.
                 end
             end
             model.Name = name

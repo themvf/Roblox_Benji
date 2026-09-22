@@ -402,25 +402,27 @@ for _, post in map.SniperOutposts do
     block(post.Id .. "DoorHeader", { x + entry * 13, 27.5, z }, { 2, 4, 10 })
 end
 
--- Ice rock decor. Two Creator Store models placed side by side so their look can be
--- compared in the map before settling on one. Props never collide and never answer a
--- raycast, so these cannot change cover or sightlines -- they sit clear of the
--- objective radii and the ground routes regardless.
--- Jagged Ice Rock 139945743433812, ICE ROCK 72083045344532.
+-- Ice rock decor, all six now Jagged Ice Rock 139945743433812. The second model this
+-- was meant to be compared against, ICE ROCK 72083045344532, does not load:
+-- InsertService returned nothing for it and MapService warned and left three rocks out
+-- of the map, which is a quiet way to lose half a scatter. Only place an id that has
+-- been seen to load. These never collide and never answer a raycast, so they cannot
+-- change cover or sightlines whatever the mesh turns out to be.
 --
 -- `fit` and `sit`, not `scale` and a y. The first pass used scale 0.8/1/1.4 against a
--- size nobody had measured, and the models arrived big enough to reach across the map
--- and cross a zip line on screen. `fit` names the studs and lets MapService derive the
--- multiplier from the model that actually loaded; `sit` puts the lowest point on the
--- ground instead of the bounding-box centre, which is what buried and tilted them.
+-- size nobody had measured. The model is 41.4 x 29.8 x 50.0 studs as authored, so 1.4
+-- meant a seventy-stud boulder, which is what crossed a zip line on screen. `fit` names
+-- the studs and lets MapService derive the multiplier from the model that actually
+-- loaded; `sit` puts the lowest point on the ground rather than the bounding-box
+-- centre, which is what buried them and made them look tilted.
 for _, rock in
     {
         { asset = 139945743433812, pos = { -92, 0, -152 }, yaw = 20, fit = 14 },
         { asset = 139945743433812, pos = { -64, 0, -170 }, yaw = 145, fit = 18 },
         { asset = 139945743433812, pos = { 74, 0, -158 }, yaw = 250, fit = 11 },
-        { asset = 72083045344532, pos = { -80, 0, 152 }, yaw = 60, fit = 14 },
-        { asset = 72083045344532, pos = { 66, 0, 166 }, yaw = 200, fit = 18 },
-        { asset = 72083045344532, pos = { 98, 0, 140 }, yaw = 320, fit = 11 },
+        { asset = 139945743433812, pos = { -80, 0, 152 }, yaw = 60, fit = 15 },
+        { asset = 139945743433812, pos = { 66, 0, 166 }, yaw = 200, fit = 19 },
+        { asset = 139945743433812, pos = { 98, 0, 140 }, yaw = 320, fit = 12 },
     }
 do
     table.insert(map.Center, {
@@ -457,9 +459,10 @@ end
 --
 -- The mesh carries its own collision rather than a hand-authored block beside it. A box
 -- would have had to guess the airframe's facing, which nothing outside Studio can tell
--- us, and would have filled in the cabin and the gaps between the debris that the
--- silhouette is made of. PreciseConvexDecomposition keeps the concavity, at a one-off
--- bake when the mesh loads.
+-- us. The shape is approximate -- CollisionFidelity is plugin-security, so nothing at
+-- runtime can ask for a precise decomposition, and Open Cloud gives no say over import
+-- settings either -- so expect roughly the hull: solid to stand on and walk around,
+-- and probably filling in the cabin.
 --
 -- The cost is real: no layout gate can audit a bought mesh, so this geometry is in the
 -- fight without check_maps or check_fortress_layout seeing it. It is allowed here

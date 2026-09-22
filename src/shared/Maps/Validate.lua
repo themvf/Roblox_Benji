@@ -32,14 +32,6 @@ Validate.KINDS = {
     prop = { solid = false, sized = false, asset = true },
 }
 
--- Names only, so this stays pure Luau and runs under Lune as well as in-game.
-Validate.FIDELITY = {
-    Default = true,
-    Hull = true,
-    Box = true,
-    PreciseConvexDecomposition = true,
-}
-
 -- Composite props, copied from MapService.placePiece. Offsets are local to the piece's
 -- position and yaw (rot[2] only). Keep in step with MapService when a prop changes.
 local PROP_PARTS = {
@@ -419,11 +411,11 @@ function Validate.check(layout, weapons)
                 if piece.collide ~= nil and type(piece.collide) ~= "boolean" then
                     err("%s: prop `collide` must be true or false", where)
                 end
-                if piece.fidelity ~= nil and Validate.FIDELITY[piece.fidelity] == nil then
-                    err("%s: prop `fidelity` must be one of Default, Hull, Box, PreciseConvexDecomposition", where)
-                end
-                if piece.fidelity ~= nil and piece.collide ~= true then
-                    err("%s: prop sets `fidelity` without `collide`, so it does nothing", where)
+                -- No `fidelity` field: CollisionFidelity is plugin-security, so nothing
+                -- at runtime can write it. A collidable prop keeps the fidelity it was
+                -- imported with. Reject the key rather than accept one that does nothing.
+                if piece.fidelity ~= nil then
+                    err("%s: prop `fidelity` cannot be set at runtime; CollisionFidelity is plugin-only", where)
                 end
             end
             -- ramps: a thin slab with roll. Too steep stalls characters.
