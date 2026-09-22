@@ -69,8 +69,17 @@ local map = {
         Cover = Color3.fromRGB(122, 130, 140),
         Upper = Color3.fromRGB(154, 165, 180),
         Ramp = Color3.fromRGB(200, 204, 212),
-        -- The one dark value on a map that is otherwise white on white. Used for the
-        -- burn under the roof wreck, where the point is contrast rather than colour.
+        -- The roof is its own surface, not more of the interior. It was `Upper`, the
+        -- same near-white as the floor below, which left a white wreck on a white deck
+        -- under a white sky with nothing to separate them. Darker and slightly bluer
+        -- so it reads as built structure against snow, and so red and blue players on
+        -- it have something to contrast against.
+        Deck = Color3.fromRGB(116, 124, 136),
+        -- Helipad. The deck is dark enough to anchor the wreck; the markings are the
+        -- only warm value on the map, which is what makes them read as paint.
+        PadDeck = Color3.fromRGB(74, 80, 88),
+        PadMark = Color3.fromRGB(214, 196, 110),
+        -- Burn under the wreck, over the pad. The point is contrast, not colour.
         Scorch = Color3.fromRGB(58, 56, 58),
     },
     Environment = {
@@ -355,7 +364,7 @@ map.RoofHatches = { { -55, 33, 40 }, { 55, 33, -40 } }
 for x = -65, 65, 10 do
     for z = -50, 50, 10 do
         if not ((x == -55 and z == 40) or (x == 55 and z == -40)) then
-            block("FortressRoof" .. x .. "_" .. z, { x, 32.5, z }, { 10, 1, 10 }, "Upper")
+            block("FortressRoof" .. x .. "_" .. z, { x, 32.5, z }, { 10, 1, 10 }, "Deck")
         end
     end
 end
@@ -442,17 +451,44 @@ end
 -- decor is not a gameplay list. It will look slightly off-centre anyway -- the pivot
 -- centres the bounding box, which includes the debris scattered around the airframe.
 --
--- Decor only, so players walk through it today. Making it real cover means authoring a
--- block beside it, and that needs one fact measured in game: which way the airframe
--- ends up facing. The mesh says its dense core sits about 8 x 14 studs at x -4.8,
--- z +4.2 from the model origin with the long axis on z -- but the sign of that offset
--- depends on how the importer lands the model, and an invisible wall on contested high
--- ground is worse than no cover at all. Verify the facing first, then add the block.
--- Flush with the roof top at y 33 and only 0.1 thick, so it is a colour change rather
--- than a step: a player walks across it without feeling anything. Wide enough to sit
--- under the airframe wherever the importer lands it, since the model's mass is offset
--- from its bounding-box centre by about 6 studs and the direction is not known here.
-block("RoofScorch", { 0, 33.05, 0 }, { 28, 0.1, 22 }, "Scorch")
+-- `collide` makes this the one prop on the map that is real geometry. Players walk
+-- around the hull and stand on it instead of through it, and it stops bullets as well
+-- as bodies -- a prop that blocks one and not the other is worse than no cover at all.
+--
+-- The mesh carries its own collision rather than a hand-authored block beside it. A box
+-- would have had to guess the airframe's facing, which nothing outside Studio can tell
+-- us, and would have filled in the cabin and the gaps between the debris that the
+-- silhouette is made of. PreciseConvexDecomposition keeps the concavity, at a one-off
+-- bake when the mesh loads.
+--
+-- The cost is real: no layout gate can audit a bought mesh, so this geometry is in the
+-- fight without check_maps or check_fortress_layout seeing it. It is allowed here
+-- because the roof is a flat open deck where the wreck is the only feature, and because
+-- it sits about 38 studs clear of both zip line landings and both roof hatches.
+-- Helipad, centred on the roof, with the wreck sitting on it. Every slab is 0.1 thick
+-- and flush with the roof top at y 33, so the whole pad is a colour change rather than
+-- a step -- a player crosses it without feeling anything, and the 0.25 stud of stacking
+-- between deck, paint and burn is below what a character notices.
+--
+-- The three layers sit at 33.05, 33.12 and 33.2 so no two faces are ever coplanar.
+-- Equal heights would z-fight, which reads as flickering paint from across the map.
+-- Nothing overlaps within a layer either: the border bars stop short of each other and
+-- the H's crossbar stops at its uprights rather than running through them.
+--
+-- 40 x 40 at the centre clears both roof hatches (x +/-55) and both zip line landings
+-- by about 38 studs, and centred is the only placement a rotationally symmetric map
+-- can take without favouring a side.
+block("HelipadDeck", { 0, 33.05, 0 }, { 40, 0.1, 40 }, "PadDeck")
+for _, edge in { -1, 1 } do
+    block("HelipadEdgeZ" .. edge, { 0, 33.12, edge * 18 }, { 36, 0.1, 1.5 }, "PadMark")
+    block("HelipadEdgeX" .. edge, { edge * 17.25, 33.12, 0 }, { 1.5, 0.1, 33 }, "PadMark")
+    block("HelipadH" .. edge, { edge * 4, 33.12, 0 }, { 2, 0.1, 12 }, "PadMark")
+end
+block("HelipadHBar", { 0, 33.12, 0 }, { 6, 0.1, 2 }, "PadMark")
+-- Burn over the paint, where the airframe came down. Wide enough to sit under it
+-- wherever the importer lands the model, since its mass is offset from its
+-- bounding-box centre by about 6 studs in a direction this file cannot know.
+block("HelipadScorch", { 0, 33.2, 0 }, { 24, 0.1, 18 }, "Scorch")
 
 table.insert(map.Center, {
     kind = "prop",
@@ -462,6 +498,7 @@ table.insert(map.Center, {
     rot = { 0, 0, 0 },
     fit = 34,
     sit = true,
+    collide = true,
     decor = true,
 })
 

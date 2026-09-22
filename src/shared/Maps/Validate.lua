@@ -24,9 +24,20 @@ Validate.KINDS = {
     helicopter = { solid = true, sized = false },
     steam = { solid = false, sized = false },
     radar = { solid = false, sized = false },
-    -- A Creator Store model placed by asset id. Decor only: it is somebody else's
-    -- mesh, so no gate can audit its shape, and it is never allowed to collide.
+    -- A Creator Store model placed by asset id. Decor by default, and `solid = false`
+    -- describes that default: it is somebody else's mesh, so no gate can audit its
+    -- shape. A piece may set `collide = true` to opt into real collision, and that is
+    -- a reviewed exception -- the arc tracer still will not see it, so keep a
+    -- collidable prop away from launch lanes and put a block there if it must be cover.
     prop = { solid = false, sized = false, asset = true },
+}
+
+-- Names only, so this stays pure Luau and runs under Lune as well as in-game.
+Validate.FIDELITY = {
+    Default = true,
+    Hull = true,
+    Box = true,
+    PreciseConvexDecomposition = true,
 }
 
 -- Composite props, copied from MapService.placePiece. Offsets are local to the piece's
@@ -404,6 +415,15 @@ function Validate.check(layout, weapons)
                 end
                 if piece.sit ~= nil and type(piece.sit) ~= "boolean" then
                     err("%s: prop `sit` must be true or false", where)
+                end
+                if piece.collide ~= nil and type(piece.collide) ~= "boolean" then
+                    err("%s: prop `collide` must be true or false", where)
+                end
+                if piece.fidelity ~= nil and Validate.FIDELITY[piece.fidelity] == nil then
+                    err("%s: prop `fidelity` must be one of Default, Hull, Box, PreciseConvexDecomposition", where)
+                end
+                if piece.fidelity ~= nil and piece.collide ~= true then
+                    err("%s: prop sets `fidelity` without `collide`, so it does nothing", where)
                 end
             end
             -- ramps: a thin slab with roll. Too steep stalls characters.

@@ -837,6 +837,15 @@ end
 -- cached, because a map can place the same rock twenty times and LoadAsset yields
 -- and hits the network. A failed load warns once and leaves the prop out rather than
 -- taking the build down with it.
+-- Looked up by name rather than indexed off Enum directly, because indexing an Enum
+-- with a name it does not have throws rather than returning nil.
+local PROP_FIDELITY = {
+    Default = Enum.CollisionFidelity.Default,
+    Hull = Enum.CollisionFidelity.Hull,
+    Box = Enum.CollisionFidelity.Box,
+    PreciseConvexDecomposition = Enum.CollisionFidelity.PreciseConvexDecomposition,
+}
+
 local propTemplates = {}
 
 local function propTemplate(assetId)
@@ -897,20 +906,31 @@ local function placePiece(folder, prefix, piece, rng, mirror)
     elseif kind == "grove" then
         makeGrove(folder, pos, piece.size, piece.count, rng)
     elseif kind == "prop" then
-        -- Decor only: never collidable, never in a raycast, never touchable. A prop is
-        -- somebody else's mesh, so the layout gates cannot audit its shape -- letting
-        -- it block movement or bullets would put geometry into the fight that nothing
-        -- checks. If a prop should be cover, author a block beside it and let that
-        -- carry the collision, where clearBody can see it.
+        -- Decor by default: a prop is somebody else's mesh, so the layout gates cannot
+        -- audit its shape, and letting it block movement or bullets silently puts
+        -- geometry into the fight that nothing checks.
+        --
+        -- `collide` opts one back in when the shape is wanted as real cover. It then
+        -- has to answer raycasts as well, because cover that stops players but not
+        -- bullets -- or the reverse -- is worse than no cover at all. The gates still
+        -- cannot see it, so a collidable prop is a deliberate, reviewed exception.
         local template = propTemplate(piece.assetId)
         if template then
             local model = template:Clone()
+            local solid = piece.collide == true
             for _, d in model:GetDescendants() do
                 if d:IsA("BasePart") then
                     d.Anchored = true
-                    d.CanCollide = false
-                    d.CanQuery = false
+                    d.CanCollide = solid
+                    d.CanQuery = solid
                     d.CanTouch = false
+                    if solid and d:IsA("MeshPart") then
+                        -- Default wraps a hollow shape in a coarse hull, which would fill
+                        -- a cabin in and let nobody stand in it. Precise keeps the
+                        -- concavity, at a one-off bake cost when the mesh loads.
+                        d.CollisionFidelity = PROP_FIDELITY[piece.fidelity or "PreciseConvexDecomposition"]
+                            or Enum.CollisionFidelity.Default
+                    end
                 end
             end
             model.Name = name
