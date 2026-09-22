@@ -416,6 +416,35 @@ do
     })
 end
 
+-- Crashed helicopter on the fortress roof, directly above objective C. Generated from
+-- a reference image by TRELLIS.2, built by scene_kit (tools/blender/scenes.json) and
+-- uploaded as Model 106313001013090.
+--
+-- y is 39.4 rather than the roof's 33 because MapService places a prop with
+-- `model:PivotTo`, and a Model's pivot is its bounding-box CENTRE. A mesh 12.75 studs
+-- tall has to be raised by half its height or it sinks through the floor.
+--
+-- Roof centre is the only symmetry-neutral spot: this map is rotationally symmetric,
+-- so anything off-centre favours one side, and check_maps cannot catch it because
+-- decor is not a gameplay list. It will look slightly off-centre anyway -- the pivot
+-- centres the bounding box, which includes the debris scattered around the airframe.
+--
+-- Decor only, so players walk through it today. Making it real cover means authoring a
+-- block beside it, and that needs one fact measured in game: which way the airframe
+-- ends up facing. The mesh says its dense core sits about 8 x 14 studs at x -4.8,
+-- z +4.2 from the model origin with the long axis on z -- but the sign of that offset
+-- depends on how the importer lands the model, and an invisible wall on contested high
+-- ground is worse than no cover at all. Verify the facing first, then add the block.
+table.insert(map.Center, {
+    kind = "prop",
+    name = "RoofHelicopter",
+    assetId = 106313001013090,
+    pos = { 0, 39.4, 0 },
+    rot = { 0, 0, 0 },
+    scale = 1,
+    decor = true,
+})
+
 local AlpineFortress = require(script.Parent.Parent.MapArt.AlpineFortress)
 AlpineFortress.applyMap(map)
 
