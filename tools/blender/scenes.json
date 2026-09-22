@@ -15,6 +15,18 @@
     "  up          which Blender axis is up after import: x|y|z (default z). It is",
     "              normalised onto Blender Z before export, because export_yup maps",
     "              Blender Z to glTF Y and Roblox reads glTF as Y-up.",
+    "  optimize    post-export meshoptimizer pass through tools/gltf_post.py, which",
+    "              shells out to the glTF-Transform CLI and so needs npx on PATH.",
+    "              {tris, texture, error, lockBorder}, all optional:",
+    "                tris       per-mesh triangle target; the run fails if the written",
+    "                           file still breaches the 10k cap afterwards",
+    "                texture    clamp embedded textures to this many pixels (1024)",
+    "                error      fix the simplifier error bound instead of escalating",
+    "                lockBorder keep mesh borders; defaults to true when tile is set,",
+    "                           so neighbouring tiles stay watertight",
+    "              Prefer this over `decimate` on a dense generated mesh -- it holds the",
+    "              silhouette much better. It cannot collapse split vertices, so on",
+    "              flat-shaded hard-surface art it stalls and says so; use decimate there.",
     "Run: blender -b -noaudio --python tools/blender/scene_kit.py -- --asset <name>"
   ],
   "assets": {

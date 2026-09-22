@@ -1,8 +1,8 @@
 # Blender scene toolkit
 
-Turning bought or scanned art into Roblox meshes, reproducibly. Three scripts, one
-manifest. Every step is config, not code, so a new asset is an entry in
-[scenes.json](scenes.json).
+Turning bought, scanned or generated art into Roblox meshes, reproducibly. One
+manifest drives it, and every step is config rather than code, so a new asset is an
+entry in [scenes.json](scenes.json).
 
 | Script | Does |
 | --- | --- |
@@ -11,6 +11,20 @@ manifest. Every step is config, not code, so a new asset is an entry in
 | `resize_textures.py` | downscale maps to 1024 and flip DirectX normals |
 | `make_sky_range.py` | generate a mountain horizon and render it as skybox faces |
 | `appraise_asset.py` | **run this first**: says what a source asset is fit for |
+| `../gltf_post.py` | meshoptimizer simplify + texture clamp on the exported `.glb` |
+
+`gltf_post.py` sits in `tools/`, not here, because it needs no Blender -- it wraps
+the [glTF-Transform](https://gltf-transform.dev/cli) CLI (Node, so `npx` must be on
+PATH) and reads the GLB container with the standard library. That means it audits
+**any** `.glb`, including one an image-to-3D generator produced that never went
+through Blender:
+
+```bash
+python tools/gltf_post.py inspect assets/models/jumppad/JumpPad.glb
+python tools/gltf_post.py optimize in.glb out.glb --tris 9000 --texture 1024
+```
+
+`inspect` exits non-zero when a mesh breaches the 10k cap, so it works as a gate.
 
 Start every new asset with the appraisal, which answers "prop, skybox, terrain or
 nothing" in one command. See
@@ -55,14 +69,42 @@ blender -b -noaudio --python tools/blender/scene_kit.py -- --asset glacier \
 | `up` | which Blender axis is up **after import**: `x`, `y` or `z` (default `z`) |
 | `exaggerate` | vertical multiplier, applied in source proportions before `fit` |
 | `fit` | `{axis, size}` uniform scale so that axis spans `size` studs |
-| `decimate` | target triangle count, before tiling |
+| `decimate` | target triangle count, before tiling (Blender's Collapse modifier) |
 | `tile` | `[nx, ny]` bisect grid across the two non-up axes |
 | `pivot` | `center`, `bottom`, `top` or `origin` |
+| `optimize` | `{tris, texture, error, lockBorder}` meshoptimizer pass after export |
 
 Order is fixed and deliberate: **import, exaggerate, fit, decimate, tile, pivot,
-textures, export**. `exaggerate` precedes `fit` so stretch is in source proportions
-while the final width still lands exactly; `pivot` follows `tile` so every tile
-shares one offset and the set places with a single `CFrame`.
+textures, export, optimize**. `exaggerate` precedes `fit` so stretch is in source
+proportions while the final width still lands exactly; `pivot` follows `tile` so
+every tile shares one offset and the set places with a single `CFrame`; `optimize`
+follows `export` because it works on the written file, which is the artifact that
+actually gets uploaded and therefore the one worth verifying.
+
+### Two ways to shed triangles, and when each one works
+
+They are not interchangeable, and picking wrong wastes a build.
+
+| | `decimate` | `optimize.tris` |
+| --- | --- | --- |
+| Engine | Blender Collapse modifier | meshoptimizer, via glTF-Transform |
+| Good at | anything, including flat-shaded art | holding a silhouette |
+| Bad at | panels and thin structures | meshes with split vertices |
+
+**Reach for `optimize` first on a dense, smooth, generated mesh** -- a marching-cubes
+output from an image-to-3D model is exactly its best case. Measured here: a
+smooth-shaded 81,920-triangle sphere goes to 9,002 in one pass, 1.83 MB to 0.21 MB.
+
+**It will stall on flat-shaded hard-surface art**, and this is worth understanding
+rather than fighting. `weld` merges only bitwise-identical vertices; flat shading and
+UV seams split every vertex, so nothing merges, and the simplifier will not collapse
+across the seam. The jetpack asked for a 38% ratio and moved 3,984 to 3,944 -- about
+1%. Raising `--error` does nothing, because the error bound was never the limit.
+`gltf_post` detects this (two rungs producing the same count) and says so instead of
+grinding through the ladder. Use `decimate` for those, or `tile`.
+
+`lockBorder` defaults to true when `tile` is set, so bisected tiles stay watertight
+against their neighbours. A torn seam is invisible in Blender and obvious in game.
 
 ## Preview before Studio
 
@@ -101,7 +143,12 @@ Use `=` on any argument whose value starts with `-`, or argparse reads it as a f
   the ratio; the glacier source is 0.119 and needs 4x exaggeration to reach 0.476.
 - **Roblox caps a mesh at 10,000 triangles and 2048 studs per axis.** `scene_kit`
   fails the build rather than letting the import fail later, and reports the worst
-  tile so `decimate`/`tile` can be retuned.
+  tile so `decimate`/`tile` can be retuned. With an `optimize` block the triangle
+  verdict defers to `gltf_post`, which checks the written file; the stud span never
+  defers, because no amount of simplification changes how big a thing is.
+- **`--ratio` is a share of vertices, not triangles**, so the triangle count that
+  falls out of it is close but never exact -- a 9,000 target landing at 9,002 is the
+  arithmetic, not a failure. `gltf_post` allows 2% before it escalates.
 - Blender headless cannot use EEVEE (no GPU context); these scripts use Cycles CPU,
   and set camera clip planes from the scene size so map-scale renders are not empty.
 

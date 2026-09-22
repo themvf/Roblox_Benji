@@ -5,3 +5,4 @@ ServerPackages/
 *.rbxl.lock
 tools/wsrc/
 reference/roblox/API-Dump.json
+__pycache__/

@@ -12,11 +12,21 @@ One Blender unit is one stud (ROBLOX_BLENDER_ASSET_PIPELINE_SPEC.md section 3).
 Operations run in this order, because each depends on the last:
 
     import -> exaggerate -> fit -> decimate -> tile -> pivot -> textures -> export
+          -> optimize
 
 `exaggerate` runs before `fit` so vertical stretch is expressed in source
 proportions while `fit` still lands the final width exactly. `pivot` runs after
 `tile` so every tile is shifted by the same offset and the whole set can be placed
-with a single CFrame.
+with a single CFrame. `optimize` runs after `export`, on the written file, because
+the simplifier it uses is a Node CLI (see tools/gltf_post.py) and because the
+artifact that gets uploaded is the thing worth verifying.
+
+Two ways to shed triangles, and they are not interchangeable. `decimate` is
+Blender's Collapse modifier: it works on anything, including flat-shaded
+hard-surface art, and it is rough with panels and thin structures. `optimize.tris`
+is meshoptimizer: it holds a silhouette far better and is the right tool for a
+dense generated mesh, but it will not collapse across split vertices, so on
+flat-shaded art it stalls and says so. Reach for meshopt first and fall back.
 
 Every run prints the numbers a map author actually needs -- final size in Roblox
 axes, the Y range about the pivot, the worst tile -- and fails loudly if a mesh
@@ -223,21 +233,52 @@ def op_textures(tex_dir):
             img.reload()
 
 
-def check(objs):
+def check(objs, defer_tris=False):
+    """Fail before export on anything Roblox would reject at import.
+
+    `defer_tris` is set when the manifest has an `optimize` block: meshoptimizer
+    runs on the exported file and is expected to bring the count down, so an
+    over-cap mesh here is a note rather than a verdict. The stud span is never
+    deferred, because no amount of simplification changes how big a thing is."""
     problems = []
+    pending = []
     for o in objs:
         count = tris([o])
         if count > MESH_TRI_LIMIT:
-            problems.append("%s: %s triangles > %s" % (o.name, format(count, ","), format(MESH_TRI_LIMIT, ",")))
+            message = "%s: %s triangles > %s" % (o.name, format(count, ","), format(MESH_TRI_LIMIT, ","))
+            (pending if defer_tris else problems).append(message)
         mn, mx = bounds([o])
         for i, axis in enumerate("xyz"):
             span = (mx - mn)[i]
             if span > MESH_STUD_LIMIT:
                 problems.append("%s: %s span %.0f > %d studs" % (o.name, axis, span, MESH_STUD_LIMIT))
+    for note in pending:
+        print("  over cap, optimize will reduce: " + note)
     if problems:
         for problem in problems:
             print("  FAIL " + problem)
         raise SystemExit(1)
+
+
+def op_optimize(path, spec, tiled):
+    """Hand the exported GLB to meshoptimizer through tools/gltf_post.py.
+
+    This runs after export rather than inside Blender because the simplifier we
+    want lives in a Node CLI, and because verifying the finished artifact is
+    worth more than verifying the scene that produced it -- the file is what gets
+    uploaded. Bisected tiles get their borders locked so neighbouring tiles stay
+    watertight; a seam that tears is invisible here and obvious in game."""
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import gltf_post
+
+    gltf_post.optimize(
+        path,
+        path,
+        tris=spec.get("tris"),
+        texture=spec.get("texture"),
+        error=spec.get("error"),
+        lock_border=spec.get("lockBorder", tiled),
+    )
 
 
 def export(out):
@@ -317,11 +358,14 @@ def build(name, spec, out_override=None):
     if len(final) > 1:
         worst = max(final, key=lambda o: tris([o]))
         print("           largest tile %s at %s tris" % (worst.name, format(tris([worst]), ",")))
-    check(final)
+    optimize = spec.get("optimize")
+    check(final, defer_tris=bool(optimize and optimize.get("tris")))
 
     out = resolve(out_override or spec["out"])
     export(out)
     print("  wrote    %s (%.2f MB)" % (out, os.path.getsize(out) / 1e6))
+    if optimize:
+        op_optimize(out, optimize, tiled=bool(tile))
 
 
 def main():
