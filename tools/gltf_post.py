@@ -19,6 +19,7 @@ would think to look for.
 """
 
 import argparse
+import io
 import json
 import os
 import shutil
@@ -136,6 +137,85 @@ def foreign_textures(doc):
     return any(i.get("mimeType") not in NATIVE_MIMES for i in doc.get("images", []))
 
 
+# --- writing -------------------------------------------------------------
+
+
+def write_glb(path, doc, blob):
+    """Write a .glb. Both chunks pad to a 4-byte boundary, as the spec requires."""
+    body = json.dumps(doc, separators=(",", ":")).encode("utf-8")
+    body += b" " * (-len(body) % 4)
+    blob = (blob or b"")
+    blob += b"\x00" * (-len(blob) % 4)
+    total = 12 + 8 + len(body) + (8 + len(blob) if blob else 0)
+    with open(path, "wb") as handle:
+        handle.write(GLB_MAGIC + struct.pack("<II", 2, total))
+        handle.write(struct.pack("<II", len(body), CHUNK_JSON))
+        handle.write(body)
+        if blob:
+            handle.write(struct.pack("<II", len(blob), CHUNK_BIN))
+            handle.write(blob)
+
+
+def base_color_image(doc):
+    """Index of the image behind the first material's base colour, or None."""
+    for material in doc.get("materials", []):
+        slot = material.get("pbrMetallicRoughness", {}).get("baseColorTexture")
+        if not slot:
+            continue
+        texture = doc["textures"][slot["index"]]
+        if "source" in texture:
+            return texture["source"]
+        for payload in texture.get("extensions", {}).values():
+            if "source" in payload:
+                return payload["source"]
+    return None
+
+
+def tint_base_color(src, dst, tint, lift=0.0):
+    """Multiply the base-colour texture by `tint` and write a new .glb.
+
+    A multiply rather than a replace, because every panel line, streak and soot
+    mark already in the atlas is detail worth keeping -- the wreck should end up
+    weathered, not repainted. `lift` keeps the darkest areas off flat black.
+
+    The new image is APPENDED to the binary chunk with a fresh bufferView
+    pointing at it. Rewriting the image in place would change its length and
+    shift every offset after it; appending leaves the rest of the file untouched
+    at the cost of some dead bytes.
+    """
+    from PIL import Image  # only this path needs it, so do not import at module load
+
+    doc, blob = read_glb(src)
+    index = base_color_image(doc)
+    if index is None:
+        raise SystemExit("%s: no base colour texture to tint" % src)
+
+    image = doc["images"][index]
+    view = doc["bufferViews"][image["bufferView"]]
+    start = view.get("byteOffset", 0)
+    original = blob[start:start + view["byteLength"]]
+
+    picture = Image.open(io.BytesIO(original)).convert("RGB")
+    bands = []
+    for channel, factor in zip(picture.split(), tint):
+        bands.append(channel.point(lambda v, f=factor: max(0, min(255, int(v * f + lift * 255)))))
+    buffer = io.BytesIO()
+    Image.merge("RGB", bands).save(buffer, format="PNG", optimize=True)
+    encoded = buffer.getvalue()
+
+    blob = blob + b"\x00" * (-len(blob) % 4)
+    doc["bufferViews"].append({"buffer": 0, "byteOffset": len(blob), "byteLength": len(encoded)})
+    image["bufferView"] = len(doc["bufferViews"]) - 1
+    image["mimeType"] = "image/png"
+    blob += encoded
+    doc["buffers"][0]["byteLength"] = len(blob) + (-len(blob) % 4)
+
+    write_glb(dst, doc, blob)
+    print("           base colour tinted by %s (lift %.2f), %s -> %s"
+          % (", ".join("%.2f" % v for v in tint), lift,
+             format(len(original), ","), format(len(encoded), ",")))
+
+
 def mesh_triangles(doc):
     """[(name, triangles)] per glTF mesh.
 
@@ -200,7 +280,8 @@ def cli(*args):
 # --- the pipeline --------------------------------------------------------
 
 
-def optimize(src, dst, tris=None, texture=None, error=None, lock_border=False):
+def optimize(src, dst, tris=None, texture=None, error=None, lock_border=False,
+             tint=None, lift=0.0):
     """weld -> simplify -> resize, then verify what actually landed.
 
     Welding first is not optional: the simplifier is limited by split vertices,
@@ -272,6 +353,18 @@ def optimize(src, dst, tris=None, texture=None, error=None, lock_border=False):
             cli("resize", current, out, "--width", texture, "--height", texture)
             current = out
 
+        # Last, so the tint runs over the fewest pixels and lands on the PNG that
+        # actually ships rather than one a later step would re-encode.
+        if tint:
+            out = os.path.join(work, "tinted.glb")
+            tint_base_color(current, out, tint, lift)
+            # The tint appends its new image and orphans the old one, so the file
+            # carries both until something drops the unreferenced bufferView.
+            # Measured on the helicopter: 6.00 MB -> 3.61 MB.
+            pruned = os.path.join(work, "pruned.glb")
+            cli("prune", out, pruned)
+            current = pruned
+
         os.makedirs(os.path.dirname(os.path.abspath(dst)) or ".", exist_ok=True)
         shutil.copyfile(current, dst)
 
@@ -302,13 +395,18 @@ def main():
                      help="fix the simplifier error bound instead of escalating it")
     run.add_argument("--lock-border", action="store_true",
                      help="keep mesh borders intact; use for bisected tiles")
+    run.add_argument("--tint", type=lambda t: [float(v) for v in t.split(",")],
+                     help="multiply the base colour by R,G,B, e.g. 0.42,0.40,0.38")
+    run.add_argument("--lift", type=float, default=0.0,
+                     help="add this much back so the darkest areas do not crush to black")
     args = parser.parse_args()
 
     if args.command == "inspect":
         worst = report(args.file, "file")
         raise SystemExit(1 if worst > MESH_TRI_LIMIT else 0)
     optimize(args.src, args.dst, tris=args.tris, texture=args.texture,
-             error=args.error, lock_border=args.lock_border)
+             error=args.error, lock_border=args.lock_border,
+             tint=args.tint, lift=args.lift)
 
 
 if __name__ == "__main__":

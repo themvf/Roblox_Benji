@@ -37,6 +37,8 @@ import argparse
 import json
 import math
 import os
+import shutil
+import subprocess
 import sys
 
 import bpy
@@ -261,24 +263,38 @@ def check(objs, defer_tris=False):
 
 
 def op_optimize(path, spec, tiled):
-    """Hand the exported GLB to meshoptimizer through tools/gltf_post.py.
+    """Hand the exported GLB to tools/gltf_post.py, as a SEPARATE process.
 
-    This runs after export rather than inside Blender because the simplifier we
-    want lives in a Node CLI, and because verifying the finished artifact is
-    worth more than verifying the scene that produced it -- the file is what gets
-    uploaded. Bisected tiles get their borders locked so neighbouring tiles stay
-    watertight; a seam that tears is invisible here and obvious in game."""
-    sys.path.insert(0, os.path.join(ROOT, "tools"))
-    import gltf_post
+    Not an import: Blender ships its own Python, and that interpreter has no
+    Pillow, so a tint would die on `from PIL import Image` after the mesh work
+    had already succeeded. Shelling out to the system interpreter also means the
+    pipeline does not care which Python Blender was built against.
 
-    gltf_post.optimize(
-        path,
-        path,
-        tris=spec.get("tris"),
-        texture=spec.get("texture"),
-        error=spec.get("error"),
-        lock_border=spec.get("lockBorder", tiled),
-    )
+    This runs after export, on the written file, because the simplifier is a Node
+    CLI and because verifying the finished artifact is worth more than verifying
+    the scene that produced it -- the file is what gets uploaded. Bisected tiles
+    get their borders locked so neighbouring tiles stay watertight; a seam that
+    tears is invisible here and obvious in game.
+    """
+    interpreter = shutil.which("python") or shutil.which("python3")
+    if not interpreter:
+        raise SystemExit("no system python on PATH for tools/gltf_post.py")
+    command = [interpreter, os.path.join(ROOT, "tools", "gltf_post.py"), "optimize", path, path]
+    if spec.get("tris"):
+        command += ["--tris", str(spec["tris"])]
+    if spec.get("texture"):
+        command += ["--texture", str(spec["texture"])]
+    if spec.get("error"):
+        command += ["--error", str(spec["error"])]
+    if spec.get("lockBorder", tiled):
+        command.append("--lock-border")
+    if spec.get("tint"):
+        command += ["--tint", ",".join(str(v) for v in spec["tint"])]
+    if spec.get("lift"):
+        command += ["--lift", str(spec["lift"])]
+    sys.stdout.flush()  # or Blender's buffered output lands after the child's
+    if subprocess.call(command) != 0:
+        raise SystemExit("gltf_post failed; the exported file is left as-is")
 
 
 def export(out):

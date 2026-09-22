@@ -69,6 +69,9 @@ local map = {
         Cover = Color3.fromRGB(122, 130, 140),
         Upper = Color3.fromRGB(154, 165, 180),
         Ramp = Color3.fromRGB(200, 204, 212),
+        -- The one dark value on a map that is otherwise white on white. Used for the
+        -- burn under the roof wreck, where the point is contrast rather than colour.
+        Scorch = Color3.fromRGB(58, 56, 58),
     },
     Environment = {
         -- "Snowy Sky Box" by @DonTheBears, Creator Store asset 2029216718, found under
@@ -390,19 +393,25 @@ for _, post in map.SniperOutposts do
     block(post.Id .. "DoorHeader", { x + entry * 13, 27.5, z }, { 2, 4, 10 })
 end
 
--- Ice rock decor, first pass. Two Creator Store models placed side by side so their
--- look and scale can be compared in the map before settling on one. Props never
--- collide and never answer a raycast, so these cannot change cover or sightlines --
--- they sit clear of the objective radii and the ground routes regardless.
+-- Ice rock decor. Two Creator Store models placed side by side so their look can be
+-- compared in the map before settling on one. Props never collide and never answer a
+-- raycast, so these cannot change cover or sightlines -- they sit clear of the
+-- objective radii and the ground routes regardless.
 -- Jagged Ice Rock 139945743433812, ICE ROCK 72083045344532.
+--
+-- `fit` and `sit`, not `scale` and a y. The first pass used scale 0.8/1/1.4 against a
+-- size nobody had measured, and the models arrived big enough to reach across the map
+-- and cross a zip line on screen. `fit` names the studs and lets MapService derive the
+-- multiplier from the model that actually loaded; `sit` puts the lowest point on the
+-- ground instead of the bounding-box centre, which is what buried and tilted them.
 for _, rock in
     {
-        { asset = 139945743433812, pos = { -92, 0, -152 }, yaw = 20, scale = 1 },
-        { asset = 139945743433812, pos = { -64, 0, -170 }, yaw = 145, scale = 1.4 },
-        { asset = 139945743433812, pos = { 74, 0, -158 }, yaw = 250, scale = 0.8 },
-        { asset = 72083045344532, pos = { -80, 0, 152 }, yaw = 60, scale = 1 },
-        { asset = 72083045344532, pos = { 66, 0, 166 }, yaw = 200, scale = 1.4 },
-        { asset = 72083045344532, pos = { 98, 0, 140 }, yaw = 320, scale = 0.8 },
+        { asset = 139945743433812, pos = { -92, 0, -152 }, yaw = 20, fit = 14 },
+        { asset = 139945743433812, pos = { -64, 0, -170 }, yaw = 145, fit = 18 },
+        { asset = 139945743433812, pos = { 74, 0, -158 }, yaw = 250, fit = 11 },
+        { asset = 72083045344532, pos = { -80, 0, 152 }, yaw = 60, fit = 14 },
+        { asset = 72083045344532, pos = { 66, 0, 166 }, yaw = 200, fit = 18 },
+        { asset = 72083045344532, pos = { 98, 0, 140 }, yaw = 320, fit = 11 },
     }
 do
     table.insert(map.Center, {
@@ -411,7 +420,8 @@ do
         assetId = rock.asset,
         pos = rock.pos,
         rot = { 0, rock.yaw, 0 },
-        scale = rock.scale,
+        fit = rock.fit,
+        sit = true,
         decor = true,
     })
 end
@@ -420,9 +430,12 @@ end
 -- a reference image by TRELLIS.2, built by scene_kit (tools/blender/scenes.json) and
 -- uploaded as Model 106313001013090.
 --
--- y is 39.4 rather than the roof's 33 because MapService places a prop with
--- `model:PivotTo`, and a Model's pivot is its bounding-box CENTRE. A mesh 12.75 studs
--- tall has to be raised by half its height or it sinks through the floor.
+-- `sit` puts its lowest point on the roof at y 33, so the height no longer has to be
+-- hand-corrected for the fact that a Model's pivot is its bounding-box CENTRE.
+--
+-- The texture is tinted to charcoal in the pipeline rather than here: a white wreck on
+-- a white roof was invisible from more than a few studs away, and MeshPart colour does
+-- not tint an applied texture. The burn patch below does the other half of the job.
 --
 -- Roof centre is the only symmetry-neutral spot: this map is rotationally symmetric,
 -- so anything off-centre favours one side, and check_maps cannot catch it because
@@ -435,13 +448,20 @@ end
 -- z +4.2 from the model origin with the long axis on z -- but the sign of that offset
 -- depends on how the importer lands the model, and an invisible wall on contested high
 -- ground is worse than no cover at all. Verify the facing first, then add the block.
+-- Flush with the roof top at y 33 and only 0.1 thick, so it is a colour change rather
+-- than a step: a player walks across it without feeling anything. Wide enough to sit
+-- under the airframe wherever the importer lands it, since the model's mass is offset
+-- from its bounding-box centre by about 6 studs and the direction is not known here.
+block("RoofScorch", { 0, 33.05, 0 }, { 28, 0.1, 22 }, "Scorch")
+
 table.insert(map.Center, {
     kind = "prop",
     name = "RoofHelicopter",
-    assetId = 106313001013090,
-    pos = { 0, 39.4, 0 },
+    assetId = 130015473244475,
+    pos = { 0, 33, 0 },
     rot = { 0, 0, 0 },
-    scale = 1,
+    fit = 34,
+    sit = true,
     decor = true,
 })
 

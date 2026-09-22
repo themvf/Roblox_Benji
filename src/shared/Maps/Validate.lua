@@ -394,6 +394,17 @@ function Validate.check(layout, weapons)
                 if piece.scale ~= nil and (type(piece.scale) ~= "number" or piece.scale <= 0) then
                     err("%s: prop `scale` must be a positive number", where)
                 end
+                -- `fit` names the studs the model should end up; `scale` multiplies a
+                -- size nobody measured. Setting both hides which one is in charge.
+                if piece.fit ~= nil and (type(piece.fit) ~= "number" or piece.fit <= 0) then
+                    err("%s: prop `fit` must be a positive number of studs", where)
+                end
+                if piece.fit ~= nil and piece.scale ~= nil then
+                    err("%s: prop sets both `fit` and `scale`; keep `fit` and drop `scale`", where)
+                end
+                if piece.sit ~= nil and type(piece.sit) ~= "boolean" then
+                    err("%s: prop `sit` must be true or false", where)
+                end
             end
             -- ramps: a thin slab with roll. Too steep stalls characters.
             if piece.rot and piece.size and #piece.size == 3 and piece.size[2] <= 2 then

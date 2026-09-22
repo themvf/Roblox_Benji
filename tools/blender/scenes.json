@@ -52,7 +52,13 @@
       "decimate": 9000,
       "pivot": "bottom",
       "optimize": {
-        "texture": 1024
+        "texture": 1024,
+        "tint": [
+          0.38,
+          0.36,
+          0.34
+        ],
+        "lift": 0.03
       }
     },
     "jumppad": {

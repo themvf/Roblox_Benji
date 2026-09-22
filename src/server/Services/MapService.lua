@@ -852,6 +852,13 @@ local function propTemplate(assetId)
         propTemplates[assetId] = cached
         if not cached then
             warn(("[MapService] prop asset %d could not be loaded; it will be missing"):format(assetId))
+        elseif model:IsA("Model") then
+            -- Say how big it actually arrives. A bought model is whatever size its
+            -- author chose and there is no way to know before it loads, so the
+            -- alternative is guessing a `scale` and reading the result off the
+            -- screen. Print it once per asset and use `fit` instead.
+            local _, size = model:GetBoundingBox()
+            print(("[MapService] prop %d loads at %.1f x %.1f x %.1f studs"):format(assetId, size.X, size.Y, size.Z))
         end
     end
     return cached or nil
@@ -907,14 +914,36 @@ local function placePiece(folder, prefix, piece, rng, mirror)
                 end
             end
             model.Name = name
-            if piece.scale and piece.scale ~= 1 and model:IsA("Model") then
-                model:ScaleTo(piece.scale)
-            end
             local cf = CFrame.new(pos[1], pos[2], pos[3])
             if rot then
                 cf = cf * CFrame.Angles(math.rad(rot[1]), math.rad(rot[2]), math.rad(rot[3]))
             end
+            -- Orient first: `fit` and `sit` both measure the bounding box, and the
+            -- box a rotated model occupies is not the one it started with.
             model:PivotTo(cf)
+            if model:IsA("Model") then
+                -- `fit` is the honest lever. `scale` is a multiplier on a size the
+                -- author never measured, so it is a guess that reads wrong in game
+                -- until somebody eyeballs it; `fit` names the studs it should end up
+                -- and lets the number come from the model that actually loaded.
+                if piece.fit then
+                    local _, size = model:GetBoundingBox()
+                    local longest = math.max(size.X, size.Z)
+                    if longest > 0 then
+                        model:ScaleTo(piece.fit / longest)
+                    end
+                elseif piece.scale and piece.scale ~= 1 then
+                    model:ScaleTo(piece.scale)
+                end
+                -- A Model's pivot is its bounding-box CENTRE, so placing one at
+                -- ground level buries half of it. `sit` puts its lowest point on
+                -- pos.y instead, which is what "on the floor" always meant.
+                if piece.sit then
+                    local box, size = model:GetBoundingBox()
+                    local bottom = box.Position.Y - size.Y / 2
+                    model:PivotTo(model:GetPivot() + Vector3.new(0, pos[2] - bottom, 0))
+                end
+            end
             model.Parent = folder
         end
     elseif kind == "marker" then

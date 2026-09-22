@@ -72,7 +72,7 @@ blender -b -noaudio --python tools/blender/scene_kit.py -- --asset glacier \
 | `decimate` | target triangle count, before tiling (Blender's Collapse modifier) |
 | `tile` | `[nx, ny]` bisect grid across the two non-up axes |
 | `pivot` | `center`, `bottom`, `top` or `origin` |
-| `optimize` | `{tris, texture, error, lockBorder}` meshoptimizer pass after export |
+| `optimize` | `{tris, texture, error, lockBorder, tint, lift}` post-export pass |
 
 Order is fixed and deliberate: **import, exaggerate, fit, decimate, tile, pivot,
 textures, export, optimize**. `exaggerate` precedes `fit` so stretch is in source
@@ -105,6 +105,27 @@ grinding through the ladder. Use `decimate` for those, or `tile`.
 
 `lockBorder` defaults to true when `tile` is set, so bisected tiles stay watertight
 against their neighbours. A torn seam is invisible in Blender and obvious in game.
+
+### Recolouring: `tint`
+
+`optimize.tint` multiplies the base-colour texture by an R,G,B triple, with `lift`
+adding a little back so the darkest areas do not crush to flat black. A multiply
+rather than a repaint, because the panel lines, streaks and soot already in the atlas
+are the detail worth keeping.
+
+Do this in the pipeline, not in the map. A `MeshPart`'s `Color` does not tint a
+texture that is already applied, so the only reliable place to change an imported
+mesh's colour is the texture itself. The helicopter needed it because a pale wreck on
+a white roof was invisible from more than a few studs: `[0.38, 0.36, 0.34]` with
+`lift 0.03` took the atlas from a mean of about 118 to 45.
+
+The tint appends its new image and orphans the old one, so `optimize` runs a `prune`
+straight after to drop the unreferenced bufferView. Skipping that left the helicopter
+at 6.00 MB instead of 3.61 MB.
+
+**`preview_scene.py` will not show any of this.** It renders with its own material, so
+a tinted asset and an untinted one look identical in its output. Check a recolour by
+extracting the texture (`gltf_post` prints each one's format and size) or in Studio.
 
 ## Preview before Studio
 
