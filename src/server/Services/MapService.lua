@@ -14,8 +14,10 @@ local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
 local FortressArt = require(script.Parent.Parent.FortressArt)
 
--- The startup map is Config.StartupMap (Tuning attribute StartupMap). This is the last resort
--- if that name does not resolve, so the server still comes up with a playable arena.
+-- The startup map is Config.StartupMap, from Shared/Config.lua only -- TuningService
+-- clears any saved StartupMap attribute before this reads it, because one set in an old
+-- session used to beat every later edit to the file. This is the last resort if that
+-- name does not resolve, so the server still comes up with a playable arena.
 local FALLBACK_MAP = "Arena"
 
 local MapService = Knit.CreateService({ Name = "MapService" })

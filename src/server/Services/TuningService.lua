@@ -18,7 +18,6 @@ local TUNABLE = {
     "RoundSeconds",
     "RoundsToWin",
     "RespawnSeconds",
-    "StartupMap",
     "MapVoteEnabled",
     "MapVoteSeconds",
     "MapVoteOptions",
@@ -41,6 +40,23 @@ function TuningService:EnsureSetup()
     end
     if tuning:GetAttribute("UI_ReducedMotion") == nil then
         tuning:SetAttribute("UI_ReducedMotion", false)
+    end
+    -- StartupMap is not a tunable. The map is built once, in MapService:KnitInit, so
+    -- changing an attribute mid-session does nothing anyway -- and because a saved
+    -- attribute beats Config forever, a value set in some earlier session silently won
+    -- over every later edit to Config.lua. That cost three separate rounds of "why am I
+    -- looking at the wrong map", each one ending in deleting the attribute by hand,
+    -- which does not stick when it is deleted from a running session.
+    --
+    -- Shared/Config.lua is the only source now. Clear whatever an older place file
+    -- still carries, before MapService reads it: EnsureSetup runs first by contract.
+    local stale = tuning:GetAttribute("StartupMap")
+    if stale ~= nil then
+        tuning:SetAttribute("StartupMap", nil)
+        print(
+            ("[Tuning] cleared a saved StartupMap of %q; the startup map now comes only "):format(tostring(stale))
+                .. "from Shared/Config.lua. Edit it there and restart the server."
+        )
     end
     -- A saved attribute wins over Shared/Config forever, because seeding only fills
     -- a nil. That is the point -- Studio tuning should survive a sync -- but it also

@@ -12,6 +12,10 @@ local Config = {
     -- what Studio's Run (F8) shows, since Run starts the server with no character:
     -- point this at whatever map you are working on to inspect it with a free
     -- camera and no second player. Design default is "Forest".
+    --
+    -- This one is NOT a Tuning attribute, unlike everything else here. The map builds
+    -- once at server start, so a live attribute could not change it anyway, and a saved
+    -- one used to beat this line permanently. TuningService clears any it finds.
     StartupMap = "SnowFortress",
 
     -- Lobby map vote: once a pad fills, the players on it pick the map before the match starts.
