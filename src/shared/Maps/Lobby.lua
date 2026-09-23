@@ -66,6 +66,26 @@ return {
             size = { 12, 1, 10 },
             color = Color3.fromRGB(120, 200, 160),
         },
+        -- Its own corner of the room, opposite the kiosk, because it is not a way to
+        -- play the game -- it is the way to go look at a map you are building.
+        --
+        -- Every other pad needs both sides populated before it can start, so one person
+        -- alone can never leave the lobby: Red or Blue is always zero. `solo` starts on
+        -- a single occupant and skips the fill wait entirely. The map vote still opens,
+        -- with one voter, which is how you choose where you are going.
+        --
+        -- Bots fill both teams from Convergence_BotsPerTeam once the match begins.
+        {
+            name = "PadPractice",
+            kind = "Convergence",
+            mode = "PRACTICE",
+            solo = true,
+            teamSize = 1,
+            minTeamSize = 1,
+            pos = { 52, 0, 6 },
+            size = { 16, 1, 12 },
+            color = Color3.fromRGB(170, 140, 235),
+        },
     },
 
     Board = { pos = { 0, 0, 52 }, size = { 26, 9, 1 } },

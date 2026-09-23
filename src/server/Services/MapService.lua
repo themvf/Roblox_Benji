@@ -514,8 +514,11 @@ local function buildLobby(self, layout)
 
     self.Pads = {}
     for _, spec in layout.Pads do
-        if spec.kind == "Convergence" then
-            -- team sizes come from Config/Tuning so tests can shrink the featured mode
+        if spec.kind == "Convergence" and not spec.solo then
+            -- team sizes come from Config/Tuning so tests can shrink the featured mode.
+            -- A solo pad is exempt: its whole point is that one person can start, and
+            -- inheriting a team size of six would make it as unusable as the pad it
+            -- exists to work around.
             local rules = Config.GetConvergence()
             spec = table.clone(spec)
             spec.teamSize = rules.TeamSize
@@ -614,6 +617,7 @@ local function buildLobby(self, layout)
             Kind = spec.kind or "Duel",
             TeamSize = spec.teamSize,
             MinTeamSize = spec.minTeamSize or spec.teamSize,
+            Solo = spec.solo == true,
         })
     end
 

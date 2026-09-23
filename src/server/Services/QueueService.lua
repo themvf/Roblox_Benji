@@ -161,8 +161,20 @@ function QueueService:KnitStart()
                 local need = pad.TeamSize
                 local minNeed = pad.MinTeamSize or need
                 local red, blue = #queued.Red, #queued.Blue
-                local full = red >= need and blue >= need
-                local viable = red >= minNeed and blue >= minNeed
+                -- A solo pad starts on one occupant, whichever half they are standing
+                -- on. Every other pad needs both sides, which is exactly why a single
+                -- player can never leave the lobby on one: their own side counts, the
+                -- other is zero, and `viable` is never reached no matter how long they
+                -- wait. Bots fill the teams once the mode starts.
+                local solo = pad.Solo == true
+                local full, viable
+                if solo then
+                    full = (red + blue) >= 1
+                    viable = full
+                else
+                    full = red >= need and blue >= need
+                    viable = red >= minNeed and blue >= minNeed
+                end
                 local rules = Config.GetConvergence()
                 local waitLeft = nil
                 if viable and not full and pad.Kind == "Convergence" then
@@ -185,6 +197,10 @@ function QueueService:KnitStart()
                         blue,
                         math.ceil(waitLeft)
                     )
+                elseif solo then
+                    -- "Pick a side (1 per team)" would be a lie here: there is no side
+                    -- to pick and nobody to wait for.
+                    status = "Step on to pick a map"
                 elseif red == 0 and blue == 0 then
                     status = minNeed < need and ("Pick a side  (%d-%d per team)"):format(minNeed, need)
                         or ("Pick a side  (%d per team)"):format(need)
@@ -201,13 +217,20 @@ function QueueService:KnitStart()
                     fillSince[pad] = nil
                     table.sort(queued.Red, byJoinOrder)
                     table.sort(queued.Blue, byJoinOrder)
-                    local n = math.min(red, blue, need)
+                    local n = solo and 1 or math.min(red, blue, need)
                     local picked = {}
-                    for i = 1, n do
-                        table.insert(picked, queued.Red[i])
-                    end
-                    for i = 1, n do
-                        table.insert(picked, queued.Blue[i])
+                    if solo then
+                        -- One player, whichever half they were standing on. Taking the
+                        -- usual min(red, blue) here would be zero and start an empty
+                        -- match.
+                        table.insert(picked, queued.Red[1] or queued.Blue[1])
+                    else
+                        for i = 1, n do
+                            table.insert(picked, queued.Red[i])
+                        end
+                        for i = 1, n do
+                            table.insert(picked, queued.Blue[i])
+                        end
                     end
                     -- The players who filled the pad vote on the map, then the mode starts with
                     -- the winner. The mode assigns the first n players to Red, the rest to Blue.
