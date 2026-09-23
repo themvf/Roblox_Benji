@@ -29,7 +29,6 @@
           "RoundSeconds": 90,
           "RoundsToWin": 5,
           "RespawnSeconds": 3,
-          "StartupMap": "Forest",
           "MapVoteEnabled": true,
           "MapVoteSeconds": 12,
           "MapVoteOptions": 5,
