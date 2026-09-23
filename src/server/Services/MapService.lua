@@ -839,6 +839,38 @@ end
 -- cached, because a map can place the same rock twenty times and LoadAsset yields
 -- and hits the network. A failed load warns once and leaves the prop out rather than
 -- taking the build down with it.
+local CORNERS = {
+    Vector3.new(-1, -1, -1),
+    Vector3.new(-1, -1, 1),
+    Vector3.new(-1, 1, -1),
+    Vector3.new(-1, 1, 1),
+    Vector3.new(1, -1, -1),
+    Vector3.new(1, -1, 1),
+    Vector3.new(1, 1, -1),
+    Vector3.new(1, 1, 1),
+}
+
+-- World-axis bounds over the parts you can actually SEE, which is not what
+-- Model:GetBoundingBox gives you. That box spans every part in the model, so an
+-- invisible collision hull or a stray anchor part sitting below the mesh makes it
+-- taller than the rock looks -- and then `sit`, which lifts by half that height,
+-- leaves the rock hanging in the air above its own shadow. It is also pivot-aligned
+-- rather than world-aligned, so it only agrees with the world for a yaw-only pivot.
+-- Eight corners per part, min and max: exact, and no assumptions about orientation.
+local function visibleExtents(model)
+    local min, max
+    for _, d in model:GetDescendants() do
+        if d:IsA("BasePart") and d.Transparency < 1 then
+            for _, corner in CORNERS do
+                local point = d.CFrame * (corner * d.Size / 2)
+                min = min and min:Min(point) or point
+                max = max and max:Max(point) or point
+            end
+        end
+    end
+    return min, max
+end
+
 local propTemplates = {}
 
 local function propTemplate(assetId)
@@ -860,7 +892,19 @@ local function propTemplate(assetId)
             -- alternative is guessing a `scale` and reading the result off the
             -- screen. Print it once per asset and use `fit` instead.
             local _, size = model:GetBoundingBox()
-            print(("[MapService] prop %d loads at %.1f x %.1f x %.1f studs"):format(assetId, size.X, size.Y, size.Z))
+            local min, max = visibleExtents(model)
+            local span = (min and max - min) or size
+            print(
+                ("[MapService] prop %d loads at %.1f x %.1f x %.1f visible (%.1f x %.1f x %.1f with hidden parts)"):format(
+                    assetId,
+                    span.X,
+                    span.Y,
+                    span.Z,
+                    size.X,
+                    size.Y,
+                    size.Z
+                )
+            )
         end
     end
     return cached or nil
@@ -942,22 +986,39 @@ local function placePiece(folder, prefix, piece, rng, mirror)
                 -- author never measured, so it is a guess that reads wrong in game
                 -- until somebody eyeballs it; `fit` names the studs it should end up
                 -- and lets the number come from the model that actually loaded.
-                if piece.fit then
-                    local _, size = model:GetBoundingBox()
-                    local longest = math.max(size.X, size.Z)
+                local min, max = visibleExtents(model)
+                if piece.fit and min then
+                    local span = max - min
+                    local longest = math.max(span.X, span.Z)
                     if longest > 0 then
                         model:ScaleTo(piece.fit / longest)
+                        min, max = visibleExtents(model)
                     end
                 elseif piece.scale and piece.scale ~= 1 then
                     model:ScaleTo(piece.scale)
+                    min, max = visibleExtents(model)
                 end
-                -- A Model's pivot is its bounding-box CENTRE, so placing one at
-                -- ground level buries half of it. `sit` puts its lowest point on
-                -- pos.y instead, which is what "on the floor" always meant.
-                if piece.sit then
-                    local box, size = model:GetBoundingBox()
-                    local bottom = box.Position.Y - size.Y / 2
-                    model:PivotTo(model:GetPivot() + Vector3.new(0, pos[2] - bottom, 0))
+                -- A Model's pivot is its bounding-box CENTRE, so placing one at ground
+                -- level buries half of it. `sit` puts its lowest VISIBLE point on pos.y,
+                -- which is what "on the floor" always meant.
+                if piece.sit and min then
+                    model:PivotTo(model:GetPivot() + Vector3.new(0, pos[2] - min.Y, 0))
+                    min, max = visibleExtents(model)
+                end
+                if (piece.fit or piece.sit) and min then
+                    -- Report what was actually placed, not what was asked for. Every
+                    -- prop problem so far -- buried, floating, seventy studs wide --
+                    -- was invisible until a number said so.
+                    local span = max - min
+                    print(
+                        ("[MapService] %s placed %.1f x %.1f x %.1f studs, base at y %.1f"):format(
+                            name,
+                            span.X,
+                            span.Y,
+                            span.Z,
+                            min.Y
+                        )
+                    )
                 end
             end
             model.Parent = folder
