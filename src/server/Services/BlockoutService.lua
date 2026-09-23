@@ -9,9 +9,19 @@
 --
 --     /mark            drop a marker sized 20 studs across
 --     /mark 35         ... or any size; the marker is that wide, so you see the scale
---     /unmark          remove the last one
+--     /unmark          take back the last one
 --     /marks           print every mark as map data, ready to paste
 --     /marks clear     remove them all
+--
+-- And to take something out of the map, stand near it and:
+--
+--     /remove          flag the nearest piece; it turns red so you can see which
+--     /unremove        take back the last flag
+--     /removals        print the flagged names
+--     /removals clear  unflag them all
+--
+-- Flagging changes nothing on its own. It turns "the ugly rock over there" into a
+-- name that appears in the map file, which is the part that was hard to say out loud.
 --
 -- A marker is a translucent box the size the prop would be, so the footprint is
 -- visible while placing rather than after building. It never collides and never
@@ -128,11 +138,128 @@ function BlockoutService:Dump()
     print(table.concat(lines, "\n"))
 end
 
+-- The map is rebuilt from data every match, so "remove this" has to come back as a
+-- name that can be found in the map file. Only the pieces that belong to the built
+-- map are candidates, and only ones small enough to have been meant: the floor is
+-- 490 studs across and is always the thing you are standing closest to.
+local REMOVE_RADIUS = 80
+local BIGGEST_PIECE = 60
+
+local function extents(piece)
+    if piece:IsA("Model") then
+        local cf, size = piece:GetBoundingBox()
+        return cf.Position, size
+    elseif piece:IsA("BasePart") then
+        return piece.Position, piece.Size
+    end
+    return nil, nil
+end
+
+function BlockoutService:Remove(player)
+    local character = player.Character
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+    if not root then
+        warn("[Blockout] no character to measure from")
+        return
+    end
+    local map = workspace:FindFirstChild("Map")
+    if not map then
+        warn("[Blockout] no built map to remove from")
+        return
+    end
+
+    self.Removals = self.Removals or {}
+    local flagged = {}
+    for _, entry in self.Removals do
+        flagged[entry.piece] = true
+    end
+
+    local best, bestAt, bestGap
+    for _, piece in map:GetChildren() do
+        local centre, size = extents(piece)
+        if centre and not flagged[piece] and math.max(size.X, size.Y, size.Z) <= BIGGEST_PIECE then
+            local gap = (centre - root.Position).Magnitude
+            if gap <= REMOVE_RADIUS and (not bestGap or gap < bestGap) then
+                best, bestAt, bestGap = piece, centre, gap
+            end
+        end
+    end
+    if not best then
+        print(("[Blockout] nothing within %d studs that is not already flagged"):format(REMOVE_RADIUS))
+        return
+    end
+
+    -- Show which one. Reading a name out of a log and hoping it was the right rock is
+    -- how the wrong thing gets deleted.
+    local glow = Instance.new("Highlight")
+    glow.FillColor = Color3.fromRGB(255, 70, 70)
+    glow.OutlineColor = Color3.fromRGB(255, 170, 170)
+    glow.FillTransparency = 0.55
+    glow.Adornee = best
+    glow.Parent = best
+
+    table.insert(self.Removals, { name = best.Name, piece = best, at = bestAt, glow = glow })
+    print(
+        ("[Blockout] flagged %q, %.0f studs away at %d, %d, %d"):format(
+            best.Name,
+            bestGap,
+            math.floor(bestAt.X + 0.5),
+            math.floor(bestAt.Y + 0.5),
+            math.floor(bestAt.Z + 0.5)
+        )
+    )
+end
+
+function BlockoutService:Unremove()
+    local removals = self.Removals
+    if not removals or #removals == 0 then
+        print("[Blockout] nothing flagged")
+        return
+    end
+    local last = table.remove(removals)
+    if last.glow then
+        last.glow:Destroy()
+    end
+    print(("[Blockout] unflagged %q; %d still flagged"):format(last.name, #removals))
+end
+
+function BlockoutService:ClearRemovals()
+    for _, entry in self.Removals or {} do
+        if entry.glow then
+            entry.glow:Destroy()
+        end
+    end
+    self.Removals = {}
+    print("[Blockout] removal flags cleared")
+end
+
+function BlockoutService:DumpRemovals()
+    local removals = self.Removals or {}
+    if #removals == 0 then
+        print("[Blockout] nothing flagged -- stand near something and type /remove")
+        return
+    end
+    local lines = { ("[Blockout] %d flagged for removal:"):format(#removals) }
+    for _, entry in removals do
+        table.insert(
+            lines,
+            ("    %s  at %d, %d, %d"):format(
+                entry.name,
+                math.floor(entry.at.X + 0.5),
+                math.floor(entry.at.Y + 0.5),
+                math.floor(entry.at.Z + 0.5)
+            )
+        )
+    end
+    print(table.concat(lines, "\n"))
+end
+
 function BlockoutService:KnitStart()
     if not RunService:IsStudio() then
         return
     end
     self.Marks = {}
+    self.Removals = {}
     local function watch(player)
         player.Chatted:Connect(function(msg)
             local text = msg:lower()
@@ -145,6 +272,14 @@ function BlockoutService:KnitStart()
             elseif text:sub(1, 5) == "/mark" then
                 local fit = tonumber(text:match("^/mark%s+([%d%.]+)$")) or DEFAULT_FIT
                 self:Mark(player, math.clamp(fit, 1, 200))
+            elseif text == "/removals clear" then
+                self:ClearRemovals()
+            elseif text == "/removals" then
+                self:DumpRemovals()
+            elseif text == "/unremove" then
+                self:Unremove()
+            elseif text == "/remove" then
+                self:Remove(player)
             end
         end)
     end
@@ -152,7 +287,8 @@ function BlockoutService:KnitStart()
     for _, player in Players:GetPlayers() do
         watch(player)
     end
-    print("[Blockout] ready: /mark, /mark <size>, /unmark, /marks, /marks clear")
+    print("[Blockout] ready: /mark <size>, /unmark, /marks, /marks clear")
+    print("[Blockout]        /remove, /unremove, /removals, /removals clear")
 end
 
 return BlockoutService
