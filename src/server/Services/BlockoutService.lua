@@ -268,6 +268,42 @@ function BlockoutService:DumpRemovals()
     print(table.concat(lines, "\n"))
 end
 
+-- Flip between the built map and the baked one without restarting the server.
+--
+-- The alternative was adding a Boolean attribute to ReplicatedStorage.Tuning by hand,
+-- which is fiddly, easy to misspell, and silent when it is wrong: an attribute set to
+-- false matches Config and prints nothing, so a missing flag and an off flag look
+-- identical. This says which path it took, every time.
+--
+-- Setting the attribute at runtime is discarded on Stop, and that is a feature here --
+-- a migration switch should not quietly persist into a place file the way StartupMap did.
+function BlockoutService:Baked(arg)
+    local MapService = Knit.GetService("MapService")
+    local tuning = ReplicatedStorage:FindFirstChild("Tuning")
+    if not tuning then
+        warn("[Blockout] no Tuning configuration")
+        return
+    end
+    if arg ~= "on" and arg ~= "off" then
+        print(
+            ("[Blockout] baked maps are %s; use /baked on or /baked off"):format(
+                tuning:GetAttribute("UseBakedMaps") == true and "ON" or "OFF"
+            )
+        )
+        return
+    end
+    tuning:SetAttribute("UseBakedMaps", arg == "on")
+    local current = MapService.CurrentMap
+    if not current then
+        print("[Blockout] flag set, but no current map to rebuild")
+        return
+    end
+    -- Rebuilding under a live match will move the ground out from under everyone. That is
+    -- acceptable for a switch whose entire job is showing you both versions side by side.
+    print(("[Blockout] rebuilding %s with baked maps %s"):format(current, arg:upper()))
+    MapService:Load(current)
+end
+
 function BlockoutService:KnitStart()
     if not RunService:IsStudio() then
         return
@@ -286,6 +322,8 @@ function BlockoutService:KnitStart()
             elseif text:sub(1, 5) == "/mark" then
                 local fit = tonumber(text:match("^/mark%s+([%d%.]+)$")) or DEFAULT_FIT
                 self:Mark(player, math.clamp(fit, 1, 200))
+            elseif text:sub(1, 6) == "/baked" then
+                self:Baked(text:match("^/baked%s+(%a+)$"))
             elseif text == "/removals clear" then
                 self:ClearRemovals()
             elseif text == "/removals" then
@@ -303,6 +341,7 @@ function BlockoutService:KnitStart()
     end
     print("[Blockout] ready: /mark <size>, /unmark, /marks, /marks clear")
     print("[Blockout]        /remove, /unremove, /removals, /removals clear")
+    print("[Blockout]        /baked on, /baked off  (rebuilds the map in place)")
 end
 
 return BlockoutService
