@@ -415,12 +415,19 @@ end
 -- the studs and lets MapService derive the multiplier from the model that actually
 -- loaded; `sit` puts the lowest point on the ground rather than the bounding-box
 -- centre, which is what buried them and made them look tilted.
+--
+-- Positions avoid both zip corridors. The zips run the -x/+z and +x/-z diagonals, so
+-- two rocks that sat in those quadrants lined up behind the ground endpoints from the
+-- angle a player approaches on and read as blocking the route, even at 63 and 72 studs
+-- of real clearance -- a prop cannot obstruct anything, but looking like it does is
+-- reason enough to move it. They are now near x 0, which puts every rock at least 139
+-- studs from either line. The other four were always in the empty quadrants.
 for _, rock in
     {
         { asset = 139945743433812, pos = { -92, 0, -152 }, yaw = 20, fit = 14 },
         { asset = 139945743433812, pos = { -64, 0, -170 }, yaw = 145, fit = 18 },
-        { asset = 139945743433812, pos = { 74, 0, -158 }, yaw = 250, fit = 11 },
-        { asset = 139945743433812, pos = { -80, 0, 152 }, yaw = 60, fit = 15 },
+        { asset = 139945743433812, pos = { -14, 0, -170 }, yaw = 250, fit = 11 },
+        { asset = 139945743433812, pos = { 14, 0, 170 }, yaw = 60, fit = 15 },
         { asset = 139945743433812, pos = { 66, 0, 166 }, yaw = 200, fit = 19 },
         { asset = 139945743433812, pos = { 98, 0, 140 }, yaw = 320, fit = 12 },
     }
