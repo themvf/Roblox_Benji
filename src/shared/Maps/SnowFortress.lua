@@ -436,12 +436,14 @@ for _, seed in
         { x = 228, z = -48, fit = 24, yaw = 320 },
         { x = 120, z = 176, fit = 18, yaw = 95 },
         { x = 24, z = 176, fit = 12, yaw = 170 },
-        -- Hand-placed with /mark, then checked the same way as the rest. Both clear
-        -- their nearest launch arc by 22 and 15 studs, which is clearance rather than
-        -- contact. A third mark at 106,-78 was dropped: it stood one stud off the
-        -- northeast zip cable.
+        -- Hand-placed with /mark. The third of these was nearly dropped on a reading of
+        -- "one stud from the northeast zip cable", which was a flat measurement of a
+        -- route that climbs: the cable is about 21 studs overhead where this sits, and
+        -- the real clearance is 24. Distances to a zip or an arc are three-dimensional,
+        -- and Validate's own check is -- which is why it did not complain about this.
         { x = 155, z = -40, fit = 20, yaw = 35 },
         { x = 144, z = 46, fit = 20, yaw = 285 },
+        { x = 106, z = -78, fit = 20, yaw = 150 },
     }
 do
     for _, turn in { 0, 180 } do
@@ -454,6 +456,14 @@ do
             rot = { 0, seed.yaw + turn, 0 },
             fit = seed.fit,
             sit = true,
+            -- Solid, like the roof wreck. Walking through a rock reads as a bug the
+            -- first time and as a cheat the second, and these are big enough to matter.
+            -- The shape is approximate: CollisionFidelity is plugin-security so nothing
+            -- at runtime can ask for a precise decomposition, which means the collision
+            -- hull sits a little wider than the spikes look. Validate keeps every
+            -- collidable prop clear of the zip lines and launch arcs, since no tracer
+            -- can see a bought mesh.
+            collide = true,
             decor = true,
         })
     end

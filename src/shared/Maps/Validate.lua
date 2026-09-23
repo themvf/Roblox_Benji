@@ -221,6 +221,17 @@ function Validate.solids(layout)
     return out
 end
 
+-- Distance from a point to a line segment, all in world space. Used to keep collidable
+-- props off the traversal routes, where the thing being avoided is a path rather than a box.
+local function pointToSegment(p, a, b)
+    local vx, vy, vz = b[1] - a[1], b[2] - a[2], b[3] - a[3]
+    local wx, wy, wz = p[1] - a[1], p[2] - a[2], p[3] - a[3]
+    local len = vx * vx + vy * vy + vz * vz
+    local t = len > 0 and math.clamp((wx * vx + wy * vy + wz * vz) / len, 0, 1) or 0
+    local dx, dy, dz = wx - t * vx, wy - t * vy, wz - t * vz
+    return math.sqrt(dx * dx + dy * dy + dz * dz)
+end
+
 -- ===== launch arcs (PickupService.launchVelocity, replayed) =====
 
 function Validate.arc(from, to, vy)
@@ -531,6 +542,46 @@ function Validate.check(layout, weapons)
             err("duplicate sniper outpost id %q", o.Name)
         else
             seenOutpost[o.Name] = true
+        end
+    end
+
+    -- --- collidable props: real geometry no tracer can see ---
+    -- A prop is somebody else's mesh, so the kind is `solid = false` and the arc tracer
+    -- has no shape to sample. A piece that opts into `collide` is nonetheless in the way
+    -- of bodies and bullets, which is the whole point of asking for it -- so it must stay
+    -- off the routes that assume clear air. `fit` is the widest the model can end up, and
+    -- half of that plus a margin is a deliberately generous radius: this cannot measure
+    -- the mesh, so it errs toward complaining early.
+    for _, piece in layout.Center or {} do
+        if piece.kind == "prop" and piece.collide == true and piece.pos then
+            local radius = (piece.fit or 0) / 2 + 6
+            local label = ("prop %s %s"):format(tostring(piece.name), fmt(piece.pos))
+            for _, zip in layout.ZipLines or {} do
+                local gap = pointToSegment(piece.pos, zip.From, zip.To)
+                if gap < radius then
+                    err(
+                        "%s: collidable, and %.0f studs from zip line %s (needs %.0f)",
+                        label,
+                        gap,
+                        tostring(zip.Id),
+                        radius
+                    )
+                end
+            end
+            -- A launch arc bows upward, so the straight line from pad to target is the
+            -- closest it ever comes to the ground: measuring against that flags early.
+            for _, pad in layout.LaunchPads or {} do
+                local gap = pointToSegment(piece.pos, pad.pos, pad.target)
+                if gap < radius then
+                    err(
+                        "%s: collidable, and %.0f studs from launch pad %s (needs %.0f)",
+                        label,
+                        gap,
+                        tostring(pad.Id),
+                        radius
+                    )
+                end
+            end
         end
     end
 
