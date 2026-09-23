@@ -402,46 +402,55 @@ for _, post in map.SniperOutposts do
     block(post.Id .. "DoorHeader", { x + entry * 13, 27.5, z }, { 2, 4, 10 })
 end
 
--- Ice rock decor, all six now Jagged Ice Rock 139945743433812. The second model this
--- was meant to be compared against, ICE ROCK 72083045344532, does not load:
--- InsertService returned nothing for it and MapService warned and left three rocks out
--- of the map, which is a quiet way to lose half a scatter. Only place an id that has
--- been seen to load. These never collide and never answer a raycast, so they cannot
--- change cover or sightlines whatever the mesh turns out to be.
+-- Ice spike scatter. Jagged Ice Rock 139945743433812, authored 41.4 x 29.8 x 50.0
+-- studs. The other model this was once compared against, ICE ROCK 72083045344532,
+-- does not load -- InsertService returned nothing and three rocks went quietly missing
+-- from the map -- so only ids that have been seen to load are placed here.
 --
--- `fit` and `sit`, not `scale` and a y. The first pass used scale 0.8/1/1.4 against a
--- size nobody had measured. The model is 41.4 x 29.8 x 50.0 studs as authored, so 1.4
--- meant a seventy-stud boulder, which is what crossed a zip line on screen. `fit` names
--- the studs and lets MapService derive the multiplier from the model that actually
--- loaded; `sit` puts the lowest point on the ground rather than the bounding-box
--- centre, which is what buried them and made them look tilted.
+-- `fit` and `sit`, never `scale` and a y. The first pass multiplied a size nobody had
+-- measured: scale 1.4 meant a seventy-stud boulder. `fit` names the studs it should end
+-- up and lets MapService derive the multiplier from the model that actually loaded;
+-- `sit` puts the lowest visible point on the ground rather than the bounding-box
+-- centre, which is what buried them and made them read as upside down.
 --
--- Positions avoid both zip corridors. The zips run the -x/+z and +x/-z diagonals, so
--- two rocks that sat in those quadrants lined up behind the ground endpoints from the
--- angle a player approaches on and read as blocking the route, even at 63 and 72 studs
--- of real clearance -- a prop cannot obstruct anything, but looking like it does is
--- reason enough to move it. They are now near x 0, which puts every rock at least 139
--- studs from either line. The other four were always in the empty quadrants.
-for _, rock in
+-- Each seed is placed twice, rotated 180 degrees about the map centre. That is not
+-- decoration for its own sake: this map is rotationally symmetric, and while a prop
+-- cannot be stood on or shot through, it DOES hide a player from view. An unpaired one
+-- hands that side a sightline break the other side has not got.
+--
+-- The yaw is offset on the twin so a pair does not read as a copy of itself.
+--
+-- Positions are checked against the gameplay geometry, not placed by eye. Across all
+-- sixteen the tightest clearances are 49 studs from a zip line, 85 from a launch arc,
+-- 30 from an objective circle, 44 from a safe point and 35 from an outpost, and none
+-- falls inside the fortress footprint. Sizes run 12 to 45 studs so the field reads as
+-- a range rather than a row of identical lumps.
+local ICE_SPIKE = 139945743433812
+for _, seed in
     {
-        { asset = 139945743433812, pos = { -92, 0, -152 }, yaw = 20, fit = 14 },
-        { asset = 139945743433812, pos = { -64, 0, -170 }, yaw = 145, fit = 18 },
-        { asset = 139945743433812, pos = { -14, 0, -170 }, yaw = 250, fit = 11 },
-        { asset = 139945743433812, pos = { 14, 0, 170 }, yaw = 60, fit = 15 },
-        { asset = 139945743433812, pos = { 66, 0, 166 }, yaw = 200, fit = 19 },
-        { asset = 139945743433812, pos = { 98, 0, 140 }, yaw = 320, fit = 12 },
+        { x = 205, z = 165, fit = 45, yaw = 20 },
+        { x = -205, z = 172, fit = 40, yaw = 145 },
+        { x = 208, z = 92, fit = 38, yaw = 250 },
+        { x = 60, z = 168, fit = 30, yaw = 60 },
+        { x = -212, z = 118, fit = 28, yaw = 200 },
+        { x = 228, z = -48, fit = 24, yaw = 320 },
+        { x = 120, z = 176, fit = 18, yaw = 95 },
+        { x = 24, z = 176, fit = 12, yaw = 170 },
     }
 do
-    table.insert(map.Center, {
-        kind = "prop",
-        name = ("IceRock%d_%d"):format(rock.asset % 1000, rock.pos[3]),
-        assetId = rock.asset,
-        pos = rock.pos,
-        rot = { 0, rock.yaw, 0 },
-        fit = rock.fit,
-        sit = true,
-        decor = true,
-    })
+    for _, turn in { 0, 180 } do
+        local flip = turn == 0 and 1 or -1
+        table.insert(map.Center, {
+            kind = "prop",
+            name = ("IceSpike%d_%d"):format(seed.x * flip, seed.z * flip),
+            assetId = ICE_SPIKE,
+            pos = { seed.x * flip, 0, seed.z * flip },
+            rot = { 0, seed.yaw + turn, 0 },
+            fit = seed.fit,
+            sit = true,
+            decor = true,
+        })
+    end
 end
 
 -- Crashed helicopter on the fortress roof, directly above objective C. Generated from
