@@ -64,6 +64,9 @@
       },
       "MapDecor": {
         "$path": "assets/environment/decor"
+      },
+      "BakedMaps": {
+        "$path": "assets/environment/baked"
       }
     },
     "ServerScriptService": {

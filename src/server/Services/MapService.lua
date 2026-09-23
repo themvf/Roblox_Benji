@@ -806,6 +806,36 @@ local function authoredDecor(parent, mapName)
     end
 end
 
+-- A map saved from workspace.Map after MapService built it, synced by Rojo from
+-- assets/environment/baked. Cloning one skips the geometry loops entirely: the parts are
+-- already parts, the facade meshes keep their SurfaceAppearances, and the props are real
+-- instead of arriving later over InsertService.
+--
+-- SafetyService's barrier is regenerated live rather than taken from the file. It is in
+-- the bake, because it is built into the Map folder, but it is the one thing here that is
+-- safety-critical and derived from Bounds -- it should follow the data, not a snapshot.
+local function bakedModel(name)
+    if Config.UseBakedMaps ~= true then
+        return nil
+    end
+    local store = ServerStorage:FindFirstChild("BakedMaps")
+    local model = store and store:FindFirstChild(name)
+    return model
+end
+
+local function cloneBaked(folder, baked)
+    local parts = 0
+    for _, child in baked:GetChildren() do
+        if child.Name:sub(1, 13) == "SafetyBarrier" then
+            continue
+        end
+        local copy = child:Clone()
+        copy.Parent = folder
+        parts += 1
+    end
+    print(("[MapBuild] cloned %d baked children"):format(parts))
+end
+
 local function applyDecor(part, piece)
     if piece.decor then
         part.CanCollide = false
@@ -1307,52 +1337,61 @@ function MapService:Build(layout)
         )
     end
 
-    -- Outer walls: visible for greybox, invisible for themed maps
-    local half = layout.Size / 2
-    local h = layout.WallHeight
-    local walls = {
-        { "WallN", { 0, h / 2, -half }, { layout.Size, h, 2 } },
-        { "WallS", { 0, h / 2, half }, { layout.Size, h, 2 } },
-        { "WallW", { -half, h / 2, 0 }, { 2, h, layout.Size } },
-        { "WallE", { half, h / 2, 0 }, { 2, h, layout.Size } },
-    }
-    for _, w in walls do
-        local wall = makePart(folder, w[1], w[2], w[3])
-        if themed then
-            wall.Transparency = 1
+    -- Either the geometry is built from data, or it is cloned from a bake of that same
+    -- build. Never both. Everything outside this block -- terrain, lighting, spawns,
+    -- objectives, pickups, traversal, the barrier -- comes from the layout either way,
+    -- because none of it is geometry.
+    local baked = bakedModel(layout.Name)
+    if baked then
+        cloneBaked(folder, baked)
+    else
+        -- Outer walls: visible for greybox, invisible for themed maps
+        local half = layout.Size / 2
+        local h = layout.WallHeight
+        local walls = {
+            { "WallN", { 0, h / 2, -half }, { layout.Size, h, 2 } },
+            { "WallS", { 0, h / 2, half }, { layout.Size, h, 2 } },
+            { "WallW", { -half, h / 2, 0 }, { 2, h, layout.Size } },
+            { "WallE", { half, h / 2, 0 }, { 2, h, layout.Size } },
+        }
+        for _, w in walls do
+            local wall = makePart(folder, w[1], w[2], w[3])
+            if themed then
+                wall.Transparency = 1
+            end
         end
-    end
 
-    for _, piece in layout.Center or {} do
-        placePiece(folder, "", piece, rng, nil)
-    end
+        for _, piece in layout.Center or {} do
+            placePiece(folder, "", piece, rng, nil)
+        end
 
-    -- Decoration lives in its own folder, separate from the geometry that decides
-    -- fights. Two reasons, and neither is tidiness. A decor change should never need
-    -- the review a wall needs, and a designer arranging rocks in Studio should have no
-    -- way to nudge a sightline screen by accident -- one folder is theirs, the other
-    -- is the map's.
-    local decor = Instance.new("Folder")
-    decor.Name = "Decor"
-    decor.Parent = folder
-    for _, piece in layout.Decor or {} do
-        placePiece(decor, "", piece, rng, nil)
-    end
-    authoredDecor(decor, layout.Name)
-    if layout.Name == "SnowFortress" then
-        FortressArt.Build(folder)
-    end
-    for _, piece in layout.Mirrored or {} do
-        placePiece(folder, "Red_", piece, rng, nil)
-        placePiece(folder, "Blue_", piece, rng, "x")
-    end
-    -- Asymmetric maps (Snow Fortress) are symmetric about Z instead: author one wing, mirror to the other.
-    for _, piece in layout.MirroredZ or {} do
-        placePiece(folder, "N_", piece, rng, nil)
-        placePiece(folder, "S_", piece, rng, "z")
-    end
-    if layout.Trees then
-        scatterTrees(folder, layout, rng)
+        -- Decoration lives in its own folder, separate from the geometry that decides
+        -- fights. Two reasons, and neither is tidiness. A decor change should never need
+        -- the review a wall needs, and a designer arranging rocks in Studio should have no
+        -- way to nudge a sightline screen by accident -- one folder is theirs, the other
+        -- is the map's.
+        local decor = Instance.new("Folder")
+        decor.Name = "Decor"
+        decor.Parent = folder
+        for _, piece in layout.Decor or {} do
+            placePiece(decor, "", piece, rng, nil)
+        end
+        authoredDecor(decor, layout.Name)
+        if layout.Name == "SnowFortress" then
+            FortressArt.Build(folder)
+        end
+        for _, piece in layout.Mirrored or {} do
+            placePiece(folder, "Red_", piece, rng, nil)
+            placePiece(folder, "Blue_", piece, rng, "x")
+        end
+        -- Asymmetric maps (Snow Fortress) are symmetric about Z instead: author one wing, mirror to the other.
+        for _, piece in layout.MirroredZ or {} do
+            placePiece(folder, "N_", piece, rng, nil)
+            placePiece(folder, "S_", piece, rng, "z")
+        end
+        if layout.Trees then
+            scatterTrees(folder, layout, rng)
+        end
     end
 
     self.Spawns = {}

@@ -18,6 +18,7 @@ local TUNABLE = {
     "RoundSeconds",
     "RoundsToWin",
     "RespawnSeconds",
+    "UseBakedMaps",
     "MapVoteEnabled",
     "MapVoteSeconds",
     "MapVoteOptions",

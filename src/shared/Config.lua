@@ -18,6 +18,13 @@ local Config = {
     -- one used to beat this line permanently. TuningService clears any it finds.
     StartupMap = "SnowFortress",
 
+    -- Load a map from assets/environment/baked/<Map>.rbxm instead of building its geometry
+    -- from the layout. The bake is a copy of what MapService built, so both paths should
+    -- produce the same map -- which is the point of keeping both while that is checked.
+    -- Everything that is not geometry (terrain, lighting, spawns, objectives, pickups,
+    -- traversal, the safety barrier) still comes from the layout either way.
+    UseBakedMaps = false,
+
     -- Lobby map vote: once a pad fills, the players on it pick the map before the match starts.
     MapVoteEnabled = true,
     MapVoteSeconds = 12,
