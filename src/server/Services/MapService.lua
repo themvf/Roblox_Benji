@@ -4,6 +4,7 @@
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerStorage = game:GetService("ServerStorage")
 local RunService = game:GetService("RunService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Palette = require(ReplicatedStorage.Shared.Palette)
@@ -772,6 +773,39 @@ end
 
 -- Dressing never changes the map players move and shoot through: a piece marked `decor`
 -- is visual only, so a detail pass cannot invalidate the geometry audit or block a bullet.
+-- Decor a designer arranged in Studio and saved to assets/environment/decor/<Map>.rbxmx,
+-- which Rojo maps to ServerStorage.MapDecor. No coordinates pass through a source file
+-- and no round trip through anybody: it is moved with the move tool and committed as a
+-- model. The only property forced here is Anchored, because an unanchored part falls
+-- through the world and that is never what was meant. Collision is left exactly as
+-- authored -- Studio is the authoring tool, so what was set there is the intent -- and
+-- tools/check_decor.luau audits collidable decor against the traversal routes, which is
+-- the one thing a designer cannot see from inside the viewport.
+local function authoredDecor(parent, mapName)
+    local store = ServerStorage:FindFirstChild("MapDecor")
+    local set = store and store:FindFirstChild(mapName)
+    if not set then
+        return
+    end
+    local count = 0
+    for _, child in set:GetChildren() do
+        local copy = child:Clone()
+        if copy:IsA("BasePart") then
+            copy.Anchored = true
+        end
+        for _, d in copy:GetDescendants() do
+            if d:IsA("BasePart") then
+                d.Anchored = true
+            end
+        end
+        copy.Parent = parent
+        count += 1
+    end
+    if count > 0 then
+        print(("[MapService] %d authored decor pieces for %s"):format(count, mapName))
+    end
+end
+
 local function applyDecor(part, piece)
     if piece.decor then
         part.CanCollide = false
@@ -1292,6 +1326,19 @@ function MapService:Build(layout)
     for _, piece in layout.Center or {} do
         placePiece(folder, "", piece, rng, nil)
     end
+
+    -- Decoration lives in its own folder, separate from the geometry that decides
+    -- fights. Two reasons, and neither is tidiness. A decor change should never need
+    -- the review a wall needs, and a designer arranging rocks in Studio should have no
+    -- way to nudge a sightline screen by accident -- one folder is theirs, the other
+    -- is the map's.
+    local decor = Instance.new("Folder")
+    decor.Name = "Decor"
+    decor.Parent = folder
+    for _, piece in layout.Decor or {} do
+        placePiece(decor, "", piece, rng, nil)
+    end
+    authoredDecor(decor, layout.Name)
     if layout.Name == "SnowFortress" then
         FortressArt.Build(folder)
     end

@@ -117,6 +117,9 @@ local map = {
     },
     Center = {},
     Mirrored = {},
+    -- Scenery. Built into its own folder and never part of the gameplay model, so a
+    -- change here needs no review and cannot move a wall by accident.
+    Decor = {},
     Symmetry = { SniperOutposts = "rotational" },
     GroundRoutes = {},
     SniperOutposts = {
@@ -448,7 +451,7 @@ for _, seed in
 do
     for _, turn in { 0, 180 } do
         local flip = turn == 0 and 1 or -1
-        table.insert(map.Center, {
+        table.insert(map.Decor, {
             kind = "prop",
             name = ("IceSpike%d_%d"):format(seed.x * flip, seed.z * flip),
             assetId = ICE_SPIKE,
@@ -525,7 +528,7 @@ block("HelipadHBar", { 0, 33.12, 0 }, { 6, 0.1, 2 }, "PadMark")
 -- bounding-box centre by about 6 studs in a direction this file cannot know.
 block("HelipadScorch", { 0, 33.2, 0 }, { 24, 0.1, 18 }, "Scorch")
 
-table.insert(map.Center, {
+table.insert(map.Decor, {
     kind = "prop",
     name = "RoofHelicopter",
     assetId = 130015473244475,

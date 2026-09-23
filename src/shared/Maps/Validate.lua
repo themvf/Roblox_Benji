@@ -221,6 +221,19 @@ function Validate.solids(layout)
     return out
 end
 
+-- Every piece that can carry `collide`, wherever it was authored. Props moved to the
+-- Decor list, and a rule that only read Center would have gone quiet without failing.
+local function decorAndCentre(layout)
+    local all = {}
+    for _, piece in layout.Center or {} do
+        table.insert(all, piece)
+    end
+    for _, piece in layout.Decor or {} do
+        table.insert(all, piece)
+    end
+    return all
+end
+
 -- Distance from a point to a line segment, all in world space. Used to keep collidable
 -- props off the traversal routes, where the thing being avoided is a path rather than a box.
 local function pointToSegment(p, a, b)
@@ -444,6 +457,10 @@ function Validate.check(layout, weapons)
     end
     checkPieces(layout.Center, "Center")
     checkPieces(layout.Mirrored, "Mirrored")
+    -- Decor gets the same field checks -- a malformed piece still breaks the builder --
+    -- but none of the fairness rules. That is the point of the list: scenery is not
+    -- required to mirror, and an ice spike on one side is not a balance problem.
+    checkPieces(layout.Decor or {}, "Decor")
 
     -- --- spawns ---
     for _, team in { "Red", "Blue" } do
@@ -552,7 +569,7 @@ function Validate.check(layout, weapons)
     -- off the routes that assume clear air. `fit` is the widest the model can end up, and
     -- half of that plus a margin is a deliberately generous radius: this cannot measure
     -- the mesh, so it errs toward complaining early.
-    for _, piece in layout.Center or {} do
+    for _, piece in decorAndCentre(layout) do
         if piece.kind == "prop" and piece.collide == true and piece.pos then
             local radius = (piece.fit or 0) / 2 + 6
             local label = ("prop %s %s"):format(tostring(piece.name), fmt(piece.pos))
