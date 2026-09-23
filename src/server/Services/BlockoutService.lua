@@ -143,7 +143,12 @@ end
 -- map are candidates, and only ones small enough to have been meant: the floor is
 -- 490 studs across and is always the thing you are standing closest to.
 local REMOVE_RADIUS = 80
-local BIGGEST_PIECE = 60
+-- Skip the ground and nothing else. A piece broad in BOTH horizontal directions is a
+-- floor or a deck, and you are always standing on one, so by surface distance it would
+-- win every time. The first rule here was "longest axis under 60 studs", which also
+-- quietly refused to flag a 66-stud sightline screen -- exactly the kind of thing
+-- somebody wants gone.
+local GROUND_FOOTPRINT = 100
 
 local function extents(piece)
     if piece:IsA("Model") then
@@ -177,8 +182,17 @@ function BlockoutService:Remove(player)
     local best, bestAt, bestGap
     for _, piece in map:GetChildren() do
         local centre, size = extents(piece)
-        if centre and not flagged[piece] and math.max(size.X, size.Y, size.Z) <= BIGGEST_PIECE then
-            local gap = (centre - root.Position).Magnitude
+        if centre and not flagged[piece] and math.min(size.X, size.Z) <= GROUND_FOOTPRINT then
+            -- Distance to the piece's surface, not its centre. Standing beside a long
+            -- wall should flag the wall, not some small thing further off whose middle
+            -- happens to be nearer. The box is treated as axis-aligned, which is true
+            -- of nearly everything a map places and close enough for a dev aid.
+            local d = centre - root.Position
+            local gap = Vector3.new(
+                math.max(0, math.abs(d.X) - size.X / 2),
+                math.max(0, math.abs(d.Y) - size.Y / 2),
+                math.max(0, math.abs(d.Z) - size.Z / 2)
+            ).Magnitude
             if gap <= REMOVE_RADIUS and (not bestGap or gap < bestGap) then
                 best, bestAt, bestGap = piece, centre, gap
             end
