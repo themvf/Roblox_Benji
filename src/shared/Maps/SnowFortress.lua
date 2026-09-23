@@ -436,6 +436,12 @@ for _, seed in
         { x = 228, z = -48, fit = 24, yaw = 320 },
         { x = 120, z = 176, fit = 18, yaw = 95 },
         { x = 24, z = 176, fit = 12, yaw = 170 },
+        -- Hand-placed with /mark, then checked the same way as the rest. Both clear
+        -- their nearest launch arc by 22 and 15 studs, which is clearance rather than
+        -- contact. A third mark at 106,-78 was dropped: it stood one stud off the
+        -- northeast zip cable.
+        { x = 155, z = -40, fit = 20, yaw = 35 },
+        { x = 144, z = 46, fit = 20, yaw = 285 },
     }
 do
     for _, turn in { 0, 180 } do

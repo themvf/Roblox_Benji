@@ -51,8 +51,16 @@ function BlockoutService:Mark(player, fit)
     -- to see 37.4182 in a table they have to scan.
     local x = math.floor(root.Position.X + 0.5)
     local z = math.floor(root.Position.Z + 0.5)
-    -- The character's root sits about 3 studs above the floor it is standing on.
-    local y = math.floor(root.Position.Y - 3 + 0.5)
+    -- Find the floor by looking for it, not by assuming how tall a character is. The
+    -- first version subtracted a hardcoded 3 studs and reported y 2 while standing on
+    -- a floor whose top is y 0: an R15 root sits about 5 studs up, and that figure
+    -- moves with rig scale anyway. A ray also gets the roof right, where the answer
+    -- should be 33 rather than the ground far below it.
+    local filter = RaycastParams.new()
+    filter.FilterType = Enum.RaycastFilterType.Exclude
+    filter.FilterDescendantsInstances = { character, workspace:FindFirstChild("Blockout") }
+    local hit = workspace:Raycast(root.Position, Vector3.new(0, -60, 0), filter)
+    local y = math.floor((hit and hit.Position.Y or root.Position.Y - 5) + 0.5)
 
     local marker = Instance.new("Part")
     marker.Name = ("Mark%d_%d"):format(x, z)
