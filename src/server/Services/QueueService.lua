@@ -250,7 +250,7 @@ function QueueService:KnitStart()
                         else
                             RoundService:StartMatch(players, teamSize, mode, mapName)
                         end
-                    end)
+                    end, solo)
                 end
             end
 

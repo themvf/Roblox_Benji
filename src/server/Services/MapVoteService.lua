@@ -101,7 +101,20 @@ end
 
 -- Players who filled the pad but left the game (or the server) during the vote should not be
 -- handed to the mode. Returns the surviving Red/Blue split, balanced.
-local function stillPresent(players, teamSize)
+local function stillPresent(players, teamSize, solo)
+    if solo then
+        -- A practice match is one-sided by design and bots fill the other team, so the
+        -- balancing below must not run: with one player it computes min(1, 0) = 0, the
+        -- caller reads that as "everyone left" and cancels the match it was asked to
+        -- start. The vote works perfectly and its result is thrown away.
+        local out = {}
+        for _, player in players do
+            if player.Parent then
+                table.insert(out, player)
+            end
+        end
+        return out, math.min(#out, teamSize)
+    end
     local red, blue = {}, {}
     for i, player in players do
         if player.Parent then
@@ -126,7 +139,9 @@ end
 
 -- Runs the vote, then calls onDecided(players, teamSize, mapName). Never blocks the caller.
 -- onDecided is not called at all if too few players are left to field two sides.
-function MapVoteService:Begin(players, teamSize, kind, onDecided)
+-- `solo` marks a one-sided practice match: one human, bots for the rest. It only
+-- affects how the survivor list is rebalanced when the vote closes.
+function MapVoteService:Begin(players, teamSize, kind, onDecided, solo)
     if self.Voting then
         return false
     end
@@ -177,7 +192,7 @@ function MapVoteService:Begin(players, teamSize, kind, onDecided)
         self.Voting = false
         self.Candidates, self.Votes, self.Voters = nil, nil, nil
 
-        local remaining, n = stillPresent(players, teamSize)
+        local remaining, n = stillPresent(players, teamSize, solo)
         if n == 0 then
             warn("[MapVote] everyone left during the vote; match cancelled")
             return
