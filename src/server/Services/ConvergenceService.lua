@@ -319,7 +319,10 @@ function ConvergenceService:FireAll(match, signal, ...)
 end
 
 -- players: Red first (teamSize of them) then Blue. Runs async; returns immediately.
-function ConvergenceService:StartMatch(players, teamSize, mapName)
+-- `solo` is a practice match: one human, bots holding both sides. It only changes
+-- when the match is considered abandoned, since "one team has no humans" is the
+-- normal state rather than a reason to stop.
+function ConvergenceService:StartMatch(players, teamSize, mapName, solo)
     BotService = BotService or Knit.GetService("BotService")
     StatsService = StatsService or Knit.GetService("StatsService")
     local RoundService = Knit.GetService("RoundService")
@@ -343,6 +346,7 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
         Overtime = false,
         Zones = {},
         Rules = rules,
+        Solo = solo == true,
     }
     self.Match = match
 
@@ -767,7 +771,17 @@ function ConvergenceService:StartMatch(players, teamSize, mapName)
                         blue += 1
                     end
                 end
-                if red == 0 or blue == 0 then
+                if match.Solo then
+                    -- A practice match has one human and bots on both sides, so an
+                    -- empty Blue is the design rather than a walkout. present() never
+                    -- counts bots, so the rule below reads that as a dead team and
+                    -- ends the match on its first tick. The question worth asking here
+                    -- is only whether anybody is still in it.
+                    if #present(match) == 0 then
+                        match.Running = false
+                        match.Aborted = true
+                    end
+                elseif red == 0 or blue == 0 then
                     match.Running = false
                     match.Aborted = true
                 end

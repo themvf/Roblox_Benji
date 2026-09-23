@@ -246,7 +246,7 @@ function QueueService:KnitStart()
                             setQueueAttributes(player, "Committed", nil, nil)
                         end
                         if kind == "Convergence" then
-                            Knit.GetService("ConvergenceService"):StartMatch(players, teamSize, mapName)
+                            Knit.GetService("ConvergenceService"):StartMatch(players, teamSize, mapName, solo)
                         else
                             RoundService:StartMatch(players, teamSize, mode, mapName)
                         end
