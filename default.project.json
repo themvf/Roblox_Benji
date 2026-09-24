@@ -67,6 +67,9 @@
       },
       "BakedMaps": {
         "$path": "assets/environment/baked"
+      },
+      "MapKit": {
+        "$path": "assets/environment/kit"
       }
     },
     "ServerScriptService": {
