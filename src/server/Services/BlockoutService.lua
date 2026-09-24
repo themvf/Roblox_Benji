@@ -293,6 +293,16 @@ function BlockoutService:Baked(arg)
         return
     end
     tuning:SetAttribute("UseBakedMaps", arg == "on")
+    -- Say straight away whether there is anything to switch to, rather than letting the
+    -- rebuild look successful and leaving the absence of one log line as the only clue.
+    if arg == "on" then
+        local store = game:GetService("ServerStorage"):FindFirstChild("BakedMaps")
+        if not store then
+            warn("[Blockout] there is no ServerStorage.BakedMaps -- restart `rojo serve` and reconnect")
+        elseif not store:FindFirstChild(MapService.CurrentMap or "") then
+            warn(("[Blockout] %s has not been baked yet"):format(tostring(MapService.CurrentMap)))
+        end
+    end
     local current = MapService.CurrentMap
     if not current then
         print("[Blockout] flag set, but no current map to rebuild")

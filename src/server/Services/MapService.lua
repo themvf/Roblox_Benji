@@ -820,6 +820,18 @@ local function bakedModel(name)
     end
     local store = ServerStorage:FindFirstChild("BakedMaps")
     local model = store and store:FindFirstChild(name)
+    if not model then
+        -- Asked for the baked map and it is not there. The first version of this returned
+        -- nil and let the build fall through to the layout, which looks exactly like the
+        -- flag never being set -- and that is precisely what happened: BakedMaps was added
+        -- to default.project.json, Rojo does not reload its project file, so the folder was
+        -- missing from the session and the map quietly built the old way.
+        warn(
+            ("[MapBuild] UseBakedMaps is on but ServerStorage.BakedMaps.%s is missing, "):format(tostring(name))
+                .. (store and "so that map has not been baked yet." or "and the BakedMaps folder does not exist at all -- restart `rojo serve`, " .. "which does not reload default.project.json on its own.")
+                .. " Building from the layout instead."
+        )
+    end
     return model
 end
 
