@@ -1,9 +1,14 @@
 # Map kit
 
-Reusable pieces cut out of Snow Fortress, one `.rbxm` each. Rojo maps this folder to
-`ServerStorage.MapKit`. Drag a piece into Workspace, put it where you want it, repeat.
+Reusable pieces, one `.rbxm` each. Rojo maps this folder to `ServerStorage.MapKit`. Drag a
+piece into Workspace, put it where you want it, repeat.
 
-Regenerate with `lune run tools/build_kit.luau`.
+Most were cut out of Snow Fortress, which has since been deleted as a map -- its bake is
+kept at `assets/kitsource/SnowFortress.rbxm` purely so the kit stays reproducible. It is
+outside the Rojo tree, so it is build input, not a map, and nothing can load it.
+
+Regenerate with `lune run tools/build_kit.luau` (cut pieces) and
+`lune run tools/build_guide.luau` (`Ground`, `Ramp`, `GUIDE`).
 
 ## Why this exists
 
@@ -27,6 +32,13 @@ A kit is the normal way to build a level: a palette of parts you assemble.
 | `Helipad` | deck, painted border, H and scorch |
 | `SniperOutpost` | a whole outpost: walls, deck, firing windows, stair |
 | `Staircase` | one 18-step stair with treads |
+| `Ramp` | 12 x 9 x 20 wedge, 24 degrees -- scale Y or Z to change the slope |
+| `Wall` | one 2 x 8 x 10 slate wall segment, for tiling into a run |
+| `WallLong` | a 54 x 8 x 2 wall in one piece |
+| `BoundaryWall` | the 500-stud perimeter wall |
+| `Pillar` | 3 x 13 x 3 metal support |
+| `Railing` | 36-stud stair rail |
+| `StoneBlock` | 7 x 15 x 6 slate block -- heavy cover |
 | `SightlineScreen` | the 66-stud screen that blocks spawn sightlines |
 | `ApproachCover` | a cover block beside a launch target |
 | `CeilingLamp` | lamp with its PointLight |
@@ -35,10 +47,21 @@ Every piece is recentred: horizontally on its own middle, vertically so its lowe
 is at y 0. Dropping one at a spot puts it **on** that spot, rather than at whatever world
 coordinate it happened to occupy in Snow Fortress.
 
-`SightlineScreen` and `ApproachCover` are pulled from the first bake, because both were
-deleted from the map in an editing pass. Both are cover rather than scenery -- the screens
-are what stops a sniper in an outpost seeing into the enemy spawn -- so keeping them here
-means removing them stays a decision rather than a one-way door.
+`SightlineScreen` and `ApproachCover` were cut from the map's first bake, which was a
+scratch file and never committed. `build_kit` prints `KEEP` for them and leaves the
+committed `.rbxm` alone rather than failing -- which it used to do, taking the other
+thirteen pieces down with it.
+
+The last seven are plain structural blocks, added because the kit went straight from "a
+500-instance building" to "a rock" with nothing in between. A map needs something to stand
+on, something to hide behind and something to walk up long before it needs a fortress.
+They are real pieces from a real map rather than grey boxes, so a wall placed next to the
+fortress is the same slate at the same scale.
+
+`Ramp` is the exception: Snow Fortress climbs on stairs, so there was no ramp anywhere to
+copy and it is generated instead. It is also the easier of the two to use -- a staircase
+only works at the rise it was built for, a ramp stretches to whatever the thing beside it
+turned out to be.
 
 ## The guide
 
@@ -56,21 +79,37 @@ normal until somebody asks what the glowing cylinder is.
 
 ## What is deliberately not in here
 
-Spawn pads, the safety barrier and the outer boundary walls. `MapService` draws all three
-from the layout data on every build, so a copy in the kit would be a duplicate sitting on
-top of the real one.
+Spawn pads and the safety barrier. `MapService` draws both from the layout data on every
+build, so a copy in the kit would be a duplicate sitting on top of the real one.
+
+`BoundaryWall` is in the kit even though the barrier is not, because the two do different
+jobs: the barrier is an invisible force field that stops players leaving, the wall is what
+stops the eye, so the map does not read as a slab floating in sky.
 
 
 
-## Starting a new map
+## Building the current map
 
-1. Clear Workspace, drag pieces out of `ServerStorage.MapKit`, assemble.
-2. Group the lot under one Folder.
-3. Right-click it → **Save to File** → `assets/environment/baked/<Name>.rbxm`
-4. Add `src/shared/Maps/<Name>.lua` with the data and `RequiresBake = true`:
-   `Name`, `Size`, `WallHeight`, `Spawns`, `Objectives`, `Bounds`, `SafePoints`,
-   `Barrier`, `Terrain`, `Palette`, `Environment`, and empty `Center`/`Mirrored`.
-5. `lune run tools/check_maps.luau` and `tools/check_bake.luau`.
+`Crucible` is the only map in the repo. Its bake already exists as ground plus a boundary
+wall, so it loads and you can walk around it before a single piece goes down.
+
+1. Open the place, drag `ServerStorage.BakedMaps.Crucible` into Workspace.
+2. Drag in `MapKit.GUIDE` so you can see where the objectives and spawns are.
+3. Assemble the kit around them.
+4. **Delete the GUIDE.**
+5. Right-click the `Crucible` model → **Save to File** → over
+   `assets/environment/baked/Crucible.rbxm`
+6. `bash tools/save_map.sh -c "what you changed"`
+
+## Starting an additional map
+
+1. Write `src/shared/Maps/<Name>.lua` -- copy `Crucible.lua` and change the numbers.
+2. `lune run tools/build_starter_bake.luau <Name>` writes the ground-and-walls bake.
+3. Add `<Name>` to `Config.Maps` / `Config.ConvergenceMaps`, and `StartupMap` to see it.
+4. Then follow "Building the current map" above.
+
+That tool refuses to overwrite an existing bake, so it cannot eat a map by being run
+twice.
 
 Geometry comes from the `.rbxm`; everything that is not geometry stays in the `.lua`.
 The gates read both.

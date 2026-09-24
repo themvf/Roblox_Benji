@@ -56,6 +56,29 @@ slab.Parent = ground
 fs.writeFile(OUT .. "/Ground.rbxm", roblox.serializeModel({ ground }))
 print(("OK    Ground        one slab, %d x %d studs, top at y 0"):format(BOUNDS.x * 2, BOUNDS.z * 2))
 
+-- ===== Ramp =====
+-- The kit could cut a wall or a pillar out of Snow Fortress, but not a ramp: that map
+-- climbs on stairs, so there was no ramp anywhere to copy. Stairs are also the harder
+-- piece to use, because a staircase only works at the one rise it was built for, while a
+-- ramp can be stretched to whatever height the thing beside it turned out to be.
+--
+-- 9 up over 20 along is 24 degrees. The map checks want a walkable ramp between 20 and
+-- 32, so this sits in the middle: steepen or flatten it by scaling the Y or Z axis and
+-- there is room to be wrong in either direction before a check complains.
+local ramp = roblox.Instance.new("Model")
+ramp.Name = "Ramp"
+local wedge = roblox.Instance.new("WedgePart")
+wedge.Name = "RampSurface"
+wedge.Anchored = true
+wedge.CanCollide = true
+wedge.Material = roblox.Enum.Material.Concrete
+wedge.Color = Color3.fromRGB(176, 180, 186)
+wedge.Size = Vector3.new(12, 9, 20)
+wedge.CFrame = CFrame.new(0, 4.5, 0)
+wedge.Parent = ramp
+fs.writeFile(OUT .. "/Ramp.rbxm", roblox.serializeModel({ ramp }))
+print("OK    Ramp          12 x 9 x 20 studs, 24 degrees, high end at y 9")
+
 -- ===== Guide =====
 local guide = roblox.Instance.new("Model")
 guide.Name = "GUIDE"
@@ -109,4 +132,4 @@ local function count(i)
 end
 count(guide)
 print(("OK    GUIDE         %d markers: bounds, 3 objectives, 12 spawn pads, centre"):format(n - 1))
-print("\nBoth written to " .. OUT)
+print("\nGround, Ramp and GUIDE written to " .. OUT)

@@ -59,9 +59,6 @@
       }
     },
     "ServerStorage": {
-      "EnvironmentArt": {
-        "$path": "assets/environment/runtime"
-      },
       "MapDecor": {
         "$path": "assets/environment/decor"
       },

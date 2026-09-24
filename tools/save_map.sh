@@ -18,7 +18,7 @@ if [ "${1:-}" = "-c" ]; then
 fi
 
 FAILED=0
-for gate in check_bake check_maps check_fortress_layout check_decor check_convergence_entry check_finale_plan; do
+for gate in check_bake check_maps check_decor check_convergence_entry check_finale_plan; do
     printf '  %-24s ' "$gate"
     if out=$(lune run "tools/$gate.luau" 2>&1); then
         echo "OK"

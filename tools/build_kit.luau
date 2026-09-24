@@ -13,7 +13,7 @@
 local fs = require("@lune/fs")
 local roblox = require("@lune/roblox")
 
-local SOURCE = "assets/environment/baked/SnowFortress.rbxm"
+local SOURCE = "assets/kitsource/SnowFortress.rbxm"
 local OUT = "assets/environment/kit"
 
 -- name -> which instances belong to it. `one` keeps a single representative where the map
@@ -67,9 +67,24 @@ local PIECES = {
     -- in an outpost seeing into the enemy spawn, and the approach blocks are the cover
     -- beside the launch targets. Keeping them in the kit means removing them stays a
     -- decision rather than becoming a one-way door.
-    { name = "SightlineScreen", match = "SightlineScreen$", one = true, from = "assets/environment/baked/_original.rbxm" },
-    { name = "ApproachCover", match = "^ApproachCoverRed1$", from = "assets/environment/baked/_original.rbxm" },
+    { name = "SightlineScreen", match = "SightlineScreen$", one = true, from = "assets/kitsource/_original.rbxm" },
+    { name = "ApproachCover", match = "^ApproachCoverRed1$", from = "assets/kitsource/_original.rbxm" },
     { name = "CeilingLamp", match = "^CeilingLamp", one = true },
+
+    -- Plain structural blocks. A fresh map needs something to stand on, something to hide
+    -- behind and something to walk up long before it needs a fortress, and until now the
+    -- kit went straight from "a 500-instance building" to "a rock". Each of these is one
+    -- representative taken from Snow Fortress, so a wall dropped next to the fortress is
+    -- the same slate at the same scale rather than a grey box that reads as unfinished.
+    { name = "Wall", match = "^SideWall%-1_48$" },
+    { name = "WallLong", match = "^EndWall1_%-42$" },
+    { name = "BoundaryWall", match = "^WallE$" },
+    { name = "Pillar", match = "^Support1_%-42$" },
+    { name = "Railing", match = "^StairRail%-11$" },
+    -- The 24 hand-authored blocks that were merged in by hand. They are not used by any
+    -- rule in the map, so dropping the map would be the end of them; here they stay
+    -- available as heavy cover.
+    { name = "StoneBlock", match = "^Part$", one = true },
 }
 
 local roots = {}
@@ -166,7 +181,17 @@ local made = 0
 for _, spec in PIECES do
     local hits = {}
     local patterns = type(spec.match) == "table" and spec.match or { spec.match }
-    local pool = spec.topOnly and rootChildren(spec.from or SOURCE) or flatten(spec.from or SOURCE)
+    local source = spec.from or SOURCE
+    -- A `from` that is not on disk means the piece was cut from a bake that no longer
+    -- exists -- the screens and the approach cover came out of the map's first bake,
+    -- which was a scratch file and never committed. The .rbxm they produced IS committed,
+    -- so the right answer is to leave it alone and say so. Failing here instead made the
+    -- whole builder unrunnable, which is how five other pieces went unwritten above.
+    if not fs.isFile(source) then
+        print(("KEEP  %-20s %s is gone; keeping the committed .rbxm as-is"):format(spec.name, source))
+        continue
+    end
+    local pool = spec.topOnly and rootChildren(source) or flatten(source)
     for _, inst in pool do
         local take = false
         for _, pattern in patterns do

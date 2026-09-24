@@ -12,7 +12,7 @@ means moving a rock with the move tool.
 
 1. Play or Run the map so there is something to place against.
 2. Arrange scenery in Studio: drag from the Toolbox, duplicate, rotate, scale.
-3. Put it all under one Folder named after the map, e.g. `SnowFortress`.
+3. Put it all under one Folder named after the map, e.g. `Crucible`.
 4. Right-click that Folder → **Save to File** → overwrite `assets/environment/decor/<Map>.rbxmx`.
 5. Commit the `.rbxmx`.
 

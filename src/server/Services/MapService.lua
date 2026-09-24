@@ -18,7 +18,10 @@ local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
 -- clears any saved StartupMap attribute before this reads it, because one set in an old
 -- session used to beat every later edit to the file. This is the last resort if that
 -- name does not resolve, so the server still comes up with a playable arena.
-local FALLBACK_MAP = "Arena"
+-- The map to try when Config.StartupMap will not load. With one map in the repo this
+-- is that same map, so the fallback cannot save a broken build -- it exists so that
+-- the moment there are two maps, a bad edit to one does not take the server down.
+local FALLBACK_MAP = "Crucible"
 
 local MapService = Knit.CreateService({ Name = "MapService" })
 

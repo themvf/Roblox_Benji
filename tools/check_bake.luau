@@ -26,8 +26,36 @@ local Baked = require("./bakedsolids")
 
 local MAPS_DIR = "src/shared/Maps"
 local SKIP = { ["Validate.lua"] = true, ["Lobby.lua"] = true }
--- A bake with almost nothing in it is a failed save, not a small map.
+-- What tells a failed save apart from a map that is simply new is the FLOOR. A save that
+-- went wrong loses everything, ground included; a map being built has barely anything on
+-- it yet but is always standing on something. So the rule is coverage, not a part count.
+--
+-- This used to be "at least 50 parts", which is true of every finished map and false of
+-- every map on its first day -- it would have rejected the starter bake the repo now ships
+-- as the way to begin. A detailed map that floors itself with tiles instead of one slab
+-- passes on the part count instead, so neither shape is locked out.
 local MIN_PARTS = 50
+local FLOOR_COVERAGE = 0.6
+
+-- Largest horizontal footprint among the collidable parts, as a share of the map's own
+-- bounds. One slab answers this directly; a tiled floor answers it on the part count.
+local function floorShare(parts, bounds)
+    if not (bounds and bounds.min and bounds.max) then
+        return 1
+    end
+    local spanX = math.abs(bounds.max[1] - bounds.min[1])
+    local spanZ = math.abs(bounds.max[3] - bounds.min[3])
+    if spanX <= 0 or spanZ <= 0 then
+        return 1
+    end
+    local best = 0
+    for _, part in parts do
+        if part.collide then
+            best = math.max(best, math.min(part.size[1] / spanX, part.size[3] / spanZ))
+        end
+    end
+    return best
+end
 
 -- The guide is scaffolding: bounds, objective circles, spawn pads, a centre pole. It is
 -- meant to be deleted before saving, and it is exactly the kind of thing that gets left
@@ -36,7 +64,7 @@ local MIN_PARTS = 50
 local GUIDE_NAMES = { "^GUIDE$", "^Bound_[XZ]", "^Objective_[ABC]", "^Centre_Pole$", "^Spawn_[BR]" }
 
 -- Derived maps (Snow) require their base by instance path; give them a `script` to walk.
-local preloaded = { Forest = require("../src/shared/Maps/Forest") }
+local preloaded = {}
 script = { Parent = preloaded }
 local luneRequire = require
 require = function(target)
@@ -62,9 +90,15 @@ for _, file in files do
                 if not parts then
                     failures += 1
                     print(("FAIL  %-14s declares RequiresBake but %s/%s.rbxm is missing"):format(name, Baked.DIR, name))
-                elseif #parts < MIN_PARTS then
+                elseif #parts < MIN_PARTS and floorShare(parts, layout.Bounds) < FLOOR_COVERAGE then
                     failures += 1
-                    print(("FAIL  %-14s baked with only %d parts -- that is a failed save"):format(name, #parts))
+                    print(
+                        ("FAIL  %-14s baked with %d parts and no floor covering %d%% of its "):format(
+                            name,
+                            #parts,
+                            FLOOR_COVERAGE * 100
+                        ) .. "bounds -- that is a failed save, not a small map"
+                    )
                 else
                     local leftovers = {}
                     for _, part in parts do
@@ -77,11 +111,13 @@ for _, file in files do
                     end
                     if #leftovers > 0 then
                         failures += 1
-                        print(("FAIL  %-14s %d guide markers left in the bake, e.g. %s"):format(
-                            name,
-                            #leftovers,
-                            leftovers[1]
-                        ))
+                        print(
+                            ("FAIL  %-14s %d guide markers left in the bake, e.g. %s"):format(
+                                name,
+                                #leftovers,
+                                leftovers[1]
+                            )
+                        )
                     else
                         print(("OK    %-14s %d parts baked, %d of them collidable"):format(name, #parts, #solids))
                     end

@@ -3,17 +3,24 @@
 Rivals-style Roblox arena shooter, pivoting to objective play (Convergence). Rojo + Wally + Knit, Weapons Kit for
 guns, Lune for build scripts. Read README.md for the full map of services.
 
-For Snow Fortress work, use [SNOW_FORTRESS_REDESIGN_SPEC.md](SNOW_FORTRESS_REDESIGN_SPEC.md).
-Snow Fortress is a Convergence map. Resolve its running-place/source mapping and effective Rojo tuning before implementation;
-the spec records baseline discrepancies, preserved screenshots, and ordered design/verification gates.
+There is one map, `Crucible`, and its geometry is NOT in Lua. It lives in
+`assets/environment/baked/Crucible.rbxm`, built in Studio out of `ServerStorage.MapKit`;
+`src/shared/Maps/Crucible.lua` holds only objectives, spawns, routes, bounds and palette.
+Never add geometry to a map module -- see `assets/environment/kit/README.md` for the loop
+and `tools/save_map.sh` for the gate-and-commit step.
+
+Snow Fortress, Carrier, Forest, Snow, Swamp and Arena were deleted on 2026-09-24 in favour
+of that one map. [SNOW_FORTRESS_REDESIGN_SPEC.md](SNOW_FORTRESS_REDESIGN_SPEC.md) is kept
+as design reference -- objective spacing, art direction, the Convergence gates -- not as a
+description of anything that still builds.
 
 ## Toolchain
 - Tools come from Rokit (`rokit.toml`): rojo 7.7, wally, stylua, selene, lune. Run them from the project root.
 - `rojo serve` owns one terminal tab; run checks in another tab or Rojo stops.
 - Before committing: `stylua src && selene src && rojo build -o /tmp/arena.rbxl`. Zero warnings is the bar.
 - Build gates: `lune run tools/check_skins.luau`, `lune run tools/check_celebrations.luau`,
-  `lune run tools/check_maps.luau`, `lune run tools/check_assets.luau`,
-  `lune run tools/check_decor.luau`, `lune run tools/check_bake.luau`,
+  `lune run tools/check_maps.luau`, `lune run tools/check_bake.luau`, `lune run tools/check_assets.luau`,
+  `lune run tools/check_decor.luau`,
   `lune run tools/build_weapons.luau` (regenerates weapon tools from `src/shared/Weapons`).
 - Lune scripts need datatypes imported from the roblox lib (`local Vector3 = roblox.Vector3` etc.).
 

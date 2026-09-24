@@ -19,7 +19,7 @@ For planning and delivery, use the [game build workflow](GAME_BUILD_WORKFLOW.md)
 
 For new modes and interfaces, follow the [Roblox game mode and UI playbook](ROBLOX_BEST_PRACTICES.md), including its reusable feature checklist and mobile acceptance criteria.
 
-The [Snow Fortress redesign specification](SNOW_FORTRESS_REDESIGN_SPEC.md) defines the Convergence map's exterior battlefield, objective spacing, art direction, weapon/HUD changes, and ordered implementation gates. It includes preserved screenshots and a copyable agent handoff; implementation and device verification remain pending.
+The [Snow Fortress redesign specification](SNOW_FORTRESS_REDESIGN_SPEC.md) is kept as design reference: objective spacing, art direction, weapon/HUD changes and ordered implementation gates, with preserved screenshots. The map itself was deleted on 2026-09-24 along with every other map; the one map now is `Crucible`, assembled in Studio from `ServerStorage.MapKit` and saved to `assets/environment/baked/Crucible.rbxm`. See [the kit README](assets/environment/kit/README.md).
 
 - `src/server/Services`   Knit services. QueueService watches the lobby pads, MapVoteService runs the lobby map vote, RoundService runs a match, MapService builds arena + lobby, WeaponService hooks the Weapons Kit.
 - `src/client/Controllers` input handling and HUD
