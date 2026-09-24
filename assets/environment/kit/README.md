@@ -75,6 +75,17 @@ top of the real one.
 Geometry comes from the `.rbxm`; everything that is not geometry stays in the `.lua`.
 The gates read both.
 
+## Saving without waiting on anybody
+
+    bash tools/save_map.sh                  gate only
+    bash tools/save_map.sh -c "message"     gate, then commit and push
+
+The first save of a NEW map needs its `.lua` written by hand -- objectives, spawns,
+bounds, terrain, sky. Every save after that is self-contained: the geometry is in the
+`.rbxm` and the gates read it, so there is nothing for a second person to do.
+
+A failing gate is a to-do list, not a rejection. The map still loads.
+
 ## While editing
 
 Never edit anything under `ServerStorage` directly. Rojo owns those instances and
