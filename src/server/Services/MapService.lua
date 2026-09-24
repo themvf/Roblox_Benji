@@ -814,21 +814,21 @@ end
 -- the bake, because it is built into the Map folder, but it is the one thing here that is
 -- safety-critical and derived from Bounds -- it should follow the data, not a snapshot.
 local function bakedModel(name)
-    if Config.UseBakedMaps ~= true then
-        return nil
-    end
+    -- Presence decides, not a flag. A flag defaulting to false was migration scaffolding,
+    -- and once SnowFortress had given up its geometry it became a trap: the toggle only
+    -- ever lived at runtime, so a restart put it back to false, the map then had neither a
+    -- builder nor a bake, and the match aborted to the lobby. A map either has a baked
+    -- model or it does not, and that question has one honest answer.
     local store = ServerStorage:FindFirstChild("BakedMaps")
     local model = store and store:FindFirstChild(name)
-    if not model then
-        -- Asked for the baked map and it is not there. The first version of this returned
-        -- nil and let the build fall through to the layout, which looks exactly like the
-        -- flag never being set -- and that is precisely what happened: BakedMaps was added
-        -- to default.project.json, Rojo does not reload its project file, so the folder was
-        -- missing from the session and the map quietly built the old way.
+    if not model and store == nil then
+        -- No BakedMaps folder at all, which is a setup problem rather than a map problem:
+        -- Rojo does not reload default.project.json, so a session started before that
+        -- mapping existed has no folder. Worth saying, because the alternative is a map
+        -- that silently builds the old way or, for a RequiresBake map, does not build.
         warn(
-            ("[MapBuild] UseBakedMaps is on but ServerStorage.BakedMaps.%s is missing, "):format(tostring(name))
-                .. (store and "so that map has not been baked yet." or "and the BakedMaps folder does not exist at all -- restart `rojo serve`, " .. "which does not reload default.project.json on its own.")
-                .. " Building from the layout instead."
+            "[MapBuild] ServerStorage.BakedMaps does not exist -- restart `rojo serve`, "
+                .. "which does not reload default.project.json on its own."
         )
     end
     return model
