@@ -18,6 +18,8 @@ A kit is the normal way to build a level: a palette of parts you assemble.
 
 | Piece | What it is |
 | --- | --- |
+| `Fortress` | the whole central building, 162 x 34 x 132 studs |
+| `RoofTile` | one 10x10 roof tile, all three layers |
 | `IceSpike` | the ice rock, one instance |
 | `CrashedHelicopter` | the wreck, 34 studs across |
 | `Helipad` | deck, painted border, H and scorch |
@@ -35,6 +37,15 @@ coordinate it happened to occupy in Snow Fortress.
 deleted from the map in an editing pass. Both are cover rather than scenery -- the screens
 are what stops a sniper in an outpost seeing into the enemy spawn -- so keeping them here
 means removing them stays a decision rather than a one-way door.
+
+## What is deliberately not in here
+
+Spawn pads, the safety barrier and the outer boundary walls. `MapService` draws all three
+from the layout data on every build, so a copy in the kit would be a duplicate sitting on
+top of the real one.
+
+The ground is not here either. `ExteriorFloor` is 490 x 370 studs -- a new map wants its
+own, sized to itself.
 
 ## Starting a new map
 

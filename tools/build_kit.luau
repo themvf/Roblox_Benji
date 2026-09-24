@@ -19,6 +19,44 @@ local OUT = "assets/environment/kit"
 -- name -> which instances belong to it. `one` keeps a single representative where the map
 -- holds many copies (roof tiles, ice spikes); the rest take everything that matches.
 local PIECES = {
+    -- The whole central building, by exclusion: everything that is not an outpost, a
+    -- prop, the outer boundary, or the ground the arena sits on. Listing what it is made
+    -- of would be a hundred patterns and would rot the moment anything is renamed.
+    -- The whole central building. Taken from the ROOT's direct children only: the map's
+    -- parts sit at the root beside two folders, Decor and BlenderEntrances, and walking
+    -- all descendants would copy the facade twice -- once as its folder and once part by
+    -- part. Defined by exclusion because listing what a fortress is made of would be a
+    -- hundred patterns that rot the first time anything is renamed.
+    {
+        name = "Fortress",
+        match = ".",
+        topOnly = true,
+        except = {
+            "^Decor$",
+            "^ExteriorFloor$",
+            "^Wall[NSEW]$",
+            "^northwest",
+            "^southeast",
+            "^ArtFullnorthwest",
+            "^ArtFullsoutheast",
+            "^IceSpike",
+            "^RoofHelicopter",
+            "^Helipad",
+            "^SafetyBarrier",
+            -- MapService draws these from layout.Spawns on every build, so a copy in the
+            -- kit is a duplicate that also drags the piece 426 studs wide.
+            "Spawn%d",
+            "^Part$",
+            "SightlineScreen",
+            "ApproachCover",
+        },
+    },
+    -- One 10x10 roof tile, all three layers: greybox slab, snow-dressed art and paving
+    -- mesh. Anchored patterns, because "15_20" is also a substring of "-15_20".
+    {
+        name = "RoofTile",
+        match = { "^FortressRoof15_20$", "^ArtFullFortressRoof15_20Snow$", "^RoofPaving15_20$" },
+    },
     { name = "IceSpike", match = "^IceSpike", one = true },
     { name = "CrashedHelicopter", match = "^RoofHelicopter" },
     { name = "Helipad", match = "^Helipad" },
@@ -33,6 +71,14 @@ local PIECES = {
     { name = "ApproachCover", match = "^ApproachCoverRed1$", from = "assets/environment/baked/_original.rbxm" },
     { name = "CeilingLamp", match = "^CeilingLamp", one = true },
 }
+
+local roots = {}
+local function rootChildren(path)
+    if not roots[path] then
+        roots[path] = roblox.deserializeModel(fs.readFile(path))[1]:GetChildren()
+    end
+    return roots[path]
+end
 
 local loaded = {}
 local function flatten(path)
@@ -71,9 +117,17 @@ local function extents(list)
                 if ok and oks then
                     found = true
                     local p = cf.Position
-                    local r = math.max(size.X, size.Y, size.Z) / 2
-                    minx, miny, minz = math.min(minx, p.X - r), math.min(miny, p.Y - r), math.min(minz, p.Z - r)
-                    maxx, maxy, maxz = math.max(maxx, p.X + r), math.max(maxy, p.Y + r), math.max(maxz, p.Z + r)
+                    -- Proper world-axis half-extents. Using max(size)/2 as a radius treats
+                    -- a 140 x 4 x 110 floor slab as a 140-stud sphere, which inflated the
+                    -- fortress to 163 studs tall and -- because this drives the recentring
+                    -- -- would have dropped every piece well off the spot you placed it.
+                    local _, _, _, r00, r01, r02, r10, r11, r12, r20, r21, r22 = cf:GetComponents()
+                    local hx, hy, hz = size.X / 2, size.Y / 2, size.Z / 2
+                    local ex = math.abs(r00) * hx + math.abs(r01) * hy + math.abs(r02) * hz
+                    local ey = math.abs(r10) * hx + math.abs(r11) * hy + math.abs(r12) * hz
+                    local ez = math.abs(r20) * hx + math.abs(r21) * hy + math.abs(r22) * hz
+                    minx, miny, minz = math.min(minx, p.X - ex), math.min(miny, p.Y - ey), math.min(minz, p.Z - ez)
+                    maxx, maxy, maxz = math.max(maxx, p.X + ex), math.max(maxy, p.Y + ey), math.max(maxz, p.Z + ez)
                 end
             end
             for _, c in node:GetChildren() do
@@ -111,14 +165,30 @@ end
 local made = 0
 for _, spec in PIECES do
     local hits = {}
-    for _, inst in flatten(spec.from or SOURCE) do
-        if inst.Name:match(spec.match) then
+    local patterns = type(spec.match) == "table" and spec.match or { spec.match }
+    local pool = spec.topOnly and rootChildren(spec.from or SOURCE) or flatten(spec.from or SOURCE)
+    for _, inst in pool do
+        local take = false
+        for _, pattern in patterns do
+            if inst.Name:match(pattern) then
+                take = true
+                break
+            end
+        end
+        for _, pattern in spec.except or {} do
+            if inst.Name:match(pattern) then
+                take = false
+                break
+            end
+        end
+        if take then
             table.insert(hits, inst)
             if spec.one then
                 break
             end
         end
     end
+
     if #hits == 0 then
         print(("SKIP  %-20s nothing matched %q"):format(spec.name, spec.match))
         continue
