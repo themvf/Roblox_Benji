@@ -29,6 +29,12 @@ local SKIP = { ["Validate.lua"] = true, ["Lobby.lua"] = true }
 -- A bake with almost nothing in it is a failed save, not a small map.
 local MIN_PARTS = 50
 
+-- The guide is scaffolding: bounds, objective circles, spawn pads, a centre pole. It is
+-- meant to be deleted before saving, and it is exactly the kind of thing that gets left
+-- in -- it is translucent and non-collidable, so a map carrying one looks completely
+-- normal until somebody wonders what the glowing cylinder is.
+local GUIDE_NAMES = { "^GUIDE$", "^Bound_[XZ]", "^Objective_[ABC]", "^Centre_Pole$", "^Spawn_[BR]" }
+
 -- Derived maps (Snow) require their base by instance path; give them a `script` to walk.
 local preloaded = { Forest = require("../src/shared/Maps/Forest") }
 script = { Parent = preloaded }
@@ -60,7 +66,25 @@ for _, file in files do
                     failures += 1
                     print(("FAIL  %-14s baked with only %d parts -- that is a failed save"):format(name, #parts))
                 else
-                    print(("OK    %-14s %d parts baked, %d of them collidable"):format(name, #parts, #solids))
+                    local leftovers = {}
+                    for _, part in parts do
+                        for _, pattern in GUIDE_NAMES do
+                            if part.name:match(pattern) then
+                                table.insert(leftovers, part.name)
+                                break
+                            end
+                        end
+                    end
+                    if #leftovers > 0 then
+                        failures += 1
+                        print(("FAIL  %-14s %d guide markers left in the bake, e.g. %s"):format(
+                            name,
+                            #leftovers,
+                            leftovers[1]
+                        ))
+                    else
+                        print(("OK    %-14s %d parts baked, %d of them collidable"):format(name, #parts, #solids))
+                    end
                 end
             elseif parts then
                 -- Baked but still building from its layout: harmless, and worth saying out

@@ -18,6 +18,8 @@ A kit is the normal way to build a level: a palette of parts you assemble.
 
 | Piece | What it is |
 | --- | --- |
+| `Ground` | the floor slab, 490 x 370, top at y 0 -- resize it to your map |
+| `GUIDE` | bounds, objective circles, spawn pads, centre. **Delete before saving** |
 | `Fortress` | the whole central building, 162 x 34 x 132 studs |
 | `RoofTile` | one 10x10 roof tile, all three layers |
 | `IceSpike` | the ice rock, one instance |
@@ -38,14 +40,27 @@ deleted from the map in an editing pass. Both are cover rather than scenery -- t
 are what stops a sniper in an outpost seeing into the enemy spawn -- so keeping them here
 means removing them stays a decision rather than a one-way door.
 
+## The guide
+
+`GUIDE` is scaffolding, not map content: the bounds outline, the three objective circles at
+their capture radius, both spawn lines and a centre pole. Drop it in first and everything
+else has somewhere to go.
+
+It is also how a new map's data gets written. Move the markers to where you want them,
+tell me, and the positions go straight into the layout's `Objectives`, `Spawns` and
+`Bounds` -- the same idea as `/mark`, at map scale.
+
+**Delete it before saving.** `check_bake` fails a map that still contains guide markers,
+because they are translucent and non-collidable, so a map carrying one looks entirely
+normal until somebody asks what the glowing cylinder is.
+
 ## What is deliberately not in here
 
 Spawn pads, the safety barrier and the outer boundary walls. `MapService` draws all three
 from the layout data on every build, so a copy in the kit would be a duplicate sitting on
 top of the real one.
 
-The ground is not here either. `ExteriorFloor` is 490 x 370 studs -- a new map wants its
-own, sized to itself.
+
 
 ## Starting a new map
 
