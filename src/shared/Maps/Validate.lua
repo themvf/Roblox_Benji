@@ -167,6 +167,14 @@ local function pieceBoxes(out, piece, mirrored)
     if not spec or not spec.solid then
         return
     end
+    -- `decor` makes MapService set CanCollide false (applyDecor), so the piece does not
+    -- exist as far as a launched player or a bullet is concerned. Modelling it as a solid
+    -- had the arc tracer checking against geometry that is not physically there: on Snow
+    -- Fortress that is 340 boxes out of 662, every one of them a facade block hiding a
+    -- real wall behind it. Only `block` and `prefab` honour the flag in the builder.
+    if piece.decor and (kind == "block" or kind == "prefab") then
+        return
+    end
     local pos = mirrored and mirrorPos(piece.pos) or piece.pos
     local rot = mirrored and mirrorRot(piece.rot) or piece.rot
     local name = (mirrored and "Blue_" or "") .. (piece.name or kind)
@@ -209,6 +217,21 @@ local function pieceBoxes(out, piece, mirrored)
 end
 
 -- Every solid box in the built map, mirrored copies included.
+-- Build a box from geometry that already exists, rather than from a piece description.
+-- A baked map has no piece list to model: it has parts, each with a CFrame and a Size.
+-- `matrix` is the row-major rotation, the same shape basis() returns, so everything
+-- downstream -- pointToBox, the arc tracer, the AABB reject -- is unchanged.
+function Validate.boxFrom(name, pos, size, matrix)
+    local box = {
+        name = name,
+        c = vec(pos),
+        h = { x = size[1] / 2, y = size[2] / 2, z = size[3] / 2 },
+        m = matrix or basis({ 0, 0, 0 }),
+    }
+    box.aabb = boxAabb(box)
+    return box
+end
+
 function Validate.solids(layout)
     local out = {}
     for _, piece in layout.Center or {} do
