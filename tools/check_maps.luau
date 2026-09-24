@@ -10,6 +10,7 @@ Enum = roblox.Enum
 Vector3 = roblox.Vector3
 
 local Validate = require("../src/shared/Maps/Validate")
+local Baked = require("./bakedsolids")
 local Weapons = require("../src/shared/Weapons")
 
 local dir = "src/shared/Maps"
@@ -37,7 +38,11 @@ for _, file in files do
     if file:sub(-4) == ".lua" and not SKIP[file] then
         checked += 1
         local layout = luneRequire("../" .. dir .. "/" .. file:sub(1, -5))
-        local ok, errors, warnings, info = Validate.check(layout, Weapons)
+        -- Where a map is baked, check the geometry that actually ships. It carries
+        -- collision the layout never described -- the facade kit authors 282 parts on
+        -- Snow Fortress alone -- so tracing against it is stricter, not looser.
+        local solids = Baked.load(layout.Name or file:sub(1, -5), Validate)
+        local ok, errors, warnings, info = Validate.check(layout, Weapons, solids)
         if ok then
             print(
                 ("OK    %-10s %4d solids  %d pads  %d pickups  %d warnings"):format(

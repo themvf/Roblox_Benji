@@ -394,7 +394,11 @@ local function checkMirrored(errors, label, list, getPos, symmetry)
     end
 end
 
-function Validate.check(layout, weapons)
+-- `solids` lets a caller supply the geometry instead of having it modelled from the
+-- layout. A baked map has parts, not a piece list, and those parts are the truth --
+-- they include collision the layout never described, such as the facade kit's authored
+-- walls. Passing nothing keeps the old behaviour for maps that are still built.
+function Validate.check(layout, weapons, solids)
     local errors, warnings = {}, {}
     local info = { Solids = 0, LaunchPads = 0, Pickups = 0 }
 
@@ -415,7 +419,7 @@ function Validate.check(layout, weapons)
         return false, errors, warnings, info
     end
 
-    local solids = Validate.solids(layout)
+    solids = solids or Validate.solids(layout)
     info.Solids = #solids
 
     -- --- pieces: known kinds, well-formed, palette keys that exist ---
