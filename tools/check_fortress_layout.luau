@@ -3,8 +3,6 @@ local roblox = require("@lune/roblox")
 Color3 = roblox.Color3
 Enum = roblox.Enum
 
-local art = require("../src/shared/MapArt/AlpineFortress")
-script = { Parent = { Parent = { MapArt = { AlpineFortress = art } } } }
 local luneRequire = require
 require = function(target)
     if type(target) == "table" then
@@ -15,8 +13,30 @@ end
 
 local map = require("../src/shared/Maps/SnowFortress")
 
+-- Geometry comes from the baked map, not from the layout. Snow Fortress no longer
+-- describes its own parts; the file does, and the file is what the server clones.
+--
+-- Presented in the shape these checks already expect, so every assertion below is
+-- unchanged: `decor` is "does not collide", and `rot` is set for anything not
+-- axis-aligned, because the abs()-per-axis overlap tests are only valid unrotated.
+local Validate = require("../src/shared/Maps/Validate")
+local Baked = require("./bakedsolids")
+local bakedSolids, bakedParts = Baked.load("SnowFortress", Validate)
+assert(bakedParts, "SnowFortress has no bake in assets/environment/baked; nothing to check")
+local pieces = {}
+for _, part in bakedParts do
+    table.insert(pieces, {
+        name = part.name,
+        pos = part.pos,
+        size = part.size,
+        kind = "block",
+        decor = not part.collide,
+        rot = (not part.axisAligned) and { 0, 0, 0 } or nil,
+    })
+end
+
 -- Art may change surface treatment but must not add gameplay collision.
-for _, piece in map.Center do
+for _, piece in pieces do
     if piece.name:match("^Art") and piece.kind == "block" then
         assert(piece.decor == true, "entrance trim must not collide or intercept weapon queries")
     end
@@ -124,7 +144,7 @@ for _, pad in map.LaunchPads do
 end
 assert(#map.RoofHatches == 2, "two roof drops required")
 for _, hatch in map.RoofHatches do
-    for _, piece in map.Center do
+    for _, piece in pieces do
         if piece.name:match("^FortressRoof") then
             assert(
                 not (
@@ -138,7 +158,7 @@ for _, hatch in map.RoofHatches do
 end
 for _, post in map.SniperOutposts do
     local count = 0
-    for _, piece in map.Center do
+    for _, piece in pieces do
         if piece.name:match("^" .. post.Id .. "Stair") then
             count += 1
         end
@@ -162,7 +182,7 @@ end
 
 -- Check actual authored block geometry, not just declarative route counts.
 local function clearBody(point, label)
-    for _, piece in map.Center do
+    for _, piece in pieces do
         if piece.kind ~= "block" or piece.rot then
             continue
         end
@@ -202,7 +222,7 @@ assert(map.Objectives[3].pos[1] == 0, "keep must not favor an exterior spawn")
 
 -- The upper slab covers the entire fortress except the two authored stair slots.
 local function upperFloorAt(x, z)
-    for _, piece in map.Center do
+    for _, piece in pieces do
         if
             piece.kind == "block"
             and piece.pos[2] == 17.5
@@ -221,7 +241,7 @@ for x = -69.5, 69.5 do
         assert(upperFloorAt(x, z) == not stairHole, "upper floor coverage or stair opening incorrect")
     end
 end
-for _, piece in map.Center do
+for _, piece in pieces do
     if
         piece.name:match("^UpperStair")
         or piece.name:match("^northwestStair")
@@ -237,16 +257,15 @@ for _, post in map.SniperOutposts do
     assert(post.pos[2] == 19 and upperFloorAt(post.pos[1], post.pos[3]), "outpost must have an upper deck at 18")
 end
 
-local Validate = require("../src/shared/Maps/Validate")
-assert(Validate.check(map), "full map validator must accept authored topology")
+assert(Validate.check(map, nil, bakedSolids), "full map validator must accept authored topology")
 map.Symmetry.SniperOutposts = "x"
-assert(not Validate.check(map), "diagonal outposts must not silently pass x-mirror validation")
+assert(not Validate.check(map, nil, bakedSolids), "diagonal outposts must not silently pass x-mirror validation")
 map.Symmetry.SniperOutposts = "rotational"
 local original = map.SniperOutposts[2].pos[3]
 map.SniperOutposts[2].pos[3] += 10
-assert(not Validate.check(map), "rotational symmetry still requires a matching partner")
+assert(not Validate.check(map, nil, bakedSolids), "rotational symmetry still requires a matching partner")
 map.SniperOutposts[2].pos[3] = original
-assert(Validate.check(map), "restore valid map after negative cases")
+assert(Validate.check(map, nil, bakedSolids), "restore valid map after negative cases")
 for _, key in
     {
         "ClockTime",

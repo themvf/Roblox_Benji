@@ -13,7 +13,6 @@ local TweenService = game:GetService("TweenService")
 local InsertService = game:GetService("InsertService")
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
-local FortressArt = require(script.Parent.Parent.FortressArt)
 
 -- The startup map is Config.StartupMap, from Shared/Config.lua only -- TuningService
 -- clears any saved StartupMap attribute before this reads it, because one set in an old
@@ -1354,6 +1353,17 @@ function MapService:Build(layout)
     -- objectives, pickups, traversal, the barrier -- comes from the layout either way,
     -- because none of it is geometry.
     local baked = bakedModel(layout.Name)
+    -- A map whose geometry lives only in its bake has nothing to fall back to. Failing
+    -- here is the honest outcome: MapService:Load pcalls this and falls back to a map
+    -- that works, which beats dropping players into an empty skybox.
+    if layout.RequiresBake and not baked then
+        error(
+            ("[MapService] %s has no geometry of its own and no baked model. Restart `rojo serve` "):format(
+                tostring(layout.Name)
+            ) .. "so ServerStorage.BakedMaps exists, or re-bake the map.",
+            0
+        )
+    end
     if baked then
         cloneBaked(folder, baked)
     else
@@ -1389,9 +1399,6 @@ function MapService:Build(layout)
             placePiece(decor, "", piece, rng, nil)
         end
         authoredDecor(decor, layout.Name)
-        if layout.Name == "SnowFortress" then
-            FortressArt.Build(folder)
-        end
         for _, piece in layout.Mirrored or {} do
             placePiece(folder, "Red_", piece, rng, nil)
             placePiece(folder, "Blue_", piece, rng, "x")

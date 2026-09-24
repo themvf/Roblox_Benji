@@ -47,11 +47,18 @@ function M.load(mapName, Validate)
                     local x, y, z, a, b, c, d, e, f, g, h, k = cf:GetComponents()
                     local pos = { x, y, z }
                     local dim = { size.X, size.Y, size.Z }
+                    -- Axis-aligned within a hair. Gates that test a point against a
+                    -- box with an abs() per axis are only correct for unrotated parts,
+                    -- which is why the layout versions skipped anything with a `rot`.
+                    local square = math.abs(math.abs(a) - 1) < 1e-4
+                        and math.abs(math.abs(e) - 1) < 1e-4
+                        and math.abs(math.abs(k) - 1) < 1e-4
                     table.insert(parts, {
                         name = inst.Name,
                         pos = pos,
                         size = dim,
                         collide = okCollide and collide or false,
+                        axisAligned = square,
                     })
                     if okCollide and collide then
                         table.insert(

@@ -21,10 +21,8 @@ Vector3 = roblox.Vector3
 local DECOR_DIR = "assets/environment/decor"
 local MARGIN = 6 -- studs of clearance beyond the part's own half-extent
 
--- Derived maps require their base by instance path; give them a `script` to walk and a
--- `require` that hands back an already-loaded table, the same way check_maps does.
+-- Derived maps (Snow) require their base by instance path; give them a `script` to walk.
 local preloaded = { Forest = require("../src/shared/Maps/Forest") }
-preloaded.Parent = { MapArt = { AlpineFortress = require("../src/shared/MapArt/AlpineFortress") } }
 script = { Parent = preloaded }
 local luneRequire = require
 require = function(target)

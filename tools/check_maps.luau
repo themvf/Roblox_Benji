@@ -20,7 +20,6 @@ local SKIP = { ["Validate.lua"] = true, ["Lobby.lua"] = true }
 -- Derived maps (Snow) do `require(script.Parent.Forest)`. Give them a `script` to walk and a
 -- `require` that hands back an already-loaded layout table.
 local preloaded = { Forest = require("../src/shared/Maps/Forest") }
-preloaded.Parent = { MapArt = { AlpineFortress = require("../src/shared/MapArt/AlpineFortress") } }
 script = { Parent = preloaded }
 local luneRequire = require
 require = function(target)
