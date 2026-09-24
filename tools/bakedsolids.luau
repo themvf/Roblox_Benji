@@ -30,8 +30,14 @@ function M.load(mapName, Validate)
     if not path then
         return nil, nil
     end
+    return M.fromRoots(roblox.deserializeModel(fs.readFile(path)), Validate)
+end
+
+-- The same, for instances already in memory: the map converter checks its candidate
+-- bake before it is written anywhere, so it cannot go through a path on disk.
+function M.fromRoots(roots, Validate)
     local solids, parts = {}, {}
-    for _, root in roblox.deserializeModel(fs.readFile(path)) do
+    for _, root in roots do
         local function walk(inst)
             if inst:IsA("BasePart") then
                 local okCf, cf = pcall(function()

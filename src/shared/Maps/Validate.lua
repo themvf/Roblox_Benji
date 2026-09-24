@@ -489,6 +489,12 @@ function Validate.check(layout, weapons, solids)
     -- required to mirror, and an ice spike on one side is not a balance problem.
     checkPieces(layout.Decor or {}, "Decor")
 
+    -- Team fairness (x-mirror pairing) is a balance judgement, so on a draft it is a
+    -- warning: a designer moving one spawn to try something must still get a playable
+    -- build. Drafts never enter a rotation (check_maps enforces that), and a map that
+    -- does is held to the full rule.
+    local fairness = layout.Draft == true and warnings or errors
+
     -- --- spawns ---
     for _, team in { "Red", "Blue" } do
         if not layout.Spawns[team] then
@@ -535,7 +541,7 @@ function Validate.check(layout, weapons, solids)
                 end
             end
             if not found then
-                err("Spawns.Red[%d] at %s has no Blue mirror at %s", i, fmt(p), fmt(want))
+                table.insert(fairness, ("Spawns.Red[%d] at %s has no Blue mirror at %s"):format(i, fmt(p), fmt(want)))
             end
         end
     end
@@ -565,18 +571,18 @@ function Validate.check(layout, weapons, solids)
     local function pos(e)
         return e.pos
     end
-    checkMirrored(errors, "LaunchPads", layout.LaunchPads, pos)
+    checkMirrored(fairness, "LaunchPads", layout.LaunchPads, pos)
     checkMirrored(
-        errors,
+        fairness,
         "SniperOutposts",
         layout.SniperOutposts,
         pos,
         layout.Symmetry and layout.Symmetry.SniperOutposts
     )
-    checkMirrored(errors, "Pickups", layout.Pickups, pos)
-    checkMirrored(errors, "Barrier", layout.Barrier, pos)
-    checkMirrored(errors, "SafeRegions", layout.SafeRegions, pos)
-    checkMirrored(errors, "InvalidRegions", layout.InvalidRegions, pos)
+    checkMirrored(fairness, "Pickups", layout.Pickups, pos)
+    checkMirrored(fairness, "Barrier", layout.Barrier, pos)
+    checkMirrored(fairness, "SafeRegions", layout.SafeRegions, pos)
+    checkMirrored(fairness, "InvalidRegions", layout.InvalidRegions, pos)
 
     local seenOutpost = {}
     for i, o in layout.SniperOutposts or {} do

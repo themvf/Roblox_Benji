@@ -33,10 +33,12 @@ local files = fs.readDir(dir)
 table.sort(files)
 
 local checked, failures = 0, 0
+local layouts = {}
 for _, file in files do
     if file:sub(-4) == ".lua" and not SKIP[file] then
         checked += 1
         local layout = luneRequire("../" .. dir .. "/" .. file:sub(1, -5))
+        layouts[file:sub(1, -5)] = layout
         -- Where a map is baked, check the geometry that actually ships. It carries
         -- collision the layout never described -- the facade kit authors 282 parts on
         -- Snow Fortress alone -- so tracing against it is stricter, not looser.
@@ -61,6 +63,22 @@ for _, file in files do
         end
         for _, w in warnings do
             print("        warning " .. w)
+        end
+    end
+end
+
+-- Drafts from the map authoring tools are for testing (/explore, /map) and are held to
+-- looser fairness rules, so none may sit in a public rotation.
+local Config = require("../src/shared/Config")
+for _, pool in { "Maps", "ConvergenceMaps" } do
+    for _, name in Config[pool] or {} do
+        local layout = layouts[name]
+        if not layout then
+            failures += 1
+            print(("FAIL  Config.%s lists %q, which is not a map in %s"):format(pool, name, dir))
+        elseif layout.Draft then
+            failures += 1
+            print(("FAIL  Config.%s lists %q, which is a draft; drafts stay out of rotation"):format(pool, name))
         end
     end
 end

@@ -5,9 +5,10 @@
 -- three objective circles, both spawn lines and the centre in the viewport, so a fortress
 -- goes down in a place that means something rather than wherever the drag ended.
 --
--- The guide is also how a NEW map's data gets written. Move the markers to where you want
--- them, save the guide alongside the map, and the positions can be read straight back into
--- the layout's Objectives, Spawns and Bounds -- the same trick as /mark, at map scale.
+-- The GUIDE is legacy and visual only: nothing ever read its positions back. New maps
+-- start from the Convergence template instead (tools/mapauthor/template.luau via
+-- `bash tools/save_map.sh new <Name>`), whose markers ARE the map data. The converter
+-- and check_bake both refuse a map that has a GUIDE dragged into it.
 --
 --     lune run tools/build_guide.luau
 local fs = require("@lune/fs")

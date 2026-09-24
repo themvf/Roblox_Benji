@@ -31,6 +31,8 @@ The [Snow Fortress redesign specification](SNOW_FORTRESS_REDESIGN_SPEC.md) defin
 - `tools/check_skins.luau`     Build gate: `lune run tools/check_skins.luau` fails on any spec violation
 - `src/shared/Celebrations/`   Celebration registry + validator; `lune run tools/check_celebrations.luau`
 - `src/shared/Maps/Validate.lua` Map validator (the spec's VALIDATE MAP as code); `lune run tools/check_maps.luau`
+- `assets/environment/source/`  Editable Convergence maps. `bash tools/save_map.sh new <Name>` / `<Name>` builds the
+  playable map from Studio-placed markers ([walkthrough](assets/environment/source/README.md))
 - `src/server/ProfileStore.luau` MadStudioRoblox ProfileStore (vendored); DataService saves loadout, favourites, skins, stats
 
 ## Editing in Studio (no code)

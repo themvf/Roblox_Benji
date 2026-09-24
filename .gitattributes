@@ -8,3 +8,5 @@
 *.rbxm binary
 *.rbxl binary
 *.rbxlx binary
+# cmd.exe mis-parses labels in LF-only batch files
+*.cmd text eol=crlf
