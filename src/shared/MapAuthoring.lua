@@ -714,18 +714,35 @@ local function support(layout, solids, p)
         below, belowName = 0, "the terrain"
     end
     if belowName then
-        return false, ("floats %.1f studs above %s"):format(p[2] - below, belowName)
+        return false, ("floats %.1f studs above %s"):format(p[2] - below, belowName), below
     end
     return false, "has nothing under it"
 end
 
+-- The solid containing a point, and how high its top is right there.
 local function insideSolid(solids, p)
     for _, box in solids do
         if pointToBox(p, box) == 0 then
-            return box.name
+            -- walk up until out of the box: its surface at this spot, to a tenth of a stud
+            local y = p[2]
+            while pointToBox({ p[1], y, p[3] }, box) == 0 and y < p[2] + 500 do
+                y += 0.1
+            end
+            return box.name, y
         end
     end
     return nil
+end
+
+-- A floor players can actually stand on: nothing solid in the space just above it.
+local function standable(solids, p, top)
+    return insideSolid(solids, { p[1], top + 2.5, p[3] }) == nil
+end
+
+-- Pivot Y for an objective whose floor point should be at `floorY`. The objective's
+-- pivot is its Capture cylinder's centre, half its height above the floor point.
+local function objectivePivotY(o, floorY)
+    return floorY + o.halfHeight / 2
 end
 
 local function inBounds(b, p)
@@ -785,24 +802,40 @@ function MapAuthoring.check(name, layout, solids, authored, Validate, weapons)
                 ) .. "If the whole map was moved down, move it back up."
             )
         end
-        local ok, why = support(layout, solids, o.pos)
+        local ok, why, below = support(layout, solids, o.pos)
         if not ok then
             err(
-                ("%s %s. Drag it down onto a floor (the bottom of the cylinder is the floor point)."):format(
+                ("%s %s. Drag it down onto a floor (the bottom of the cylinder is the floor point)"):format(
                     o.Where,
                     why
                 )
+                    .. (
+                        below
+                            and ("; or set its Pivot > Origin > Position Y to %.1f."):format(objectivePivotY(o, below))
+                        or "."
+                    )
             )
         end
-        local buried = insideSolid(solids, { o.pos[1], o.pos[2] + 1, o.pos[3] })
+        local buried, buriedTop = insideSolid(solids, { o.pos[1], o.pos[2] + 1, o.pos[3] })
         if buried then
-            err(("%s is sunk into %s. Raise it so the cylinder's bottom sits on the floor."):format(o.Where, buried))
+            err(
+                ("%s is sunk %.1f studs into %s. Raise it %.1f studs: select it and set Pivot > Origin > Position Y to %.1f."):format(
+                    o.Where,
+                    buriedTop - o.pos[2],
+                    buried,
+                    buriedTop - o.pos[2],
+                    objectivePivotY(o, buriedTop)
+                )
+            )
         end
         -- other floors inside the capture height (it extends as far below as above)
         for _, box in solids do
             local a = box.aabb
             if o.pos[1] >= a.min.x and o.pos[1] <= a.max.x and o.pos[3] >= a.min.z and o.pos[3] <= a.max.z then
                 local top = a.max.y
+                if not standable(solids, o.pos, top) then
+                    continue
+                end
                 if top > o.pos[2] + 1.5 and top <= o.pos[2] + o.halfHeight - 3 then
                     warn(
                         ("%s: players standing on %s (top at y %.1f) are inside its capture height."):format(
@@ -839,9 +872,12 @@ function MapAuthoring.check(name, layout, solids, authored, Validate, weapons)
                     ) .. "If the whole map was moved down, move it back up."
                 )
             end
-            local ok, why = support(layout, solids, s.pos)
+            local ok, why, below = support(layout, solids, s.pos)
             if not ok then
-                err(("%s %s. Drag it onto a floor."):format(s.Where, why))
+                err(
+                    ("%s %s. Drag it onto a floor"):format(s.Where, why)
+                        .. (below and ("; or set its Position Y to %.2f."):format(below + 0.25) or ".")
+                )
             end
             local blocked = insideSolid(solids, { s.pos[1], s.pos[2] + 2.5, s.pos[3] })
             if blocked then
