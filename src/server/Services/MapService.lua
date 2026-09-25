@@ -1680,7 +1680,29 @@ function MapService:Load(name)
         return false
     end
     self.CurrentMap = name
+    if layout.Draft then
+        -- The revision is the one tools/map.luau printed, so a designer can tell the build
+        -- they just converted from an older one still synced.
+        local text = ("DRAFT %s · build %s"):format(name, tostring(layout.Revision))
+        print("[MapAuthoring] " .. text)
+        -- at server start nobody is here yet, and the toast would go nowhere
+        if #Players:GetPlayers() > 0 then
+            Knit.GetService("SafetyService").Client.Notice:FireAll(text)
+        end
+    end
     return true
+end
+
+-- An editable map source (assets/environment/source) left in Workspace while testing sits
+-- exactly where the built map goes: a second floor to z-fight with, and glowing markers
+-- over the real objectives. Play sessions are copies, so removing it loses no edits.
+local function removeEditableSources()
+    for _, inst in workspace:GetDescendants() do
+        if inst:GetAttribute("MapSource") ~= nil and inst.Parent then
+            print(("[MapAuthoring] hid editable map %q for this test"):format(inst.Name))
+            inst:Destroy()
+        end
+    end
 end
 
 function MapService:KnitInit()
@@ -1688,6 +1710,7 @@ function MapService:KnitInit()
     -- come from it, and Knit does not order KnitInit between services.
     Knit.GetService("TuningService"):EnsureSetup()
 
+    removeEditableSources()
     if not self:Load(Config.StartupMap) then
         warn("[MapService] falling back to " .. FALLBACK_MAP)
         self:Load(FALLBACK_MAP)

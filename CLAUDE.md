@@ -13,7 +13,7 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - Before committing: `stylua src && selene src && rojo build -o /tmp/arena.rbxl`. Zero warnings is the bar.
 - Build gates: `lune run tools/check_skins.luau`, `lune run tools/check_celebrations.luau`,
   `lune run tools/check_maps.luau`, `lune run tools/check_assets.luau`,
-  `lune run tools/check_decor.luau`, `lune run tools/check_bake.luau`,
+  `lune run tools/check_decor.luau`, `lune run tools/check_bake.luau`, `lune run tools/check_map_authoring.luau`,
   `lune run tools/build_weapons.luau` (regenerates weapon tools from `src/shared/Weapons`).
 - Lune scripts need datatypes imported from the roblox lib (`local Vector3 = roblox.Vector3` etc.).
 
@@ -103,3 +103,10 @@ map file, where the gates can see its shape.
 ## Map building
 Use the `roblox-map-building` skill (.claude/skills) before adding or editing a map layout. It holds the geometry
 audit checklist, the safety data every map must declare, and the QA gate.
+
+New Convergence maps are authored, not written: `bash tools/save_map.sh new <Name>` makes an editable
+`assets/environment/source/<Name>.rbxm` whose markers are the map data, and `bash tools/save_map.sh <Name>`
+generates `src/shared/Maps/<Name>.lua` and the bake from it. Never hand-edit either generated file (check_bake
+fails on drift); change the source or `<Name>.presentation.lua`. Designer walkthrough:
+[assets/environment/source/README.md](assets/environment/source/README.md); decisions and evidence:
+[docs/design/map-authoring/design-packet.md](docs/design/map-authoring/design-packet.md).

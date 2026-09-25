@@ -6,3 +6,7 @@ ServerPackages/
 tools/wsrc/
 reference/roblox/API-Dump.json
 __pycache__/
+
+# map authoring: staging/rollback scratch and local source history
+.mapbuild/
+assets/environment/source/.history/

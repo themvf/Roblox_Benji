@@ -19,7 +19,7 @@ A kit is the normal way to build a level: a palette of parts you assemble.
 | Piece | What it is |
 | --- | --- |
 | `Ground` | the floor slab, 490 x 370, top at y 0 -- resize it to your map |
-| `GUIDE` | bounds, objective circles, spawn pads, centre. **Delete before saving** |
+| `GUIDE` | legacy visual guide, superseded by the map template -- see below |
 | `Fortress` | the whole central building, 162 x 34 x 132 studs |
 | `RoofTile` | one 10x10 roof tile, all three layers |
 | `IceSpike` | the ice rock, one instance |
@@ -40,19 +40,22 @@ deleted from the map in an editing pass. Both are cover rather than scenery -- t
 are what stops a sniper in an outpost seeing into the enemy spawn -- so keeping them here
 means removing them stays a decision rather than a one-way door.
 
-## The guide
+## Building a map with the kit
 
-`GUIDE` is scaffolding, not map content: the bounds outline, the three objective circles at
-their capture radius, both spawn lines and a centre pole. Drop it in first and everything
-else has somewhere to go.
+Kit pieces go into a map made from the Convergence template, inside its `Geometry`
+folder. The template carries the objective, spawn and boundary markers that the game
+reads, and one command converts it. Nobody has to write map data by hand. The full
+walkthrough is [assets/environment/source/README.md](../source/README.md):
 
-It is also how a new map's data gets written. Move the markers to where you want them,
-tell me, and the positions go straight into the layout's `Objectives`, `Spawns` and
-`Bounds` -- the same idea as `/mark`, at map scale.
+    bash tools/save_map.sh new TestMap       then Insert from File in Studio, build, Save to File
+    bash tools/save_map.sh TestMap           convert and check
 
-**Delete it before saving.** `check_bake` fails a map that still contains guide markers,
-because they are translucent and non-collidable, so a map carrying one looks entirely
-normal until somebody asks what the glowing cylinder is.
+Copy a piece from `ServerStorage.MapKit` and use **Paste Into** on `Geometry`. Don't drag
+it out of `ServerStorage` in the Explorer.
+
+`GUIDE` is the older, visual-only version of those markers. Its positions were never
+read back into anything. Don't drop it into a template map: the converter refuses a map
+containing it, and so does `check_bake` if it reaches a bake.
 
 ## What is deliberately not in here
 
@@ -62,29 +65,12 @@ top of the real one.
 
 
 
-## Starting a new map
+## Saving
 
-1. Clear Workspace, drag pieces out of `ServerStorage.MapKit`, assemble.
-2. Group the lot under one Folder.
-3. Right-click it → **Save to File** → `assets/environment/baked/<Name>.rbxm`
-4. Add `src/shared/Maps/<Name>.lua` with the data and `RequiresBake = true`:
-   `Name`, `Size`, `WallHeight`, `Spawns`, `Objectives`, `Bounds`, `SafePoints`,
-   `Barrier`, `Terrain`, `Palette`, `Environment`, and empty `Center`/`Mirrored`.
-5. `lune run tools/check_maps.luau` and `tools/check_bake.luau`.
-
-Geometry comes from the `.rbxm`; everything that is not geometry stays in the `.lua`.
-The gates read both.
-
-## Saving without waiting on anybody
-
-    bash tools/save_map.sh                  gate only
-    bash tools/save_map.sh -c "message"     gate, then commit and push
-
-The first save of a NEW map needs its `.lua` written by hand -- objectives, spawns,
-bounds, terrain, sky. Every save after that is self-contained: the geometry is in the
-`.rbxm` and the gates read it, so there is nothing for a second person to do.
-
-A failing gate is a to-do list, not a rejection. The map still loads.
+Maps built from the template save and convert with `bash tools/save_map.sh <Name>`. See
+the walkthrough linked above. Snow Fortress predates the template: its bake in
+`assets/environment/baked` is edited directly, and `bash tools/save_map.sh --all` runs
+every gate over it without committing anything.
 
 ## While editing
 

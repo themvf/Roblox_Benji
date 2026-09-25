@@ -3,6 +3,7 @@
 -- Players not in a match live in the lobby (Team attribute "Lobby").
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Config = require(ReplicatedStorage.Shared.Config)
 
@@ -257,6 +258,47 @@ function RoundService:KnitStart()
                     Knit.GetService("SafetyService").Client.Notice:Fire(player, "Unknown map: " .. name)
                 end
             end
+        end)
+        -- /explore <name>: build a map and walk it, no match (Studio only). The way to
+        -- check scale, floors, stairs and collision on a draft from tools/map.luau without
+        -- a lobby queue; dying returns you to the lobby as usual.
+        player.Chatted:Connect(function(msg)
+            local name = msg:match("^/explore%s+(%w+)")
+            if not name then
+                return
+            end
+            local notice = Knit.GetService("SafetyService").Client.Notice
+            if not RunService:IsStudio() then
+                notice:Fire(player, "/explore is a Studio test command")
+                return
+            end
+            if self.Busy or player:GetAttribute("InMatch") then
+                notice:Fire(player, "A match is running; /explore works from the lobby between matches")
+                return
+            end
+            local found
+            for _, m in ReplicatedStorage.Shared.Maps:GetChildren() do
+                if m.Name:lower() == name:lower() then
+                    found = m.Name
+                    break
+                end
+            end
+            local MapService = Knit.GetService("MapService")
+            if not found or found == "Lobby" or found == "Validate" then
+                notice:Fire(player, "Unknown map: " .. name)
+                return
+            end
+            if not MapService:Load(found) then
+                notice:Fire(player, "Could not build " .. found .. "; see Output")
+                return
+            end
+            local point = MapService:PickSpawn("Blue") or MapService:PickSpawn("Red")
+            local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+            if point and root then
+                local pos = point + Vector3.new(0, 3, 0)
+                root.CFrame = CFrame.lookAt(pos, Vector3.new(0, pos.Y, 0))
+            end
+            notice:Fire(player, "Exploring " .. found .. " -- reset or die to return to the lobby")
         end)
         -- Lobby preview: type /celebrate to run your default celebration solo on the podium
         player.Chatted:Connect(function(msg)

@@ -1,6 +1,15 @@
 # Baked maps
 
-A baked map is `workspace.Map` saved to a file, exactly as `MapService` built it.
+A baked map is the playable geometry `MapService` clones.
+
+**Maps made from the Convergence template** (every map with `Authored` in its
+`src/shared/Maps/<Name>.lua`) have a bake **generated** from
+`assets/environment/source/<Name>.rbxm` by `bash tools/save_map.sh <Name>`. Never edit
+those bakes directly: `check_bake` regenerates them and fails on any difference. Edit
+the source instead ([source/README.md](../source/README.md)).
+
+The rest of this file describes the older hand-baked route, which Snow Fortress still
+uses: `workspace.Map` saved to a file, exactly as `MapService` built it.
 
 This exists to answer a question we kept losing days to: **why is a map built by code at
 all?** It was the right call while the layout was being generated -- loops, mirrors,
