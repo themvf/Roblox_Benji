@@ -254,7 +254,7 @@ local function changes(old, layout, parts, bakeBytes)
         table.insert(
             lines,
             prev.Revision == layout.Revision and "no changes since the last conversion"
-                or "no gameplay or geometry changes (sky, terrain, labels or a whole-map move)"
+                or "no gameplay or geometry changes (sky, terrain or labels)"
         )
     end
     return lines
@@ -424,9 +424,6 @@ local function convert(name, opts)
         #layout.Spawns.Blue,
         #layout.Spawns.Red
     ))
-    if result.authored.PivotMoved then
-        say("  (the editable model was moved/rotated as a whole; the playable map stays centred on its pivot)")
-    end
     if result.presentationIsNew then
         say("  created " .. P.relPresentation .. " with default sky and terrain (optional to edit)")
     end

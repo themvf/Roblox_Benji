@@ -11,10 +11,13 @@
 -- regenerated from them on every conversion and never edited by hand, and the runtime
 -- and every gate read that module. There is no second marker reader anywhere.
 --
--- Everything is expressed relative to the source model's pivot. Moving or rotating the
--- whole editable map in Studio therefore changes nothing in the game, and scaling it
--- scales markers and geometry together. Only a marker transform that cannot be turned
--- into data -- a tilted capture area, a rotated boundary -- is refused.
+-- Positions are plain world coordinates. An earlier version measured everything from
+-- the model's pivot so that moving the whole map would change nothing, but Studio resets
+-- a model's pivot to its bounding-box centre on Insert from File -- which silently sank
+-- a map 36.5 studs under the terrain. World coordinates cannot drift like that. Moving
+-- the whole map moves every marker with it, so the result stays consistent, and a map
+-- dragged away from the origin or under the terrain is reported. Only a marker transform
+-- that cannot be turned into data -- a tilted capture area, a rotated boundary -- is refused.
 local fs = require("@lune/fs")
 local luau = require("@lune/luau")
 local roblox = require("@lune/roblox")
@@ -256,17 +259,6 @@ end
 
 -- ===== reading the source =====
 
-local function isIdentity(cf)
-    local c = { cf:GetComponents() }
-    local want = { 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1 }
-    for i = 1, 12 do
-        if math.abs(c[i] - want[i]) > 1e-6 then
-            return false
-        end
-    end
-    return true
-end
-
 local function pathOf(inst, root)
     local parts = {}
     local i = inst
@@ -301,7 +293,7 @@ local function v3list(v)
     return { v.X, v.Y, v.Z }
 end
 
--- Parse the editable source. Returns `authored` (markers as plain numbers, pivot space),
+-- Parse the editable source. Returns `authored` (markers as plain numbers, world space),
 -- the bake instances, and any errors/warnings about the source itself.
 function C.parse(bytes, name)
     local errors, warnings = {}, {}
@@ -356,11 +348,8 @@ function C.parse(bytes, name)
         return nil, nil, errors, warnings
     end
 
-    local pivot = root.ClassName == "Model" and root.WorldPivotData or nil
-    pivot = pivot or CFrame.new()
-    local inv = pivot:Inverse()
     local function rel(cf)
-        return inv * cf
+        return cf
     end
 
     local authoring = root:FindFirstChild("Authoring")
@@ -599,8 +588,8 @@ function C.parse(bytes, name)
         local up, right = cf.UpVector, cf.RightVector
         if math.abs(up.Y) < 0.999 or (math.abs(right.X) < 0.999 and math.abs(right.Z) < 0.999) then
             err(
-                "the Map Boundary is rotated. It must line up with the map: set its Orientation to 0, 0, 0 "
-                    .. "(turning the whole map model is fine)."
+                "the Map Boundary is rotated. It must line up with the world axes: set its Orientation to "
+                    .. "0, 0, 0. If you turned the whole map model, turn it back (Ctrl+Z)."
             )
         else
             local sx, sz = box.Size.X, box.Size.Z
@@ -637,16 +626,19 @@ function C.parse(bytes, name)
             child:Clone().Parent = bake
         end
     end
-    local transform = not isIdentity(pivot)
     local parts = 0
     for _, inst in bake:GetDescendants() do
         if inst:IsA("BasePart") then
             parts += 1
-            if transform then
-                inst.CFrame = rel(inst.CFrame)
-            end
-        elseif inst:IsA("Model") and transform and inst.WorldPivotData then
-            inst.WorldPivotData = rel(inst.WorldPivotData)
+        end
+        -- Creator Store models often carry scripts, and a script in the bake would run
+        -- on the live server. Props never need one.
+        if inst:IsA("LuaSourceContainer") then
+            err(
+                ("%s is a script inside a map piece. Scripts in map geometry would run in the game; "):format(
+                    pathOf(inst, bake)
+                ) .. "delete it (free models often bring them along)."
+            )
         end
         for _, pattern in LEGACY_GUIDE do
             if inst.Name:match(pattern) then
@@ -675,7 +667,6 @@ function C.parse(bytes, name)
         )
     end
     authored.PartCount = parts
-    authored.PivotMoved = transform
     return authored, bake, errors, warnings
 end
 
@@ -919,6 +910,17 @@ local function support(layout, solids, p)
     return false, "has nothing under it"
 end
 
+-- The terrain field fills everything below y = 0 across the map, so a point below it
+-- is inside solid ground.
+local function underTerrain(layout, p)
+    local t = layout.Terrain
+    if not t or t.Sea then
+        return false
+    end
+    local half = layout.Size * 2
+    return math.abs(p[1]) <= half and math.abs(p[3]) <= half and p[2] < -1
+end
+
 local function insideSolid(solids, p)
     for _, box in solids do
         if pointToBox(p, box) == 0 then
@@ -1024,6 +1026,16 @@ function C.validate(name, luaText, bakeRoots, authored, weapons)
 
     -- ---- gameplay placement ----
     local b = layout.Bounds
+    local cx, cz = (b.min[1] + b.max[1]) / 2, (b.min[3] + b.max[3]) / 2
+    if math.sqrt(cx * cx + cz * cz) > 50 then
+        warn(
+            ("the map's centre is at (%.0f, %.0f), %.0f studs from the world origin. Players spawn facing the origin "):format(
+                cx,
+                cz,
+                math.sqrt(cx * cx + cz * cz)
+            ) .. "and the terrain is centred on it. If you moved the whole map by accident, move it back."
+        )
+    end
     for _, o in authored.Objectives do
         if not inBounds(b, o.pos) then
             err(("%s is outside the Map Boundary. Move it inside, or enlarge the boundary."):format(o.Where))
@@ -1037,6 +1049,14 @@ function C.validate(name, luaText, bakeRoots, authored, weapons)
                     o.Where,
                     o.halfHeight
                 ) .. "Scale its height up."
+            )
+        end
+        if underTerrain(layout, o.pos) then
+            err(
+                ("%s is %.1f studs under the terrain surface (y = 0), where nobody can reach it. "):format(
+                    o.Where,
+                    -o.pos[2]
+                ) .. "If the whole map was moved down, move it back up."
             )
         end
         local ok, why = support(layout, solids, o.pos)
@@ -1078,6 +1098,14 @@ function C.validate(name, luaText, bakeRoots, authored, weapons)
         for i, s in list do
             if not inBounds(b, s.pos) then
                 err(("%s is outside the Map Boundary. Move the spawn inside, or enlarge the boundary."):format(s.Where))
+            end
+            if underTerrain(layout, s.pos) then
+                err(
+                    ("%s is %.1f studs under the terrain surface (y = 0); players would spawn inside it. "):format(
+                        s.Where,
+                        -s.pos[2]
+                    ) .. "If the whole map was moved down, move it back up."
+                )
             end
             local ok, why = support(layout, solids, s.pos)
             if not ok then

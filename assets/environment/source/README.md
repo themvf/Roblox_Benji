@@ -72,8 +72,13 @@ Use Studio's own tools (Move, Rotate, Scale, Ctrl+D to duplicate, Ctrl+Z to undo
   the boundary, or fall below it, are sent back to a spawn or objective. Set the
   **TeleportOnExit** attribute to false to make leaving it lethal instead, as it is on
   public maps.
-- **Move the whole map.** Moving or turning the entire `TestMap — EDITABLE` model is
-  harmless. The playable map is always built around the model's own pivot.
+- **Leave the whole map where it is.** Positions are world positions: the game builds the map
+  exactly where it sits in Studio, and players spawn facing the world's centre. Moving the
+  whole `TestMap — EDITABLE` model moves everything with it, so nothing breaks, but the
+  converter warns if the map drifts away from the centre and refuses it if it sinks under
+  the terrain. Turning the whole model is refused. Ctrl+Z it.
+- **Free models from the Toolbox** often contain scripts. The converter refuses a map with
+  a script inside a piece, because it would run in the game. Delete the script and convert again.
 
 What each kind of piece does in the game:
 
