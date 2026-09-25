@@ -14,6 +14,7 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - Build gates: `lune run tools/check_skins.luau`, `lune run tools/check_celebrations.luau`,
   `lune run tools/check_maps.luau`, `lune run tools/check_assets.luau`,
   `lune run tools/check_decor.luau`, `lune run tools/check_bake.luau`, `lune run tools/check_map_authoring.luau`,
+  `lune run tools/check_live_map.luau`,
   `lune run tools/build_weapons.luau` (regenerates weapon tools from `src/shared/Weapons`).
 - Lune scripts need datatypes imported from the roblox lib (`local Vector3 = roblox.Vector3` etc.).
 

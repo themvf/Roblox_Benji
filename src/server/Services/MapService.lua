@@ -13,6 +13,7 @@ local TweenService = game:GetService("TweenService")
 local InsertService = game:GetService("InsertService")
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
+local MapAuthoring = require(ReplicatedStorage.Shared.MapAuthoring)
 
 -- The startup map is Config.StartupMap, from Shared/Config.lua only -- TuningService
 -- clears any saved StartupMap attribute before this reads it, because one set in an old
@@ -813,7 +814,13 @@ end
 -- SafetyService's barrier is regenerated live rather than taken from the file. It is in
 -- the bake, because it is built into the Map folder, but it is the one thing here that is
 -- safety-critical and derived from Bounds -- it should follow the data, not a snapshot.
+-- Geometry for maps read live from Workspace in Studio (see readLiveMaps), by name.
+local LIVE_BAKES = {}
+
 local function bakedModel(name)
+    if LIVE_BAKES[name] then
+        return LIVE_BAKES[name]
+    end
     -- Presence decides, not a flag. A flag defaulting to false was migration scaffolding,
     -- and once SnowFortress had given up its geometry it became a trap: the toggle only
     -- ever lived at runtime, so a restart put it back to false, the map then had neither a
@@ -1529,6 +1536,15 @@ function MapService:PlaceCharacter(player, character)
         end
         local pos = point + Vector3.new(0, 3, 0)
         root.CFrame = CFrame.lookAt(pos, Vector3.new(0, pos.Y, 0))
+    elseif
+        self.ExploreMap
+        and self.CurrentMap == self.ExploreMap
+        and player:GetAttribute("Exploring") ~= false
+        and self:PickSpawn("Blue")
+    then
+        -- Studio with a map in Workspace: Play puts you on it, not in the lobby.
+        local pos = self:PickSpawn("Blue", character) + Vector3.new(0, 3, 0)
+        root.CFrame = CFrame.lookAt(pos, Vector3.new(0, pos.Y, 0))
     else
         local points = self.LobbySpawns
         if not points or #points == 0 then
@@ -1660,30 +1676,63 @@ function MapService:RunEvent(event, callbacks)
     return inside
 end
 
--- Rebuild the arena for a named map (module name under Shared/Maps). Safe between matches.
-function MapService:Load(name)
+-- The canonical name of a map, matched case-insensitively: a map read live from
+-- Workspace (Studio) or a module under Shared/Maps. Lobby and Validate are not maps.
+function MapService:FindMap(name)
+    if type(name) ~= "string" then
+        return nil
+    end
+    local lower = name:lower()
+    for live in self.LiveMaps or {} do
+        if live:lower() == lower then
+            return live
+        end
+    end
+    for _, m in ReplicatedStorage.Shared.Maps:GetChildren() do
+        if m:IsA("ModuleScript") and m.Name:lower() == lower and m.Name ~= "Lobby" and m.Name ~= "Validate" then
+            return m.Name
+        end
+    end
+    return nil
+end
+
+-- The layout table for a map. A live map beats the saved module of the same name, so
+-- Play always shows what is in the viewport.
+function MapService:GetLayout(name)
+    if self.LiveMaps and self.LiveMaps[name] then
+        return self.LiveMaps[name]
+    end
     local module = type(name) == "string" and ReplicatedStorage.Shared.Maps:FindFirstChild(name)
     if not module or not module:IsA("ModuleScript") then
-        warn("[MapService] unknown map " .. tostring(name))
-        return false
+        return nil, "unknown map " .. tostring(name)
     end
-    -- A map is data written by hand; a syntax error or a bad field in one should not take the
-    -- server down with it, so the caller can fall back to a map that works.
+    -- A map module could have a mistake in it; that should not take the server down, so
+    -- the caller can fall back to a map that works.
     local ok, layout = pcall(require, module)
     if not ok or type(layout) ~= "table" then
-        warn(("[MapService] %s failed to load: %s"):format(name, tostring(layout)))
+        return nil, ("%s failed to load: %s"):format(name, tostring(layout))
+    end
+    return layout
+end
+
+-- Rebuild the arena for a named map. Safe between matches.
+function MapService:Load(name)
+    local layout, why = self:GetLayout(name)
+    if not layout then
+        warn("[MapService] " .. tostring(why))
         return false
     end
-    local built, why = pcall(self.Build, self, layout)
+    local built, failure = pcall(self.Build, self, layout)
     if not built then
-        warn(("[MapService] %s failed to build: %s"):format(name, tostring(why)))
+        warn(("[MapService] %s failed to build: %s"):format(name, tostring(failure)))
         return false
     end
     self.CurrentMap = name
     if layout.Draft then
         -- The revision is the one tools/map.luau printed, so a designer can tell the build
         -- they just converted from an older one still synced.
-        local text = ("DRAFT %s · build %s"):format(name, tostring(layout.Revision))
+        local text = layout.Revision == "live" and ("DRAFT %s · live from Studio"):format(name)
+            or ("DRAFT %s · build %s"):format(name, tostring(layout.Revision))
         print("[MapAuthoring] " .. text)
         -- at server start nobody is here yet, and the toast would go nowhere
         if #Players:GetPlayers() > 0 then
@@ -1693,14 +1742,107 @@ function MapService:Load(name)
     return true
 end
 
--- An editable map source (assets/environment/source) left in Workspace while testing sits
--- exactly where the built map goes: a second floor to z-fight with, and glowing markers
--- over the real objectives. Play sessions are copies, so removing it loses no edits.
-local function removeEditableSources()
+local IGNORED_IN_WORKSPACE = { Baseplate = true, SpawnLocation = true, Map = true, Lobby = true }
+
+-- In a Studio play session, an editable map in Workspace IS the map: it is read here,
+-- with the same code the converter uses (Shared.MapAuthoring), and played as it stands.
+-- No Save to File, no command, no Rojo round trip -- Stop, edit, Play again.
+--
+-- The play session is a copy, so the model and anything left loose beside it are
+-- removed from it: loose pieces are not part of the map, and showing them would make
+-- the test lie about what the saved map will contain.
+--
+-- Outside Studio nothing is read; a stray source is just removed.
+function MapService:ReadLiveMaps()
+    self.LiveMaps, self.LiveProblems, self.LooseRemoved = {}, {}, {}
+    local sources = {}
     for _, inst in workspace:GetDescendants() do
-        if inst:GetAttribute("MapSource") ~= nil and inst.Parent then
-            print(("[MapAuthoring] hid editable map %q for this test"):format(inst.Name))
-            inst:Destroy()
+        if inst:GetAttribute("MapSource") ~= nil then
+            table.insert(sources, inst)
+        end
+    end
+    if #sources == 0 then
+        return
+    end
+    if not RunService:IsStudio() then
+        for _, root in sources do
+            root:Destroy()
+        end
+        return
+    end
+    for _, root in sources do
+        if not root.Parent then
+            continue
+        end
+        local name = tostring(root:GetAttribute("MapSource"))
+        -- sky and terrain from the last conversion, if there was one; defaults otherwise
+        local presentation = MapAuthoring.defaultPresentation()
+        local saved = self:GetLayout(name)
+        if saved and saved.Authored then
+            for _, key in { "Terrain", "Palette", "Environment", "Seed" } do
+                presentation[key] = saved[key]
+            end
+        end
+        local layout, bake, errors, warnings = MapAuthoring.read(root, name, {
+            Instance = Instance,
+            Validate = Validate,
+            presentation = presentation,
+            revision = "live",
+        })
+        root:Destroy()
+        for _, w in warnings do
+            warn("[MapAuthoring] " .. w)
+        end
+        if #errors > 0 then
+            warn(("[MapAuthoring] %s can't be played yet -- fix these and press Play again:"):format(name))
+            for _, e in errors do
+                warn("    " .. e)
+            end
+            self.LiveProblems[name] = errors
+        else
+            print(("[MapAuthoring] playing %s straight from Workspace"):format(name))
+            self.LiveMaps[name] = layout
+            LIVE_BAKES[name] = bake
+        end
+    end
+    for _, child in workspace:GetChildren() do
+        local keep = IGNORED_IN_WORKSPACE[child.Name]
+            or child:IsA("Camera")
+            or child:IsA("Terrain")
+            or child:IsA("LuaSourceContainer")
+            or Players:GetPlayerFromCharacter(child) ~= nil
+        if not keep then
+            table.insert(self.LooseRemoved, child.Name)
+            child:Destroy()
+        end
+    end
+    if #self.LooseRemoved > 0 then
+        warn(
+            ("[MapAuthoring] %d thing(s) were loose in Workspace, not inside the map, so they are not part of it "):format(
+                #self.LooseRemoved
+            )
+                .. "and were left out of this test: "
+                .. table.concat(self.LooseRemoved, ", ")
+                .. ". Drag them into the map's Geometry folder to include them."
+        )
+    end
+end
+
+-- What a designer needs to hear on joining a Studio test with a map in Workspace.
+function MapService:LiveNotice(player)
+    local notice = Knit.GetService("SafetyService").Client.Notice
+    for name, errors in self.LiveProblems or {} do
+        notice:Fire(player, ("%s has %d problem(s) -- see the Output window"):format(name, #errors))
+    end
+    if self.ExploreMap then
+        notice:Fire(
+            player,
+            ("Playing %s from Studio. /lobby for the lobby; the PRACTICE pad plays a match here"):format(
+                self.ExploreMap
+            )
+        )
+        if #(self.LooseRemoved or {}) > 0 then
+            notice:Fire(player, ("%d loose piece(s) left out -- see Output"):format(#self.LooseRemoved))
         end
     end
 end
@@ -1710,10 +1852,18 @@ function MapService:KnitInit()
     -- come from it, and Knit does not order KnitInit between services.
     Knit.GetService("TuningService"):EnsureSetup()
 
-    removeEditableSources()
-    if not self:Load(Config.StartupMap) then
+    self:ReadLiveMaps()
+    local live = {}
+    for name in self.LiveMaps do
+        table.insert(live, name)
+    end
+    table.sort(live)
+    local startup = live[1] or Config.StartupMap
+    if not self:Load(startup) then
         warn("[MapService] falling back to " .. FALLBACK_MAP)
         self:Load(FALLBACK_MAP)
+    elseif live[1] then
+        self.ExploreMap = startup
     end
     buildLobby(self, require(ReplicatedStorage.Shared.Maps.Lobby))
 
@@ -1725,6 +1875,13 @@ function MapService:KnitInit()
         end)
         if player.Character then
             task.defer(self.PlaceCharacter, self, player, player.Character)
+        end
+        if self.ExploreMap or next(self.LiveProblems) then
+            task.delay(3, function()
+                if player.Parent then
+                    self:LiveNotice(player)
+                end
+            end)
         end
     end
     Players.PlayerAdded:Connect(watch)

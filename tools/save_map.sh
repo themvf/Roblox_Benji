@@ -22,7 +22,7 @@ case "${1:-}" in
     --all)
         FAILED=0
         for gate in check_maps check_bake check_fortress_layout check_decor check_convergence_entry \
-            check_finale_plan check_map_authoring; do
+            check_finale_plan check_map_authoring check_live_map; do
             printf '  %-24s ' "$gate"
             if out=$(lune run "tools/$gate.luau" 2>&1); then
                 echo "OK"

@@ -25,6 +25,9 @@ for _, loadSucceeds in { true, false } do
         MapVoteService = { Begin = noop },
         MapService = {
             Objectives = {}, -- stops after entry preflight without simulating combat
+            GetLayout = function()
+                return { Objectives = {} }
+            end,
             Load = function(_, name)
                 loaded = name
                 return loadSucceeds

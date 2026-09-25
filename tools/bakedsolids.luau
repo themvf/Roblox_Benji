@@ -9,6 +9,7 @@
 -- player, and this map is full of them: greybox blocks hidden behind facade meshes.
 local fs = require("@lune/fs")
 local roblox = require("@lune/roblox")
+local MapAuthoring = require("../src/shared/MapAuthoring")
 
 local M = {}
 
@@ -36,51 +37,7 @@ end
 -- The same, for instances already in memory: the map converter checks its candidate
 -- bake before it is written anywhere, so it cannot go through a path on disk.
 function M.fromRoots(roots, Validate)
-    local solids, parts = {}, {}
-    for _, root in roots do
-        local function walk(inst)
-            if inst:IsA("BasePart") then
-                local okCf, cf = pcall(function()
-                    return inst.CFrame
-                end)
-                local okSize, size = pcall(function()
-                    return inst.Size
-                end)
-                local okCollide, collide = pcall(function()
-                    return inst.CanCollide
-                end)
-                if okCf and okSize then
-                    local x, y, z, a, b, c, d, e, f, g, h, k = cf:GetComponents()
-                    local pos = { x, y, z }
-                    local dim = { size.X, size.Y, size.Z }
-                    -- Axis-aligned within a hair. Gates that test a point against a
-                    -- box with an abs() per axis are only correct for unrotated parts,
-                    -- which is why the layout versions skipped anything with a `rot`.
-                    local square = math.abs(math.abs(a) - 1) < 1e-4
-                        and math.abs(math.abs(e) - 1) < 1e-4
-                        and math.abs(math.abs(k) - 1) < 1e-4
-                    table.insert(parts, {
-                        name = inst.Name,
-                        pos = pos,
-                        size = dim,
-                        collide = okCollide and collide or false,
-                        axisAligned = square,
-                    })
-                    if okCollide and collide then
-                        table.insert(
-                            solids,
-                            Validate.boxFrom(inst.Name, pos, dim, { { a, b, c }, { d, e, f }, { g, h, k } })
-                        )
-                    end
-                end
-            end
-            for _, child in inst:GetChildren() do
-                walk(child)
-            end
-        end
-        walk(root)
-    end
-    return solids, parts
+    return MapAuthoring.solids(roots, Validate)
 end
 
 return M

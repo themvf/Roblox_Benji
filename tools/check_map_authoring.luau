@@ -192,6 +192,20 @@ do
     check("A05", "the piece is in the playable bake", parts > 1 and bake:FindFirstChild("Geometry"):FindFirstChild("SniperOutpost") ~= nil)
 end
 
+-- free models bring scripts along; none may reach the bake
+edit("TestMap", function(root)
+    local script = roblox.Instance.new("Script")
+    script.Name = "Spreader"
+    script.Parent = find(root, "Geometry/SniperOutpost")
+end)
+ok, out = run({ "convert", "TestMap" })
+check("A05", "a script inside a map piece is refused and named", not ok and out:find("Spreader") ~= nil, out)
+edit("TestMap", function(root)
+    find(root, "Geometry/SniperOutpost/Spreader").Parent = nil
+end)
+ok, out = run({ "convert", "TestMap" })
+check("A05", "without the script it converts again", ok, out)
+
 -- ===== A13: no helpers in the bake; conversion repeatable =====
 do
     local bake = roblox.deserializeModel(fs.readFile(P("TestMap").bake))[1]
@@ -291,28 +305,73 @@ check("A09", "next conversion succeeds", ok, out)
 -- ===== A07: whole-map transforms and boundary edits =====
 before = outputs("TestMap")
 local L0 = layoutOf("TestMap")
+local function allMarkers(L, fn)
+    local ok = true
+    for i, o in L.Objectives do
+        ok = ok and fn(o.pos, L0.Objectives[i].pos) and math.abs(o.radius - L0.Objectives[i].radius) < 0.01
+    end
+    for _, team in { "Blue", "Red" } do
+        for i, s in L.Spawns[team] do
+            ok = ok and fn(s, L0.Spawns[team][i])
+        end
+    end
+    return ok and fn(L.Bounds.min, L0.Bounds.min) and fn(L.Bounds.max, L0.Bounds.max)
+end
+-- What Studio does on Insert from File: re-centres the model's pivot on its bounding box.
+-- This once sank a real map 36.5 studs under the terrain; the pivot must not matter.
 edit("TestMap", function(root)
-    local turn = CFrame.new(500, 20, -300) * CFrame.Angles(0, math.rad(30), 0)
+    root.WorldPivotData = CFrame.new(0, 36.5, 0)
+end)
+ok, out = run({ "convert", "TestMap" })
+L = layoutOf("TestMap")
+check("A07", "Studio re-centring the model's pivot changes nothing", ok and allMarkers(L, near), out)
+check("A07", "... including the geometry", read(P("TestMap").bake) == before.bake)
+edit("TestMap", function(root)
+    for _, d in root:GetDescendants() do
+        if d:IsA("BasePart") then
+            d.CFrame = d.CFrame + Vector3.new(80, 0, 0)
+        end
+    end
+end)
+ok, out = run({ "convert", "TestMap" })
+L = layoutOf("TestMap")
+check(
+    "A07",
+    "moving the whole map moves every anchor by the same amount",
+    ok and allMarkers(L, function(a, b)
+        return near(a, { b[1] + 80, b[2], b[3] })
+    end),
+    out
+)
+edit("TestMap", function(root)
+    for _, d in root:GetDescendants() do
+        if d:IsA("BasePart") then
+            d.CFrame = d.CFrame + Vector3.new(-80, -20, 0)
+        end
+    end
+end)
+ok, out = run({ "convert", "TestMap" })
+check("A07", "a map sunk under the terrain is refused", not ok and out:find("under the terrain") ~= nil, out)
+edit("TestMap", function(root)
+    local turn = CFrame.new(0, 20, 0) * CFrame.Angles(0, math.rad(30), 0)
     for _, d in root:GetDescendants() do
         if d:IsA("BasePart") then
             d.CFrame = turn * d.CFrame
         end
     end
-    root.WorldPivotData = turn * root.WorldPivotData
 end)
 ok, out = run({ "convert", "TestMap" })
-L = layoutOf("TestMap")
-local same = ok
-for i, o in L.Objectives do
-    same = same and near(o.pos, L0.Objectives[i].pos) and math.abs(o.radius - L0.Objectives[i].radius) < 0.01
-end
-for _, team in { "Blue", "Red" } do
-    for i, s in L.Spawns[team] do
-        same = same and near(s, L0.Spawns[team][i])
+check("A07", "turning the whole map is refused with a fix", not ok and out:find("Map Boundary is rotated") ~= nil, out)
+edit("TestMap", function(root)
+    local back = CFrame.Angles(0, math.rad(-30), 0) * CFrame.new(0, -20, 0)
+    for _, d in root:GetDescendants() do
+        if d:IsA("BasePart") then
+            d.CFrame = CFrame.new(0, 20, 0) * back * d.CFrame
+        end
     end
-end
-same = same and near(L.Bounds.min, L0.Bounds.min) and near(L.Bounds.max, L0.Bounds.max)
-check("A07", "moving and turning the whole map keeps every anchor consistent", same, out)
+end)
+ok, out = run({ "convert", "TestMap" })
+check("A07", "turned back, it converts to the original positions", ok and allMarkers(layoutOf("TestMap"), near), out)
 edit("TestMap", function(root)
     local b = find(root, "Authoring/Bounds")
     b.Size = b.Size + Vector3.new(20, 0, 0)
@@ -451,6 +510,56 @@ do
     )
     check("A16", "--commit leaves unrelated staged work staged and uncommitted", files:find("unrelated") == nil and staged:find("unrelated.txt", 1, true) ~= nil, files .. staged)
     check("A16", "--commit does not push", out:find("not pushed") ~= nil, out)
+end
+
+-- ===== LIVE: Play in Studio reads the map with the same code as the converter =====
+do
+    local MapAuthoring = require("../src/shared/MapAuthoring")
+    local Validate = require("../src/shared/Maps/Validate")
+    -- the default presentation the game uses equals the file the converter writes
+    local fromText = C.loadLua(C.PRESENTATION_DEFAULT, "default")
+    check(
+        "LIVE",
+        "live default sky/terrain equals the converter's default file",
+        C.emit(fromText, 0) == C.emit(MapAuthoring.defaultPresentation(), 0)
+    )
+    -- the model as it sits in Workspace, read the way MapService reads it at Play
+    local root = roblox.deserializeModel(fs.readFile(P("TestMap").source))[1]
+    local presentation = C.loadLua(fs.readFile(P("TestMap").presentation), "p")
+    local layout, bake, errors = MapAuthoring.read(root, "TestMap", {
+        Instance = roblox.Instance,
+        Validate = Validate,
+        presentation = presentation,
+        revision = "live",
+    })
+    local saved = layoutOf("TestMap")
+    local same = layout ~= nil and #errors == 0
+    if same then
+        for i, o in layout.Objectives do
+            same = same and near(o.pos, saved.Objectives[i].pos) and o.radius == saved.Objectives[i].radius
+        end
+        for _, team in { "Blue", "Red" } do
+            for i, s in layout.Spawns[team] do
+                same = same and near(s, saved.Spawns[team][i])
+            end
+        end
+        same = same and near(layout.Bounds.min, saved.Bounds.min) and #layout.Barrier == #saved.Barrier
+    end
+    check("LIVE", "Play-time reading gives the same objectives, spawns and bounds as a conversion", same, table.concat(errors or {}, "\n"))
+    check("LIVE", "live geometry carries no markers", bake and bake:FindFirstChild("Authoring") == nil)
+    check("LIVE", "the Workspace model itself is left alone by reading", root:FindFirstChild("Authoring") ~= nil)
+    find(root, "Authoring/Objectives/C").Parent = nil
+    local broken, _, liveErrors = MapAuthoring.read(root, "TestMap", {
+        Instance = roblox.Instance,
+        Validate = Validate,
+        revision = "live",
+    })
+    check(
+        "LIVE",
+        "a broken map in Workspace gives the same plain-language problem at Play",
+        broken == nil and table.concat(liveErrors, "\n"):find("exactly 3 objectives") ~= nil,
+        table.concat(liveErrors, "\n")
+    )
 end
 
 if failed == 0 then

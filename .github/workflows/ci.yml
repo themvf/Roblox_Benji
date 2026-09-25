@@ -98,6 +98,11 @@ jobs:
       - name: Map authoring loop
         run: lune run tools/check_map_authoring.luau
 
+      # Play in Studio with a map in Workspace plays that map: the real MapService code
+      # against a stand-in Workspace.
+      - name: Live map in Studio
+        run: lune run tools/check_live_map.luau
+
       # Studio-authored decor is not reviewed, by design. Collidable decor still has to
       # clear the zip lines and launch arcs, which a designer cannot see from the viewport.
       - name: Validate authored decor
