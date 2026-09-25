@@ -388,7 +388,7 @@ function ConvergenceService:StartMatch(players, teamSize, mapName, solo)
         local ok, failure = xpcall(function()
             -- QueueService already completed the vote and passed its chosen map.
             -- MapVoteService no longer has the old blocking Pick API.
-            local layout = require(ReplicatedStorage.Shared.Maps[mapName])
+            local layout = MapService:GetLayout(mapName) or {}
             local plan, planError = FinalePlan.create(mapName, layout.Objectives or {}, layout.Finale)
             if planError then
                 warn("[Convergence] finale preflight failed for " .. mapName .. ": " .. planError)

@@ -23,6 +23,7 @@ end
 
 function RoundService:SendToLobby(player)
     player:SetAttribute("InMatch", nil)
+    player:SetAttribute("Exploring", false)
     player:SetAttribute("Team", "Lobby")
     if player.Parent then
         player:LoadCharacter()
@@ -239,14 +240,9 @@ function RoundService:KnitStart()
             if name then
                 local tuning = ReplicatedStorage:FindFirstChild("Tuning")
                 local lower = name:lower()
-                -- match the real module name case-insensitively: title-casing breaks SnowFortress
-                local found
-                for _, m in ReplicatedStorage.Shared.Maps:GetChildren() do
-                    if m.Name:lower() == lower then
-                        found = m.Name
-                        break
-                    end
-                end
+                -- the real name, case-insensitively (title-casing breaks SnowFortress);
+                -- includes a map being played live from Studio
+                local found = Knit.GetService("MapService"):FindMap(name)
                 if tuning and (lower == "off" or lower == "none") then
                     tuning:SetAttribute("Debug_ForceMap", "")
                     Knit.GetService("SafetyService").Client.Notice:Fire(player, "Map override off: normal rotation")
@@ -276,15 +272,9 @@ function RoundService:KnitStart()
                 notice:Fire(player, "A match is running; /explore works from the lobby between matches")
                 return
             end
-            local found
-            for _, m in ReplicatedStorage.Shared.Maps:GetChildren() do
-                if m.Name:lower() == name:lower() then
-                    found = m.Name
-                    break
-                end
-            end
             local MapService = Knit.GetService("MapService")
-            if not found or found == "Lobby" or found == "Validate" then
+            local found = MapService:FindMap(name)
+            if not found then
                 notice:Fire(player, "Unknown map: " .. name)
                 return
             end
@@ -292,6 +282,7 @@ function RoundService:KnitStart()
                 notice:Fire(player, "Could not build " .. found .. "; see Output")
                 return
             end
+            player:SetAttribute("Exploring", true)
             local point = MapService:PickSpawn("Blue") or MapService:PickSpawn("Red")
             local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
             if point and root then
@@ -299,6 +290,13 @@ function RoundService:KnitStart()
                 root.CFrame = CFrame.lookAt(pos, Vector3.new(0, pos.Y, 0))
             end
             notice:Fire(player, "Exploring " .. found .. " -- reset or die to return to the lobby")
+        end)
+        -- /lobby: leave a map you are exploring (Studio puts you on a live map at Play)
+        player.Chatted:Connect(function(msg)
+            if msg:lower():match("^/lobby") and not player:GetAttribute("InMatch") then
+                player:SetAttribute("Exploring", false)
+                player:LoadCharacter()
+            end
         end)
         -- Lobby preview: type /celebrate to run your default celebration solo on the podium
         player.Chatted:Connect(function(msg)

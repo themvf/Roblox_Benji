@@ -38,13 +38,17 @@ end
 -- played the Carrier in a dev session. That switch now means "testing aids" and nothing else --
 -- with it still forcing a map, the vote would never appear in the default Studio config. Use
 -- /map carrier (Debug_ForceMap) when you want to pin the map.
+--
+-- In Studio with a map in Workspace (MapService.ExploreMap), that map is the default: the
+-- designer is testing it, and a vote between other maps would get in the way.
 local function forcedMap()
     local t = tuning()
     local forced = t and t:GetAttribute("Debug_ForceMap")
-    if type(forced) == "string" and forced ~= "" and ReplicatedStorage.Shared.Maps:FindFirstChild(forced) then
-        return forced
+    local MapService = Knit.GetService("MapService")
+    if type(forced) == "string" and forced ~= "" then
+        return MapService:FindMap(forced)
     end
-    return nil
+    return MapService.ExploreMap
 end
 
 local function pool(kind)

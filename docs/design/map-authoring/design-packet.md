@@ -83,6 +83,23 @@ for Snow Fortress.
 | Barrier segments are generated only where ground lies within 6 studs of the boundary edge. Otherwise the converter warns. | A barrier in open air protects nothing, and Validate rejects one. The boundary still recovers players there. |
 | Recovery: `RecoveryY` = the bottom of the boundary. `SafePoints` = the spawn pad nearest each team's middle, plus each objective. `SafetyAlwaysOn` = the boundary's `TeleportOnExit` attribute (default true). | Derived from authored data. No Snow Fortress coordinates are copied. |
 
+### 2026-09-25: live play in Studio
+
+The first real session showed the file loop was too heavy for day-to-day building. It
+took seven steps per change: Insert from File, keep pieces in Geometry, Save to File, a
+terminal command, Rojo, Stop/Play and a chat command. The designer said so directly.
+
+| Decision | Reason |
+| --- | --- |
+| In a Studio play session, MapService reads an editable map in Workspace **live** and starts on it. The player spawns on it, and the PRACTICE pad plays it. | Build → Play → Stop is the whole loop. Files are only for storing a map in the project. |
+| One marker reader, `src/shared/MapAuthoring.lua`, is used by both MapService (live) and the converter (Lune). | The spec forbids a second interpretation path. `check_map_authoring` asserts that the live read and a conversion produce the same data. |
+| Pieces loose in Workspace are left out of the live test and named in Output. | The test must show what the stored map will contain. A loose piece was the designer's first mistake. |
+| A live map beats the saved module of the same name, and keeps its stored sky and terrain. | Play shows the viewport, not an older save. |
+| Outside Studio, an editable map in Workspace is removed and never played. | Live reading is a development path only. |
+
+Evidence: `tools/check_live_map.luau` runs the real MapService source against a stand-in
+Workspace (12 checks). A Studio session is still pending.
+
 ## 7. Acceptance and evidence
 
 Scripted: `lune run tools/check_map_authoring.luau` runs 60 checks in a throwaway tree.

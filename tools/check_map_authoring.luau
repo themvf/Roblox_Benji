@@ -512,6 +512,56 @@ do
     check("A16", "--commit does not push", out:find("not pushed") ~= nil, out)
 end
 
+-- ===== LIVE: Play in Studio reads the map with the same code as the converter =====
+do
+    local MapAuthoring = require("../src/shared/MapAuthoring")
+    local Validate = require("../src/shared/Maps/Validate")
+    -- the default presentation the game uses equals the file the converter writes
+    local fromText = C.loadLua(C.PRESENTATION_DEFAULT, "default")
+    check(
+        "LIVE",
+        "live default sky/terrain equals the converter's default file",
+        C.emit(fromText, 0) == C.emit(MapAuthoring.defaultPresentation(), 0)
+    )
+    -- the model as it sits in Workspace, read the way MapService reads it at Play
+    local root = roblox.deserializeModel(fs.readFile(P("TestMap").source))[1]
+    local presentation = C.loadLua(fs.readFile(P("TestMap").presentation), "p")
+    local layout, bake, errors = MapAuthoring.read(root, "TestMap", {
+        Instance = roblox.Instance,
+        Validate = Validate,
+        presentation = presentation,
+        revision = "live",
+    })
+    local saved = layoutOf("TestMap")
+    local same = layout ~= nil and #errors == 0
+    if same then
+        for i, o in layout.Objectives do
+            same = same and near(o.pos, saved.Objectives[i].pos) and o.radius == saved.Objectives[i].radius
+        end
+        for _, team in { "Blue", "Red" } do
+            for i, s in layout.Spawns[team] do
+                same = same and near(s, saved.Spawns[team][i])
+            end
+        end
+        same = same and near(layout.Bounds.min, saved.Bounds.min) and #layout.Barrier == #saved.Barrier
+    end
+    check("LIVE", "Play-time reading gives the same objectives, spawns and bounds as a conversion", same, table.concat(errors or {}, "\n"))
+    check("LIVE", "live geometry carries no markers", bake and bake:FindFirstChild("Authoring") == nil)
+    check("LIVE", "the Workspace model itself is left alone by reading", root:FindFirstChild("Authoring") ~= nil)
+    find(root, "Authoring/Objectives/C").Parent = nil
+    local broken, _, liveErrors = MapAuthoring.read(root, "TestMap", {
+        Instance = roblox.Instance,
+        Validate = Validate,
+        revision = "live",
+    })
+    check(
+        "LIVE",
+        "a broken map in Workspace gives the same plain-language problem at Play",
+        broken == nil and table.concat(liveErrors, "\n"):find("exactly 3 objectives") ~= nil,
+        table.concat(liveErrors, "\n")
+    )
+end
+
 if failed == 0 then
     fs.removeDir(ROOT)
 end
