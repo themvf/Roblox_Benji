@@ -7,6 +7,7 @@ local Debris = game:GetService("Debris")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Palette = require(ReplicatedStorage.Shared.Palette)
 local Celebrations = require(ReplicatedStorage.Shared.Celebrations)
+local Movement = require(ReplicatedStorage.Shared.Movement)
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
 local CelebrationService = Knit.CreateService({
@@ -353,7 +354,7 @@ function CelebrationService:Run(winners, losers)
     for _, p in participants do
         local hum = p.Character and p.Character:FindFirstChildOfClass("Humanoid")
         if hum then
-            hum.WalkSpeed = 0
+            Movement.setModifier(p.Character, "Celebration", 0, true)
             hum.JumpPower = 0
         end
         self.Client.Start:Fire(p, sequence)
@@ -401,7 +402,7 @@ function CelebrationService:Run(winners, losers)
         self.Client.End:Fire(p)
         local hum = p.Character and p.Character:FindFirstChildOfClass("Humanoid")
         if hum then
-            hum.WalkSpeed = 16
+            Movement.setModifier(p.Character, "Celebration", nil, true)
             hum.JumpPower = 50
         end
     end

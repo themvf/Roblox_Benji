@@ -14,7 +14,7 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - Build gates: `lune run tools/check_skins.luau`, `lune run tools/check_celebrations.luau`,
   `lune run tools/check_maps.luau`, `lune run tools/check_assets.luau`,
   `lune run tools/check_decor.luau`, `lune run tools/check_bake.luau`, `lune run tools/check_map_authoring.luau`,
-  `lune run tools/check_live_map.luau`,
+  `lune run tools/check_live_map.luau`, `lune run tools/check_movement.luau`,
   `lune run tools/build_weapons.luau` (regenerates weapon tools from `src/shared/Weapons`).
 - Lune scripts need datatypes imported from the roblox lib (`local Vector3 = roblox.Vector3` etc.).
 
@@ -72,6 +72,9 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - Celebrations cap at 8 s, never target an opponent, need a flashing rating.
 - Objective mode logic is generic; maps supply Objectives/Events/Pickups data. Never hard-code a map in a service.
 - Every tunable number lives in `Config` and is exposed as a Tuning attribute so it can be changed in Studio.
+- Nothing writes `Humanoid.WalkSpeed` but `Shared/Movement` and `MovementController` (check_movement fails
+  otherwise). A speed effect is `Movement.setModifier(character, source, multiplier | nil)`, so effects combine
+  in any order. The Weapons Kit's own sprint/aim-slow are switched off in `tools/build_weapons.luau`.
 
 ## UI and screens
 Layout goes through `src/client/UI/Screen.lua`: safe-area insets, device class, a UIScale per panel, 44pt

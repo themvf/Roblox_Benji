@@ -146,6 +146,8 @@ local function makeRig(bot)
     local hum = model:FindFirstChildOfClass("Humanoid")
     hum.DisplayName = bot.Name
     hum.WalkSpeed = bot.Level.Speed
+    -- speed effects (Shared/Movement) multiply this base for bots
+    model:SetAttribute("BaseWalkSpeed", bot.Level.Speed)
     hum.AutoRotate = true
     hum.BreakJointsOnDeath = false
     for _, d in model:GetDescendants() do

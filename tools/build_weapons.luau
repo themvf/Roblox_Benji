@@ -122,6 +122,15 @@ do
     local after = "self.weaponsSystem.doDamage(hitInfo.h, damage, nil, self.player, hitInfo, self.instance)"
     assert(src:find(before, 1, true), "BulletWeapon doDamage call not found; kit changed?")
     bullet.Source = src:gsub(before:gsub("%p", "%%%0"), after)
+    -- Patch: the kit's camera springs WalkSpeed toward its own sprint/aim speed every frame
+    -- while a gun is out, overwriting every other speed effect (Brace, pickups). Movement
+    -- is ours now (Shared/Movement + MovementController, same 16/24/8 numbers), so switch
+    -- the kit's sprint and aim-slow off.
+    for _, flag in { "SprintEnabled", "SlowZoomWalkEnabled" } do
+        local value = system.Configuration:FindFirstChild(flag)
+        assert(value, flag .. " not found in the kit's Configuration; kit changed?")
+        value.Value = false
+    end
     fs.writeFile("assets/WeaponsSystem.rbxm", roblox.serializeModel({ system }))
     print("wrote assets/WeaponsSystem.rbxm")
 end

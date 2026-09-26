@@ -12,6 +12,7 @@ local Debris = game:GetService("Debris")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local MeshDressing = require(ReplicatedStorage.Shared.MeshDressing)
+local Movement = require(ReplicatedStorage.Shared.Movement)
 
 local PickupService = Knit.CreateService({
     Name = "PickupService",
@@ -306,9 +307,9 @@ function PickupService:GiveSpeed(player, mult, duration)
     if character:GetAttribute("SpeedBoost") then
         return -- no stacking
     end
-    local base = hum.WalkSpeed
     character:SetAttribute("SpeedBoost", true)
-    hum.WalkSpeed = base * mult
+    -- a speed effect, not a WalkSpeed write, so it combines with Brace and sprint
+    Movement.setModifier(character, "Pickup", mult, true)
     -- trail so the boost is visible to others
     local root = character:FindFirstChild("HumanoidRootPart")
     local trail
@@ -328,10 +329,8 @@ function PickupService:GiveSpeed(player, mult, duration)
         trail.Parent = root
     end
     task.delay(duration, function()
-        if hum.Parent then
-            hum.WalkSpeed = base
-        end
         if character.Parent then
+            Movement.setModifier(character, "Pickup", nil, true)
             character:SetAttribute("SpeedBoost", nil)
         end
         if trail then

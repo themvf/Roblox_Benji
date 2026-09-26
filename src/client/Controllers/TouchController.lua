@@ -1,6 +1,7 @@
 -- Touch HUD for phones and tablets. Draws big on-screen buttons for everything the desktop
--- build binds to keys: Mutate (Q), Ground Slam / Brace / Charge (E/F/C), hold-to-fly for the
--- jetpack, a scoreboard toggle (Tab) and the celebration skip vote (V). Guns already get a fire
+-- build binds to keys: Mutate (Q), Ground Slam / Brace / Charge (E/F/C), crouch and slide
+-- (Ctrl/C), hold-to-fly for the jetpack, a scoreboard toggle (Tab) and the celebration skip
+-- vote (V). Sprint needs no button: touch players sprint whenever they move, as in Rivals. Guns already get a fire
 -- button and drag-to-aim from the Weapons Kit, and movement/jump come from Roblox's own touch
 -- controls, so those are not duplicated here. Only rendering and input: every action goes
 -- through the same controller methods the keyboard uses, so the server sees identical requests.
@@ -178,6 +179,14 @@ function TouchController:BuildGui()
         self.Abilities[name] = b
     end
 
+    -- CROUCH / SLIDE: one button, as in Rivals. Tap to crouch (tap again to stand); while
+    -- running it becomes SLIDE. Next to MUTATE, the other most-reached-for button.
+    self.Crouch = makeButton(column, "CROUCH", READY)
+    self.Crouch.Button.LayoutOrder = 80
+    self.Crouch.Button.Activated:Connect(function()
+        Knit.GetController("MovementController"):TouchCrouch()
+    end)
+
     -- MUTATE: the most-used button, so it sits closest to the resting thumb
     self.Mutate = makeButton(column, "TITAN", READY)
     self.Mutate.Button.LayoutOrder = 90
@@ -249,6 +258,32 @@ function TouchController:Update()
         self.Fly.Fill.Size = UDim2.fromScale(1, frac)
         self.Fly.Sub.Text = ("HOLD %d%%"):format(100 * frac)
         self.Fly.Ring.Transparency = jet.Fuel > 0 and 0.2 or 0.8
+    end
+
+    -- CROUCH / SLIDE: whenever the player can crouch, lobby included (maps are walked there)
+    local movement = Knit.GetController("MovementController")
+    local character = me.Character
+    local hum = character and character:FindFirstChildOfClass("Humanoid")
+    local canCrouch = hum ~= nil and hum.Health > 0 and me:GetAttribute("Mutated") == nil
+    self.Crouch.Button.Visible = canCrouch
+    if canCrouch then
+        local stance = movement.Stance
+        local cooldown = math.max(0, movement.SlideReadyAt - os.clock())
+        local sliding = stance == "Sprint" or stance == "Slide"
+        self.Crouch.Label.Text = sliding and "SLIDE" or "CROUCH"
+        if stance == "Slide" then
+            self.Crouch.Sub.Text = "SLIDING"
+        elseif sliding and cooldown > 0 then
+            self.Crouch.Sub.Text = ("%.1fs"):format(cooldown)
+        elseif stance == "Crouch" then
+            self.Crouch.Sub.Text = "ON"
+        else
+            self.Crouch.Sub.Text = "tap"
+        end
+        local ready = not (sliding and cooldown > 0)
+        self.Crouch.Label.TextColor3 = ready and TEXT or MUTED
+        self.Crouch.Ring.Transparency = (stance == "Crouch" or stance == "Slide") and 0 or (ready and 0.2 or 0.7)
+        self.Crouch.Fill.Size = UDim2.fromScale(1, (stance == "Crouch" or stance == "Slide") and 1 or 0)
     end
 
     if not inMatch then
