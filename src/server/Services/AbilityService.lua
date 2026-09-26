@@ -8,6 +8,7 @@ local Debris = game:GetService("Debris")
 local TweenService = game:GetService("TweenService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local AlterEgos = require(ReplicatedStorage.Shared.AlterEgos)
+local Movement = require(ReplicatedStorage.Shared.Movement)
 
 local AbilityService = Knit.CreateService({
     Name = "AbilityService",
@@ -20,7 +21,7 @@ local AbilityService = Knit.CreateService({
 })
 
 local cooldowns = {} -- [player] = { [ability] = endsAt (os.clock) }
-local braces = {} -- [player] = { Until, BaseSpeed }
+local braces = {} -- [player] = { Until }
 local charges = {} -- [player] = { Until, Hit = {} }
 local telemetry = {} -- [player] = { Uses = {}, Hits = {} }
 
@@ -127,19 +128,23 @@ local function groundSlam(player, ego, def)
     return hits
 end
 
+-- Brace slows through a speed effect (Shared/Movement), not by writing WalkSpeed: a
+-- speed pickup during a brace used to restore the wrong "base" and stick.
 local function brace(player, _ego, def)
-    local hum = player.Character:FindFirstChildOfClass("Humanoid")
-    local base = hum.WalkSpeed
-    braces[player] = { Until = now() + def.Duration, BaseSpeed = base }
-    hum.WalkSpeed = base * def.MoveSpeedMultiplier
-    player.Character:SetAttribute("Bracing", true)
+    local character = player.Character
+    local mine = { Until = now() + def.Duration }
+    braces[player] = mine
+    Movement.setModifier(character, "Brace", def.MoveSpeedMultiplier, true)
+    character:SetAttribute("Bracing", true)
     task.delay(def.Duration, function()
-        if braces[player] and hum.Parent then
-            hum.WalkSpeed = braces[player].BaseSpeed
+        -- a newer brace owns the effect now
+        if braces[player] ~= mine then
+            return
         end
         braces[player] = nil
-        if player.Character then
-            player.Character:SetAttribute("Bracing", nil)
+        if character.Parent then
+            Movement.setModifier(character, "Brace", nil, true)
+            character:SetAttribute("Bracing", nil)
         end
     end)
     return 0
@@ -245,13 +250,9 @@ function AbilityService:OnMutate(player, _ego)
 end
 
 function AbilityService:OnRevert(player)
-    local b = braces[player]
-    local hum = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-    if b and hum then
-        hum.WalkSpeed = b.BaseSpeed
-    end
     braces[player], charges[player] = nil, nil
     if player.Character then
+        Movement.setModifier(player.Character, "Brace", nil, true)
         player.Character:SetAttribute("Bracing", nil)
         player.Character:SetAttribute("Charging", nil)
     end

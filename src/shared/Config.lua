@@ -45,6 +45,21 @@ local Config = {
     },
 }
 
+-- Movement: sprint, crouch, slide (Rivals-style). Exposed as Tuning attributes
+-- Movement_<Key>, read live every frame by MovementController. The first three match
+-- the Weapons Kit's own speeds, which this replaces (16 walk / 24 sprint / 8 aimed).
+Config.Movement = {
+    WalkSpeed = 16,
+    SprintMultiplier = 1.5, -- hold Shift (PC), click the left stick (controller), auto on touch
+    AimMultiplier = 0.5, -- aiming down sights; no sprinting while aimed
+    CrouchMultiplier = 0.5, -- hold Ctrl or C (PC), B (controller), CROUCH button (touch)
+    SlideSpeed = 42, -- studs/s at the start of a slide; fades to crouch speed
+    SlideSeconds = 0.75,
+    SlideCooldown = 1.0, -- from the end of one slide to the start of the next
+    AutoSprintTouch = true, -- phones/tablets sprint whenever moving, as in Rivals
+    AutoSprintDesktop = false, -- Rivals' "Auto Sprint" setting, for keyboard and controller
+}
+
 -- Convergence keys exposed as flat Tuning attributes (Convergence_<Key>)
 Config.CONVERGENCE_TUNABLE = {
     "TeamSize",

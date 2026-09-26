@@ -175,7 +175,13 @@ default thumbstick and jump button. The touch HUD adds:
   button on small phones. Positions are constants at the top of `TouchController:BuildGui`.
 
 ## Controls
-Mouse1 fire or swing, Mouse2 aim, R reload, 1-4 switch slots (Primary, Secondary, Melee, Utility), Shift sprint. With the Jetpack equipped, hold Jump to fly. Guns are the Weapons Kit; melee is MeleeService; utility is UtilityService.
+Mouse1 fire or swing, Mouse2 aim, R reload, 1-4 switch slots (Primary, Secondary, Melee, Utility). With the Jetpack equipped, hold Jump to fly. Guns are the Weapons Kit; melee is MeleeService; utility is UtilityService.
+
+Movement, Rivals-style (MovementController, tuned by `Movement_*` Tuning attributes):
+- **Sprint:** hold Shift, or click the left stick on a controller. Touch players sprint automatically while moving.
+- **Crouch:** hold Ctrl or C, or hold B on a controller. On touch, the CROUCH button toggles it.
+- **Slide:** crouch while sprinting. The touch button reads SLIDE while you run.
+- Aiming slows you and stops a sprint. A mutated Titan doesn't crouch or slide, and C stays Charge.
 
 ## Next steps
 - Shooting range with target dummies, leaderboard, skins

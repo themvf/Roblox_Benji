@@ -100,6 +100,12 @@ function TuningService:EnsureSetup()
             tuning:SetAttribute(key, phases[i] or 180)
         end
     end
+    -- sprint / crouch / slide (MovementController reads these live)
+    for key, default in Config.Movement do
+        if tuning:GetAttribute("Movement_" .. key) == nil then
+            tuning:SetAttribute("Movement_" .. key, default)
+        end
+    end
     -- arena camera framing (CameraController) -- experiment, tune while moving
     for key, default in
         {
