@@ -562,6 +562,40 @@ do
     )
 end
 
+-- ===== FIX: the first designer session's objective-in-the-fortress case =====
+do
+    run({ "new", "FortMap" })
+    edit("FortMap", function(root)
+        local fortress = roblox.deserializeModel(fs.readFile("assets/environment/kit/Fortress.rbxm"))[1]
+        fortress.Parent = find(root, "Geometry")
+        -- C lifted 3 studs: still inside the fortress's 4.49-stud raised floor
+        moveBy(find(root, "Authoring/Objectives/C"), Vector3.new(0, 3, 0))
+    end)
+    ok, out = run({ "convert", "FortMap" })
+    check(
+        "FIX",
+        "a sunk objective says how far and the exact Y to set",
+        not ok and out:find("sunk 1.5 studs into FortressGround", 1, true) ~= nil and out:find("Y to 8.0", 1, true) ~= nil,
+        out
+    )
+    edit("FortMap", function(root)
+        moveBy(find(root, "Authoring/Objectives/C"), Vector3.new(0, 1.49, 0))
+    end)
+    ok, out = run({ "convert", "FortMap" })
+    check("FIX", "raised by that amount, it converts", ok, out)
+    check(
+        "FIX",
+        "no warning about the ground sealed under the fortress floor",
+        out:find("players on Floor", 1, true) == nil,
+        out
+    )
+    edit("FortMap", function(root)
+        moveBy(find(root, "Authoring/Spawns/Blue/Spawn 1"), Vector3.new(0, 4, 0))
+    end)
+    ok, out = run({ "convert", "FortMap" })
+    check("FIX", "a floating spawn gives the exact Y to set", not ok and out:find("Position Y to 0.25", 1, true) ~= nil, out)
+end
+
 if failed == 0 then
     fs.removeDir(ROOT)
 end

@@ -1291,7 +1291,10 @@ function MapService:Build(layout)
     if RunService:IsStudio() then
         -- The build gate (tools/check_maps.luau) is the real check; this catches a layout edited
         -- in Studio since the last run. Warn only, never block a test session.
-        local ok, errors = Validate.check(layout)
+        -- A baked map's geometry is its bake, not its layout's (empty) piece lists; checking
+        -- without it reported every barrier and launch landing as floating in empty space.
+        local bake = bakedModel(layout.Name)
+        local ok, errors = Validate.check(layout, nil, bake and MapAuthoring.solids({ bake }, Validate) or nil)
         if not ok then
             warn(("[MapService] %s fails validation (%d):"):format(layout.Name, #errors))
             for _, e in errors do
