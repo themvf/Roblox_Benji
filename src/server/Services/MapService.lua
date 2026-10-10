@@ -843,9 +843,17 @@ end
 
 local function cloneBaked(folder, baked)
     local parts = 0
+    local geometryCopied = false
     for _, child in baked:GetChildren() do
         if child.Name:sub(1, 13) == "SafetyBarrier" then
             continue
+        end
+        if child.Name == "Geometry" and child:IsA("Folder") then
+            if geometryCopied then
+                warn("[MapBuild] duplicate Geometry folder in " .. baked.Name .. " bake; skipping extra copy")
+                continue
+            end
+            geometryCopied = true
         end
         local copy = child:Clone()
         copy.Parent = folder

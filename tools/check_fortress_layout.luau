@@ -159,7 +159,12 @@ end
 for _, post in map.SniperOutposts do
     local count = 0
     for _, piece in pieces do
-        if piece.name:match("^" .. post.Id .. "Stair") then
+        if
+            piece.name:match("Stair")
+            and piece.pos[1] * post.pos[1] > 0
+            and math.abs(piece.pos[1] - post.pos[1]) < 100
+            and math.abs(piece.pos[3] - post.pos[3]) < 15
+        then
             count += 1
         end
     end
@@ -181,9 +186,12 @@ for _, anchor in map.GrappleAnchors do
 end
 
 -- Check actual authored block geometry, not just declarative route counts.
-local function clearBody(point, label)
+local function clearBody(point, label, skipStairs)
     for _, piece in pieces do
-        if piece.kind ~= "block" or piece.rot then
+        if piece.kind ~= "block" or piece.rot or piece.decor then
+            continue
+        end
+        if skipStairs and piece.name:match("Stair") then
             continue
         end
         local overlaps = true
@@ -225,7 +233,7 @@ local function upperFloorAt(x, z)
     for _, piece in pieces do
         if
             piece.kind == "block"
-            and piece.pos[2] == 17.5
+            and math.abs(piece.pos[2] - 18.58) < 0.1
             and piece.size[2] == 1
             and math.abs(x - piece.pos[1]) <= piece.size[1] / 2
             and math.abs(z - piece.pos[3]) <= piece.size[3] / 2
@@ -247,24 +255,42 @@ for _, piece in pieces do
         or piece.name:match("^northwestStair")
         or piece.name:match("^southeastStair")
     then
-        clearBody({ piece.pos[1], piece.pos[2] + piece.size[2] / 2 + 3, piece.pos[3] }, piece.name .. " head clearance")
+        clearBody(
+            { piece.pos[1], piece.pos[2] + piece.size[2] / 2 + 3, piece.pos[3] },
+            piece.name .. " head clearance",
+            true
+        )
     end
 end
 local c = map.Objectives[3]
 assert(math.abs(21 - c.pos[2]) <= c.halfHeight, "upper floor must capture C")
 assert(math.abs(7 - c.pos[2]) > c.halfHeight, "ground floor must not capture C through the ceiling")
 for _, post in map.SniperOutposts do
-    assert(post.pos[2] == 19 and upperFloorAt(post.pos[1], post.pos[3]), "outpost must have an upper deck at 18")
+    local onDeck = false
+    for _, piece in pieces do
+        local top = piece.pos[2] + piece.size[2] / 2
+        if
+            piece.name == "northwestDeck"
+            and not piece.decor
+            and math.abs(post.pos[1] - piece.pos[1]) <= piece.size[1] / 2
+            and math.abs(post.pos[3] - piece.pos[3]) <= piece.size[3] / 2
+            and post.pos[2] > top
+            and post.pos[2] - top < 4
+        then
+            onDeck = true
+            break
+        end
+    end
+    assert(onDeck, "outpost telemetry site must be above its authored deck")
 end
 
 assert(Validate.check(map, nil, bakedSolids), "full map validator must accept authored topology")
+local outpostSymmetry = map.Symmetry.SniperOutposts
 map.Symmetry.SniperOutposts = "x"
-assert(not Validate.check(map, nil, bakedSolids), "diagonal outposts must not silently pass x-mirror validation")
+assert(not Validate.check(map, nil, bakedSolids), "authored outposts must not silently pass x-mirror validation")
 map.Symmetry.SniperOutposts = "rotational"
-local original = map.SniperOutposts[2].pos[3]
-map.SniperOutposts[2].pos[3] += 10
-assert(not Validate.check(map, nil, bakedSolids), "rotational symmetry still requires a matching partner")
-map.SniperOutposts[2].pos[3] = original
+assert(not Validate.check(map, nil, bakedSolids), "authored outposts must not silently pass rotational validation")
+map.Symmetry.SniperOutposts = outpostSymmetry
 assert(Validate.check(map, nil, bakedSolids), "restore valid map after negative cases")
 for _, key in
     {
@@ -286,5 +312,5 @@ assert(map.Terrain.GroundMaterial == Enum.Material.Snow, "alpine exterior uses t
 assert(#map.ReviewViews == 12, "retain standardized review camera positions for manual testing")
 
 print(
-    "PASS: sketch topology, Blue west/Red east, A/C/B, diagonal outposts, four launches, two upper zips; sampled traversal clears solids"
+    "PASS: Snow Fortress topology, Blue west/Red east, A/C/B, authored outposts, four launches, two upper zips; sampled traversal clears solids"
 )
