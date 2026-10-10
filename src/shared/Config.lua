@@ -60,6 +60,30 @@ Config.Movement = {
     AutoSprintDesktop = false, -- Rivals' "Auto Sprint" setting, for keyboard and controller
 }
 
+-- Team Deathmatch: 5v5, respawning, first team to KillTarget kills, or most kills at
+-- MaxSeconds. Every key is a Tuning attribute (TDM_<Key>), read through GetTDM().
+Config.TDMMaps = { "SnowFortress" }
+Config.TDM = {
+    TeamSize = 5,
+    MinTeamSize = 3, -- once both sides have this many, start after FillWaitSeconds even if not full
+    FillWaitSeconds = 30,
+    KillTarget = 50,
+    MaxSeconds = 600, -- 10 min cap; most kills wins, equal kills is a draw
+    RespawnSeconds = 3,
+    SpawnProtectSeconds = 2, -- ForceField after each respawn, so a spawn is never a free kill
+}
+
+-- Valid range per key, so a typo in Studio cannot start a 0-kill or 0-second match.
+local TDM_RANGE = {
+    TeamSize = { 1, 8 },
+    MinTeamSize = { 1, 8 },
+    FillWaitSeconds = { 0, 300 },
+    KillTarget = { 1, 500 },
+    MaxSeconds = { 30, 3600 },
+    RespawnSeconds = { 0, 30 },
+    SpawnProtectSeconds = { 0, 10 },
+}
+
 -- Convergence keys exposed as flat Tuning attributes (Convergence_<Key>)
 Config.CONVERGENCE_TUNABLE = {
     "TeamSize",
@@ -108,6 +132,26 @@ function Config.GetConvergence()
     first = math.clamp(positive(first, Config.Convergence.PhaseSeconds[1]), 1, out.HardCapSeconds - 2)
     second = math.clamp(positive(second, Config.Convergence.PhaseSeconds[2]), 1, out.HardCapSeconds - first - 1)
     out.PhaseSeconds = { first, second, out.HardCapSeconds - first - second }
+    return out
+end
+
+-- Team Deathmatch settings with Tuning overrides applied. Non-numbers fall back to the
+-- default; numbers are clamped to TDM_RANGE, counts are whole, and the minimum team can
+-- never exceed the full team.
+function Config.GetTDM()
+    local out = table.clone(Config.TDM)
+    for key, default in Config.TDM do
+        local v = overrides and overrides:GetAttribute("TDM_" .. key)
+        if type(v) ~= "number" or v ~= v or v == math.huge or v == -math.huge then
+            v = default
+        end
+        local range = TDM_RANGE[key]
+        out[key] = range and math.clamp(v, range[1], range[2]) or v
+    end
+    for _, key in { "TeamSize", "MinTeamSize", "KillTarget" } do
+        out[key] = math.floor(out[key])
+    end
+    out.MinTeamSize = math.min(out.MinTeamSize, out.TeamSize)
     return out
 end
 

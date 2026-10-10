@@ -54,6 +54,8 @@ end
 local function pool(kind)
     if kind == "Convergence" then
         return Config.ConvergenceMaps or { "Forest" }, "Convergence"
+    elseif kind == "TDM" then
+        return Config.TDMMaps or { "SnowFortress" }, "TDM"
     end
     return Config.Maps or { "Forest" }, "Duel"
 end

@@ -100,6 +100,12 @@ function TuningService:EnsureSetup()
             tuning:SetAttribute(key, phases[i] or 180)
         end
     end
+    -- Team Deathmatch (TDMService and the lobby queue read these through Config.GetTDM)
+    for key, default in Config.TDM do
+        if tuning:GetAttribute("TDM_" .. key) == nil then
+            tuning:SetAttribute("TDM_" .. key, default)
+        end
+    end
     -- sprint / crouch / slide (MovementController reads these live)
     for key, default in Config.Movement do
         if tuning:GetAttribute("Movement_" .. key) == nil then
