@@ -94,7 +94,7 @@ assert(a[3] < -90 and b[3] > 90 and c[3] == 0, "A/B exterior, C central")
 
 assert(#map.SniperOutposts == 2, "v1 requires exactly two outposts")
 assert(#map.LaunchPads == 4, "sketch requires four launch approaches")
-assert(#map.ZipLines == 2, "sketch requires two diagonal zips")
+assert(#map.ZipLines == 0, "zip lines were removed after playtest; the roof is reached by launch pads and stairs")
 assert(#map.GrappleAnchors == 0, "do not invent extra traversal routes")
 assert(map.SniperOutposts[1].pos[1] < 0 and map.SniperOutposts[1].pos[3] < 0, "northwest outpost")
 assert(map.SniperOutposts[2].pos[1] > 0 and map.SniperOutposts[2].pos[3] > 0, "southeast outpost")
@@ -312,5 +312,5 @@ assert(map.Terrain.GroundMaterial == Enum.Material.Snow, "alpine exterior uses t
 assert(#map.ReviewViews == 12, "retain standardized review camera positions for manual testing")
 
 print(
-    "PASS: Snow Fortress topology, Blue west/Red east, A/C/B, authored outposts, four launches, two upper zips; sampled traversal clears solids"
+    "PASS: Snow Fortress topology, Blue west/Red east, A/C/B, authored outposts, four launches, no zip lines; sampled traversal clears solids"
 )
