@@ -856,6 +856,15 @@ local function cloneBaked(folder, baked)
             geometryCopied = true
         end
         local copy = child:Clone()
+        -- Same rule as authored decor: an imported prop saved unanchored falls out of the sky.
+        if copy:IsA("BasePart") then
+            copy.Anchored = true
+        end
+        for _, d in copy:GetDescendants() do
+            if d:IsA("BasePart") then
+                d.Anchored = true
+            end
+        end
         copy.Parent = folder
         parts += 1
     end

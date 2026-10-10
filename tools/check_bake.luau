@@ -81,13 +81,17 @@ for _, file in files do
                     print(("FAIL  %-14s declares RequiresBake but %s/%s.rbxm is missing"):format(name, Baked.DIR, name))
                 elseif #solids == 0 and not (layout.Terrain and not layout.Terrain.Sea) then
                     failures += 1
-                    print(("FAIL  %-14s baked with nothing collidable and no terrain -- nothing to stand on"):format(name))
+                    print(
+                        ("FAIL  %-14s baked with nothing collidable and no terrain -- nothing to stand on"):format(name)
+                    )
                 else
-                    local leftovers = {}
+                    local leftovers, loose = {}, {}
                     for _, root in roblox.deserializeModel(fs.readFile(Baked.path(name))) do
                         for _, inst in root:GetDescendants() do
                             if isScaffolding(inst) then
                                 table.insert(leftovers, inst.Name)
+                            elseif inst:IsA("BasePart") and not inst.Anchored then
+                                table.insert(loose, inst:GetFullName())
                             end
                         end
                     end
@@ -101,11 +105,19 @@ for _, file in files do
                         print(("        run: bash tools/save_map.sh %s"):format(name))
                     elseif #leftovers > 0 then
                         failures += 1
-                        print(("FAIL  %-14s %d guide markers left in the bake, e.g. %s"):format(
-                            name,
-                            #leftovers,
-                            leftovers[1]
-                        ))
+                        print(
+                            ("FAIL  %-14s %d guide markers left in the bake, e.g. %s"):format(
+                                name,
+                                #leftovers,
+                                leftovers[1]
+                            )
+                        )
+                    elseif #loose > 0 then
+                        -- MapService anchors on clone, but the bake is what Studio shows a
+                        -- designer, and a part falling there hides where it was placed.
+                        failures += 1
+                        print(("FAIL  %-14s %d unanchored parts in the bake, e.g. %s"):format(name, #loose, loose[1]))
+                        print("        anchor them in Studio and save the bake again")
                     else
                         print(("OK    %-14s %d parts baked, %d of them collidable"):format(name, #parts, #solids))
                     end
