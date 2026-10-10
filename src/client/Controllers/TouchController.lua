@@ -1,6 +1,7 @@
 -- Touch HUD for phones and tablets. Draws big on-screen buttons for everything the desktop
 -- build binds to keys: Mutate (Q), Ground Slam / Brace / Charge (E/F/C), crouch and slide
--- (Ctrl/C), hold-to-fly for the jetpack, a scoreboard toggle (Tab) and the celebration skip
+-- (Ctrl/C), a scope toggle for scoped weapons (right mouse), hold-to-fly for the jetpack, a
+-- scoreboard toggle (Tab) and the celebration skip
 -- vote (V). Sprint needs no button: touch players sprint whenever they move, as in Rivals. Guns already get a fire
 -- button and drag-to-aim from the Weapons Kit, and movement/jump come from Roblox's own touch
 -- controls, so those are not duplicated here. Only rendering and input: every action goes
@@ -22,6 +23,21 @@ local READY = Theme.Color.Energy
 local FLY = Theme.Color.Fly
 
 local ABILITY_SHORT = { GroundSlam = "SLAM", Brace = "BRACE", Charge = "CHARGE" }
+
+-- The Weapons Kit's shoulder camera. It zooms only while right mouse or L2 is held and has
+-- no touch input, so a scoped weapon could not aim at all on a phone; SCOPE drives it.
+local kitCamera = nil
+local function scopeCamera()
+    if not kitCamera then
+        local folder = ReplicatedStorage:FindFirstChild("WeaponsSystem")
+        local module = folder and folder:FindFirstChild("WeaponsSystem")
+        if module then
+            local ok, system = pcall(require, module)
+            kitCamera = ok and system and system.camera or nil
+        end
+    end
+    return kitCamera
+end
 
 -- Touch device = a phone or tablet per Screen's device class (a laptop with a touchscreen keeps
 -- its keyboard layout, an iPad with a Magic Keyboard stays a tablet).
@@ -187,6 +203,18 @@ function TouchController:BuildGui()
         Knit.GetController("MovementController"):TouchCrouch()
     end)
 
+    -- SCOPE: tap to look down a scoped weapon's sight, tap again to come out. Only while
+    -- one is held. Fire with the kit's fire button as usual.
+    self.Scope = makeButton(column, "SCOPE", Theme.Color.Accent)
+    self.Scope.Button.LayoutOrder = 70
+    self.Scope.Button.Visible = false
+    self.Scope.Button.Activated:Connect(function()
+        local cam = scopeCamera()
+        if cam then
+            cam:setZoomedFromInput(not cam.zoomedFromInput)
+        end
+    end)
+
     -- MUTATE: the most-used button, so it sits closest to the resting thumb
     self.Mutate = makeButton(column, "TITAN", READY)
     self.Mutate.Button.LayoutOrder = 90
@@ -258,6 +286,21 @@ function TouchController:Update()
         self.Fly.Fill.Size = UDim2.fromScale(1, frac)
         self.Fly.Sub.Text = ("HOLD %d%%"):format(100 * frac)
         self.Fly.Ring.Transparency = jet.Fuel > 0 and 0.2 or 0.8
+    end
+
+    -- SCOPE: whenever the held weapon has a scope. Put away or swapped, the toggle resets, so
+    -- drawing the sniper again does not open straight into the scope.
+    local cam = scopeCamera()
+    local scoped = cam ~= nil and cam.enabled == true and cam.hasScope == true and cam.currentTool ~= nil
+    self.Scope.Button.Visible = scoped
+    if scoped then
+        local on = cam.zoomState == true
+        self.Scope.Label.Text = on and "EXIT" or "SCOPE"
+        self.Scope.Sub.Text = on and "scoped" or "tap"
+        self.Scope.Ring.Transparency = on and 0 or 0.2
+        self.Scope.Fill.Size = UDim2.fromScale(1, on and 1 or 0)
+    elseif cam and cam.zoomedFromInput then
+        cam:setZoomedFromInput(false)
     end
 
     -- CROUCH / SLIDE: whenever the player can crouch, lobby included (maps are walked there)
