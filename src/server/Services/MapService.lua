@@ -524,6 +524,11 @@ local function buildLobby(self, layout)
             spec = table.clone(spec)
             spec.teamSize = rules.TeamSize
             spec.minTeamSize = rules.MinTeamSize
+        elseif spec.kind == "TDM" then
+            local rules = Config.GetTDM() -- same: TDM_TeamSize / TDM_MinTeamSize in Tuning
+            spec = table.clone(spec)
+            spec.teamSize = rules.TeamSize
+            spec.minTeamSize = rules.MinTeamSize
         end
         local pw, ph, pd = spec.size[1], spec.size[2], spec.size[3]
         local gap = 1.5
