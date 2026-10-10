@@ -843,11 +843,28 @@ end
 
 local function cloneBaked(folder, baked)
     local parts = 0
+    local geometryCopied = false
     for _, child in baked:GetChildren() do
         if child.Name:sub(1, 13) == "SafetyBarrier" then
             continue
         end
+        if child.Name == "Geometry" and child:IsA("Folder") then
+            if geometryCopied then
+                warn("[MapBuild] duplicate Geometry folder in " .. baked.Name .. " bake; skipping extra copy")
+                continue
+            end
+            geometryCopied = true
+        end
         local copy = child:Clone()
+        -- Same rule as authored decor: an imported prop saved unanchored falls out of the sky.
+        if copy:IsA("BasePart") then
+            copy.Anchored = true
+        end
+        for _, d in copy:GetDescendants() do
+            if d:IsA("BasePart") then
+                d.Anchored = true
+            end
+        end
         copy.Parent = folder
         parts += 1
     end
