@@ -1,6 +1,14 @@
--- Mutation HUD + input: meter with percentage, MUTATION READY, mutant timer, ability cooldowns,
--- Q to activate, E/F/C abilities. Applies server-sent knockback and charge movement to the local
--- character (client-owned physics). Never decides energy, damage, or cooldowns.
+-- Mutation HUD + input. Q to activate, E/F/C abilities. Applies server-sent knockback and
+-- charge movement to the local character (client-owned physics). Never decides energy,
+-- damage, or cooldowns.
+--
+-- The HUD is two icon groups docked either side of the weapon slots, Rivals-style, instead of
+-- a text panel: on the left a round power icon that fills with energy and pulses when ready,
+-- with a small Q keycap; while mutated it drains with the time left, and the three ability
+-- icons appear on the right with a cooldown shade and seconds. The abilities are not shown
+-- before the mutation exists -- greyed-out "E GroundSlam" next to a half-full meter read as
+-- "you have these now". Touch players get the same state on TouchController's buttons, so
+-- this whole gui is off there.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -9,34 +17,32 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local AlterEgos = require(ReplicatedStorage.Shared.AlterEgos)
 local Screen = require(script.Parent.Parent.UI.Screen)
 local Theme = require(script.Parent.Parent.UI.Theme)
+local Icons = require(script.Parent.Parent.UI.Icons)
 
 local MutationController = Knit.CreateController({ Name = "MutationController" })
 
 local PANEL = Theme.Color.Panel
 local TEXT = Theme.Color.Text
 local MUTED = Theme.Color.TextMuted
-local LOCKED = Theme.Color.TextMuted
 local READY = Theme.Color.Energy
 
 local KEYS = { Q = Enum.KeyCode.Q, E = Enum.KeyCode.E, F = Enum.KeyCode.F, C = Enum.KeyCode.C }
 
--- Titan charge reads as a STATE, not a percentage. The player should feel the approach, so the
--- widget changes character at thresholds rather than only growing a bar:
---   0-49   dormant  -- quiet, muted, easy to ignore
---   50-74  stirring -- the label wakes up, the bar warms
---   75-99  surging  -- slow pulse, stroke appears, it starts asking for attention
---   100    ready    -- unmistakable, fast pulse
+local ORB = 60 -- the weapon slots are 60 tall; the dock lines up with them
+local TILE = 52
+local DOCK_GAP = 12
+
+-- Titan charge reads as a STATE, not a percentage. The icon changes character at thresholds
+-- rather than only filling:
+--   0-49   dormant  -- muted, easy to ignore
+--   50-74  stirring -- warms up
+--   75-99  surging  -- slow pulse
+--   100    ready    -- bright, fast pulse
 local STAGES = {
-    { at = 100, name = "ready", label = Color3.fromRGB(255, 240, 180), bar = Color3.fromRGB(255, 226, 120), pulse = 7 },
-    { at = 75, name = "surging", label = Color3.fromRGB(255, 200, 110), bar = Color3.fromRGB(255, 170, 60), pulse = 3 },
-    {
-        at = 50,
-        name = "stirring",
-        label = Color3.fromRGB(215, 175, 120),
-        bar = Color3.fromRGB(215, 130, 55),
-        pulse = 0,
-    },
-    { at = 0, name = "dormant", label = Color3.fromRGB(140, 145, 158), bar = Color3.fromRGB(120, 110, 105), pulse = 0 },
+    { at = 100, name = "ready", color = Theme.Color.Accent, pulse = 7 },
+    { at = 75, name = "surging", color = Theme.Color.Energy, pulse = 3 },
+    { at = 50, name = "stirring", color = Theme.Color.Warn, pulse = 0 },
+    { at = 0, name = "dormant", color = Theme.Color.TextMuted, pulse = 0 },
 }
 
 local function stageFor(pct: number)
@@ -48,94 +54,122 @@ local function stageFor(pct: number)
     return STAGES[#STAGES]
 end
 
+local function round(inst, r)
+    local c = Instance.new("UICorner")
+    c.CornerRadius = r or UDim.new(0, 10)
+    c.Parent = inst
+end
+
+-- A small key badge in a tile's top-right corner. Keyboard only: this gui is off on touch.
+local function keycap(parent, key)
+    local cap = Instance.new("TextLabel")
+    cap.AnchorPoint = Vector2.new(1, 0)
+    cap.Position = UDim2.new(1, -3, 0, 3)
+    cap.Size = UDim2.fromOffset(18, 18)
+    cap.BackgroundColor3 = Theme.Color.PanelHigh
+    cap.Text = key
+    cap.TextSize = Theme.textSize(Theme.Type.Label)
+    cap.Font = Enum.Font.GothamBlack
+    cap.TextColor3 = TEXT
+    cap.ZIndex = 4
+    cap.Parent = parent
+    round(cap, UDim.new(0, 4))
+    return cap
+end
+
+-- A rounded tile with an icon and a fill rising from the bottom. A CanvasGroup, so the fill is
+-- clipped to the rounded corners instead of poking out square.
+local function tile(parent, iconName, size, radius)
+    local t = Instance.new("CanvasGroup")
+    t.Size = UDim2.fromOffset(size, size)
+    t.BackgroundColor3 = PANEL
+    t.BackgroundTransparency = Theme.Transparency.Panel
+    t.Parent = parent
+    round(t, radius)
+    local fill = Instance.new("Frame")
+    fill.Name = "Fill"
+    fill.AnchorPoint = Vector2.new(0.5, 1)
+    fill.Position = UDim2.fromScale(0.5, 1)
+    fill.Size = UDim2.fromScale(1, 0)
+    fill.BackgroundColor3 = READY
+    fill.BackgroundTransparency = 0.55
+    fill.BorderSizePixel = 0
+    fill.Parent = t
+    local icon = Icons.make(t, iconName, UDim2.fromScale(0.58, 0.58))
+    icon.AnchorPoint = Vector2.new(0.5, 0.5)
+    icon.Position = UDim2.fromScale(0.5, 0.5)
+    icon.ZIndex = 2
+    local ring = Instance.new("UIStroke")
+    ring.Thickness = 2
+    ring.Color = READY
+    ring.Transparency = 1
+    ring.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    ring.Parent = t
+    return { Frame = t, Fill = fill, Icon = icon, Ring = ring }
+end
+
 function MutationController:BuildGui()
     local gui = Screen.newScreenGui("MutationHud", Screen.Layers.Meter)
     gui.Enabled = false
     gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
     self.Gui = gui
 
-    local frame = Instance.new("Frame")
-    frame.AnchorPoint = Vector2.new(0.5, 1)
-    frame.Position = UDim2.new(0.5, 0, 1, -110)
-    frame.Size = UDim2.fromOffset(320, 64)
-    -- Designed at 320x64 for a desktop window; the UIScale keeps that proportion on a phone.
-    Screen.autoScale(frame)
-    frame.BackgroundColor3 = PANEL
-    frame.BackgroundTransparency = Theme.Transparency.Panel
-    frame.Parent = gui
-    self.Frame = frame
-    local fstroke = Instance.new("UIStroke")
-    fstroke.Thickness = 2
-    fstroke.Color = Color3.fromRGB(255, 170, 60)
-    fstroke.Transparency = 1 -- invisible until the charge starts surging
-    fstroke.Parent = frame
-    self.FrameStroke = fstroke
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 10)
-    corner.Parent = frame
+    -- left of the weapon slots: the power icon
+    local orb = tile(gui, "Mutate", ORB, UDim.new(0.5, 0))
+    orb.Frame.AnchorPoint = Vector2.new(1, 1)
+    Screen.autoScale(orb.Frame)
+    keycap(orb.Frame, AlterEgos.Mutation.ActivateKey)
+    local timer = Instance.new("TextLabel")
+    timer.AnchorPoint = Vector2.new(0.5, 1)
+    timer.Position = UDim2.new(0.5, 0, 1, -2)
+    timer.Size = UDim2.new(1, 0, 0, 16)
+    timer.BackgroundTransparency = 1
+    timer.Text = ""
+    timer.TextSize = Theme.textSize(Theme.Type.Label)
+    timer.Font = Enum.Font.GothamBlack
+    timer.TextColor3 = TEXT
+    timer.ZIndex = 3
+    timer.Parent = orb.Frame
+    orb.Timer = timer
+    self.Orb = orb
 
-    local title = Instance.new("TextLabel")
-    title.Position = UDim2.new(0, 10, 0, 4)
-    title.Size = UDim2.new(1, -20, 0, 18)
-    title.BackgroundTransparency = 1
-    title.Text = "TITAN"
-    title.TextSize = Theme.textSize(Theme.Type.Label)
-    title.Font = Enum.Font.GothamBlack
-    title.TextColor3 = READY
-    title.TextXAlignment = Enum.TextXAlignment.Left
-    title.Parent = frame
-    self.Title = title
-
-    local back = Instance.new("Frame")
-    back.Position = UDim2.new(0, 10, 0, 26)
-    back.Size = UDim2.new(1, -20, 0, 12)
-    back.BackgroundColor3 = Theme.Color.Track
-    back.BorderSizePixel = 0
-    back.Parent = frame
-    local bc = Instance.new("UICorner")
-    bc.CornerRadius = UDim.new(0, 6)
-    bc.Parent = back
-    local bar = Instance.new("Frame")
-    bar.Size = UDim2.fromScale(0, 1)
-    bar.BackgroundColor3 = READY
-    bar.BorderSizePixel = 0
-    bar.Parent = back
-    local fc = Instance.new("UICorner")
-    fc.CornerRadius = UDim.new(0, 6)
-    fc.Parent = bar
-    self.Bar = bar
-
-    local pct = Instance.new("TextLabel")
-    pct.AnchorPoint = Vector2.new(1, 0)
-    pct.Position = UDim2.new(1, -10, 0, 4)
-    pct.Size = UDim2.new(0.6, 0, 0, 18)
-    pct.BackgroundTransparency = 1
-    pct.Text = "0%"
-    pct.TextSize = Theme.textSize(Theme.Type.Label)
-    pct.Font = Enum.Font.GothamBold
-    pct.TextColor3 = TEXT
-    pct.TextXAlignment = Enum.TextXAlignment.Right
-    pct.Parent = frame
-    self.Pct = pct
-
-    -- ability row
+    -- right of the weapon slots, only while mutated: the abilities
     local row = Instance.new("Frame")
-    row.Position = UDim2.new(0, 10, 0, 42)
-    row.Size = UDim2.new(1, -20, 0, 18)
+    row.AnchorPoint = Vector2.new(0, 1)
+    row.Size = UDim2.fromOffset(3 * TILE + 2 * 8, TILE)
     row.BackgroundTransparency = 1
-    row.Parent = frame
+    row.Visible = false
+    row.Parent = gui
+    Screen.autoScale(row)
+    local layout = Instance.new("UIListLayout")
+    layout.FillDirection = Enum.FillDirection.Horizontal
+    layout.Padding = UDim.new(0, 8)
+    layout.SortOrder = Enum.SortOrder.LayoutOrder
+    layout.Parent = row
     self.Row = row
     self.Abilities = {}
+    local ego = AlterEgos.get(AlterEgos.DEFAULT)
     for i, name in AlterEgos.ABILITY_ORDER do
-        local l = Instance.new("TextLabel")
-        l.Position = UDim2.fromScale((i - 1) / 3, 0)
-        l.Size = UDim2.fromScale(1 / 3, 1)
-        l.BackgroundTransparency = 1
-        l.TextSize = Theme.textSize(Theme.Type.Label)
-        l.Font = Enum.Font.GothamBold
-        l.TextColor3 = MUTED
-        l.Parent = row
-        self.Abilities[name] = l
+        local t = tile(row, Icons.ABILITY[name] or "Info", TILE)
+        t.Frame.LayoutOrder = i
+        -- cooldown: a shade that drops away from the top as the ability comes back
+        t.Fill.AnchorPoint = Vector2.new(0.5, 0)
+        t.Fill.Position = UDim2.fromScale(0.5, 0)
+        t.Fill.BackgroundColor3 = PANEL
+        t.Fill.BackgroundTransparency = 0.25
+        t.Fill.ZIndex = 3
+        keycap(t.Frame, ego.Abilities[name].Key)
+        local secs = Instance.new("TextLabel")
+        secs.Size = UDim2.fromScale(1, 1)
+        secs.BackgroundTransparency = 1
+        secs.Text = ""
+        secs.TextSize = Theme.textSize(Theme.Type.Title)
+        secs.Font = Enum.Font.GothamBlack
+        secs.TextColor3 = TEXT
+        secs.ZIndex = 5
+        secs.Parent = t.Frame
+        t.Seconds = secs
+        self.Abilities[name] = t
     end
     self.CooldownEnds = {}
 end
@@ -147,82 +181,58 @@ end
 function MutationController:Update()
     local me = Players.LocalPlayer
     local inMatch = me:GetAttribute("InMatch") == true
-    self.Gui.Enabled = inMatch
-    if not inMatch then
+    self.Gui.Enabled = inMatch and not self:Touch()
+    if not self.Gui.Enabled then
         return
     end
-    -- On touch the ability row is replaced by the on-screen buttons, so the panel loses a line.
-    -- It also moves out of the bottom centre: on a phone that strip belongs to the backpack
-    -- hotbar and the jump button, and anything sitting there lands on top of the player's own
-    -- character. Top-left, under the Roblox pills, is the one strip nothing else claims.
-    local touch = self:Touch()
+
+    -- dock either side of the weapon slots, whatever width the row has right now
     local state = Screen.get()
-    self.Row.Visible = not touch
-    self.Frame.Size = touch and UDim2.fromOffset(230, 44) or UDim2.fromOffset(320, 64)
-    if touch then
-        self.Frame.AnchorPoint = Vector2.new(0, 0)
-        self.Frame.Position =
-            UDim2.new(0, state.Insets.Left, 0, state.Insets.Top + (state.Viewport.X < 600 and 138 or 42))
-    else
-        self.Frame.AnchorPoint = Vector2.new(0.5, 1)
-        self.Frame.Position = UDim2.new(0.5, 0, 1, -110 - state.Insets.Bottom)
-    end
+    local bar = Knit.GetController("WeaponBarController")
+    local half = bar.Row and bar.Row.AbsoluteSize.X / 2 or 0
+    local bottom = -state.Insets.Bottom - bar.BOTTOM_GAP
+    self.Orb.Frame.Position = UDim2.new(0.5, -half - DOCK_GAP, 1, bottom)
+    self.Row.Position = UDim2.new(0.5, half + DOCK_GAP, 1, bottom - (bar.SLOT_HEIGHT - TILE) / 2)
+
     local ego = AlterEgos.get(me:GetAttribute("AlterEgo") or AlterEgos.DEFAULT)
     local energy = me:GetAttribute("MutationEnergy") or 0
     local mutated = me:GetAttribute("Mutated")
     local endsAt = me:GetAttribute("MutationEndsAt")
+    local now = workspace:GetServerTimeNow()
+    local orb = self.Orb
+
+    self.Row.Visible = mutated ~= nil
     if mutated and endsAt then
-        local left = math.max(0, endsAt - workspace:GetServerTimeNow())
-        self.Title.Text = ("%s  %.1fs"):format(mutated:upper(), left)
-        self.Bar.Size = UDim2.fromScale(left / AlterEgos.Mutation.DurationSeconds, 1)
-        self.Pct.Text = ""
-        for name, l in self.Abilities do
+        local left = math.max(0, endsAt - now)
+        orb.Fill.Size = UDim2.fromScale(1, left / AlterEgos.Mutation.DurationSeconds)
+        orb.Fill.BackgroundColor3 = READY
+        orb.Timer.Text = ("%.0f"):format(left)
+        Icons.tint(orb.Icon, TEXT)
+        orb.Ring.Color = READY
+        orb.Ring.Transparency = 0
+        for name, t in self.Abilities do
             local def = ego.Abilities[name]
-            local cdEnd = self.CooldownEnds[name] or 0
-            local cdLeft = math.max(0, cdEnd - workspace:GetServerTimeNow())
-            l.Text = cdLeft > 0 and ("%s %s %.1f"):format(def.Key, name, cdLeft)
-                or ("%s %s READY"):format(def.Key, name)
-            l.TextColor3 = cdLeft > 0 and MUTED or TEXT
-            l.TextTransparency = 0
+            local cdLeft = math.max(0, (self.CooldownEnds[name] or 0) - now)
+            local shade = def.Cooldown > 0 and math.min(1, cdLeft / def.Cooldown) or 0
+            t.Fill.Size = UDim2.fromScale(1, shade)
+            t.Seconds.Text = cdLeft > 0 and ("%d"):format(math.ceil(cdLeft)) or ""
+            Icons.tint(t.Icon, cdLeft > 0 and MUTED or TEXT)
+            t.Ring.Transparency = cdLeft > 0 and 1 or 0.2
         end
-        self.Title.TextColor3 = READY
-        self.Title.TextSize = 17
-        self.FrameStroke.Transparency = 0.2
     else
         local pct = (energy / AlterEgos.Energy.Cap) * 100
         local stage = stageFor(pct)
-        -- Below "surging" this is a strip, not a panel: label + bar + number, no ability row.
-        -- The abilities do not exist yet, so they should not be occupying screen at 18%.
-        local compact = stage.name == "dormant" or stage.name == "stirring"
-        self.Row.Visible = not touch and not compact
-        self.Frame.Size = compact and UDim2.fromOffset(212, 34) or UDim2.fromOffset(268, 58)
-        self.Frame.Position = touch and UDim2.new(0.5, 0, 1, -196) or UDim2.new(0.5, 0, 1, -164)
-        self.Frame.BackgroundTransparency = compact and 0.3 or 0.12
-        local hint = self:Touch() and "tap MUTATE" or ("press " .. AlterEgos.Mutation.ActivateKey)
-        self.Title.Text = stage.name == "ready" and ("MUTATION READY  " .. hint) or ego.Name:upper()
-        self.Title.TextColor3 = stage.label
-        self.Title.TextSize = stage.name == "dormant" and 14 or (stage.name == "stirring" and 15 or 17)
-        self.Bar.Size = UDim2.fromScale(energy / AlterEgos.Energy.Cap, 1)
-        self.Bar.BackgroundColor3 = stage.bar
-        self.Pct.Text = ("%d%%"):format(energy)
-        self.Pct.TextColor3 = stage.label
-
+        orb.Fill.Size = UDim2.fromScale(1, math.clamp(energy / AlterEgos.Energy.Cap, 0, 1))
+        orb.Fill.BackgroundColor3 = stage.color
+        orb.Timer.Text = ""
+        Icons.tint(orb.Icon, stage.name == "dormant" and MUTED or TEXT)
+        orb.Ring.Color = stage.color
         -- pulse rate is the anticipation: nothing until 75, slow while surging, fast when ready
         if stage.pulse > 0 then
             local wave = 0.5 + 0.5 * math.sin(os.clock() * stage.pulse)
-            self.Bar.BackgroundTransparency = 0.35 * (1 - wave)
-            self.FrameStroke.Transparency = 0.45 + 0.45 * (1 - wave)
+            orb.Ring.Transparency = 0.6 * (1 - wave)
         else
-            self.Bar.BackgroundTransparency = 0
-            self.FrameStroke.Transparency = 1
-        end
-
-        -- Abilities are NOT available until the transformation exists. Showing them live-looking
-        -- next to a half-full meter reads as "you have these now", which is a lie.
-        for name, l in self.Abilities do
-            l.Text = ("%s  %s"):format(ego.Abilities[name].Key, name)
-            l.TextColor3 = LOCKED
-            l.TextTransparency = 0.45
+            orb.Ring.Transparency = 1
         end
     end
 end
@@ -234,7 +244,7 @@ function MutationController:Activate()
     end
     Knit.GetService("MutationService"):Activate():andThen(function(ok, why)
         if not ok and why and why ~= "not ready" then
-            Knit.GetController("ConvergenceController"):ShowBanner("Cannot mutate: " .. why, MUTED)
+            Knit.GetController("ConvergenceController"):ShowBanner("Cannot mutate: " .. why, MUTED, "Info")
         end
     end)
 end
@@ -256,10 +266,10 @@ function MutationController:KnitStart()
         if text:find("reverted") then
             return
         end
-        conv:ShowBanner(text .. (who == Players.LocalPlayer.Name and "" or ("  (" .. who .. ")")), READY)
+        conv:ShowBanner(text .. (who == Players.LocalPlayer.Name and "" or ("  (" .. who .. ")")), READY, "Mutate")
     end)
     mutation.Ready:Connect(function()
-        conv:ShowBanner(self:Touch() and "MUTATION READY  tap MUTATE" or "MUTATION READY  press Q", READY)
+        conv:ShowBanner("MUTATION READY", READY, "Mutate")
     end)
     ability.Cooldowns:Connect(function(map)
         self.CooldownEnds = map
