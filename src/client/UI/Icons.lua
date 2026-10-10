@@ -12,23 +12,24 @@ local Uploads = require(ReplicatedStorage.Shared.Uploads)
 
 local Icons = {}
 
--- rbxassetid numbers, filled in after the upload. nil = not uploaded yet.
+-- rbxassetid numbers from the Studio bulk import (Asset Manager > Uploads, 2026-10-10).
+-- A redrawn icon is a new upload and a new id here. nil = not uploaded yet.
 Icons.IDS = {
-    Health = nil,
-    Ammo = nil,
-    Mutate = nil,
-    Slam = nil,
-    Brace = nil,
-    Charge = nil,
-    Fuel = nil,
-    Scope = nil,
-    Crouch = nil,
-    Slide = nil,
-    Scores = nil,
-    Speed = nil,
-    Info = nil,
-    Zone = nil,
-    Skip = nil,
+    Health = 106159250698131,
+    Ammo = 135312164633776,
+    Mutate = 85697933037012,
+    Slam = 120151948601833,
+    Brace = 139253669418283,
+    Charge = 109849830431999,
+    Fuel = 75543669976767,
+    Scope = 107315012852455,
+    Crouch = 91400471867744,
+    Slide = 123316459410819,
+    Scores = 93516430322698,
+    Speed = 128167205174867,
+    Info = 74267510979454,
+    Zone = 112409379197885,
+    Skip = 108686178729088,
 }
 
 -- Shown in place of the image until it is uploaded: short, so the layout holds.

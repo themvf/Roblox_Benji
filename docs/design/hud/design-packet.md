@@ -1,6 +1,6 @@
 # In-match HUD, Rivals-style — design packet
 
-Status: implemented, awaiting Studio device QA and icon upload.
+Status: implemented, awaiting Studio device QA.
 
 ## 1. Identity and intent
 
@@ -74,7 +74,7 @@ Not applicable.
 ## 7. Acceptance and evidence
 
 - [x] stylua, selene, every lune gate, and `rojo build` pass.
-- [ ] Icons uploaded and ids entered in `Icons.IDS`.
+- [x] Icons uploaded and ids entered in `Icons.IDS`.
 - [ ] Studio device QA (roblox-ui-layout skill): iPhone landscape, iPad and Split View, 1080p
   desktop, a resize mid-match, and `Debug_ForceTouchUi`.
 - [ ] Bright-sky contrast check on Snow Fortress.
@@ -83,5 +83,5 @@ Not applicable.
 
 ## 8. Gates and handoff
 
-Pending: the device QA above and the icon upload. Known follow-ups: a kill feed, and
+Pending: the device QA above. Known follow-ups: a kill feed, and
 reload-state feedback on the ammo count.
