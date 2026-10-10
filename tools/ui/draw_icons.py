@@ -70,15 +70,15 @@ def ammo(d):
 
 
 def mutate(d):
-    # power burst: an eight-point star with a solid core
-    pts = []
-    for i in range(16):
-        a = math.radians(i * 22.5 - 90)
-        r = 46 if i % 2 == 0 else 22
-        pts.append((50 + r * math.cos(a), 50 + r * math.sin(a)))
-    poly(d, pts)
-    circle(d, 50, 50, 14, fill=CLEAR)
-    circle(d, 50, 50, 8, fill=W)
+    # Titan: a clenched fist, knuckles up. (A star burst read as nothing in playtest.)
+    for x in (20, 35, 50, 65):
+        rrect(d, x, 14, x + 15, 50, 7)
+    rrect(d, 20, 34, 80, 80, 12)
+    for x in (35, 50, 65):  # gaps between the fingers
+        rrect(d, x - 1.2, 14, x + 1.2, 44, 1, fill=CLEAR)
+    rrect(d, 10, 46, 58, 66, 10, fill=CLEAR)  # thumb, separated from the fingers
+    rrect(d, 13, 49, 55, 63, 7)
+    rrect(d, 30, 82, 70, 94, 4)  # wrist
 
 
 def slam(d):
@@ -103,9 +103,13 @@ def charge(d):
 
 
 def fuel(d):
-    poly(d, [(50, 8), (78, 52), (22, 52)])
-    circle(d, 50, 62, 28, fill=W)
-    circle(d, 40, 64, 7, fill=CLEAR)
+    # jetpack / fly: a rocket with its flame. (A fuel drop read as nothing in playtest.)
+    d.pieslice((*p(36, 4), *p(64, 44)), 180, 360, fill=W)  # nose
+    rrect(d, 36, 22, 64, 70, 6)  # body
+    circle(d, 50, 38, 6, fill=CLEAR)  # window
+    poly(d, [(36, 48), (20, 74), (36, 68)])  # fins
+    poly(d, [(64, 48), (80, 74), (64, 68)])
+    poly(d, [(41, 74), (59, 74), (50, 97)])  # flame
 
 
 def scope(d):

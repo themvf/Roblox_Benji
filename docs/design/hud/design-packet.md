@@ -25,7 +25,7 @@ Not applicable.
 
 1. **Lobby or intermission:** one status line at the top, e.g. "NEXT MAP  SNOW FORTRESS  0:05".
 2. **Duel round:** the score bar shows the red score, the clock and the blue score. Your side is
-   underlined, which replaced the "RED TEAM" badge.
+   underlined. The "RED TEAM" badge stays at the top left (cutting it lost the team signal).
 3. **Convergence round:** only the Convergence bar and zone chips show. This fixes the duplicate
    clock.
 4. **Picking something up:** a notice under the bar with an icon and a few words, e.g. "SPEED"
@@ -69,7 +69,7 @@ Not applicable.
 | Weapon slots | `WeaponBarController` |
 | Mutation dock (desktop) | `MutationController` |
 | Touch buttons | `TouchController` |
-| Removed | `TeamIdentityController` |
+| Team badge | `TeamIdentityController` (kept) |
 
 ## 7. Acceptance and evidence
 

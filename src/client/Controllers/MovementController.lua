@@ -228,8 +228,11 @@ local function pose()
 end
 
 function MovementController:KnitStart()
-    UserInputService.InputBegan:Connect(function(input, gameProcessed)
-        if gameProcessed then
+    UserInputService.InputBegan:Connect(function(input)
+        -- Not `gameProcessed`: the Weapons Kit binds Left Shift for its own (disabled) sprint
+        -- through ContextActionService whenever a gun is out, which marks every Shift press
+        -- processed -- so sprint never started while holding a gun. Only typing is excluded.
+        if UserInputService:GetFocusedTextBox() then
             return
         end
         if SPRINT_KEYS[input.KeyCode] then

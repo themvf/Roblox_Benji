@@ -80,7 +80,7 @@ function ConvergenceController:BuildGui()
     end
     self.RedScore = score(0.03, RED, Enum.TextXAlignment.Left)
     self.BlueScore = score(0.67, BLUE, Enum.TextXAlignment.Right)
-    -- your side is underlined, so it reads without colour (it replaced the RED TEAM badge)
+    -- your side is underlined, so the bar itself says which team you are on, beside the badge
     local function mark(x, color)
         local m = Instance.new("Frame")
         m.AnchorPoint = Vector2.new(0, 1)
