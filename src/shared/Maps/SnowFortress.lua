@@ -313,22 +313,9 @@ local map = {
             vy = 62,
         },
     },
-    ZipLines = {
-        {
-            Id = "southwest-upper",
-            From = { -150, 4, 130 },
-            To = { -55, 40, 50 },
-            GroundAlternative = "blue-centre",
-            Purpose = "Southwest exterior to roof hatch",
-        },
-        {
-            Id = "northeast-upper",
-            From = { 150, 4, -100 },
-            To = { 55, 43, -50 },
-            GroundAlternative = "red-centre",
-            Purpose = "Northeast exterior to roof hatch",
-        },
-    },
+    -- Removed after the 2026-10-10 playtest: the bright cables read as stray lines across
+    -- the map. The roof is reached by the launch pads and the stairs.
+    ZipLines = {},
     -- No grapple routes in the new authoritative sketch.
     GrappleAnchors = {},
     ReviewViews = {
