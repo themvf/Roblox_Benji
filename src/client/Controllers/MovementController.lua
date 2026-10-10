@@ -54,7 +54,13 @@ MovementController.SlideReadyAt = 0 -- os.clock() when the next slide is allowed
 local held = { sprint = false, crouch = false }
 local toggles = { sprint = false, crouch = false } -- controller sprint, touch crouch
 local slide = nil -- { Started, Dir }
-local crouchPressed = false -- a crouch press waiting to become a slide
+-- A crouch press waits SLIDE_BUFFER seconds to become a slide rather than one frame, so a
+-- press made mid-jump slides on landing and one made just before the cooldown ends still
+-- slides. A slide survives AIR_GRACE seconds off the ground, so stairs and bumps on the
+-- way do not end it; a real drop or a jump still does.
+local SLIDE_BUFFER = 0.3
+local AIR_GRACE = 0.2
+local slideQueuedUntil = 0 -- os.clock() until which a crouch press can still start a slide
 -- HipHeight while standing, captured when a crouch or slide begins and put back when it
 -- ends. HipHeight is left alone the rest of the time: a Titan mutation rescales the
 -- character, and writing a remembered value back every frame would undo it.
@@ -105,7 +111,7 @@ end
 -- Touch CROUCH button: slide if sprinting, otherwise toggle crouch.
 function MovementController:TouchCrouch()
     if self.Stance == "Sprint" then
-        crouchPressed = true
+        slideQueuedUntil = os.clock() + SLIDE_BUFFER
     else
         toggles.crouch = not toggles.crouch
     end
@@ -121,7 +127,7 @@ function MovementController:Step()
     local hum = character and character:FindFirstChildOfClass("Humanoid")
     local root = character and character:FindFirstChild("HumanoidRootPart")
     if not hum or not root or hum.Health <= 0 then
-        self.Stance, slide, crouchPressed = nil, nil, false
+        self.Stance, slide, slideQueuedUntil = nil, nil, 0
         return
     end
 
@@ -146,7 +152,9 @@ function MovementController:Step()
         local horizontal = Vector3.new(root.AssemblyLinearVelocity.X, 0, root.AssemblyLinearVelocity.Z)
         local jumped = hum.Jump or hum:GetState() == Enum.HumanoidStateType.Jumping
         local stalled = t > 0.15 and horizontal.Magnitude < s.WalkSpeed * s.CrouchMultiplier * mods * 0.8
-        if t >= s.SlideSeconds or jumped or stalled or (not grounded and t > 0.25) then
+        slide.AirSince = if grounded then nil else slide.AirSince or now
+        local airborne = slide.AirSince ~= nil and now - slide.AirSince > AIR_GRACE
+        if t >= s.SlideSeconds or jumped or stalled or airborne then
             slide = nil
             self.SlideReadyAt = now + s.SlideCooldown
             toggles.crouch = false
@@ -158,7 +166,7 @@ function MovementController:Step()
                 Vector3.new(slide.Dir.X * speed, root.AssemblyLinearVelocity.Y, slide.Dir.Z * speed)
         end
     elseif
-        crouchPressed
+        now <= slideQueuedUntil
         and self.Stance == "Sprint"
         and grounded
         and moving
@@ -167,13 +175,13 @@ function MovementController:Step()
     then
         local dir = Vector3.new(hum.MoveDirection.X, 0, hum.MoveDirection.Z)
         slide = { Started = now, Dir = dir.Magnitude > 0.1 and dir.Unit or root.CFrame.LookVector }
+        slideQueuedUntil = 0
         stance = "Slide"
     elseif wantCrouch and grounded then
         stance = "Crouch"
     elseif wantSprint then
         stance = "Sprint"
     end
-    crouchPressed = false
 
     self.Stance = stance
     local speed = Movement.resolve(s, mods, stance, aim)
@@ -220,8 +228,11 @@ local function pose()
 end
 
 function MovementController:KnitStart()
-    UserInputService.InputBegan:Connect(function(input, gameProcessed)
-        if gameProcessed then
+    UserInputService.InputBegan:Connect(function(input)
+        -- Not `gameProcessed`: the Weapons Kit binds Left Shift for its own (disabled) sprint
+        -- through ContextActionService whenever a gun is out, which marks every Shift press
+        -- processed -- so sprint never started while holding a gun. Only typing is excluded.
+        if UserInputService:GetFocusedTextBox() then
             return
         end
         if SPRINT_KEYS[input.KeyCode] then
@@ -234,7 +245,7 @@ function MovementController:KnitStart()
                 return
             end
             held.crouch = true
-            crouchPressed = true
+            slideQueuedUntil = os.clock() + SLIDE_BUFFER
         end
     end)
     UserInputService.InputEnded:Connect(function(input)
@@ -251,7 +262,7 @@ function MovementController:KnitStart()
     Players.LocalPlayer.CharacterAdded:Connect(function()
         held.sprint, held.crouch = false, false
         toggles.sprint, toggles.crouch = false, false
-        slide, crouchPressed, sentStance = nil, false, nil
+        slide, slideQueuedUntil, sentStance = nil, 0, nil
         self.Stance = nil
     end)
 

@@ -7,6 +7,10 @@
 --
 -- Disabling the core Backpack also disables its number-key handling, so equipping is implemented
 -- here: 1/2/3 and clicks both go through Equip().
+--
+-- Rivals-style: the slot IS the icon. No weapon names (the model says which gun it is), a small
+-- key number in the corner on keyboard only, and an outline on the one in your hands. Health
+-- and ammo sit just above the row (VitalsController).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StarterGui = game:GetService("StarterGui")
@@ -14,17 +18,21 @@ local UserInputService = game:GetService("UserInputService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Weapons = require(ReplicatedStorage.Shared.Weapons)
 local WeaponPreview = require(ReplicatedStorage.Shared.WeaponPreview)
+local Screen = require(script.Parent.Parent.UI.Screen)
+local Theme = require(script.Parent.Parent.UI.Theme)
 
 local WeaponBarController = Knit.CreateController({ Name = "WeaponBarController" })
 
-local SLOT = Color3.fromRGB(26, 29, 37)
-local SLOT_ON = Color3.fromRGB(52, 60, 76)
-local TEXT = Color3.fromRGB(245, 245, 250)
-local MUTED = Color3.fromRGB(150, 156, 170)
-local ACCENT = Color3.fromRGB(255, 200, 70)
+local SLOT = Theme.Color.Panel
+local SLOT_ON = Theme.Color.PanelSelected
+local TEXT = Theme.Color.Text
+local MUTED = Theme.Color.TextMuted
+local ACCENT = Theme.Color.Accent
 
-local SLOT_SIZE = 104
-local SLOT_HEIGHT = 88
+local SLOT_SIZE = 80
+local SLOT_HEIGHT = 60
+WeaponBarController.SLOT_HEIGHT = SLOT_HEIGHT
+WeaponBarController.BOTTOM_GAP = 10 -- row's distance above the bottom safe-area inset
 local SLOT_ORDER = { Primary = 1, Secondary = 2, Melee = 3, Utility = 4 }
 local NUMBER_KEY = {
     [Enum.KeyCode.One] = 1,
@@ -41,8 +49,8 @@ end
 -- Frame a model inside a ViewportFrame: one camera per slot, pulled back to fit the extents.
 local function makeIcon(parent: Instance, tool: Tool)
     local vp = Instance.new("ViewportFrame")
-    vp.Size = UDim2.new(1, -12, 0, 42)
-    vp.Position = UDim2.fromOffset(6, 17)
+    vp.Size = UDim2.new(1, -12, 1, -12)
+    vp.Position = UDim2.fromOffset(6, 6)
     vp.BackgroundTransparency = 1
     vp.Ambient = Color3.fromRGB(200, 210, 225)
     vp.LightColor = Color3.fromRGB(255, 245, 225)
@@ -79,7 +87,16 @@ local function makeIcon(parent: Instance, tool: Tool)
     end
     if #clone:GetChildren() == 0 then
         clone:Destroy()
-        return vp -- the persistent weapon name remains a usable fallback
+        -- nothing visible to frame: the name is the fallback
+        local name = Instance.new("TextLabel")
+        name.Size = UDim2.fromScale(1, 1)
+        name.BackgroundTransparency = 1
+        name.Text = (tool.Name:gsub("(%l)(%u)", "%1 %2")):upper()
+        name.TextScaled = true
+        name.Font = Enum.Font.GothamBold
+        name.TextColor3 = TEXT
+        name.Parent = vp
+        return vp
     end
     clone.Parent = vp
 
@@ -113,41 +130,20 @@ local function makeIcon(parent: Instance, tool: Tool)
 end
 
 function WeaponBarController:BuildGui()
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "WeaponBar"
-    gui.ResetOnSpawn = false
-    gui.DisplayOrder = 12
+    local gui = Screen.newScreenGui("WeaponBar", Screen.Layers.Hotbar)
     gui.Parent = player():WaitForChild("PlayerGui")
     self.Gui = gui
 
-    -- Backed status text stays readable against snow; every slot also retains its weapon name.
-    local name = Instance.new("TextLabel")
-    name.AnchorPoint = Vector2.new(0.5, 1)
-    name.Position = UDim2.new(0.5, 0, 1, -104)
-    name.Size = UDim2.fromOffset(260, 24)
-    name.BackgroundColor3 = SLOT
-    name.BackgroundTransparency = 0.1
-    name.Text = ""
-    name.TextSize = 14
-    name.Font = Enum.Font.GothamBold
-    name.TextColor3 = MUTED
-    name.Parent = gui
-    self.NameLabel = name
-
     local row = Instance.new("Frame")
     row.AnchorPoint = Vector2.new(0.5, 1)
-    row.Position = UDim2.new(0.5, 0, 1, -10)
-    row.Size = UDim2.fromOffset(400, SLOT_SIZE)
+    row.Size = UDim2.fromOffset(400, SLOT_HEIGHT)
     row.BackgroundTransparency = 1
     row.Parent = gui
-    local layout = Instance.new("UIListLayout")
-    layout.FillDirection = Enum.FillDirection.Horizontal
-    layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
-    layout.Padding = UDim.new(0, 4)
-    layout.SortOrder = Enum.SortOrder.LayoutOrder
-    layout.Parent = row
     self.Row = row
+    Screen.onChange(function(state)
+        row.Position = UDim2.new(0.5, 0, 1, -state.Insets.Bottom - WeaponBarController.BOTTOM_GAP)
+        self:Rebuild()
+    end)
     gui:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
         self:Resize()
     end)
@@ -208,15 +204,15 @@ function WeaponBarController:Rebuild()
     layout.Parent = self.Row
 
     self.Slots = {}
-    self.NameLabel.Text = "CHOOSE A WEAPON"
     local character = player().Character
+    local touch = Knit.GetController("TouchController").IsTouch() -- honours Debug_ForceTouchUi
     for i, tool in self:Tools() do
         local held = tool.Parent == character
         local btn = Instance.new("TextButton")
         btn.Name = tool.Name
         btn.Size = UDim2.fromOffset(SLOT_SIZE, SLOT_HEIGHT)
         btn.BackgroundColor3 = held and SLOT_ON or SLOT
-        btn.BackgroundTransparency = 0.15
+        btn.BackgroundTransparency = held and 0.05 or Theme.Transparency.Panel
         btn.AutoButtonColor = false
         btn.Text = ""
         btn.LayoutOrder = i
@@ -225,52 +221,34 @@ function WeaponBarController:Rebuild()
         c.CornerRadius = UDim.new(0, 8)
         c.Parent = btn
         if held then
-            -- a thin accent underline plus the size/brightness step is enough to be unmistakable
-            local bar = Instance.new("Frame")
-            bar.AnchorPoint = Vector2.new(0.5, 1)
-            bar.Position = UDim2.new(0.5, 0, 1, -2)
-            bar.Size = UDim2.new(0.55, 0, 0, 2)
-            bar.BackgroundColor3 = ACCENT
-            bar.BorderSizePixel = 0
-            bar.Parent = btn
+            local ring = Instance.new("UIStroke")
+            ring.Thickness = 2
+            ring.Color = ACCENT
+            ring.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            ring.Parent = btn
         end
 
         makeIcon(btn, tool)
 
-        local label = Instance.new("TextLabel")
-        label.Position = UDim2.new(0, 4, 1, -29)
-        label.Size = UDim2.new(1, -8, 0, 27)
-        label.BackgroundTransparency = 1
-        label.Text = (tool.Name:gsub("(%l)(%u)", "%1 %2")):upper()
-        label.TextSize = 13
-        label.TextWrapped = true
-        label.Font = Enum.Font.GothamBold
-        label.TextColor3 = TEXT
-        label.Parent = btn
-
-        -- the key prompt lives in the corner, small, where it does not compete with the icon
-        local key = Instance.new("TextLabel")
-        key.Position = UDim2.fromOffset(5, 3)
-        key.Size = UDim2.new(1, -10, 0, 14)
-        key.BackgroundTransparency = 1
-        key.Text = held and (tostring(i) .. "  EQUIPPED") or tostring(i)
-        key.TextSize = 11
-        key.Font = Enum.Font.GothamBold
-        key.TextColor3 = held and TEXT or MUTED
-        key.Parent = btn
+        -- keyboard only: a touch player taps the slot, and the number is noise there
+        if not touch then
+            local key = Instance.new("TextLabel")
+            key.Position = UDim2.fromOffset(5, 3)
+            key.Size = UDim2.fromOffset(14, 14)
+            key.BackgroundTransparency = 1
+            key.Text = tostring(i)
+            key.TextSize = Theme.textSize(Theme.Type.Label)
+            key.Font = Enum.Font.GothamBold
+            key.TextColor3 = held and TEXT or MUTED
+            key.TextXAlignment = Enum.TextXAlignment.Left
+            key.ZIndex = 2
+            key.Parent = btn
+        end
 
         btn.Activated:Connect(function()
             self:Equip(i)
         end)
         self.Slots[i] = btn
-        if held then
-            -- "AssaultRifle" -> "ASSAULT RIFLE"
-            self.NameLabel.Text = (tool.Name:gsub("(%l)(%u)", "%1 %2")):upper()
-            self.NameLabel.TextColor3 = TEXT
-        end
-    end
-    if not self.NameLabel.Text or self.NameLabel.Text == "" then
-        self.NameLabel.Text = ""
     end
     self.Gui.Enabled = #self:Tools() > 0
     self:Resize()
