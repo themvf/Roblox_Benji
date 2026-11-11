@@ -106,6 +106,11 @@ function TuningService:EnsureSetup()
             tuning:SetAttribute("Movement_" .. key, default)
         end
     end
+    for key, default in Config.Turret do
+        if tuning:GetAttribute("Turret_" .. key) == nil then
+            tuning:SetAttribute("Turret_" .. key, default)
+        end
+    end
     -- arena camera framing (CameraController) -- experiment, tune while moving
     for key, default in
         {
@@ -148,6 +153,16 @@ function TuningService:EnsureSetup()
     for _, key in Config.CONVERGENCE_TUNABLE do
         if tuning:GetAttribute("Convergence_" .. key) == nil then
             tuning:SetAttribute("Convergence_" .. key, conv[key])
+        end
+    end
+    for key, default in Config.TDM do
+        if tuning:GetAttribute("TDM_" .. key) == nil then
+            tuning:SetAttribute("TDM_" .. key, default)
+        end
+    end
+    for key, default in Config.Training do
+        if tuning:GetAttribute("Training_" .. key) == nil then
+            tuning:SetAttribute("Training_" .. key, default)
         end
     end
     local note = tuning:FindFirstChild("README")

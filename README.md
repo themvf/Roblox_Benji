@@ -15,7 +15,11 @@ when one team is eliminated or the timer runs out, first team to 5 rounds wins.
 4. Test with Test > Clients and Servers (2+ players). Everyone spawns in the lobby; stand on the RED or BLUE half of the big gold CONVERGENCE pad (or a DUEL side pad) to queue on that team; friends stand on the same half.
 
 ## Layout
+To edit the lobby visually in Studio, use the [editable lobby walkthrough](docs/design/lobby-experience/EDITING.md).
+
 For planning and delivery, use the [game build workflow](GAME_BUILD_WORKFLOW.md): a standard question set, player storyboard, component reuse contract, and evidence gates for every map and mode.
+
+The story lives in the [Dark Matter lore bible](docs/design/lore/DARK_MATTER_LORE_BIBLE.md): crews, heroes, villains, map lore, the Season 1 comic arc and the on-screen lore names. Those names live in `src/shared/Lore.lua`, with streak and bounty names in `src/shared/Progression.lua`.
 
 For new modes and interfaces, follow the [Roblox game mode and UI playbook](ROBLOX_BEST_PRACTICES.md), including its reusable feature checklist and mobile acceptance criteria.
 
@@ -66,15 +70,15 @@ who reached 100 and never activated, ability uses and hits). Numbers live in `Sh
 - Match score = Objective + Defense + Teamplay + Combat + Discipline (weights in `Shared/Progression`). MVP is the
   top scorer on the winning team; the recap card shows the breakdown. Hold Tab for the scoreboard.
 - Only completed public matches count (>= 90 s, not aborted). Bot matches count while `Debug_CountBotMatches` is on.
-- Streaks: 2 Heating Up, 3 Hot Streak, 5 On Fire, 8 Elite, 10 Legendary, 15 Mythic. Checkpoints at 3/5/8/10 are
+- Streaks: 2 Resonant, 3 Stable, 5 Coherent, 8 Anchored, 10 Absolute, 15 Eternal. Checkpoints at 3/5/8/10 are
   saved forever. A loss resets the run, not the legacy. Lobby nameplates and the pre-match card show streak status.
-- Match bounties (XP + titles only): Combat (4/7/10 kills in one life -> Marked / Priority Target / Overrun) and
+- Match bounties (XP + titles only): Combat (4/7/10 kills in one life -> Entangled / Observed / Singularity) and
   Objective (2 captures in a life, 90 s held in a life, or 3 stops). Markers show only with line of sight; a zone
   ping every 75 s; capture callouts. Claimed on elimination; XP split 60% opposing team / 25% hunter / 15% top
   objective contributor; eligibility needs 90 s match age, target score >= 100, hunter present >= 60 s, and repeat
   kills on the same target pay 100% / 50% / 0%. Surviving to a win while marked pays survival XP.
 - Persistent stats (ProfileStore): wins, losses, K/D/A, captures, MVPs, objective score, bounties, XP/level, streaks.
-- Lobby leaderboard wall (OrderedDataStore): Convergence Rating, Best Streak, Wins, Bounties Claimed.
+- Lobby leaderboard wall (OrderedDataStore): Coherence Rating, Best Streak, Wins, Bounties Claimed.
 - Not yet (Phase 3-4 by design): cross-match streak bounties with currency, rivalry ledger, weekly boards.
 
 ## Modes

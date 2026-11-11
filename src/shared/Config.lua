@@ -7,7 +7,7 @@ local Config = {
     RoundsToWin = 5,
     RespawnSeconds = 3, -- lobby respawn only; in a Duel you wait for the next round
     Teams = { "Red", "Blue" },
-    Maps = { "Forest", "Snow", "Arena" }, -- Duel rotation
+    Maps = { "MyMapPublic" }, -- Duel rotation
     -- Module under Shared/Maps built at server start, before the first match. Also
     -- what Studio's Run (F8) shows, since Run starts the server with no character:
     -- point this at whatever map you are working on to inspect it with a free
@@ -16,7 +16,7 @@ local Config = {
     -- This one is NOT a Tuning attribute, unlike everything else here. The map builds
     -- once at server start, so a live attribute could not change it anyway, and a saved
     -- one used to beat this line permanently. TuningService clears any it finds.
-    StartupMap = "SnowFortress",
+    StartupMap = "MyMapPublic",
 
     -- Lobby map vote: once a pad fills, the players on it pick the map before the match starts.
     MapVoteEnabled = true,
@@ -24,7 +24,21 @@ local Config = {
     MapVoteOptions = 5, -- candidates offered; capped by how many maps the mode's rotation has
 
     -- Convergence (featured objective mode). Every number here is a Tuning attribute too.
-    ConvergenceMaps = { "Carrier", "Forest", "Snow", "SnowFortress", "Swamp" },
+    ConvergenceMaps = { "MyMapPublic" }, -- the designer-built map (source: assets/environment/source/MyMap.rbxm)
+    TDMMaps = { "MyMapTDM" }, -- same arena, no capture objectives
+    -- Training pads: one player, bots on both sides. Each team is filled to TeamSize, so the
+    -- player's side gets one bot fewer (5 = you + 4 bots against 5 bots). Tuning: Training_TeamSize.
+    Training = {
+        TeamSize = 5,
+    },
+    TDM = {
+        ScoreToWin = 50,
+        RegulationSeconds = 600,
+        OvertimeSeconds = 120,
+        RespawnSeconds = 3,
+        SpawnProtectSeconds = 1,
+        RecentHitSeconds = 10,
+    },
     Convergence = {
         TeamSize = 1, -- TESTING: design target is 6 (set Convergence_TeamSize in Tuning or here)
         MinTeamSize = 1, -- TESTING: design fallback is 4
@@ -60,6 +74,45 @@ Config.Movement = {
     AutoSprintDesktop = false, -- Rivals' "Auto Sprint" setting, for keyboard and controller
 }
 
+local overrides = nil
+
+-- Walk-up mounted turret. Server reads live Tuning attributes through GetTurret().
+Config.Turret = {
+    Damage = 8,
+    Range = 240,
+    FireRate = 8,
+    Magazine = 60,
+    ReloadSeconds = 4,
+    MaxYawDegrees = 75,
+    MinPitchDegrees = -18,
+    MaxPitchDegrees = 28,
+    OperatorDistance = 14,
+}
+
+function Config.GetTurret()
+    local out = table.clone(Config.Turret)
+    if overrides then
+        for key, default in Config.Turret do
+            local value = overrides:GetAttribute("Turret_" .. key)
+            if type(value) == "number" and value == value and value < math.huge and value > -math.huge then
+                out[key] = value
+            else
+                out[key] = default
+            end
+        end
+    end
+    out.Damage = math.clamp(out.Damage, 1, 100)
+    out.Range = math.clamp(out.Range, 20, 500)
+    out.FireRate = math.clamp(out.FireRate, 1, 20)
+    out.Magazine = math.floor(math.clamp(out.Magazine, 1, 200))
+    out.ReloadSeconds = math.clamp(out.ReloadSeconds, 0.5, 15)
+    out.MaxYawDegrees = math.clamp(out.MaxYawDegrees, 10, 180)
+    out.MinPitchDegrees = math.clamp(out.MinPitchDegrees, -60, 0)
+    out.MaxPitchDegrees = math.clamp(out.MaxPitchDegrees, 0, 60)
+    out.OperatorDistance = math.clamp(out.OperatorDistance, 6, 30)
+    return out
+end
+
 -- Convergence keys exposed as flat Tuning attributes (Convergence_<Key>)
 Config.CONVERGENCE_TUNABLE = {
     "TeamSize",
@@ -79,7 +132,45 @@ Config.CONVERGENCE_TUNABLE = {
     "BotsPerTeam",
 }
 
-local overrides = nil
+function Config.GetTDM()
+    local out = table.clone(Config.TDM)
+    if overrides then
+        for key, default in Config.TDM do
+            local value = overrides:GetAttribute("TDM_" .. key)
+            if type(value) == "number" and value == value and value < math.huge and value > 0 then
+                out[key] = value
+            else
+                out[key] = default
+            end
+        end
+    end
+    out.ScoreToWin = math.floor(math.clamp(out.ScoreToWin, 1, 500))
+    out.RegulationSeconds = math.clamp(out.RegulationSeconds, 30, 3600)
+    out.OvertimeSeconds = math.clamp(out.OvertimeSeconds, 10, 600)
+    out.RespawnSeconds = math.clamp(out.RespawnSeconds, 0.5, 20)
+    out.SpawnProtectSeconds = math.clamp(out.SpawnProtectSeconds, 0.5, 10)
+    out.RecentHitSeconds = math.clamp(out.RecentHitSeconds, 1, 60)
+    return out
+end
+
+-- Training settings with Tuning overrides (Training_<Key>) applied
+function Config.GetTraining()
+    local out = table.clone(Config.Training)
+    local value = overrides and overrides:GetAttribute("Training_TeamSize")
+    if type(value) == "number" and value == value and value < math.huge then
+        out.TeamSize = value
+    end
+    out.TeamSize = math.floor(math.clamp(out.TeamSize, 1, 8))
+    return out
+end
+
+-- Bots each team needs to reach `teamSize`, counting the humans already on it.
+function Config.TrainingBots(teamSize, humans)
+    return {
+        Red = math.max(0, teamSize - (humans.Red or 0)),
+        Blue = math.max(0, teamSize - (humans.Blue or 0)),
+    }
+end
 
 -- Called by TuningService with the Configuration instance; reads are live thereafter.
 function Config.SetOverrideSource(inst)

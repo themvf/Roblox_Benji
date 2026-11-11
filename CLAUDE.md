@@ -14,7 +14,7 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - Build gates: `lune run tools/check_skins.luau`, `lune run tools/check_celebrations.luau`,
   `lune run tools/check_maps.luau`, `lune run tools/check_assets.luau`,
   `lune run tools/check_decor.luau`, `lune run tools/check_bake.luau`, `lune run tools/check_map_authoring.luau`,
-  `lune run tools/check_live_map.luau`, `lune run tools/check_movement.luau`,
+  `lune run tools/check_live_map.luau`, `lune run tools/check_lobby_authoring.luau`, `lune run tools/check_movement.luau`,
   `lune run tools/build_weapons.luau` (regenerates weapon tools from `src/shared/Weapons`).
 - Lune scripts need datatypes imported from the roblox lib (`local Vector3 = roblox.Vector3` etc.).
 
@@ -30,6 +30,7 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
   system-wide, which otherwise makes `stylua --check src` fail on every file locally while CI passes.
 
 ## External art: appraise before you build
+- For asset handoff and resumption, follow [ASSET_DELIVERY_WORKFLOW.md](docs/design/ASSET_DELIVERY_WORKFLOW.md). Read the asset package's `HANDOFF.md` before rebuilding; record approved decisions and continue from the first unverified stage. The server rack is the worked example.
 - **Any** model, scan or scenery pack gets appraised before a pipeline is pointed at it:
   `blender -b -noaudio --python tools/blender/appraise_asset.py -- --source "<file>" --record assets/<kind>/<name>/appraisal.json`
   Then fill in `decision`, stating what the asset is for. `check_assets` fails until you do.
@@ -77,6 +78,11 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
   in any order. The Weapons Kit's own sprint/aim-slow are switched off in `tools/build_weapons.luau`.
 
 ## UI and screens
+The lobby world is editable in Studio through `assets/environment/source/Lobby.rbxm`.
+Follow [the lobby editing walkthrough](docs/design/lobby-experience/EDITING.md): edit the
+Workspace source, Play to preview, then Save to File and run `tools/save_lobby.cmd`.
+Do not hand-edit the generated playable copy or the temporary `Workspace.Lobby`.
+
 Layout goes through `src/client/UI/Screen.lua`: safe-area insets, device class, a UIScale per panel, 44pt
 tap targets (96pt ceiling), one DisplayOrder table, and reserved zones (crosshair, thumbstick, jump button,
 hotbar). Never build a raw `ScreenGui` or position off a raw screen edge. World-space `BillboardGui` sizes

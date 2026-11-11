@@ -62,6 +62,11 @@ require = function(target)
     end
     return luneRequire(target)
 end
+preloaded.Snow = luneRequire("../src/shared/Maps/Snow")
+preloaded.SnowFortress = luneRequire("../src/shared/Maps/SnowFortress")
+-- MyMapPublic wraps the generated MyMap, and MyMapTDM wraps MyMapPublic.
+preloaded.MyMap = luneRequire("../src/shared/Maps/MyMap")
+preloaded.MyMapPublic = luneRequire("../src/shared/Maps/MyMapPublic")
 
 local checked, failures = 0, 0
 local files = fs.readDir(MAPS_DIR)
@@ -72,19 +77,29 @@ for _, file in files do
         local ok, layout = pcall(luneRequire, "../" .. MAPS_DIR .. "/" .. file:sub(1, -5))
         if ok then
             local name = layout.Name or file:sub(1, -5)
-            local solids, parts = Baked.load(name, Validate)
+            -- a mode variant (SnowFortressTDM, MyMapTDM) ships another map's bake
+            local bakeName = layout.BakedMap or name
+            local solids, parts = Baked.load(bakeName, Validate)
 
             if layout.RequiresBake then
                 checked += 1
                 if not parts then
                     failures += 1
-                    print(("FAIL  %-14s declares RequiresBake but %s/%s.rbxm is missing"):format(name, Baked.DIR, name))
+                    print(
+                        ("FAIL  %-14s declares RequiresBake but %s/%s.rbxm is missing"):format(
+                            name,
+                            Baked.DIR,
+                            bakeName
+                        )
+                    )
                 elseif #solids == 0 and not (layout.Terrain and not layout.Terrain.Sea) then
                     failures += 1
-                    print(("FAIL  %-14s baked with nothing collidable and no terrain -- nothing to stand on"):format(name))
+                    print(
+                        ("FAIL  %-14s baked with nothing collidable and no terrain -- nothing to stand on"):format(name)
+                    )
                 else
                     local leftovers = {}
-                    for _, root in roblox.deserializeModel(fs.readFile(Baked.path(name))) do
+                    for _, root in roblox.deserializeModel(fs.readFile(Baked.path(bakeName))) do
                         for _, inst in root:GetDescendants() do
                             if isScaffolding(inst) then
                                 table.insert(leftovers, inst.Name)
@@ -101,11 +116,13 @@ for _, file in files do
                         print(("        run: bash tools/save_map.sh %s"):format(name))
                     elseif #leftovers > 0 then
                         failures += 1
-                        print(("FAIL  %-14s %d guide markers left in the bake, e.g. %s"):format(
-                            name,
-                            #leftovers,
-                            leftovers[1]
-                        ))
+                        print(
+                            ("FAIL  %-14s %d guide markers left in the bake, e.g. %s"):format(
+                                name,
+                                #leftovers,
+                                leftovers[1]
+                            )
+                        )
                     else
                         print(("OK    %-14s %d parts baked, %d of them collidable"):format(name, #parts, #solids))
                     end

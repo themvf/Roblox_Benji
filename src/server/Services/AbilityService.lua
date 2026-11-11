@@ -71,6 +71,7 @@ end
 local function hurt(attacker, victim, amount)
     victim.Character:SetAttribute("LastHitBy", attacker.UserId)
     victim.Character:SetAttribute("LastHitByName", attacker.Name)
+    victim.Character:SetAttribute("LastHitAt", os.clock())
     local dealt = math.min(amount, victim.Humanoid.Health)
     Knit.GetService("StatsService"):OnDamage(attacker, victim.Character, dealt)
     victim.Humanoid:TakeDamage(amount)

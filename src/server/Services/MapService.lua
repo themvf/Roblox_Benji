@@ -9,11 +9,13 @@ local RunService = game:GetService("RunService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Palette = require(ReplicatedStorage.Shared.Palette)
 local Config = require(ReplicatedStorage.Shared.Config)
+local Lore = require(ReplicatedStorage.Shared.Lore)
 local TweenService = game:GetService("TweenService")
 local InsertService = game:GetService("InsertService")
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
 local MapAuthoring = require(ReplicatedStorage.Shared.MapAuthoring)
+local LobbyAuthoring = require(ReplicatedStorage.Shared.LobbyAuthoring)
 
 -- The startup map is Config.StartupMap, from Shared/Config.lua only -- TuningService
 -- clears any saved StartupMap attribute before this reads it, because one set in an old
@@ -445,48 +447,139 @@ local function buildLobby(self, layout)
         return { o[1] + p[1], o[2] + p[2], o[3] + p[3] }
     end
 
-    local w, d = layout.Size[1], layout.Size[2]
-    makePart(folder, "Floor", at({ 0, -1, 0 }), { w, 2, d }, nil, pal.Floor)
-    -- thin grid lines so the floor reads as a designed surface
-    for x = -w / 2 + 10, w / 2 - 10, 10 do
-        local line = makePart(folder, "GridX", at({ x, 0.02, 0 }), { 0.3, 0.04, d }, nil, pal.FloorGrid)
-        line.CanCollide = false
-    end
-    for z = -d / 2 + 10, d / 2 - 10, 10 do
-        local line = makePart(folder, "GridZ", at({ 0, 0.02, z }), { w, 0.04, 0.3 }, nil, pal.FloorGrid)
-        line.CanCollide = false
-    end
-    -- invisible rails so nobody walks off
-    local h = 30
-    for _, wall in
-        {
-            { at({ 0, h / 2, -d / 2 }), { w, h, 1 } },
-            { at({ 0, h / 2, d / 2 }), { w, h, 1 } },
-            { at({ -w / 2, h / 2, 0 }), { 1, h, d } },
-            { at({ w / 2, h / 2, 0 }), { 1, h, d } },
-        }
-    do
-        local p = makePart(folder, "Rail", wall[1], wall[2])
-        p.Transparency = 1
+    local mist = layout.ArrivalMist
+    if mist then
+        local field = Instance.new("Folder")
+        field.Name = "ArrivalMist"
+        field.Parent = folder
+        for row = 1, mist.Rows do
+            for column = 1, mist.Columns do
+                local x = mist.Center[1] + (column - (mist.Columns + 1) / 2) * mist.Spacing[1]
+                local z = mist.Center[3] + (row - (mist.Rows + 1) / 2) * mist.Spacing[2]
+                local anchor = makePart(field, "MistSource", at({ x, mist.Center[2], z }), { 0.2, 0.2, 0.2 })
+                anchor.Transparency = 1
+                anchor.CanCollide = false
+                anchor.CanTouch = false
+                anchor.CanQuery = false
+                anchor.CastShadow = false
+                local emitter = Instance.new("ParticleEmitter")
+                emitter.Name = "FloorMist"
+                emitter.Texture = mist.Texture
+                emitter.Color = ColorSequence.new(Color3.fromRGB(184, 198, 207), Color3.fromRGB(220, 226, 230))
+                emitter.Transparency = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0, 0.8),
+                    NumberSequenceKeypoint.new(0.2, 0.25),
+                    NumberSequenceKeypoint.new(0.8, 0.25),
+                    NumberSequenceKeypoint.new(1, 0.8),
+                })
+                emitter.Size = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0, 2),
+                    NumberSequenceKeypoint.new(0.5, 4),
+                    NumberSequenceKeypoint.new(1, 4.5),
+                })
+                emitter.Lifetime = NumberRange.new(3, 4)
+                emitter.Speed = NumberRange.new(0.05, 0.2)
+                emitter.Drag = 1.5
+                emitter.SpreadAngle = Vector2.new(75, 75)
+                emitter.Rotation = NumberRange.new(0, 360)
+                emitter.RotSpeed = NumberRange.new(-5, 5)
+                emitter.EmissionDirection = Enum.NormalId.Top
+                emitter.Rate = mist.RatePerEmitter
+                emitter.LightEmission = 0
+                emitter.Parent = anchor
+            end
+        end
     end
 
-    for _, piece in layout.Pieces do
-        local part = makePart(folder, piece.name, at(piece.pos), piece.size, piece.rot, pal[piece.color] or GREY)
-        -- accent strips are the only emissive surfaces in the room, so they read as signal
-        if piece.color == "Accent" or (piece.color == "Ego" and piece.name:find("Ring")) then
-            part.Material = Enum.Material.Neon
+    if layout.SourceGeometry then
+        for _, child in layout.SourceGeometry:GetChildren() do
+            child:Clone().Parent = folder
         end
+    else
+        local w, d = layout.Size[1], layout.Size[2]
+        makePart(folder, "Floor", at({ 0, -1, 0 }), { w, 2, d }, nil, pal.Floor)
+        -- thin grid lines so the floor reads as a designed surface
+        for x = -w / 2 + 10, w / 2 - 10, 10 do
+            local line = makePart(folder, "GridX", at({ x, 0.02, 0 }), { 0.3, 0.04, d }, nil, pal.FloorGrid)
+            line.CanCollide = false
+        end
+        for z = -d / 2 + 10, d / 2 - 10, 10 do
+            local line = makePart(folder, "GridZ", at({ 0, 0.02, z }), { w, 0.04, 0.3 }, nil, pal.FloorGrid)
+            line.CanCollide = false
+        end
+        -- invisible rails so nobody walks off
+        local h = 30
+        for _, wall in
+            {
+                { at({ 0, h / 2, -d / 2 }), { w, h, 1 } },
+                { at({ 0, h / 2, d / 2 }), { w, h, 1 } },
+                { at({ -w / 2, h / 2, 0 }), { 1, h, d } },
+                { at({ w / 2, h / 2, 0 }), { 1, h, d } },
+            }
+        do
+            local p = makePart(folder, "Rail", wall[1], wall[2])
+            p.Transparency = 1
+        end
+        for _, piece in layout.Pieces do
+            local part = makePart(folder, piece.name, at(piece.pos), piece.size, piece.rot, pal[piece.color] or GREY)
+            if piece.collide == false then
+                part.CanCollide = false
+                part.CanTouch = false
+                part.CanQuery = false
+            end
+            if piece.color == "Accent" or (piece.color == "Ego" and piece.name:find("Ring")) then
+                part.Material = Enum.Material.Neon
+            end
+        end
+    end
+
+    for _, spec in layout.Wayfinding or {} do
+        local color = typeof(spec.color) == "Color3" and spec.color or pal[spec.color] or pal.Accent
+        local anchor = makePart(folder, spec.name .. "Wayfinding", at(spec.pos), { 1, 1, 1 }, nil, color)
+        anchor.Transparency = 1
+        anchor.CanCollide = false
+        anchor.CanTouch = false
+        anchor.CanQuery = false
+
+        local sign = Instance.new("BillboardGui")
+        sign.Name = "Wayfinding"
+        sign.Size = UDim2.fromScale(spec.size[1], spec.size[2])
+        sign.AlwaysOnTop = true
+        sign.MaxDistance = 110
+        sign.Parent = anchor
+
+        local title = Instance.new("TextLabel")
+        title.Size = UDim2.fromScale(1, 0.68)
+        title.BackgroundTransparency = 1
+        title.Text = spec.title
+        title.TextScaled = true
+        title.Font = Enum.Font.GothamBlack
+        title.TextColor3 = color
+        Palette.worldText(title)
+        title.Parent = sign
+
+        local detail = Instance.new("TextLabel")
+        detail.Position = UDim2.fromScale(0, 0.68)
+        detail.Size = UDim2.fromScale(1, 0.32)
+        detail.BackgroundTransparency = 1
+        detail.Text = spec.detail
+        detail.TextScaled = true
+        detail.Font = Enum.Font.GothamBold
+        detail.TextColor3 = Color3.fromRGB(245, 245, 250)
+        Palette.worldText(detail)
+        detail.Parent = sign
     end
 
     -- One controlled light per destination instead of a uniformly blown-out floor. The room
     -- should read as three lit places in a dark hall, which is what makes the hierarchy legible.
     for _, spec in layout.Lights or {} do
-        local anchor = makePart(folder, spec.name, at(spec.pos), { 1, 1, 1 }, nil, pal[spec.color] or GREY)
+        local color = typeof(spec.color) == "Color3" and spec.color or pal[spec.color] or GREY
+        local anchor = makePart(folder, spec.name, at(spec.pos), { 1, 1, 1 }, nil, color)
         anchor.Transparency = 1
         anchor.CanCollide = false
         anchor.CanQuery = false
         local light = Instance.new("PointLight")
-        light.Color = pal[spec.color] or Color3.new(1, 1, 1)
+        light.Color = color
         light.Range = spec.range or 30
         light.Brightness = spec.brightness or 1.5
         light.Shadows = true
@@ -555,7 +648,7 @@ local function buildLobby(self, layout)
             local count = (spec.minTeamSize and spec.minTeamSize < spec.teamSize)
                     and (spec.minTeamSize .. "-" .. spec.teamSize .. " PLAYERS")
                 or (spec.teamSize .. (spec.teamSize == 1 and " PLAYER" or " PLAYERS"))
-            floorLabel(part, side.team:upper() .. "\n" .. count, Color3.fromRGB(20, 24, 30))
+            floorLabel(part, Lore.teamName(side.team):upper() .. "\n" .. count, Color3.fromRGB(20, 24, 30))
             sides[side.team] = part
         end
 
@@ -653,7 +746,7 @@ local function buildLobby(self, layout)
         title.Parent = sg
         self.BoardLabels = {}
         local names = { "Rating", "BestStreak", "Wins", "BountiesClaimed" }
-        local titles = { "CONVERGENCE RATING", "BEST STREAK", "WINS", "BOUNTIES CLAIMED" }
+        local titles = { Lore.Rating:upper(), "BEST STREAK", "WINS", "BOUNTIES CLAIMED" }
         for i, name in names do
             local col = Instance.new("TextLabel")
             col.Position = UDim2.new((i - 1) * 0.25, 4, 0.15, 0)
@@ -843,9 +936,17 @@ end
 
 local function cloneBaked(folder, baked)
     local parts = 0
+    local geometryCopied = false
     for _, child in baked:GetChildren() do
         if child.Name:sub(1, 13) == "SafetyBarrier" then
             continue
+        end
+        if child.Name == "Geometry" and child:IsA("Folder") then
+            if geometryCopied then
+                warn("[MapBuild] duplicate Geometry folder in " .. baked.Name .. " bake; skipping extra copy")
+                continue
+            end
+            geometryCopied = true
         end
         local copy = child:Clone()
         copy.Parent = folder
@@ -1293,7 +1394,7 @@ function MapService:Build(layout)
         -- in Studio since the last run. Warn only, never block a test session.
         -- A baked map's geometry is its bake, not its layout's (empty) piece lists; checking
         -- without it reported every barrier and launch landing as floating in empty space.
-        local bake = bakedModel(layout.Name)
+        local bake = bakedModel(layout.BakedMap or layout.Name)
         local ok, errors = Validate.check(layout, nil, bake and MapAuthoring.solids({ bake }, Validate) or nil)
         if not ok then
             warn(("[MapService] %s fails validation (%d):"):format(layout.Name, #errors))
@@ -1362,7 +1463,7 @@ function MapService:Build(layout)
     -- build. Never both. Everything outside this block -- terrain, lighting, spawns,
     -- objectives, pickups, traversal, the barrier -- comes from the layout either way,
     -- because none of it is geometry.
-    local baked = bakedModel(layout.Name)
+    local baked = bakedModel(layout.BakedMap or layout.Name)
     -- A map whose geometry lives only in its bake has nothing to fall back to. Failing
     -- here is the honest outcome: MapService:Load pcalls this and falls back to a map
     -- that works, which beats dropping players into an empty skybox.
@@ -1451,6 +1552,8 @@ function MapService:Build(layout)
             warn(("[MapService] %s: no %s spawns; that team will spawn at the origin"):format(layout.Name or "?", team))
         end
     end
+
+    Knit.GetService("TurretService"):Build(layout, folder)
 
     if layout.Environment then
         applyLighting(layout.Environment)
@@ -1810,6 +1913,7 @@ function MapService:ReadLiveMaps()
     end
     for _, child in workspace:GetChildren() do
         local keep = IGNORED_IN_WORKSPACE[child.Name]
+            or child:GetAttribute("LobbySource") == true
             or child:IsA("Camera")
             or child:IsA("Terrain")
             or child:IsA("LuaSourceContainer")
@@ -1840,7 +1944,7 @@ function MapService:LiveNotice(player)
     if self.ExploreMap then
         notice:Fire(
             player,
-            ("Playing %s from Studio. /lobby for the lobby; the PRACTICE pad plays a match here"):format(
+            ("Playing %s from Studio. /lobby for the lobby; the TRAINING · OBJECTIVE pad plays a match here"):format(
                 self.ExploreMap
             )
         )
@@ -1848,6 +1952,55 @@ function MapService:LiveNotice(player)
             notice:Fire(player, ("%d loose piece(s) left out -- see Output"):format(#self.LooseRemoved))
         end
     end
+end
+
+-- A Workspace editing copy wins in Studio, just as it does for authored maps.
+-- The saved copy in BakedMaps is the production source. Both use one marker
+-- reader; a bad edit falls back to the last converted copy without deleting it.
+function MapService:ReadLobbyLayout()
+    local base = require(ReplicatedStorage.Shared.Maps.Lobby)
+    local function read(root, label)
+        local layout, errors = LobbyAuthoring.read(root, base)
+        if not layout then
+            warn(("[LobbyAuthoring] %s cannot be played:"):format(label))
+            for _, message in errors do
+                warn("    " .. message)
+            end
+        end
+        return layout
+    end
+    local live = {}
+    for _, child in workspace:GetChildren() do
+        if child:GetAttribute("LobbySource") == true then
+            table.insert(live, child)
+        end
+    end
+    if RunService:IsStudio() and #live == 1 then
+        local layout = read(live[1], "editable lobby")
+        live[1]:Destroy() -- only the Play-session copy; the Studio edit model remains
+        if layout then
+            print("[LobbyAuthoring] playing lobby straight from Workspace")
+            return layout
+        end
+    elseif #live > 1 then
+        warn("[LobbyAuthoring] more than one editable lobby in Workspace; using the last saved copy")
+    end
+    for _, root in live do
+        if root.Parent then
+            root:Destroy()
+        end
+    end
+    local store = ServerStorage:FindFirstChild("BakedMaps")
+    local saved = store and store:FindFirstChild("Lobby")
+    if saved and saved:GetAttribute("LobbySource") ~= true then
+        for _, child in saved:GetChildren() do
+            if child:GetAttribute("LobbySource") == true then
+                saved = child
+                break
+            end
+        end
+    end
+    return (saved and read(saved, "saved lobby")) or base
 end
 
 function MapService:KnitInit()
@@ -1868,7 +2021,7 @@ function MapService:KnitInit()
     elseif live[1] then
         self.ExploreMap = startup
     end
-    buildLobby(self, require(ReplicatedStorage.Shared.Maps.Lobby))
+    buildLobby(self, self:ReadLobbyLayout())
 
     -- Hook spawns here, in KnitInit, so this runs before RoundService (KnitStart) can
     -- load anyone's character. Otherwise the first spawn lands at the world origin.
