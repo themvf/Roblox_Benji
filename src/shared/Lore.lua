@@ -3,9 +3,11 @@
 -- and team colour (Palette) stays the primary team signal. Streak and bounty names live in Progression.
 local Lore = {}
 
-Lore.Teams = { Red = "Forge", Blue = "Institute" }
+-- Plain colour names for now. The lore names are Red = "Forge", Blue = "Institute";
+-- put them back here to bring them back on every screen at once.
+Lore.Teams = { Red = "Red", Blue = "Blue" }
 
--- "Red" -> "Forge"; anything unknown passes through unchanged
+-- "Red" -> "Red"; anything unknown passes through unchanged
 function Lore.teamName(team)
     return Lore.Teams[team] or tostring(team or "")
 end

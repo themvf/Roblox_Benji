@@ -912,7 +912,7 @@ function BotService:Start(perTeam, respawnSeconds, getZones, onKill)
             local level = LEVELS[levelName]
             local bot = {
                 Name = ("%s Bot %d"):format(team, i), -- internal: logs, telemetry, model name
-                DisplayName = ("%s %s %d"):format(Lore.teamName(team), Lore.Bot, i), -- on screen: "Forge Echo 1"
+                DisplayName = ("%s %s %d"):format(Lore.teamName(team), Lore.Bot, i), -- on screen: "Red Echo 1"
                 Team = team,
                 Id = nextId,
                 Alive = false,
