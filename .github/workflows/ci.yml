@@ -86,7 +86,9 @@ jobs:
         run: lune run tools/check_celebrations.luau
 
       - name: Validate maps
-        run: lune run tools/check_maps.luau
+        run: |
+          lune run tools/check_maps.luau
+          lune run tools/check_fortress_modes.luau
 
       # A baked map has something to stand on and no authoring scaffolding, and a map
       # converted from an editable source matches what that source generates now.
@@ -102,6 +104,9 @@ jobs:
       # against a stand-in Workspace.
       - name: Live map in Studio
         run: lune run tools/check_live_map.luau
+
+      - name: Editable lobby source
+        run: lune run tools/check_lobby_authoring.luau
 
       # Sprint / crouch / slide rules, the speed-effect resolver, one WalkSpeed writer,
       # and the Weapons Kit's own sprint switched off.

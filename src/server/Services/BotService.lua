@@ -10,6 +10,7 @@ local RunService = game:GetService("RunService")
 local Debris = game:GetService("Debris")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Palette = require(ReplicatedStorage.Shared.Palette)
+local Lore = require(ReplicatedStorage.Shared.Lore)
 
 local BotService = Knit.CreateService({ Name = "BotService" })
 
@@ -28,6 +29,7 @@ local T = {
     LosRecheck = 0.10,
     LosLostGrace = 0.6,
     ObjectiveEval = 0.50,
+    HuntRefresh = 2.0, -- no zones (TDM): how often a bot re-picks the enemy it walks toward
     EngageRange = 45,
     SightRange = 60,
     ShotInterval = 0.1,
@@ -144,7 +146,7 @@ local function makeRig(bot)
     local model = Players:CreateHumanoidModelFromDescription(desc, Enum.HumanoidRigType.R15)
     model.Name = bot.Name
     local hum = model:FindFirstChildOfClass("Humanoid")
-    hum.DisplayName = bot.Name
+    hum.DisplayName = bot.DisplayName
     hum.WalkSpeed = bot.Level.Speed
     -- speed effects (Shared/Movement) multiply this base for bots
     model:SetAttribute("BaseWalkSpeed", bot.Level.Speed)
@@ -387,6 +389,19 @@ local function zoneSpot(bot, z)
     return z.Position
 end
 
+-- With no objective to hold (Team Deathmatch) a bot walks toward the nearest enemy,
+-- seen or not, and the usual sight check takes over once it gets close.
+local function huntGoal(bot)
+    local best, bestD
+    for _, e in enemiesOf(bot.Team) do
+        local d = (e.Root.Position - bot.Root.Position).Magnitude
+        if not bestD or d < bestD then
+            best, bestD = e.Root.Position, d
+        end
+    end
+    return best
+end
+
 -- ===== decision =====
 local function decide(bot, zones)
     local t = now()
@@ -407,6 +422,10 @@ local function decide(bot, zones)
                 bot.ZoneSpot = z and zoneSpot(bot, z) or nil
                 bot.Telemetry.Transitions += 1
             end
+        end
+        if not bot.Zone and t - (bot.HuntAt or 0) >= T.HuntRefresh then
+            bot.HuntAt = t
+            bot.HuntGoal = huntGoal(bot)
         end
         local atZone = bot.Zone and inZone(bot.Root.Position, bot.Zone)
         local enemyNear = bot.Target and bot.TargetDist <= 30
@@ -647,7 +666,8 @@ local function fire(bot)
     if math.random() < hitChance(bot, bot.TargetDist) then
         bot.Telemetry.Hits += 1
         target.Character:SetAttribute("LastHitBy", bot.Id)
-        target.Character:SetAttribute("LastHitByName", bot.Name)
+        target.Character:SetAttribute("LastHitByName", bot.Name) -- internal: bot retaliation matches on it
+        target.Character:SetAttribute("LastHitAt", os.clock()) -- TDM only credits recent hits
         local dmg = Knit.GetService("AbilityService"):ApplyBrace(target.Character, bot.Root.Position, SHOT_DAMAGE)
         target.Humanoid:TakeDamage(dmg)
     end
@@ -763,6 +783,8 @@ local function act(bot, dt)
                 bot.FlankCounted = false
             end
             navigateTo(bot, goal)
+        elseif bot.HuntGoal then
+            navigateTo(bot, bot.HuntGoal)
         end
     end
 
@@ -810,6 +832,7 @@ function BotService:SpawnBot(bot, spawnCF)
     bot.StateSince = now()
     bot.Ammo, bot.BurstLeft, bot.Reloading = bot.Level.Mag, 0, false
     bot.Target, bot.Zone, bot.ZoneSpot, bot.Waypoints, bot.PathGoal = nil, nil, nil, nil, nil
+    bot.HuntGoal, bot.HuntAt = nil, nil
     bot.FlankSide = (math.random() < 0.5) and -1 or 1
     bot.LastPos, bot.LastPos2, bot.StuckStep = nil, nil, 0
     bot.Telemetry.FirstContact, bot.Telemetry.FirstObjective = nil, nil
@@ -840,9 +863,13 @@ function BotService:SpawnBot(bot, spawnCF)
                 b.Telemetry.Kills += 1
             end
         end
-        local conv = Knit.GetService("ConvergenceService")
-        if conv.CreditKill then
-            conv:CreditKill(killerId, bot.Team)
+        if self.OnKill then
+            self.OnKill(killerId, bot.Team)
+        else
+            local conv = Knit.GetService("ConvergenceService")
+            if conv.CreditKill then
+                conv:CreditKill(killerId, bot.Team)
+            end
         end
         if bot.Root and self.Match then
             local p = bot.Root.Position
@@ -866,19 +893,26 @@ function BotService:SpawnFor(team)
     return CFrame.new(p)
 end
 
-function BotService:Start(perTeam, respawnSeconds, getZones)
+-- `perTeam` is a count for both teams, or { Red = n, Blue = m } when a side already has
+-- humans (training fills each team to a size). With no zones (Team Deathmatch) bots hunt
+-- the nearest enemy instead. `onKill(killerId, victimTeam)` scores a bot's death; without
+-- it the kill goes to ConvergenceService, which is what objective matches rely on.
+function BotService:Start(perTeam, respawnSeconds, getZones, onKill)
     self:Stop()
     self.Active = true
     self.RespawnSeconds = respawnSeconds
+    self.OnKill = onKill
     self.Match = { StartedAt = now(), Deaths = {} }
-    local archs, lvls = composition(perTeam)
+    local counts = type(perTeam) == "table" and perTeam or { Red = perTeam, Blue = perTeam }
     for _, team in { "Red", "Blue" } do
-        for i = 1, perTeam do
+        local archs, lvls = composition(counts[team] or 0)
+        for i = 1, counts[team] or 0 do
             nextId -= 1
             local levelName = LEVELS[self.Level] and self.Level or lvls[i]
             local level = LEVELS[levelName]
             local bot = {
-                Name = ("%s Bot %d"):format(team, i),
+                Name = ("%s Bot %d"):format(team, i), -- internal: logs, telemetry, model name
+                DisplayName = ("%s %s %d"):format(Lore.teamName(team), Lore.Bot, i), -- on screen: "Forge Echo 1"
                 Team = team,
                 Id = nextId,
                 Alive = false,
@@ -1017,6 +1051,7 @@ function BotService:Stop()
         self:Report()
     end
     self.Active = false
+    self.OnKill = nil
     if self.Conn then
         self.Conn:Disconnect()
         self.Conn = nil

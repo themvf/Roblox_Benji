@@ -75,7 +75,7 @@ function AlterEgoService:KnitStart()
             character:WaitForChild("Humanoid")
             task.wait(0.2)
             local _, ego = self:Get(player)
-            if ego and character.Parent then
+            if ego and character.Parent and (player:GetAttribute("CharacterSkin") or "") == "" then
                 dress(character, ego)
             end
         end)

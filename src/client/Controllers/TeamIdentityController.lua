@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Lore = require(ReplicatedStorage.Shared.Lore)
 local Screen = require(script.Parent.Parent.UI.Screen)
 local Theme = require(script.Parent.Parent.UI.Theme)
 local Controller = Knit.CreateController({ Name = "TeamIdentityController" })
@@ -26,7 +27,7 @@ function Controller:KnitStart()
     local function refresh()
         local team = me:GetAttribute("Team")
         gui.Enabled = me:GetAttribute("InMatch") == true and (team == "Red" or team == "Blue")
-        badge.Text = team == "Red" and "RED TEAM" or "BLUE TEAM"
+        badge.Text = Lore.teamName(team == "Red" and "Red" or "Blue"):upper()
         badge.BackgroundColor3 = team == "Red" and Theme.Team.Red or Theme.Team.Blue
     end
     me:GetAttributeChangedSignal("Team"):Connect(refresh)

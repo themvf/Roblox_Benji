@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Rectangular PLAY hall lobby concept</title>
+  <desc id="desc">Source layout concept: arrival spawns face a rectangular PLAY hall containing Duel, Convergence, Team Deathmatch, and Practice. Armory and Alter Ego remain side bays. Not an in-game capture.</desc>
+  <rect width="960" height="540" fill="#11141b"/>
+  <text x="40" y="44" fill="#f5f5fa" font-family="Arial, sans-serif" font-size="25" font-weight="bold">LOBBY ARRIVAL · PLAY HALL</text>
+  <text x="40" y="68" fill="#a0a5b4" font-family="Arial, sans-serif" font-size="14">Top-down source concept · verify sightlines and queue pads in Studio</text>
+  <rect x="138" y="90" width="684" height="395" rx="10" fill="#303540" stroke="#586070" stroke-width="4"/>
+  <rect x="181" y="103" width="598" height="209" fill="#252a34" stroke="#ffc446" stroke-width="5"/>
+  <text x="480" y="132" text-anchor="middle" fill="#ffc446" font-family="Arial, sans-serif" font-size="27" font-weight="bold">PLAY</text>
+  <text x="480" y="151" text-anchor="middle" fill="#e3e5ed" font-family="Arial, sans-serif" font-size="12">CHOOSE A GAME TYPE · JOIN RED OR BLUE</text>
+  <rect x="195" y="169" width="155" height="83" fill="#3b454d" stroke="#78c8a0" stroke-width="2"/>
+  <text x="272" y="192" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">DUELS</text>
+  <text x="272" y="215" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="13">1v1 · 2v2</text>
+  <rect x="362" y="169" width="236" height="83" fill="#414350" stroke="#ffc446" stroke-width="2"/>
+  <text x="480" y="192" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">CONVERGENCE</text>
+  <text x="480" y="215" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="13">4–6 PER TEAM</text>
+  <rect x="610" y="169" width="155" height="83" fill="#414350" stroke="#ffc446" stroke-width="2"/>
+  <text x="687" y="190" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="bold">TEAM DEATHMATCH</text>
+  <text x="687" y="211" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="13">5v5 · MAP ROTATION</text>
+  <rect x="623" y="222" width="61" height="21" fill="#b65050"/>
+  <rect x="690" y="222" width="61" height="21" fill="#4b7aca"/>
+  <text x="653" y="237" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">RED</text>
+  <text x="720" y="237" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">BLUE</text>
+  <rect x="427" y="265" width="106" height="32" fill="#4e3660" stroke="#a58bc4"/>
+  <text x="480" y="286" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="13">PRACTICE</text>
+  <rect x="166" y="328" width="175" height="102" fill="#3e4858" stroke="#9fa5b4" stroke-width="3"/>
+  <text x="254" y="368" text-anchor="middle" fill="#ffc446" font-family="Arial, sans-serif" font-size="21" font-weight="bold">ARMORY</text>
+  <text x="254" y="390" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="13">LOADOUT</text>
+  <rect x="619" y="328" width="175" height="102" fill="#4e3660" stroke="#a58bc4" stroke-width="3"/>
+  <text x="706" y="368" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">ALTER EGO</text>
+  <text x="706" y="390" text-anchor="middle" fill="#e2c8f5" font-family="Arial, sans-serif" font-size="12">CHOOSE YOUR FORM</text>
+  <path d="M427 446 V316 M533 446 V316" stroke="#ffc446" stroke-width="3"/>
+  <g fill="#f5f5fa" stroke="#ffc446" stroke-width="3"><circle cx="390" cy="454" r="9"/><circle cx="435" cy="454" r="9"/><circle cx="480" cy="454" r="9"/><circle cx="525" cy="454" r="9"/><circle cx="570" cy="454" r="9"/></g>
+  <text x="480" y="478" text-anchor="middle" fill="#f5f5fa" font-family="Arial, sans-serif" font-size="12">FIVE ARRIVAL SPAWNS FACE PLAY</text>
+  <text x="40" y="519" fill="#a0a5b4" font-family="Arial, sans-serif" font-size="12">Concept only. The source includes the rectangular hall, mode pads, and TDM queue.</text>
+</svg>

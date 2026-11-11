@@ -1,9 +1,7 @@
 -- Combat staging hub. Not a queue room with pads scattered across the floor.
 --
--- Three destinations, in deliberate order of visual weight:
---   PLAY      the arena gate, dead centre, the tallest thing in the room. Mode pads live
---             INSIDE it, so they are something you find after choosing to play rather than
---             the room's visual content.
+-- The central rectangular PLAY hall is the dominant destination. Its mode
+-- zones are visible from arrival: Duel, Convergence, Team Deathmatch, Training.
 --   ARMORY    left bay, weapon displays and the loadout station.
 --   ALTER EGO right bay, deliberately stranger. Titan/Colossus is the differentiating
 --             mechanic and previously had no physical presence in the lobby at all.
@@ -27,15 +25,26 @@ return {
     },
 
     Spawns = {
-        { 0, 3, 42 },
-        { -8, 3, 44 },
-        { 8, 3, 44 },
-        { -16, 3, 46 },
-        { 16, 3, 46 },
+        { 0, 3, 10 },
+        { -7, 3, 12 },
+        { 7, 3, 12 },
+        { -14, 3, 14 },
+        { 14, 3, 14 },
     },
 
-    -- Pads sit inside the gate mouth, not out on the open floor. Convergence is centred under
-    -- the arch; the two Duel pads are tucked behind it, smaller, and read as secondary.
+    -- Cool ankle-height mist across the central arrival area. The emitters are
+    -- placed by MapService for both the editable and baked lobby.
+    ArrivalMist = {
+        Center = { 0, 0.28, 12 },
+        Columns = 5,
+        Rows = 3,
+        Spacing = { 7, 6 },
+        RatePerEmitter = 5,
+        Texture = "rbxasset://textures/particles/smoke_main.dds",
+    },
+
+    -- Distinct mode zones inside one rectangular PLAY hall. The TDM halves each
+    -- fit five standing players without crossing into Convergence or the exit.
     Pads = {
         {
             name = "PadConvergence",
@@ -44,7 +53,7 @@ return {
             featured = true,
             teamSize = 6,
             minTeamSize = 4,
-            pos = { 0, 0, -30 },
+            pos = { 0, 0, -32 },
             size = { 36, 1, 18 },
             color = Color3.fromRGB(255, 196, 70),
         },
@@ -53,8 +62,8 @@ return {
             kind = "Duel",
             mode = "DUEL 1v1",
             teamSize = 1,
-            pos = { -26, 0, -46 },
-            size = { 12, 1, 10 },
+            pos = { -47, 0, -28 },
+            size = { 25, 1, 9 },
             color = Color3.fromRGB(120, 200, 160),
         },
         {
@@ -62,9 +71,19 @@ return {
             kind = "Duel",
             mode = "DUEL 2v2",
             teamSize = 2,
-            pos = { 26, 0, -46 },
-            size = { 12, 1, 10 },
+            pos = { -47, 0, -43 },
+            size = { 25, 1, 9 },
             color = Color3.fromRGB(120, 200, 160),
+        },
+        {
+            name = "PadTDM",
+            kind = "TDM",
+            mode = "TEAM DEATHMATCH",
+            teamSize = 5,
+            minTeamSize = 5,
+            pos = { 44, 0, -34 },
+            size = { 34, 1, 22 },
+            color = Color3.fromRGB(255, 196, 70),
         },
         -- Its own corner of the room, opposite the kiosk, because it is not a way to
         -- play the game -- it is the way to go look at a map you are building.
@@ -74,16 +93,28 @@ return {
         -- a single occupant and skips the fill wait entirely. The map vote still opens,
         -- with one voter, which is how you choose where you are going.
         --
-        -- Bots fill both teams from Convergence_BotsPerTeam once the match begins.
+        -- Training: one player, bots on both sides, filled to Config.Training.TeamSize
+        -- per team, so the player's side has one bot fewer. One pad per mode.
         {
-            name = "PadPractice",
+            name = "PadTrainingObjective",
             kind = "Convergence",
-            mode = "PRACTICE",
+            mode = "TRAINING · OBJECTIVE",
             solo = true,
             teamSize = 1,
             minTeamSize = 1,
-            pos = { 52, 0, 6 },
-            size = { 16, 1, 12 },
+            pos = { -10, 0, -51 },
+            size = { 16, 1, 9 },
+            color = Color3.fromRGB(170, 140, 235),
+        },
+        {
+            name = "PadTrainingTDM",
+            kind = "TDM",
+            mode = "TRAINING · TDM",
+            solo = true,
+            teamSize = 1,
+            minTeamSize = 1,
+            pos = { 10, 0, -51 },
+            size = { 16, 1, 9 },
             color = Color3.fromRGB(170, 140, 235),
         },
     },
@@ -96,21 +127,54 @@ return {
         showcase = "AssaultRifle",
     },
 
+    -- The first view from every spawn points at PLAY. These labels name the
+    -- destinations before a player reaches the smaller mode pads or stations.
+    Wayfinding = {
+        {
+            name = "Play",
+            pos = { 0, 27, -13 },
+            size = { 28, 5 },
+            title = "PLAY",
+            detail = "DUELS  |  CONVERGENCE  |  TDM",
+            color = "Accent",
+        },
+        {
+            name = "Armory",
+            pos = { -52, 15, 6 },
+            size = { 13, 3.5 },
+            title = "ARMORY",
+            detail = "LOADOUT",
+            color = "Accent",
+        },
+        {
+            name = "AlterEgo",
+            pos = { 52, 15, 6 },
+            size = { 15, 3.5 },
+            title = "ALTER EGO",
+            detail = "CHOOSE YOUR FORM",
+            color = "Ego",
+        },
+    },
+
     Pieces = {
         -- ===== floor plates: each destination stands on its own, so the eye reads three places =====
-        { name = "PlateGate", pos = { 0, 0.3, -34 }, size = { 70, 0.4, 44 }, color = "FloorGrid" },
+        { name = "PlatePlay", pos = { 0, 0.3, -36 }, size = { 132, 0.4, 44 }, color = "FloorGrid" },
         { name = "PlateArmory", pos = { -52, 0.3, 6 }, size = { 30, 0.4, 34 }, color = "FloorGrid" },
         { name = "PlateEgo", pos = { 52, 0.3, 6 }, size = { 30, 0.4, 34 }, color = "FloorGrid" },
 
-        -- ===== PLAY: the arena gate. Tallest mass in the room, framing the pads =====
-        { name = "GateLegL", pos = { -30, 14, -30 }, size = { 6, 28, 16 }, color = "Gate" },
-        { name = "GateLegR", pos = { 30, 14, -30 }, size = { 6, 28, 16 }, color = "Gate" },
-        { name = "GateLintel", pos = { 0, 29, -30 }, size = { 66, 6, 16 }, color = "Gate" },
-        { name = "GateCrown", pos = { 0, 33, -30 }, size = { 54, 2, 12 }, color = "Pillar" },
-        -- amber lip along the underside of the arch: the room's brightest accent, and it points in
-        { name = "GateGlow", pos = { 0, 25.6, -22.4 }, size = { 60, 0.5, 0.8 }, color = "Accent" },
-        { name = "GateBackL", pos = { -20, 10, -52 }, size = { 22, 20, 3 }, color = "Wall" },
-        { name = "GateBackR", pos = { 20, 10, -52 }, size = { 22, 20, 3 }, color = "Wall" },
+        -- Low path lights link the five arrival spawns to the PLAY hall. They stop
+        -- before its floor plate and do not change collision or queue volumes.
+        { name = "PlayPathL", pos = { -18, 0.05, 16 }, size = { 0.35, 0.04, 56 }, color = "Accent", collide = false },
+        { name = "PlayPathR", pos = { 18, 0.05, 16 }, size = { 0.35, 0.04, 56 }, color = "Accent", collide = false },
+
+        -- ===== PLAY: a broad rectangular frame around all four mode zones =====
+        { name = "PlayPillarL", pos = { -64, 12, -14 }, size = { 4, 24, 4 }, color = "Gate" },
+        { name = "PlayPillarR", pos = { 64, 12, -14 }, size = { 4, 24, 4 }, color = "Gate" },
+        { name = "PlayHeader", pos = { 0, 25, -14 }, size = { 132, 5, 4 }, color = "Gate" },
+        { name = "PlayHeaderGlow", pos = { 0, 22.3, -11.8 }, size = { 128, 0.5, 0.8 }, color = "Accent" },
+        { name = "PlayBack", pos = { 0, 8, -61 }, size = { 132, 16, 2 }, color = "Wall" },
+        { name = "PlaySideL", pos = { -65, 4, -39 }, size = { 2, 8, 44 }, color = "Wall" },
+        { name = "PlaySideR", pos = { 65, 4, -39 }, size = { 2, 8, 44 }, color = "Wall" },
 
         -- ===== ARMORY: a bay you walk into, with a rack behind the counter =====
         { name = "ArmoryBack", pos = { -64, 9, 6 }, size = { 3, 18, 34 }, color = "Armory" },
@@ -141,8 +205,9 @@ return {
     -- Controlled accent lighting instead of a blown-out white floor. One light per destination,
     -- so the room reads as three beacons in a dark hall.
     Lights = {
-        { name = "GateLight", pos = { 0, 22, -30 }, color = "Accent", range = 46, brightness = 2 },
+        { name = "GateLight", pos = { 0, 22, -32 }, color = "Accent", range = 65, brightness = 2 },
         { name = "ArmoryLight", pos = { -52, 15, 6 }, color = "Accent", range = 30, brightness = 1.4 },
+        { name = "TdmLight", pos = { 44, 13, -34 }, color = "Accent", range = 24, brightness = 1.2 },
         { name = "EgoLight", pos = { 52, 12, 6 }, color = "Ego", range = 32, brightness = 2.2 },
         { name = "BoardLight", pos = { 0, 12, 48 }, color = "Pillar", range = 26, brightness = 1 },
     },

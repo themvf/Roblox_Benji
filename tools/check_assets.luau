@@ -16,6 +16,12 @@ local process = require("@lune/process")
 -- Directories whose children are asset packages. Generated output (weapons, skins,
 -- the runtime art slice, rendered skyboxes) has no external source to appraise.
 local ROOTS = { "assets/models", "assets/scenery" }
+-- Appraisals dated on or after this must ship the views sheet the appraiser renders. Older
+-- packages predate it and are grandfathered rather than failed, because their sources are
+-- not all in the repo to re-render; re-run the appraisal on one and it is held to the rule.
+-- Why it exists: image-to-3D copies the reference's floor, cables and loose props into the
+-- mesh and renders glass as an opaque slab, and none of that shows in a triangle count.
+local VIEWS_REQUIRED_FROM = "2026-10-05"
 local REQUIRED = { "tool", "source", "sourceSha256", "measurements", "verdict" }
 
 local failures = 0
@@ -67,6 +73,14 @@ local function checkPackage(dir: string)
     if type(decision) ~= "string" or decision:gsub("%s", "") == "" then
         fail(dir, "appraisal.json has no `decision` -- state what this asset is for")
         return
+    end
+    local appraised = record.appraisedOn
+    if type(appraised) == "string" and appraised >= VIEWS_REQUIRED_FROM then
+        local views = record.views
+        if type(views) ~= "string" or not fs.isFile(dir .. "/" .. views) then
+            fail(dir, "no views sheet -- re-run appraise_asset.py --record, then LOOK at views.png")
+            return
+        end
     end
     local measurements = record.measurements
     if type(measurements) ~= "table" or type(measurements.triangles) ~= "number" then

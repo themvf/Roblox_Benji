@@ -9,6 +9,7 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local Screen = require(script.Parent.Parent.UI.Screen)
 local Theme = require(script.Parent.Parent.UI.Theme)
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
+local Lore = require(ReplicatedStorage.Shared.Lore)
 
 local ConvergenceController = Knit.CreateController({ Name = "ConvergenceController" })
 
@@ -415,7 +416,10 @@ function ConvergenceController:KnitStart()
         if kind == "FinaleRevealed" then
             self:RevealFinale(data)
         elseif kind == "ZoneCaptured" then
-            self:ShowBanner((data.Team or ""):upper() .. " CAPTURED " .. glyphChar(data.Index), teamColor(data.Team))
+            self:ShowBanner(
+                Lore.teamName(data.Team):upper() .. " CAPTURED " .. glyphChar(data.Index),
+                teamColor(data.Team)
+            )
         elseif kind == "ZoneNeutralized" then
             self:ShowBanner(glyphChar(data.Index) .. " NEUTRALIZED", NEUTRAL)
         elseif kind == "ZoneClosing" then

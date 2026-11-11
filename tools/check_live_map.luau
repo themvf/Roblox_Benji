@@ -19,6 +19,8 @@ Vector3 = roblox.Vector3
 local Template = require("./mapauthor/template")
 local Validate = require("../src/shared/Maps/Validate")
 local MapAuthoring = require("../src/shared/MapAuthoring")
+local LobbyAuthoring = require("../src/shared/LobbyAuthoring")
+local Lore = require("../src/shared/Lore")
 
 local passed, failed = 0, 0
 local function check(what, cond, detail)
@@ -41,6 +43,8 @@ local function run(opts)
     local kit = roblox.deserializeModel(fs.readFile("assets/environment/kit/Helipad.rbxm"))[1]
     kit.Parent = source:FindFirstChild("Geometry")
     source.Parent = workspace
+    local lobbySource = roblox.deserializeModel(fs.readFile("assets/environment/source/Lobby.rbxm"))[1]
+    lobbySource.Parent = workspace
     for _, name in { "Fortress", "Pallet" } do
         local loose = roblox.Instance.new("Model")
         loose.Name = name
@@ -58,14 +62,22 @@ local function run(opts)
     local mapsFolder = {
         FindFirstChild = function(_, name)
             if name == "SnowFortress" then
-                return { Name = name, IsA = function()
-                    return true
-                end, module = { Name = name } }
+                return {
+                    Name = name,
+                    IsA = function()
+                        return true
+                    end,
+                    module = { Name = name },
+                }
             end
             if name == "LiveMap" and opts.saved then
-                return { Name = "LiveMap", IsA = function()
-                    return true
-                end, module = savedModule }
+                return {
+                    Name = "LiveMap",
+                    IsA = function()
+                        return true
+                    end,
+                    module = savedModule,
+                }
             end
             return nil
         end,
@@ -82,6 +94,8 @@ local function run(opts)
             Config = "Config",
             Uploads = "Uploads",
             MapAuthoring = "MapAuthoring",
+            LobbyAuthoring = "LobbyAuthoring",
+            Lore = "Lore",
             Maps = mapsFolder,
         },
     }
@@ -109,8 +123,10 @@ local function run(opts)
         Palette = { World = { Red = Color3.new(1, 0, 0), Blue = Color3.new(0, 0, 1) } },
         Config = { StartupMap = "SnowFortress" },
         Uploads = {},
+        Lore = Lore,
         Validate = Validate,
         MapAuthoring = MapAuthoring,
+        LobbyAuthoring = LobbyAuthoring,
     }
     local players = {
         GetPlayers = function()
@@ -190,6 +206,10 @@ check(
     layout and #layout.Objectives == 3 and #layout.Spawns.Blue == 6 and layout.Revision == "live"
 )
 check("the map model is removed from the play session", r.workspace:FindFirstChild("LiveMap — EDITABLE") == nil)
+check(
+    "the editable lobby survives live-map cleanup until its own reader runs",
+    r.workspace:FindFirstChild("Lobby") ~= nil
+)
 check(
     "a piece inside Geometry is part of the live map",
     r.service.GetLayout and r.service:FindMap("livemap") == "LiveMap"
