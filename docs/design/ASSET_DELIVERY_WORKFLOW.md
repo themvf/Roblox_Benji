@@ -11,6 +11,20 @@ and intended role: decoration, cover, interactive object, or wearable. Save the
 approved answers in the asset package. Do not depend on temporary screenshots,
 browser sessions, or chat history as the only record.
 
+## Generating candidates from a reference image
+
+`tools/asset_generate.py` replaces the by-hand TRELLIS.2 loop. It calls the same
+Hugging Face Space through its API, so set `HF_TOKEN` to use your own GPU quota.
+
+```bash
+python tools/asset_generate.py generate <image> --name wooden-crate --seeds 3
+python tools/asset_generate.py pick wooden-crate --seed 2
+```
+
+`generate` saves the reference, makes one candidate per seed in `trials/`, appraises
+each and writes `review/candidates.png`. Look at that sheet, `pick` the winner into
+`source/`, fill in `decision`, then continue from stage 2 below.
+
 ## Stages and evidence
 
 1. Intake: saved source/reference, appraisal, approved purpose and dimensions.
