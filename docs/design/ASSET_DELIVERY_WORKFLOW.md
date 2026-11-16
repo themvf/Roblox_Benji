@@ -15,6 +15,65 @@ For a character meant for the Roblox Marketplace (and as a game skin), start fro
 `docs/templates/MARKETPLACE_CHARACTER_BRIEF.md`: the Midjourney/TRELLIS input checklist
 and the Codex brief.
 
+## The repeatable flow, in order
+
+Each step stops the next one if it fails. The rules are in `tools/asset_rules.py`; the
+gates are `tools/check_asset_registry.luau` and `tools/check_large_files.luau`, both in CI.
+
+| Step | Command | What it settles |
+| --- | --- | --- |
+| 1. Brief | `asset_generate.py brief <name> --purpose --role --height` | role, size, route and triangle budget, before any GPU time |
+| 2. Reference | `prompt` (Midjourney) or `reference` (built in) | one subject, white background, nothing cropped; checked on intake |
+| 3. Mesh | `generate`, then `pick` | one candidate on the clean route, three on scan; `pick` writes `provenance.json` |
+| 4. Build | `build` | per-mesh cap, role budget, size and pivot against the brief, detail against the source |
+| 5. Approve | look at the review sheets; `verdict --looks good\|bad` for a scan | the eye is the gate for looks |
+| 6. Publish | `publish` (dry run), then `publish --confirm` | uploads once, records the id in `src/shared/AssetRegistry.json` |
+| 7. Studio | `verify --check loads --check facing ...` | what only Studio shows; the gate lists what is still open |
+
+**Roles and budgets** (total triangles over all meshes; Roblox's 10,000 is per mesh):
+`held` 4,000, `cover` 10,000, `interactive` 15,000, `decor` 30,000, `scenery` 60,000.
+These are starting values, not measurements; the device test in
+[performance/DEVICE_TEST.md](performance/DEVICE_TEST.md) is how they get replaced with measured ones. An asset that has to exceed its budget
+records why: `brief <name> --budget-waiver "<reason>"`.
+
+**Asset ids live in the registry, never in a script.** Game code reads
+`require(ReplicatedStorage.Shared.AssetRegistry)["<name>"].assetId`. The gate fails when a
+registered id is typed into `src/`, and when the uploaded file is an older build than the
+export on disk.
+
+**Looks and collision are separate parts.** The visual mesh never collides
+(`CanCollide` off, `CollisionFidelity` Box); the thing players touch is a simple
+invisible block. A model template under `assets/environment/runtime` that is named in the
+registry is also checked for `RenderFidelity = Precise` and, on a scan, `DoubleSided`.
+
+**Forward is -Z, one unit is one stud, the pivot is the centre of the base.** A Blender
+builder puts the front at -Y; the glTF import turns that to Roblox -Z.
+
+**Vehicles and guns need more than a shape.** Say so in the brief with `--kind`; a plain
+`prop` needs none of this. A mount is a named point in studs from the pivot (+X right, +Y
+up, -Z forward). `build` fails until the kind's mounts are set and plausible, and draws
+them on `review/mounts.png`, which also shows which end the pipeline takes as the front.
+
+| | Vehicle (`--kind vehicle`, role `interactive`) | Gun (`--kind weapon`, role `held`) |
+| --- | --- | --- |
+| Brief | `--game-name WaveRunner` | `--game-name <Name>`, `--length <studs>` |
+| Mounts | `DriverSeat`, `HullCentre` (centre of the physics block; sets the waterline), any `Passenger...` | `Grip`, `Muzzle` |
+| Build checks | seat above the base, mounts inside the model | long axis runs front to back, muzzle in front of the grip and at the front end |
+| Code you still write | a `VEHICLE_SPECS` entry and a builder in `VehicleService.lua` that reads the id and mounts from the registry; a `VehicleSpawns` entry in the map | stats in `src/shared/Weapons`; a kit base in `BASE` and the art welded on in `tools/build_weapons.luau`; then `lune run tools/build_weapons.luau` and commit `assets/weapons/tools/` |
+| Studio checks | enter, drive forward, waterline, seat height, exit | held the right way round, flash at the muzzle, first-person view not blocked |
+
+The registry gate lists missing wiring as a reminder until the asset is uploaded, then
+fails on it. A gun is drawn by the Weapons Kit: the kit Tool keeps its own muzzle, grip and
+scripts, its geometry is hidden, and the art is welded to it (`attachWhiteSniperArt` is the
+one existing example and is specific to that rifle; a second gun is the time to make it
+read `Grip` and `Muzzle` from the registry).
+
+**One session per package.** Commands that change a package claim it for four hours;
+a second session is told who holds it. `claim <name> --release` when finished.
+
+**Large files.** Nothing over 5 MB is committed without a line in
+`tools/large_files.json` saying why it cannot be rebuilt. `trials/` is ignored by git.
+
 ## Generating candidates from a reference image
 
 `tools/asset_generate.py` replaces the by-hand TRELLIS.2 loop. It calls the same
@@ -98,6 +157,10 @@ Over 0.08 the build warns; over 0.15 it fails and the export should not be uploa
 sees tearing and holes. It does not see a surface that keeps its shape but looks lumpy up
 close, nor anything Roblox does after import, so the Studio stage still stands.
 
+The two lines rest on four builds. After looking at a scan build, record
+`asset_generate.py verdict <name> --looks good|bad`; `asset_generate.py calibrate` then
+prints every score beside its verdict and says whether the lines still separate them.
+
 ## Stages and evidence
 
 1. Intake: saved source/reference, appraisal, approved purpose and dimensions.
@@ -121,6 +184,7 @@ changes stages, with the next concrete action and actual evidence.
 - exports/: only intended delivery assets; experiments belong in trials/.
 - textures/ and review/: maps and views of the actual exported file.
 - validation.json: latest machine-check result, time, artifact hashes and limitations.
+- brief.json and provenance.json: what it is for, and where the reference and mesh came from.
 - Studio setup instructions or a narrowly scoped helper for engine-only settings.
 
 ## Streamlining rule

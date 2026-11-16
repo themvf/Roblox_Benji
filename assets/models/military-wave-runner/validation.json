@@ -1,9 +1,64 @@
 {
-  "checkedOn": "2026-11-16 08:43",
+  "checkedOn": "2026-11-16 13:24",
   "export": "assets/models/military-wave-runner/exports/MilitaryWaveRunner.glb",
   "exportSha256": "8caab1c06dbf20c3b1c4ea84e653c03982c728e411afb000c825dd749499285f",
   "sourceSha256": "c6733cc31a60a158b6ed493546cee3928ce409dd80c637e0ab985e1cc8009be7",
   "triangleCapPassed": true,
+  "route": {
+    "brief": "scan",
+    "suggested": "clean",
+    "reasons": [
+      "the role is interactive, so players are right next to it and its parts may need to move"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.986,
+      "side": 0.989,
+      "top": 0.992
+    },
+    "surfaceError": {
+      "front": 0.028,
+      "back": 0.04,
+      "right": 0.03,
+      "left": 0.03,
+      "top": 0.029,
+      "bottom": 0.035
+    },
+    "worstSurfaceError": 0.04,
+    "sheet": "assets/models/military-wave-runner/review/detail.png",
+    "passed": true
+  },
+  "budget": {
+    "role": "interactive",
+    "budget": 15000,
+    "triangles": 70044,
+    "waiver": null,
+    "passed": false,
+    "within": false
+  },
+  "contract": {
+    "sizeStuds": [
+      5.706,
+      4.534,
+      11.144
+    ],
+    "heightStuds": 4.5,
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        3,
+        4
+      ],
+      "decimate": 58227,
+      "worstMesh": 8393,
+      "passed": true
+    }
+  ],
   "inspect": [
     "file     MilitaryWaveRunner.glb (7.33 MB)",
     "           geometry_0.001                   4,281 tris",
@@ -23,5 +78,6 @@
     "           texture                      1024x1024  image/png"
   ],
   "views": "review/views.png",
+  "audit": null,
   "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
 }

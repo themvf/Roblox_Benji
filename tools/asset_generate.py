@@ -5,16 +5,40 @@ clicking Generate, clicking Extract and saving the file. The Space is called
 through its public API (the same one the web page uses), so the result is the
 same model and the same settings you get in the browser.
 
+    python tools/asset_generate.py brief    wooden-crate --purpose "..." --role decor --height 4
     python tools/asset_generate.py reference wooden-crate --prompt "..." --seeds 4
     python tools/asset_generate.py reference wooden-crate --use 2
-    python tools/asset_generate.py generate <image> --name wooden-crate --seeds 3
+    python tools/asset_generate.py generate <image> --name wooden-crate
     python tools/asset_generate.py review   wooden-crate
     python tools/asset_generate.py pick     wooden-crate --seed 2
-    python tools/asset_generate.py brief    wooden-crate --purpose "..." --role decor --height 4
     python tools/asset_generate.py build    wooden-crate
+    python tools/asset_generate.py publish  wooden-crate            (dry run; --confirm uploads)
+    python tools/asset_generate.py verify   wooden-crate --check loads --check facing
 
-brief     writes brief.json: purpose, role, height in studs, pivot. Write it at any
-          point before build; pick copies its purpose into the appraisal decision.
+The rules behind these (triangle budget per role, size and pivot contract, the asset
+registry, one session per package, provenance) live in tools/asset_rules.py.
+
+brief     comes FIRST. Writes brief.json: purpose, role, height in studs, pivot, route.
+          The role sets the triangle budget and, with the route, how much to generate:
+          a held or interactive asset goes the clean route, where the generated mesh is
+          only a shape guide and one candidate is enough. reference and generate stop
+          without a brief (--no-brief overrides). pick copies its purpose into the
+          appraisal decision.
+prompt    prints a reference-image prompt in the house framing for Midjourney or any
+          other image tool, and records it for provenance.
+publish   uploads the built export with tools/roblox/upload_asset.ps1 and writes the id
+          to src/shared/AssetRegistry.json, which game code reads. Without --confirm it
+          is a dry run. It refuses an export that failed a gate and skips one that is
+          already uploaded. register records an id uploaded some other way.
+verify    ticks off what was checked by eye in Studio (loads, facing, scale, materials,
+          collision); tools/check_asset_registry.luau lists what is still open.
+verdict   records whether the current scan build looks good or bad beside its surface
+          error; calibrate prints every score with its verdict so the detail gate's
+          lines can be moved on evidence.
+claim     every command that changes a package claims it for this session for four
+          hours; another session is stopped with a message. --take-over or --release.
+provenance rewrites provenance.json (reference, generator, seed, date) from disk; pick
+          writes it automatically.
 build     turns the brief into scene.json (a one-asset scene_kit manifest kept in
           the package), runs scene_kit, checks the export against the triangle cap,
           renders review/views.png of the written file and records validation.json.
@@ -81,6 +105,9 @@ import shutil
 import subprocess
 import sys
 import time
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import asset_rules as rules  # noqa: E402 - budgets, registry, claims, provenance; see that file
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SPACE = "microsoft/TRELLIS.2"
@@ -313,8 +340,21 @@ def reference_sheet(pkg):
     return out
 
 
+def require_brief(pkg, name, skip):
+    """Stop a generation that has no brief yet. Route and size decide how much to generate."""
+    brief = read_brief(pkg)
+    if brief or skip:
+        return brief
+    sys.exit(
+        f"no brief.json in {rel(pkg)}. Write it first, so the route is decided before GPU time is spent:\n"
+        f"  python tools/asset_generate.py brief {name} --purpose \"...\" --role <{'|'.join(ROLES)}> --height <studs>\n"
+        "(--no-brief skips this.)"
+    )
+
+
 def cmd_reference(args):
     pkg = package_dir(args.name)
+    rules.claim(pkg, "reference")
     if args.use is not None:
         chosen = os.path.join(pkg, "trials", "reference", f"seed-{args.use}.png")
         if not os.path.isfile(chosen):
@@ -327,6 +367,9 @@ def cmd_reference(args):
         os.makedirs(os.path.join(pkg, "source"), exist_ok=True)
         target = os.path.join(pkg, "source", "reference.png")
         shutil.copyfile(chosen, target)
+        made = os.path.join(pkg, "trials", "reference", "edit.json" if args.use > EDIT_SEED_BASE else "prompt.json")
+        made = read_json(made) if os.path.isfile(made) else {}
+        rules.write_reference_record(pkg, "generated", made.get("space"), made.get("prompt") or made.get("instruction"))
         print(f"using seed {args.use} -> {os.path.relpath(target, ROOT)}")
         print(f"next: python tools/asset_generate.py generate --name {args.name}")
         return
@@ -337,6 +380,7 @@ def cmd_reference(args):
         return
     if not args.prompt:
         sys.exit("give --prompt to make candidates, or --use <seed> to choose one")
+    require_brief(pkg, args.name, args.no_brief)
     prompt = args.prompt.strip()
     if not args.raw:
         prompt = f"{REFERENCE_STYLES[args.style]}: {prompt.rstrip('.')}. {REFERENCE_FRAMING}"
@@ -685,6 +729,8 @@ def contact_sheet(pkg):
 
 def cmd_generate(args):
     pkg = package_dir(args.name)
+    brief = require_brief(pkg, args.name, args.no_brief)
+    rules.claim(pkg, "generate")
     if args.image is None:
         reference = reference_image(pkg)
         if not reference:
@@ -696,7 +742,18 @@ def cmd_generate(args):
         reference = os.path.join(pkg, "source", "reference" + os.path.splitext(args.image)[1].lower())
         if os.path.abspath(args.image) != os.path.abspath(reference):
             shutil.copyfile(args.image, reference)
-    seeds = list(range(args.first_seed, args.first_seed + args.seeds))
+        if args.made_with or args.prompt_text or not os.path.isfile(os.path.join(pkg, "source", "reference.json")):
+            rules.write_reference_record(pkg, "user-supplied", args.made_with, args.prompt_text)
+    for problem in rules.reference_problems(reference):
+        print(f"reference: {problem}.")
+    count = args.seeds
+    if count is None:
+        # On the clean route the mesh is only a shape guide for the hand-written builder,
+        # so one candidate is enough; on the scan route the mesh is the asset, so compare.
+        route = planned_route(brief) if brief else "scan"
+        count = 1 if route == "clean" else 3
+        print(f"route {route}: generating {count} candidate(s)" + (" as a shape guide for the clean builder." if route == "clean" else "."))
+    seeds = list(range(args.first_seed, args.first_seed + count))
     generate_candidates(pkg, reference, seeds, args)
     appraise_trials(pkg)
     contact_sheet(pkg)
@@ -711,6 +768,7 @@ def cmd_review(args):
 
 def cmd_pick(args):
     pkg = package_dir(args.name)
+    rules.claim(pkg, "pick")
     trial = os.path.join(pkg, "trials", f"seed-{args.seed}")
     candidate = os.path.join(trial, "candidate.glb")
     if not os.path.isfile(candidate):
@@ -721,6 +779,8 @@ def cmd_pick(args):
     os.makedirs(os.path.dirname(target), exist_ok=True)
     shutil.copyfile(candidate, target)
     print(f"picked seed {args.seed} -> {os.path.relpath(target, ROOT)}")
+    rules.write_provenance(pkg, args.name, args.seed)
+    print(f"wrote {rel(os.path.join(pkg, 'provenance.json'))}")
     record = os.path.join(pkg, "appraisal.json")
     brief = read_brief(pkg)
     if appraise(target, record):
@@ -739,7 +799,7 @@ def cmd_pick(args):
 
 # --------------------------------------------------------------- brief/build
 
-ROLES = ("decor", "cover", "interactive")
+ROLES = ("decor", "cover", "interactive", "held", "scenery")  # budgets per role: tools/asset_rules.py
 SINGLE_MESH_MAX_STUDS = 12  # taller than this and one 10k mesh starts to look melted
 DENSE_SOURCE_TRIS = 50000  # above this the source is a generated or scanned mesh
 DENSE_KEEP = 0.2  # share of source triangles kept
@@ -767,13 +827,19 @@ def recommend_route(brief, measured, spec):
     Advice from numbers already on hand, not a verdict: the outline and surface check after
     a build is what proves a scan route worked."""
     reasons = []
-    if brief.get("role") == "interactive":
-        reasons.append("the role is interactive, so players are right next to it and its parts may need to move")
+    if brief.get("role") in rules.CLOSE_ROLES:
+        reasons.append(f"the role is {brief['role']}, so players are right next to it and its parts may need to move")
     source_tris = measured.get("triangles", 0)
     kept = spec.get("decimate")
     if source_tris and kept and 1 - kept / source_tris > CLEAN_REDUCTION:
         reasons.append(f"it needs a {1 - kept / source_tris:.0%} triangle cut, past the {CLEAN_REDUCTION:.0%} where shape is lost")
     return ("clean" if reasons else "scan"), reasons
+
+
+def planned_route(brief):
+    """The route to plan for before any mesh exists: the brief's, or what its role implies."""
+    chosen = brief.get("route", "auto")
+    return chosen if chosen != "auto" else recommend_route(brief, {}, {})[0]
 
 
 def clean_builder(name):
@@ -879,6 +945,7 @@ def scene_spec(name, pkg, brief):
 
 def cmd_brief(args):
     pkg = package_dir(args.name)
+    rules.claim(pkg, "brief")
     brief = read_brief(pkg) or {}
     for key, value in (
         ("purpose", args.purpose),
@@ -887,6 +954,10 @@ def cmd_brief(args):
         ("pivot", args.pivot),
         ("meshes", args.meshes),
         ("route", args.route),
+        ("budgetWaiver", args.budget_waiver),
+        ("kind", args.kind),
+        ("lengthStuds", args.length),
+        ("gameName", args.game_name),
     ):
         if value is not None:
             brief[key] = value
@@ -897,15 +968,32 @@ def cmd_brief(args):
     brief.setdefault("meshes", "auto")
     brief.setdefault("route", "auto")
     brief.setdefault("scene", {})
+    brief.setdefault("kind", "prop")
+    for item in args.mount or ():
+        found = re.fullmatch(r"([A-Za-z][A-Za-z0-9]*)=(-?[\d.]+),(-?[\d.]+),(-?[\d.]+)", item)
+        if not found:
+            sys.exit(f"--mount takes Name=x,y,z in studs from the pivot (-z is forward), got {item!r}")
+        brief.setdefault("mounts", {})[found.group(1)] = [float(found.group(i)) for i in (2, 3, 4)]
+    needed = rules.KIND_ROLE.get(brief["kind"])
+    if needed and brief["role"] != needed:
+        sys.exit(f"kind {brief['kind']} goes with role {needed}, not {brief['role']}; pass --role {needed}")
     os.makedirs(pkg, exist_ok=True)
     write_json(os.path.join(pkg, "brief.json"), brief)
     print(f"wrote {rel(os.path.join(pkg, 'brief.json'))}")
+    missing = [name for name in rules.KINDS[brief["kind"]] if name not in brief.get("mounts", {})]
+    if missing:
+        print(f"kind {brief['kind']}: build will fail until these mounts are set: " + ", ".join(missing) + ". Add each with --mount Name=x,y,z once the model's shape is known.")
+    if brief["kind"] != "prop" and not brief.get("gameName"):
+        print(f"kind {brief['kind']}: set --game-name to the name game code uses for it, so the gate can check it is wired in.")
     if brief["role"] == "cover":
         print("note: cover a player relies on is a block in the map file; this mesh is its visual shell.")
+    print(f"budget: role {brief['role']} allows {rules.ROLE_BUDGETS[brief['role']]:,} triangles in total, {TRI_CAP:,} per mesh.")
     record = os.path.join(pkg, "appraisal.json")
-    if os.path.isfile(record):
-        route, reasons = recommend_route(brief, read_json(record).get("measurements", {}), scene_spec(args.name, pkg, brief))
-        print(f"route: brief says {brief['route']}; the numbers suggest {route}" + (" because " + "; ".join(reasons) if reasons else "") + ".")
+    measured = read_json(record).get("measurements", {}) if os.path.isfile(record) else {}
+    route, reasons = recommend_route(brief, measured, scene_spec(args.name, pkg, brief) if measured else {})
+    print(f"route: brief says {brief['route']}; the numbers suggest {route}" + (" because " + "; ".join(reasons) if reasons else "") + ".")
+    if planned_route(brief) == "clean":
+        print(f"clean route: the generated mesh is a shape guide. The asset is written as {rel(clean_builder(args.name))}.")
 
 
 def mesh_triangles(inspect_text):
@@ -947,8 +1035,36 @@ def retry_spec(spec, attempts, measured):
     return None
 
 
+def gate_export(name, pkg, brief, route, out, total):
+    """Budget, size and pivot of a written export; also notes the build in the registry."""
+    budget = rules.budget_check(brief, total)
+    contract = rules.contract_check(out, brief, os.path.join(pkg, "review", "mounts.png"))
+    state = "within" if budget["within"] else ("OVER, waived: " + budget["waiver"] if budget["waiver"] else "OVER")
+    print(f"budget: {total:,} triangles against {budget['budget']:,} for role {budget['role']} ({state})")
+    size = contract["sizeStuds"]
+    print(f"contract: {size[0]:g} wide x {size[1]:g} tall x {size[2]:g} long studs, pivot {contract['pivot']}" + ("" if contract["passed"] else " -- " + "; ".join(contract["problems"])))
+    print(f"mounts: {contract['mountSheet']} shows which end is the front" + (" and where " + ", ".join(contract["mounts"]) + " sit" if contract["mounts"] else "") + ". Look at it.")
+    rules.record_build(name, pkg, brief, route, out, total)
+    return budget, contract
+
+
+def gate_failures(name, budget, contract):
+    """Exit messages for a build whose budget or contract failed, or an empty list."""
+    out = []
+    if not budget["passed"]:
+        out.append(
+            f"FAIL: over budget. {budget['triangles']:,} triangles, role {budget['role']} allows {budget['budget']:,}. "
+            f"Use the clean route, lower scene.decimate in the brief, or record why it is acceptable: "
+            f"asset_generate.py brief {name} --budget-waiver \"<reason>\"."
+        )
+    if not contract["passed"]:
+        out.append("FAIL: the export does not match the brief: " + "; ".join(contract["problems"]) + ". Fix the builder or the brief.")
+    return out
+
+
 def cmd_build(args):
     pkg = package_dir(args.name)
+    rules.claim(pkg, "build")
     brief = read_brief(pkg)
     if not brief:
         sys.exit(f"no brief.json in {rel(pkg)}; run: asset_generate.py brief {args.name} ...")
@@ -961,7 +1077,7 @@ def cmd_build(args):
         sys.exit("Blender not found; set the BLENDER environment variable")
 
     if brief.get("route", "auto") == "clean":
-        build_clean(args.name, pkg, source, blender)
+        build_clean(args.name, pkg, source, blender, brief)
         return
 
     manifest = os.path.join(pkg, "scene.json")
@@ -1040,6 +1156,7 @@ def cmd_build(args):
     route, reasons = recommend_route(brief, measured, spec)
     if worst_error > DETAIL_WARN:
         print("detail: the export has drifted from the source; look at the sheet (red is surface it lost).")
+    budget, contract = gate_export(args.name, pkg, brief, "scan", out, sum(mesh_triangles(inspect_text)))
     rendered = appraise(out, os.path.join(review, "export.json"))
     audited = None if args.no_audit else run_audit(pkg, out, review)
 
@@ -1053,6 +1170,8 @@ def cmd_build(args):
             "triangleCapPassed": passed,
             "route": {"brief": brief.get("route", "auto"), "suggested": route, "reasons": reasons},
             "detail": detail,
+            "budget": budget,
+            "contract": contract,
             "buildAttempts": attempts,
             "inspect": inspect_text.strip().splitlines(),
             "views": "review/views.png" if rendered else None,
@@ -1094,12 +1213,15 @@ def cmd_build(args):
             f"{rel(clean_builder(args.name))}), keep more triangles under scene.decimate in the brief, "
             "or pass --allow-detail-loss if it is only ever seen from far away."
         )
+    failures = gate_failures(args.name, budget, contract)
+    if failures:
+        sys.exit("\n".join(failures))
     if route == "clean" and brief.get("route", "auto") != "scan":
         print("route: the numbers suggest a clean rebuild for this asset because " + "; ".join(reasons) + ".")
-    print("next: look at review/audit.png and audit_closeups.png, then upload with tools/roblox/upload_asset.ps1 once approved.")
+    print(f"next: look at review/audit.png and audit_closeups.png; once approved: asset_generate.py publish {args.name} --confirm")
 
 
-def build_clean(name, pkg, source, blender):
+def build_clean(name, pkg, source, blender, brief):
     """Clean route: run the asset's hand-written builder, then check and record its export.
 
     The builder is tools/blender/build_<name>.py and writes exports/<Name>Clean.glb. It is
@@ -1122,6 +1244,7 @@ def build_clean(name, pkg, source, blender):
     print(printable(inspect.stdout.rstrip()))
     detail = detail_check(source, out, os.path.join(pkg, "review", "clean-detail.png"))
     detail["passed"] = None  # informational on this route
+    budget, contract = gate_export(name, pkg, brief, "clean", out, sum(mesh_triangles(inspect.stdout)))
     write_json(
         os.path.join(pkg, "validation-clean.json"),
         {
@@ -1133,13 +1256,161 @@ def build_clean(name, pkg, source, blender):
             "triangleCapPassed": inspect.returncode == 0,
             "inspect": inspect.stdout.strip().splitlines(),
             "detail": detail,
+            "budget": budget,
+            "contract": contract,
             "limitations": "Local checks only. Shape fidelity is judged by eye on the builder's renders.",
         },
     )
     if inspect.returncode != 0:
         sys.exit("FAIL: the clean export breaks a Roblox limit; see the inspect output above.")
     print(f"built {rel(out)} by the clean route; outline against the source: {detail['outlineOverlap']} (information only)")
-    print("next: look at the review/clean-*.png renders, then upload with tools/roblox/upload_asset.ps1 once approved.")
+    failures = gate_failures(name, budget, contract)
+    if failures:
+        sys.exit("\n".join(failures))
+    print(f"next: look at the review/clean-*.png renders; once approved: asset_generate.py publish {name} --confirm")
+
+
+# ------------------------------------------------- publish / registry / records
+
+UPLOADER = os.path.join(ROOT, "tools", "roblox", "upload_asset.ps1")
+
+
+def latest_validation(pkg, export_sha):
+    """The validation record that describes this exact export file, or None."""
+    for name in ("validation.json", "validation-clean.json"):
+        path = os.path.join(pkg, name)
+        if os.path.isfile(path) and read_json(path).get("exportSha256") == export_sha:
+            return read_json(path)
+    return None
+
+
+def cmd_publish(args):
+    """Upload the built export through the existing Open Cloud uploader and record the id.
+
+    Skips the upload when this exact file is already uploaded. Refuses a file that has no
+    passing validation, so nothing reaches Roblox that the local gates turned down."""
+    pkg = package_dir(args.name)
+    rules.claim(pkg, "publish")
+    entry = rules.read_registry().get(args.name)
+    if not entry or not entry.get("export"):
+        sys.exit(f"{args.name} has no built export in {rel(rules.REGISTRY)}; run build first")
+    export = os.path.join(ROOT, entry["export"])
+    if not os.path.isfile(export):
+        sys.exit(f"no file at {entry['export']}; run build first")
+    current = sha256(export)
+    if entry.get("assetId") and entry.get("uploadedSha256") == current:
+        print(f"already uploaded: asset {entry['assetId']} is this exact file. Nothing to do.")
+        return
+    validation = latest_validation(pkg, current)
+    if not validation:
+        sys.exit("the export on disk has no validation record (it changed since the last build); run build again")
+    blocked = [
+        label
+        for label, ok in (
+            ("triangle cap", validation.get("triangleCapPassed")),
+            ("detail", (validation.get("detail") or {}).get("passed") is not False),
+            ("budget", (validation.get("budget") or {}).get("passed")),
+            ("size and pivot", (validation.get("contract") or {}).get("passed")),
+        )
+        if not ok
+    ]
+    if blocked:
+        sys.exit("not uploading: the last build failed " + ", ".join(blocked) + ". Fix it and build again.")
+    brief = read_brief(pkg) or {}
+    command = ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", UPLOADER, "-File", export]
+    if brief.get("purpose"):
+        command += ["-Description", brief["purpose"]]
+    if not args.confirm:
+        done = subprocess.run(command + ["-DryRun"], capture_output=True, text=True, encoding="utf-8", errors="replace")
+        print(printable(done.stdout.rstrip()))
+        print(f"dry run only. {entry['export']} passed its gates and is ready. After the review sheets are approved by the user:")
+        print(f"  python tools/asset_generate.py publish {args.name} --confirm")
+        return
+    done = subprocess.run(command, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    print(printable(done.stdout.rstrip()))
+    found = re.search(r"(?:Uploaded|Previously uploaded) asset: (\d+)", done.stdout)
+    if not found:
+        sys.exit("upload did not report an asset id. " + printable(done.stderr[-400:]))
+    rules.record_upload(args.name, int(found.group(1)), current)
+    print(f"recorded asset {found.group(1)} in {rel(rules.REGISTRY)}. Game code reads it from Shared.AssetRegistry.")
+    print(f"next: check it in Studio, then  asset_generate.py verify {args.name} --check loads --check facing ...")
+
+
+def cmd_register(args):
+    """Record an id for an export that was uploaded before the registry existed."""
+    pkg = package_dir(args.name)
+    entry = rules.read_registry().get(args.name)
+    if not entry:
+        sys.exit(f"{args.name} is not in {rel(rules.REGISTRY)}; run build first so its export is recorded")
+    rules.record_upload(args.name, args.asset_id, entry.get("exportSha256"))
+    print(f"recorded asset {args.asset_id} for {args.name} against export {entry['exportSha256'][:16]}.")
+    del pkg
+
+
+def cmd_verify(args):
+    """Tick off what was checked by eye in Studio. Only a person, or Studio itself, can."""
+    studio = rules.record_studio(args.name, args.check or ())
+    for check, ok in studio["checks"].items():
+        print(f"  {'done' if ok else 'TODO':<5} {check}")
+    if studio["verifiedOn"]:
+        print(f"all Studio checks recorded ({studio['verifiedOn']}).")
+
+
+def cmd_verdict(args):
+    """Record how the current scan build looks, beside its surface-error score."""
+    pkg = package_dir(args.name)
+    path = os.path.join(pkg, "validation.json")
+    if not os.path.isfile(path) or "detail" not in read_json(path):
+        sys.exit(f"{args.name} has no scored scan build; run build first")
+    validation = read_json(path)
+    write_json(
+        rules.verdict_path(pkg),
+        {
+            "looks": args.looks,
+            "note": args.note,
+            "exportSha256": validation["exportSha256"],
+            "worstSurfaceError": validation["detail"]["worstSurfaceError"],
+            "recordedOn": time.strftime("%Y-%m-%d"),
+        },
+    )
+    print(f"recorded: {args.name} looks {args.looks} at surface error {validation['detail']['worstSurfaceError']:.3f}")
+
+
+def cmd_calibrate(args):
+    del args
+    print(rules.calibration_report(DETAIL_WARN, DETAIL_FAIL))
+
+
+def cmd_claim(args):
+    pkg = package_dir(args.name)
+    if args.release:
+        rules.release(pkg)
+        print(f"released {args.name}")
+        return
+    rules.claim(pkg, "claim", take_over=args.take_over)
+    print(f"{args.name} is claimed by {rules.owner()} for {rules.CLAIM_HOURS} hours from its last command.")
+
+
+def cmd_provenance(args):
+    pkg = package_dir(args.name)
+    if args.made_with or args.prompt_text:
+        rules.write_reference_record(pkg, args.origin or "user-supplied", args.made_with, args.prompt_text)
+    record = rules.write_provenance(pkg, args.name)
+    if not record:
+        sys.exit(f"no source/*.glb in {rel(pkg)} to describe")
+    print(json.dumps(record, indent=2))
+
+
+def cmd_prompt(args):
+    """Print a reference-image prompt in the house framing, for Midjourney or any image tool."""
+    pkg = package_dir(args.name)
+    body = f"{REFERENCE_STYLES[args.style]}: {args.describe.strip().rstrip('.')}. {REFERENCE_FRAMING}"
+    ratio = {"square": "1:1", "wide": "3:2", "tall": "2:3"}[args.aspect]
+    text = f"{body} --ar {ratio} --style raw" if args.tool == "midjourney" else body
+    os.makedirs(os.path.join(pkg, "source"), exist_ok=True)
+    rules.write_reference_record(pkg, "user-supplied", args.tool, text)
+    print(text)
+    print(f"\n(recorded in {rel(os.path.join(pkg, 'source', 'reference.json'))}; then write the brief, then: asset_generate.py generate <saved image> --name {args.name})")
 
 
 def main():
@@ -1157,12 +1428,16 @@ def main():
     ref.add_argument("--edit", metavar="INSTRUCTION", help="change one thing about the current reference, keep the rest")
     ref.add_argument("--use", type=int, metavar="SEED", help="promote this candidate to source/reference.png")
     ref.add_argument("--replace", action="store_true", help="with --use, overwrite an existing reference")
+    ref.add_argument("--no-brief", action="store_true", help="generate before a brief exists")
     ref.set_defaults(run=cmd_reference)
 
     gen = sub.add_parser("generate", help="image -> candidates -> contact sheet")
     gen.add_argument("image", nargs="?", help="omit to use the package's source/reference.*")
     gen.add_argument("--name", required=True, help="package name, kebab-case")
-    gen.add_argument("--seeds", type=int, default=3, help="how many candidates (default 3)")
+    gen.add_argument("--seeds", type=int, help="how many candidates (default 3; 1 on the clean route)")
+    gen.add_argument("--no-brief", action="store_true", help="generate before a brief exists")
+    gen.add_argument("--made-with", help="tool that made the reference image, e.g. Midjourney (for provenance)")
+    gen.add_argument("--prompt-text", help="the prompt that made the reference image (for provenance)")
     gen.add_argument("--first-seed", type=int, default=1)
     gen.add_argument("--resolution", choices=["512", "1024", "1536"], default="1024")
     gen.add_argument("--decimation", type=int, default=300000, help="Space-side triangle target")
@@ -1188,6 +1463,11 @@ def main():
     brief.add_argument("--pivot", choices=["bottom", "center", "top", "origin"])
     brief.add_argument("--meshes", choices=["auto", "single", "tiled"], help="one mesh, or a 2x2 tile set")
     brief.add_argument("--route", choices=ROUTES, help="scan keeps the generated mesh; clean rebuilds it from shapes")
+    brief.add_argument("--kind", choices=sorted(rules.KINDS), help="vehicle and weapon need mounts; prop (default) does not")
+    brief.add_argument("--mount", action="append", metavar="NAME=x,y,z", help="a named point in studs from the pivot, -z forward; repeatable")
+    brief.add_argument("--length", type=float, help="finished front-to-back length in studs (weapons)")
+    brief.add_argument("--game-name", help="the name game code uses for it, e.g. WaveRunner or WhiteSniper")
+    brief.add_argument("--budget-waiver", metavar="REASON", help="why this asset may exceed its role's triangle budget")
     brief.set_defaults(run=cmd_brief)
 
     build = sub.add_parser("build", help="brief + picked source -> game-ready GLB, checked")
@@ -1203,6 +1483,51 @@ def main():
     audit.add_argument("--focus", action="append", metavar="X,Y,Z", help="extra close-up at this point, as fractions of the bounding box")
     audit.add_argument("--zoom", type=float, default=3.0, help="magnification of --focus close-ups (default 3)")
     audit.set_defaults(run=cmd_audit)
+
+    pub = sub.add_parser("publish", help="upload the built export and record its id (dry run without --confirm)")
+    pub.add_argument("name")
+    pub.add_argument("--confirm", action="store_true", help="really upload; only after the user approved the review sheets")
+    pub.set_defaults(run=cmd_publish)
+
+    reg = sub.add_parser("register", help="record the id of an export uploaded outside publish")
+    reg.add_argument("name")
+    reg.add_argument("--asset-id", type=int, required=True)
+    reg.set_defaults(run=cmd_register)
+
+    ver = sub.add_parser("verify", help="record Studio checks done by eye")
+    ver.add_argument("name")
+    ver.add_argument("--check", action="append", choices=rules.STUDIO_CHECKS)
+    ver.set_defaults(run=cmd_verify)
+
+    verdict = sub.add_parser("verdict", help="record how the current scan build looks, for calibration")
+    verdict.add_argument("name")
+    verdict.add_argument("--looks", choices=["good", "bad"], required=True)
+    verdict.add_argument("--note")
+    verdict.set_defaults(run=cmd_verdict)
+
+    cal = sub.add_parser("calibrate", help="surface-error scores beside verdicts: are the gate's lines right?")
+    cal.set_defaults(run=cmd_calibrate)
+
+    claim = sub.add_parser("claim", help="reserve a package for this session, or release it")
+    claim.add_argument("name")
+    claim.add_argument("--take-over", action="store_true", help="take a package another session still holds")
+    claim.add_argument("--release", action="store_true")
+    claim.set_defaults(run=cmd_claim)
+
+    prov = sub.add_parser("provenance", help="write provenance.json from what is on disk")
+    prov.add_argument("name")
+    prov.add_argument("--origin", choices=["user-supplied", "generated"])
+    prov.add_argument("--made-with", help="tool that made the reference image")
+    prov.add_argument("--prompt-text", help="the prompt that made the reference image")
+    prov.set_defaults(run=cmd_provenance)
+
+    prompt = sub.add_parser("prompt", help="print a reference-image prompt in the house framing")
+    prompt.add_argument("name")
+    prompt.add_argument("--describe", required=True, help="full-sentence description of the object")
+    prompt.add_argument("--style", choices=sorted(REFERENCE_STYLES), default="realistic")
+    prompt.add_argument("--aspect", choices=sorted(REFERENCE_ASPECTS), default="square")
+    prompt.add_argument("--tool", choices=["midjourney", "other"], default="midjourney")
+    prompt.set_defaults(run=cmd_prompt)
 
     args = ap.parse_args()
     args.run(args)

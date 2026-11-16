@@ -29,8 +29,27 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - Line endings are LF everywhere (`.gitattributes`, `eol=lf`). Git for Windows sets `core.autocrlf=true`
   system-wide, which otherwise makes `stylua --check src` fail on every file locally while CI passes.
 
+## Generated assets: one flow, enforced
+- Order is brief -> reference -> mesh -> build -> approve -> publish -> Studio, all through
+  `python tools/asset_generate.py`; the table is at the top of
+  [ASSET_DELIVERY_WORKFLOW.md](docs/design/ASSET_DELIVERY_WORKFLOW.md). Write the brief first: its role
+  sets the triangle budget and whether the mesh is kept (`scan`) or rebuilt from shapes (`clean`).
+- A vehicle or a gun is `brief --kind vehicle|weapon` with named mounts (`DriverSeat`, `HullCentre`;
+  `Grip`, `Muzzle`), a `--game-name`, and code the workflow doc lists per kind. `build` draws the
+  mounts and the front on `review/mounts.png`; look at it. Game code reads mounts from the registry.
+- Never type an uploaded asset id into a script. `publish` writes it to `src/shared/AssetRegistry.json`
+  and code reads `require(ReplicatedStorage.Shared.AssetRegistry)[name].assetId`.
+- `publish --confirm` uploads, so it needs the user's approval of the review sheets first.
+- Gates: `lune run tools/check_asset_registry.luau` (hashes, stale uploads, budgets, template settings,
+  ids typed into `src/`) and `lune run tools/check_large_files.luau` (nothing over 5 MB without a reason
+  in `tools/large_files.json`). Both run in CI.
+- One session per asset package. If a command says another session holds the package, work on
+  something else; do not `--take-over` unless the user says that session is finished.
+
 ## External art: appraise before you build
 - For asset handoff and resumption, follow [ASSET_DELIVERY_WORKFLOW.md](docs/design/ASSET_DELIVERY_WORKFLOW.md). Read the asset package's `HANDOFF.md` before rebuilding; record approved decisions and continue from the first unverified stage. The server rack is the worked example.
+- A new asset asked for by description alone ("make me a palm tree") goes through the `asset-from-prompt`
+  skill (.claude/skills): run text -> reference -> mesh -> local build without check-ins, report once at the end.
 - **Any** model, scan or scenery pack gets appraised before a pipeline is pointed at it:
   `blender -b -noaudio --python tools/blender/appraise_asset.py -- --source "<file>" --record assets/<kind>/<name>/appraisal.json`
   Then fill in `decision`, stating what the asset is for. `check_assets` fails until you do.

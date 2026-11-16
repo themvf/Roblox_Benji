@@ -1,5 +1,5 @@
 {
-  "checkedOn": "2026-11-16 10:53",
+  "checkedOn": "2026-11-16 13:31",
   "route": "clean",
   "builder": "tools/blender/build_military_wave_runner.py",
   "export": "assets/models/military-wave-runner/exports/MilitaryWaveRunnerClean.glb",
@@ -27,6 +27,39 @@
     "worstSurfaceError": 0.907,
     "sheet": "assets/models/military-wave-runner/review/clean-detail.png",
     "passed": null
+  },
+  "budget": {
+    "role": "interactive",
+    "budget": 15000,
+    "triangles": 1696,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      4.434,
+      3.487,
+      8.952
+    ],
+    "heightStuds": 3.5,
+    "kind": "vehicle",
+    "mounts": {
+      "DriverSeat": [
+        0.0,
+        2.15,
+        0.92
+      ],
+      "HullCentre": [
+        0.0,
+        1.1,
+        0.0
+      ]
+    },
+    "mountSheet": "assets/models/military-wave-runner/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
   },
   "limitations": "Local checks only. Shape fidelity is judged by eye on the builder's renders."
 }

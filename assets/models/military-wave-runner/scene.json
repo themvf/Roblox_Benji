@@ -2,7 +2,7 @@
   "_comment": "Generated from brief.json by tools/asset_generate.py build.",
   "assets": {
     "military-wave-runner": {
-      "description": "Military wave runner, static shoreline prop for Five Islands Hurricane (role: decor, about 4.5 studs tall)",
+      "description": "Military wave runner, drivable vehicle at the Five Islands Hurricane docks (role: interactive, about 4.5 studs tall)",
       "source": "assets/models/military-wave-runner/source/MilitaryWaveRunner.glb",
       "out": "assets/models/military-wave-runner/exports/MilitaryWaveRunner.glb",
       "fit": {

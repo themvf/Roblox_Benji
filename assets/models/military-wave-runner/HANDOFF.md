@@ -61,6 +61,11 @@ model `VehicleService.buildWaveRunner` tries first; the 12-part template is its 
   one 64x48 palette texture (`textures/MilitaryWaveRunnerClean_Palette.png`). SHA-256 `99f94d10ea8519f91097a1fd2b272338b64420d37c1f26badd69971b09c41374`.
 - Review renders: `review/clean-comparison.png`, `review/clean-{quarter,side,rear,top}.png`.
 - Roblox Model asset id: `134548593522969` (Open Cloud, `moderationState: Approved`).
+- Registry: both builds are in `src/shared/AssetRegistry.json` (`military-wave-runner` is the clean
+  model, `military-wave-runner-scan` the 12-mesh fallback template, over budget with a recorded
+  waiver). `VehicleService` reads the clean id from there. Brief height is now 3.5 studs, the clean
+  model's real height. Studio checks still open for the clean model: loads, facing, scale, materials,
+  collision. Record each with `python tools/asset_generate.py verify military-wave-runner --check <name>`.
 - Integration: `CLEAN_WAVE_RUNNER` in `src/server/Services/VehicleService.lua` loads the asset once with
   `InsertService:LoadAsset` and welds it to the invisible hull. Waterline is `KeelBelowHull`, rider
   position is `Seat`.

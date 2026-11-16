@@ -6,6 +6,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerStorage = game:GetService("ServerStorage")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local AssetRegistry = require(ReplicatedStorage.Shared.AssetRegistry)
 
 local VehicleService = Knit.CreateService({
     Name = "VehicleService",
@@ -199,11 +200,17 @@ end
 -- The clean low-poly wave runner: one MeshPart, 1,696 triangles, built by
 -- tools/blender/build_military_wave_runner.py and uploaded as a Model. It is loaded once and
 -- cached. If the load fails (asset not owned by this experience, no network) the older
--- EnvironmentArt template is used, and failing that the primitive craft.
+-- EnvironmentArt template is used, and failing that the primitive craft. The asset id comes
+-- from the registry, which tools/asset_generate.py publish rewrites on every new upload.
+-- Its mounts are measured from the model's pivot (bottom centre of the keel) and are drawn on
+-- assets/models/military-wave-runner/review/mounts.png. Change them with
+-- `asset_generate.py brief military-wave-runner --mount ...` and rebuild, not here.
+local waveRunnerAsset = AssetRegistry["military-wave-runner"]
+local hullCentre = Vector3.new(table.unpack(waveRunnerAsset.mounts.HullCentre))
 local CLEAN_WAVE_RUNNER = {
-    AssetId = 134548593522969,
-    KeelBelowHull = 1.1, -- studs from the hull part's centre down to the keel; sets the waterline
-    Seat = Vector3.new(0, 1.05, 0.92), -- DriverSeat centre relative to the hull part, on the cushion
+    AssetId = waveRunnerAsset.assetId,
+    KeelBelowHull = hullCentre.Y, -- studs from the hull part's centre down to the keel; sets the waterline
+    Seat = Vector3.new(table.unpack(waveRunnerAsset.mounts.DriverSeat)) - hullCentre, -- relative to the hull part
 }
 local cleanWaveRunner = nil -- MeshPart once loaded, false once the load has failed
 
@@ -212,6 +219,9 @@ local function loadCleanWaveRunner()
         return cleanWaveRunner or nil
     end
     cleanWaveRunner = false
+    if not CLEAN_WAVE_RUNNER.AssetId then
+        return nil -- built locally but not uploaded yet
+    end
     local ok, loaded = pcall(function()
         return InsertService:LoadAsset(CLEAN_WAVE_RUNNER.AssetId)
     end)

@@ -122,6 +122,15 @@ jobs:
       - name: Validate asset appraisals
         run: lune run tools/check_assets.luau
 
+      # Registered pipeline assets: export hashes, stale uploads, triangle budgets,
+      # template settings, and no asset id typed into game code.
+      - name: Validate asset registry
+        run: lune run tools/check_asset_registry.luau
+
+      # Nothing over 5 MB is tracked without a reason in tools/large_files.json.
+      - name: Large files
+        run: lune run tools/check_large_files.luau
+
       # build_weapons is deterministic, so regenerating must leave the tree clean.
       # A diff here means someone edited src/shared/Weapons without rebuilding.
       - name: Weapon tools are up to date

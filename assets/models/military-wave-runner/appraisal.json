@@ -29,5 +29,5 @@
     "LOOK at views.png before building: generated meshes copy the reference's floor,",
     "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
   ],
-  "decision": "Military wave runner, static shoreline prop for Five Islands Hurricane (role: decor, about 4.5 studs tall)"
+  "decision": "Military wave runner, drivable vehicle at the Five Islands Hurricane docks (role: interactive, about 3.5 studs tall). The generated mesh is the shape guide; the shipped model is the clean rebuild."
 }
