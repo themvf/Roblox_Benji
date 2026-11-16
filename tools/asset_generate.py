@@ -18,6 +18,9 @@ same model and the same settings you get in the browser.
 The rules behind these (triangle budget per role, size and pivot contract, the asset
 registry, one session per package, provenance) live in tools/asset_rules.py.
 
+questions prints the 10 intake questions. Ask the user all of them in one message
+          before writing a brief; reference and generate stop until the brief holds the
+          answers (or --assumed records what you chose because they said to decide).
 brief     comes FIRST. Writes brief.json: purpose, role, height in studs, pivot, route.
           The role sets the triangle budget and, with the route, how much to generate:
           a held or interactive asset goes the clean route, where the generated mesh is
@@ -343,10 +346,20 @@ def reference_sheet(pkg):
 def require_brief(pkg, name, skip):
     """Stop a generation that has no brief yet. Route and size decide how much to generate."""
     brief = read_brief(pkg)
+    if brief and not skip:
+        unanswered = [k for k in rules.INTAKE_REQUIRED if brief.get(k) in (None, "")]
+        if unanswered and not brief.get("assumed"):
+            sys.exit(
+                f"the brief for {name} is missing answers from the user: " + ", ".join(unanswered) + ".\n"
+                "Ask them in one message (python tools/asset_generate.py questions), then record the answers with\n"
+                f"  python tools/asset_generate.py brief {name} --where ... --copies ... --share game|public --kind ...\n"
+                "If the user told you to decide, record what you chose: brief <name> --assumed \"<what and why>\"."
+            )
     if brief or skip:
         return brief
     sys.exit(
-        f"no brief.json in {rel(pkg)}. Write it first, so the route is decided before GPU time is spent:\n"
+        f"no brief.json in {rel(pkg)}. Ask the user the intake questions (asset_generate.py questions), then\n"
+        "write the brief, so the route is decided before GPU time is spent:\n"
         f"  python tools/asset_generate.py brief {name} --purpose \"...\" --role <{'|'.join(ROLES)}> --height <studs>\n"
         "(--no-brief skips this.)"
     )
@@ -958,33 +971,51 @@ def cmd_brief(args):
         ("kind", args.kind),
         ("lengthStuds", args.length),
         ("gameName", args.game_name),
+        ("where", args.where),
+        ("copies", args.copies),
+        ("moving", args.moving),
+        ("share", args.share),
+        ("assumed", args.assumed),
     ):
         if value is not None:
             brief[key] = value
     missing = [k for k in ("purpose", "role", "heightStuds") if k not in brief]
     if missing:
-        sys.exit("a new brief needs --purpose, --role and --height; missing: " + ", ".join(missing))
+        sys.exit(
+            "a new brief needs --purpose, --role and --height; missing: " + ", ".join(missing)
+            + ".\nThese come from the user. Ask them:  python tools/asset_generate.py questions"
+        )
     brief.setdefault("pivot", "bottom")
     brief.setdefault("meshes", "auto")
     brief.setdefault("route", "auto")
     brief.setdefault("scene", {})
-    brief.setdefault("kind", "prop")
+    unanswered = [k for k in rules.INTAKE_REQUIRED if brief.get(k) in (None, "")]
+    kind = brief.get("kind", "prop")  # left out of the file until the user has said, so it counts as unanswered
     for item in args.mount or ():
         found = re.fullmatch(r"([A-Za-z][A-Za-z0-9]*)=(-?[\d.]+),(-?[\d.]+),(-?[\d.]+)", item)
         if not found:
             sys.exit(f"--mount takes Name=x,y,z in studs from the pivot (-z is forward), got {item!r}")
         brief.setdefault("mounts", {})[found.group(1)] = [float(found.group(i)) for i in (2, 3, 4)]
-    needed = rules.KIND_ROLE.get(brief["kind"])
+    needed = rules.KIND_ROLE.get(kind)
     if needed and brief["role"] != needed:
-        sys.exit(f"kind {brief['kind']} goes with role {needed}, not {brief['role']}; pass --role {needed}")
+        sys.exit(f"kind {kind} goes with role {needed}, not {brief['role']}; pass --role {needed}")
     os.makedirs(pkg, exist_ok=True)
     write_json(os.path.join(pkg, "brief.json"), brief)
     print(f"wrote {rel(os.path.join(pkg, 'brief.json'))}")
-    missing = [name for name in rules.KINDS[brief["kind"]] if name not in brief.get("mounts", {})]
+    missing = [name for name in rules.KINDS[kind] if name not in brief.get("mounts", {})]
     if missing:
-        print(f"kind {brief['kind']}: build will fail until these mounts are set: " + ", ".join(missing) + ". Add each with --mount Name=x,y,z once the model's shape is known.")
-    if brief["kind"] != "prop" and not brief.get("gameName"):
-        print(f"kind {brief['kind']}: set --game-name to the name game code uses for it, so the gate can check it is wired in.")
+        print(f"kind {kind}: build will fail until these mounts are set: " + ", ".join(missing) + ". Add each with --mount Name=x,y,z once the model's shape is known.")
+    if kind != "prop" and not brief.get("gameName"):
+        print(f"kind {kind}: set --game-name to the name game code uses for it, so the gate can check it is wired in.")
+    if unanswered:
+        print(
+            "intake: not answered yet: " + ", ".join(unanswered) + ". reference and generate will stop until they are. "
+            "Ask the user (asset_generate.py questions), or pass --assumed with what you chose for them."
+        )
+    if brief.get("share") == "public":
+        print("share: public. Fill in the rights note in provenance.json before it leaves this game.")
+    if brief.get("moving") and planned_route(brief) != "clean":
+        print("moving parts: set --route clean, so each moving part is built as its own piece.")
     if brief["role"] == "cover":
         print("note: cover a player relies on is a block in the map file; this mesh is its visual shell.")
     print(f"budget: role {brief['role']} allows {rules.ROLE_BUDGETS[brief['role']]:,} triangles in total, {TRI_CAP:,} per mesh.")
@@ -1467,6 +1498,11 @@ def main():
     brief.add_argument("--mount", action="append", metavar="NAME=x,y,z", help="a named point in studs from the pivot, -z forward; repeatable")
     brief.add_argument("--length", type=float, help="finished front-to-back length in studs (weapons)")
     brief.add_argument("--game-name", help="the name game code uses for it, e.g. WaveRunner or WhiteSniper")
+    brief.add_argument("--where", help="the map or place it goes in")
+    brief.add_argument("--copies", type=int, help="about how many are on screen at once")
+    brief.add_argument("--moving", help="parts that move by themselves, e.g. 'wheels, rotor'; empty string for none")
+    brief.add_argument("--share", choices=["game", "public"], help="stays in this game, or may be sold or given away")
+    brief.add_argument("--assumed", help="answers you chose because the user said to decide; shown in the final report")
     brief.add_argument("--budget-waiver", metavar="REASON", help="why this asset may exceed its role's triangle budget")
     brief.set_defaults(run=cmd_brief)
 
@@ -1528,6 +1564,9 @@ def main():
     prompt.add_argument("--aspect", choices=sorted(REFERENCE_ASPECTS), default="square")
     prompt.add_argument("--tool", choices=["midjourney", "other"], default="midjourney")
     prompt.set_defaults(run=cmd_prompt)
+
+    ask = sub.add_parser("questions", help="the questions to ask the user before writing a brief")
+    ask.set_defaults(run=lambda _args: print(rules.intake_text()))
 
     args = ap.parse_args()
     args.run(args)

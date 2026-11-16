@@ -53,6 +53,45 @@ CALIBRATION_SEED = [
 ]
 
 
+# What to ask the user before writing a brief: (key, question, how the answer is used).
+# One message, all at once, skipping anything the request already answers. After that the
+# run is hands-off. `asset_generate.py questions` prints this list for any model to use.
+INTAKE = [
+    ("purpose", "What is it, in one sentence?", "--purpose"),
+    ("where", "Which map or place does it go in?", "--where"),
+    (
+        "use",
+        "What does a player do with it? (a) walk past it  (b) take cover behind it  (c) drive or ride it  "
+        "(d) hold it, like a gun or tool  (e) only see it far away  (f) open or use it some other way",
+        "a: --role decor --kind prop | b: --role cover --kind prop | c: --role interactive --kind vehicle | "
+        "d: --role held --kind weapon | e: --role scenery --kind prop | f: --role interactive --kind prop",
+    ),
+    ("size", "How big is it? Studs, or a comparison such as 'as tall as a player' (a player is about 5.5 studs).", "--height, and --length for a gun"),
+    ("reference", "Do you have a picture of it (give the file), or should one be generated? Realistic, stylized or blocky?", "generate <image>, or reference --style"),
+    ("copies", "About how many will be on screen at once?", "--copies; many copies of a heavy model is what slows phones down"),
+    ("moving", "Does any part need to move by itself, such as wheels, a door or a rotor?", "--moving; moving parts mean the clean route, built as separate pieces"),
+    (
+        "kindDetail",
+        "Only for a vehicle or gun. Vehicle: land, water or air, and how many seats? "
+        "Gun: which existing weapon should it behave like, and what is it called in game?",
+        "--game-name; seats become mounts; the existing weapon is the kit base in tools/build_weapons.luau",
+    ),
+    ("share", "Will it stay in this game, or might you sell it or give it away?", "--share game|public; public needs the rights note in provenance.json filled in"),
+    ("stop", "Should I stop at the finished local build for your approval (the default), or also upload once you approve the pictures?", "nothing is ever uploaded without approval"),
+]
+# Answers a brief must hold before anything is generated.
+INTAKE_REQUIRED = ("purpose", "role", "kind", "heightStuds", "where", "copies", "share")
+
+
+def intake_text():
+    lines = ["Ask the user these in ONE message before writing the brief. Skip any the request already answers.", ""]
+    for number, (_, question, use) in enumerate(INTAKE, 1):
+        lines.append(f"{number:>2}. {question}")
+        lines.append(f"      -> {use}")
+    lines += ["", "If they say 'you decide' to one, choose, and say what you chose in the final report.", "After the answers, run the whole flow without further questions and report once."]
+    return "\n".join(lines)
+
+
 def rel(path):
     return os.path.relpath(path, ROOT).replace("\\", "/")
 
@@ -254,6 +293,7 @@ def record_build(key, pkg, brief, route, export, triangles):
             "kind": brief.get("kind", "prop"),
             "gameName": brief.get("gameName"),
             "mounts": brief.get("mounts") or {},
+            "share": brief.get("share", "game"),
         }
     )
     if brief.get("budgetWaiver"):

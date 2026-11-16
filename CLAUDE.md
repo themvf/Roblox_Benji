@@ -30,6 +30,10 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
   system-wide, which otherwise makes `stylua --check src` fail on every file locally while CI passes.
 
 ## Generated assets: one flow, enforced
+- **Ask before you build.** For any new asset, run `python tools/asset_generate.py questions` and put
+  those questions to the user in one message, skipping what the request already answers. Record the
+  answers in the brief. That is the only check-in; after it, run hands-off and report once.
+  `reference` and `generate` refuse to run on a brief without the answers.
 - Order is brief -> reference -> mesh -> build -> approve -> publish -> Studio, all through
   `python tools/asset_generate.py`; the table is at the top of
   [ASSET_DELIVERY_WORKFLOW.md](docs/design/ASSET_DELIVERY_WORKFLOW.md). Write the brief first: its role

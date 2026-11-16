@@ -5,14 +5,14 @@ description: Make a new 3D game asset from a one-line description with no check-
 
 # Asset from a prompt, hands-off
 
-The user gives one sentence. You run stages 1-4 of
+The user gives one sentence. You ask the intake questions once (see "Ask first, once"), then run stages 1-4 of
 [ASSET_DELIVERY_WORKFLOW.md](../../../docs/design/ASSET_DELIVERY_WORKFLOW.md) yourself and come back
 once, with the finished local build. The user said plainly that they do not want to be involved in the
 intermediate steps: do not ask them to choose a seed, approve a prompt or look at a sheet mid-run.
 
 You make every call below. Write each one down in the package so the user can overrule it afterwards.
 
-## What you decide without asking
+## Your defaults, offered with the questions
 
 | Decision | Rule |
 |---|---|
@@ -22,7 +22,21 @@ You make every call below. Write each one down in the package so the user can ov
 | Style | `realistic` for vehicles, scenery and props; `blocky` for Roblox-style characters; `stylized` when asked for low-poly or cartoon |
 | Aspect | `wide` for vehicles and anything longer than tall, `tall` for trees, towers and standing figures, else `square` |
 
-Ask a question only if the request does not say what the object is.
+## Ask first, once
+
+Before anything else, run `python tools/asset_generate.py questions` and put those questions to the
+user in **one** message (use the question tool if you have one). Skip any the request already
+answers, and offer your default from the table above where one applies so they can just agree. Do
+not start generating while you wait. This is the only check-in: once they answer, the run is
+hands-off and you report once at the end.
+
+Record every answer with `brief` (`--purpose --role --kind --height --where --copies --moving
+--share`, plus `--game-name` and `--length` where they apply). If the user says "you decide", choose,
+and record what you chose with `--assumed "..."`; repeat those choices in your final report.
+`reference` and `generate` refuse to run until the brief holds the answers.
+
+The user asked for this on 2026-11-16: they would rather answer a short list up front than have a
+forgotten detail (drivable, held, how many on screen) decided silently and built wrong.
 
 ## The run
 

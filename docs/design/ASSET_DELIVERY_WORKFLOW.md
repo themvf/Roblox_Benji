@@ -22,7 +22,8 @@ gates are `tools/check_asset_registry.luau` and `tools/check_large_files.luau`, 
 
 | Step | Command | What it settles |
 | --- | --- | --- |
-| 1. Brief | `asset_generate.py brief <name> --purpose --role --height` | role, size, route and triangle budget, before any GPU time |
+| 0. Ask | `asset_generate.py questions` | the model asks the user ten questions in one message; the only check-in before the final report |
+| 1. Brief | `asset_generate.py brief <name> --purpose --role --kind --height --where --copies --share` | the answers, and from them role, size, route and triangle budget, before any GPU time |
 | 2. Reference | `prompt` (Midjourney) or `reference` (built in) | one subject, white background, nothing cropped; checked on intake |
 | 3. Mesh | `generate`, then `pick` | one candidate on the clean route, three on scan; `pick` writes `provenance.json` |
 | 4. Build | `build` | per-mesh cap, role budget, size and pivot against the brief, detail against the source |

@@ -4,6 +4,9 @@ Project conventions are in [CLAUDE.md](CLAUDE.md).
 
 For external-art and game-asset work:
 
+0. For a new asset, run `python tools/asset_generate.py questions` and ask the user
+   those questions in one message before doing anything else. Record the answers
+   with `asset_generate.py brief`. Generation is blocked until the brief has them.
 1. Read [the asset delivery workflow](docs/design/ASSET_DELIVERY_WORKFLOW.md).
 2. Read the target asset package's HANDOFF.md before acting. Preserve approved
    decisions, verify current files, and resume at the first unverified stage.

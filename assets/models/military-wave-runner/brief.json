@@ -19,5 +19,10 @@
       1.1,
       0.0
     ]
-  }
+  },
+  "where": "Five Islands Hurricane",
+  "copies": 4,
+  "moving": "",
+  "share": "game",
+  "assumed": "copies (4) and share (game) were chosen by Claude on 2026-11-16, not stated by the user"
 }
