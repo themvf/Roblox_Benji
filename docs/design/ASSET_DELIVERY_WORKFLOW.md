@@ -23,7 +23,20 @@ python tools/asset_generate.py pick wooden-crate --seed 2
 
 `generate` saves the reference, makes one candidate per seed in `trials/`, appraises
 each and writes `review/candidates.png`. Look at that sheet, `pick` the winner into
-`source/`, fill in `decision`, then continue from stage 2 below.
+`source/`.
+
+```bash
+python tools/asset_generate.py brief wooden-crate --purpose "..." --role decor --height 4
+python tools/asset_generate.py build wooden-crate
+```
+
+`brief` writes `brief.json` (purpose, role, height in studs, pivot); `pick` copies the
+purpose into the appraisal `decision`. `build` generates the package's own `scene.json`
+from the brief, runs `scene_kit` on it, checks the export against the triangle cap,
+renders `review/views.png` of the written file and records `validation.json`. Anything
+wider than 12 studs is built as a 2x2 tile set; override with `--meshes`, or put any
+`scene_kit` field (`cull`, `decimate`, `tile`) under `scene` in the brief. That reaches
+stage 4. It never uploads: stages 5-7 still need your approval and Studio.
 
 ## Stages and evidence
 
