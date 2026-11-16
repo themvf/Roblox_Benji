@@ -1,0 +1,9 @@
+{
+  "purpose": "Military wave runner, drivable vehicle at the Five Islands Hurricane docks",
+  "role": "interactive",
+  "heightStuds": 4.5,
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "route": "clean"
+}

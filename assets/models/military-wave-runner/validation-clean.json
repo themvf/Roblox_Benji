@@ -1,0 +1,32 @@
+{
+  "checkedOn": "2026-11-16 10:53",
+  "route": "clean",
+  "builder": "tools/blender/build_military_wave_runner.py",
+  "export": "assets/models/military-wave-runner/exports/MilitaryWaveRunnerClean.glb",
+  "exportSha256": "99f94d10ea8519f91097a1fd2b272338b64420d37c1f26badd69971b09c41374",
+  "triangleCapPassed": true,
+  "inspect": [
+    "file     MilitaryWaveRunnerClean.glb (0.12 MB)",
+    "           MilitaryWaveRunner               1,696 tris",
+    "           texture                          64x48  image/png"
+  ],
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.7,
+      "side": 0.774,
+      "top": 0.87
+    },
+    "surfaceError": {
+      "front": 0.907,
+      "back": 0.859,
+      "right": 0.816,
+      "left": 0.813,
+      "top": 0.798,
+      "bottom": 0.696
+    },
+    "worstSurfaceError": 0.907,
+    "sheet": "assets/models/military-wave-runner/review/clean-detail.png",
+    "passed": null
+  },
+  "limitations": "Local checks only. Shape fidelity is judged by eye on the builder's renders."
+}

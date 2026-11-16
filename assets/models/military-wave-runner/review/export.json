@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-16",
+  "source": "MilitaryWaveRunner.glb",
+  "sourceSha256": "8caab1c06dbf20c3b1c4ea84e653c03982c728e411afb000c825dd749499285f",
+  "measurements": {
+    "triangles": 70044,
+    "size": [
+      5.706,
+      11.144,
+      4.534
+    ],
+    "reliefRatio": 0.4068,
+    "openEdges": 89384,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": ""
+}

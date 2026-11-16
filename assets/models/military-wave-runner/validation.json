@@ -1,0 +1,27 @@
+{
+  "checkedOn": "2026-11-16 08:43",
+  "export": "assets/models/military-wave-runner/exports/MilitaryWaveRunner.glb",
+  "exportSha256": "8caab1c06dbf20c3b1c4ea84e653c03982c728e411afb000c825dd749499285f",
+  "sourceSha256": "c6733cc31a60a158b6ed493546cee3928ce409dd80c637e0ab985e1cc8009be7",
+  "triangleCapPassed": true,
+  "inspect": [
+    "file     MilitaryWaveRunner.glb (7.33 MB)",
+    "           geometry_0.001                   4,281 tris",
+    "           geometry_0.002                   8,393 tris",
+    "           geometry_0.003                   4,024 tris",
+    "           geometry_0.004                   5,181 tris",
+    "           geometry_0.005                   6,437 tris",
+    "           geometry_0.006                   8,295 tris",
+    "           geometry_0.007                   5,598 tris",
+    "           geometry_0.008                   6,776 tris",
+    "           geometry_0.009                   4,030 tris",
+    "           geometry_0.010                   7,975 tris",
+    "           geometry_0.011                   3,796 tris",
+    "           geometry_0.012                   5,258 tris",
+    "           total                           70,044 tris (12 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}
