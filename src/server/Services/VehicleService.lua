@@ -241,6 +241,54 @@ local function loadCleanWaveRunner()
     return cleanWaveRunner or nil
 end
 
+-- The patrol RHIB: one MeshPart, about 2,100 triangles, built by tools/blender/build_patrol_rhib.py
+-- and uploaded as a Model. Same arrangement as the wave runner: the id and mounts come from the
+-- registry, the mesh is loaded once and cached, and if the load fails the block-built boat below
+-- is used. Mounts are drawn on assets/models/patrol-rhib/review/mounts.png; change them with
+-- `asset_generate.py brief patrol-rhib --mount ...` and rebuild, not here.
+local rhibAsset = AssetRegistry["patrol-rhib"]
+local rhibHullCentre = rhibAsset and Vector3.new(table.unpack(rhibAsset.mounts.HullCentre))
+local CLEAN_RHIB = rhibAsset
+    and {
+        AssetId = rhibAsset.assetId,
+        KeelBelowHull = rhibHullCentre.Y, -- the hull part rides at Y = 0.35, so this sets the draught
+        Seat = Vector3.new(table.unpack(rhibAsset.mounts.DriverSeat)) - rhibHullCentre,
+        -- Invisible collision, relative to the hull part. The deck block's top is the deck, so
+        -- players stand where the floor is drawn; the collar blocks stop them walking through it.
+        -- Both stop short of the bow, where the boat narrows and a box would poke out of it.
+        Deck = Vector3.new(6.8, 1.1, 22),
+        CollarOffset = Vector3.new(3.9, 0.9, 3),
+        Collar = Vector3.new(2, 2, 19),
+    }
+local cleanRHIB = nil -- MeshPart once loaded, false once the load has failed
+
+local function loadCleanRHIB()
+    if cleanRHIB ~= nil then
+        return cleanRHIB or nil
+    end
+    cleanRHIB = false
+    if not CLEAN_RHIB or not CLEAN_RHIB.AssetId then
+        return nil -- not in the registry, or built locally but not uploaded yet
+    end
+    local ok, loaded = pcall(function()
+        return InsertService:LoadAsset(CLEAN_RHIB.AssetId)
+    end)
+    if not ok or not loaded then
+        warn("[VehicleService] patrol RHIB did not load, using the block-built boat:", loaded)
+        return nil
+    end
+    local mesh = loaded:FindFirstChildWhichIsA("MeshPart", true)
+    if mesh then
+        mesh.Name = "RHIBBody"
+        mesh.Parent = nil
+        cleanRHIB = mesh
+    else
+        warn("[VehicleService] patrol RHIB asset holds no MeshPart")
+    end
+    loaded:Destroy()
+    return cleanRHIB or nil
+end
+
 local function findEnvironmentArtTemplate(name: string): Folder?
     local art = ServerStorage:FindFirstChild("EnvironmentArt")
     local folder = art and art:FindFirstChild(name)
@@ -390,6 +438,53 @@ end
 local function buildRHIB(baseCF)
     local model = Instance.new("Model")
     model.Name = "RHIB"
+
+    local clean = loadCleanRHIB()
+    if clean then
+        local hull =
+            makePart(model, "Hull", baseCF, CLEAN_RHIB.Deck, COLORS.BoatHull, Enum.Material.SmoothPlastic, true, 1)
+        hull.Massless = false
+        -- Four times the old hull's volume, so a quarter of its density keeps the same drive feel.
+        hull.CustomPhysicalProperties = PhysicalProperties.new(0.15, 0.2, 0.1, 1, 1)
+        model.PrimaryPart = hull
+
+        for _, side in { 1, -1 } do
+            local offset = CLEAN_RHIB.CollarOffset * Vector3.new(side, 1, 1)
+            local collar = makePart(
+                model,
+                side == 1 and "CollarR" or "CollarL",
+                baseCF * CFrame.new(offset),
+                CLEAN_RHIB.Collar,
+                COLORS.BoatTube,
+                Enum.Material.SmoothPlastic,
+                true,
+                1
+            )
+            weldTo(hull, collar)
+        end
+
+        -- A MeshPart's CFrame is the centre of its bounding box, so lift it by half its height
+        -- from the keel line. Its own rotation is kept in case the import left one on it.
+        local body = clean:Clone()
+        local rot = body.CFrame.Rotation
+        local size = body.Size
+        local tall = math.abs(rot.RightVector.Y) * size.X
+            + math.abs(rot.UpVector.Y) * size.Y
+            + math.abs(rot.LookVector.Y) * size.Z
+        body.CFrame = baseCF * CFrame.new(0, tall / 2 - CLEAN_RHIB.KeelBelowHull, 0) * rot
+        body.Anchored = false
+        body.Massless = true
+        body.CanCollide = false
+        body.CanQuery = false
+        body.CanTouch = false
+        body.Parent = model
+        weldTo(hull, body)
+
+        -- One working seat for now: the helm. Passenger seats come back when they are asked for.
+        local driverSeat = addSeat(model, hull, "DriverSeat", CLEAN_RHIB.Seat, true)
+        attachPhysics(hull, false)
+        return model, hull, { driverSeat }
+    end
 
     local hull = makePart(model, "Hull", baseCF, Vector3.new(4.3, 1.35, 12.2), COLORS.BoatHull, Enum.Material.Metal)
     hull.Massless = false

@@ -30,8 +30,10 @@ answers, and offer your default from the table above where one applies so they c
 not start generating while you wait. This is the only check-in: once they answer, the run is
 hands-off and you report once at the end.
 
-Record every answer with `brief` (`--purpose --role --kind --height --where --copies --moving
---share`, plus `--game-name` and `--length` where they apply). If the user says "you decide", choose,
+Record every answer with `brief` (`--purpose --role --kind --height --length --width --where --copies
+--moving --share`, plus `--game-name` where it applies). Then list every part your description gives
+a number for: `--count seats=8 --count legs=4`, or `--count none`. Nobody asks the user this; you
+write the description, so you know what it promises. If the user says "you decide", choose,
 and record what you chose with `--assumed "..."`; repeat those choices in your final report.
 `reference` and `generate` refuse to run until the brief holds the answers.
 
@@ -66,7 +68,18 @@ for this session; if one says another session holds it, pick a different asset.
      10,000 triangles. Keep them for static decor and check them in the export views. If they come
      out broken, or the part has to move in game, regenerate with bare hubs or mounts and note in
      HANDOFF.md that those parts are to be added as separate meshes.
-2. **References:** `reference <name> --prompt "..." --style ... --aspect ... --seeds 8`, then Read
+   **GPU is a shared daily quota. Spend it on purpose** (`asset_generate.py quota` shows what was
+   used and when it is back):
+   - First `asset_generate.py find <words>`: reuse, rescale or recolour something the repo already
+     has before making anything.
+   - Boxy or flat-sided things (shelving, cabinets, walls, crates, lifts) and anything thin, driven
+     or held are built from shapes, which needs no mesh and no GPU at all.
+   - More than two generated assets for one map need an asset plan the user approved:
+     `asset_generate.py plan "<Map>" --add <name> --what "..." --source reuse|shapes|generate`,
+     show them the table, then `--approve <runs> --said "<their words>"`. `generate` enforces it.
+   - If the quota is out, the request is queued by itself. Do not stop: carry on with the brief,
+     a builder, or another asset, and say in the report what is waiting.
+2. **References:** `reference <name> --prompt "..." --style ... --aspect ... --seeds 4`, then Read
    `review/references.png` and reject any image with:
    - part of the subject touching or leaving the frame edge
    - motion blur, or soft focus on any part
@@ -74,26 +87,37 @@ for this session; if one says another session holds it, pick a different asset.
    - people, extra objects, text or a logo
    - a background that is not plain white, or a long cast shadow
    - a colour or part the description did not ask for
-   Promote the best survivor with `reference <name> --use <seed>`. If the best one is right except
+   The command prints each picture's outline against the brief's size; one marked REJECT cannot be
+   that size from any reference camera. Count every briefed part on the one you choose.
+   Promote the best survivor with `reference <name> --use <seed> --counted seats=<n>`; a wrong
+   outline or count is refused (`--accept "<reason>"` passes it and records why). If the best one is right except
    for a single part (a blurred rotor, a wrong blade count), fix that part instead of re-rolling:
    `reference <name> --edit "Replace the ... with ..., crisp and in focus" --seeds 3`, Read the
    sheet, then `--use <101-103> --replace`. Edits vary a lot by seed; some redraw the whole object.
    Zoom in on the edited part before accepting it. If none survive, rewrite the
    description to address what went wrong and run once more. Two rounds, then stop and report.
-3. **Mesh:** `generate --name <name> --seeds 2`, then Read `review/candidates.png`. A candidate fails
+3. **Mesh:** `generate --name <name>` makes ONE candidate, as a 512 draft. Read
+   `review/candidates.png`. Ask for a second (`--seeds 2`) only if the first fails; a third needs
+   `--why "<what was wrong>"`, and if two fail the same way fix the picture instead (`reference
+   --edit`). `pick` then runs the chosen seed once at 1024 for a scan build; a clean build keeps the
+   draft, since the mesh is only its guide. Compare the final with the draft before building: they
+   should be the same shape. `generate` prints any candidate whose length or depth is more than 20%
+   off the brief; `pick --seed <n> --counted seats=<n>` refuses it, and refuses a miscount, before
+   the 1024 pass is spent. If the generator crashes twice on a picture it stops: follow what it
+   prints (the draft, a simpler picture, or shapes) instead of trying again. A candidate also fails
    if a view shows missing or fused parts, a flat or hollow back, or a shape that does not match the
    reference. Count the countable parts again here: the same reference gave a four-blade tail rotor
    on one seed and six on the next. Compare `openEdges` against other packages' `trials/*/appraisal.json`: TRELLIS output
    here runs around 140,000-200,000 at 290,000 triangles, so that range is normal and far above it
-   is not. If both fail, add two more seeds (`--first-seed 3`). Four candidates, then stop and report.
+   is not. Three candidates, then stop and report.
 4. **Pick, build:** the brief already exists (see "Brief first" above). `pick <name> --seed <n>`,
    then `build <name>`. `build` also fails an export that is over its role's triangle budget or
    is not the height the brief says; fix the brief or the build, or record
    `brief <name> --budget-waiver "<reason>"` when the excess is justified. The build retries a finer tile grid by itself
-   when a mesh is over the triangle cap (up to five attempts) and writes the grid that passed
-   into `brief.json`. Only if it still fails, set `"scene": {"decimate": N, "tile": [nx, ny]}`
-   by hand: more cuts along the long axis, an even count across it, `decimate` no lower than
-   15% of the source triangles.
+   when a mesh is over the triangle cap, and rebuilds with fewer triangles by itself when the total
+   is over the role's budget; it writes what passed into `brief.json`. Do not set `scene.decimate`
+   by hand to find a budget. If it prints that it went under 15% of the source, read the detail
+   score and the close-ups with extra care: that is where panels crumple.
 5. **Audit the export.** `build` ends by running `audit`, which is the file that would be
    uploaded seen from ten sides plus close-ups at most 16 studs across. The textured views are
    one-sided, as Roblox draws a mesh, so a gap in them is a gap in game. Read both sheets every time:
@@ -126,7 +150,8 @@ for this session; if one says another session holds it, pick a different asset.
 6. **Record:** update the package's `HANDOFF.md` with the description you sent, every assumption from
    the table above, the seeds you rejected and why, and any flaw still visible in the export.
 
-Stop at a GPU quota error and say so; finished seeds are kept and the same command resumes.
+A GPU quota error parks the request in the queue (`asset_generate.py queue`); finished seeds are
+kept and `queue --run` resumes it after the reset. Keep working on what does not need the GPU.
 
 ## What you bring back
 
@@ -139,6 +164,7 @@ One message, when the audit is done or the run has failed:
 
 Before you report, write your own review: `asset_generate.py findings <name>` prints what to look
 for; go through every close-up panel and record each defect with `--defect "where: what"`, or `--none`.
+Count every briefed part on the build and pass it (`--counted seats=<n>`); a miscount joins the list.
 Finding defects is your job, not the user's. Lead the report with that list (the command prints it,
 with what the checks measured), so their part is a yes or no.
 

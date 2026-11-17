@@ -110,7 +110,9 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import asset_gpu as gpu  # noqa: E402 - plan, cache, usage ledger and queue for hosted GPU runs
 import asset_rules as rules  # noqa: E402 - budgets, registry, claims, provenance; see that file
+import asset_shape as shape  # noqa: E402 - proportions and counts, checked before GPU and build time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SPACE = "microsoft/TRELLIS.2"
@@ -346,6 +348,55 @@ def reference_sheet(pkg):
     return out
 
 
+def accept(pkg, stage, reason):
+    """Record why a failed proportion or count check was passed anyway."""
+    brief = read_brief(pkg) or {}
+    brief.setdefault("accepted", []).append({"stage": stage, "reason": reason.strip(), "on": time.strftime("%Y-%m-%d"), "by": rules.owner()})
+    write_json(os.path.join(pkg, "brief.json"), brief)
+
+
+def shape_gate(pkg, name, stage, problems, counted, accepting):
+    """Stop a picture or mesh whose proportions or counts do not match the brief.
+
+    `problems` are proportion problems already measured. `counted` is what the caller
+    counted on the sheet (--counted name=n). Returns the counts as recorded."""
+    brief = read_brief(pkg) or {}
+    wanted = brief.get("counts") or {}
+    try:
+        seen = shape.parse_counts(counted, "--counted")
+    except ValueError as error:
+        sys.exit(str(error))
+    missing, wrong = shape.count_problems(wanted, seen)
+    if missing:
+        sys.exit(
+            f"count them first: the brief for {name} says " + ", ".join(f"{k}={v}" for k, v in wanted.items()) + ". Look at the sheet, count each on "
+            "the one you are choosing, and pass what you counted:  " + " ".join(f"--counted {k}=<n>" for k in missing)
+        )
+    failed = ["shape: " + p for p in problems] + ["count: " + w for w in wrong]
+    if failed and not (accepting or "").strip():
+        sys.exit(
+            f"{name} does not match its brief at {stage}:\n  " + "\n  ".join(failed) + "\n"
+            "Choose another, fix the picture (reference --edit), or correct the brief if the brief is what is wrong. "
+            "To go on with it as it is, say why:  --accept \"<reason>\""
+        )
+    if failed:
+        accept(pkg, stage, accepting + " [" + "; ".join(failed) + "]")
+        print("accepted with a reason; it is recorded in the brief and belongs in the report:\n  " + "\n  ".join(failed))
+    return seen
+
+
+def reference_shapes(pkg, brief):
+    """Print each reference candidate's outline against what the brief's size allows."""
+    if not brief or not shape.target(brief):
+        return
+    for path in reference_trials(pkg):
+        aspect, low, high, problem = shape.image_problem(path, brief)
+        if aspect is None:
+            continue
+        label = os.path.splitext(os.path.basename(path))[0]
+        print(f"  {label}: {aspect:.2f} wide per high (the brief allows {low:.2f} to {high:.2f})" + ("  REJECT: " + problem if problem else ""))
+
+
 def require_brief(pkg, name, skip):
     """Stop a generation that has no brief yet. Route and size decide how much to generate."""
     brief = read_brief(pkg)
@@ -358,6 +409,13 @@ def require_brief(pkg, name, skip):
                 f"  python tools/asset_generate.py brief {name} --where ... --copies ... --share game|public --kind ...\n"
                 "If the user told you to decide, record what you chose: brief <name> --assumed \"<what and why>\"."
             )
+    if brief and not skip and "counts" not in brief:
+        sys.exit(
+            f"the brief for {name} does not say what must be counted. List every part your description gives a number for "
+            "(seats, wheels, blades, legs, doors, paintings), so each can be checked on the picture and the mesh:\n"
+            f"  python tools/asset_generate.py brief {name} --count seats=8 --count legs=4\n"
+            f"or, if nothing on it has a number:  brief {name} --count none"
+        )
     if brief or skip:
         return brief
     sys.exit(
@@ -375,6 +433,9 @@ def cmd_reference(args):
         chosen = os.path.join(pkg, "trials", "reference", f"seed-{args.use}.png")
         if not os.path.isfile(chosen):
             sys.exit(f"no reference candidate for seed {args.use} in {os.path.relpath(os.path.dirname(chosen), ROOT)}")
+        brief = read_brief(pkg) or {}
+        problem = shape.image_problem(chosen, brief)[3]
+        shape_gate(pkg, args.name, f"reference seed {args.use}", [problem] if problem else [], args.counted, args.accept)
         existing = glob.glob(os.path.join(pkg, "source", "reference.*"))
         if existing and not args.replace:
             sys.exit(f"{os.path.relpath(existing[0], ROOT)} already exists; pass --replace to overwrite it")
@@ -403,37 +464,99 @@ def cmd_reference(args):
     seeds = list(range(args.first_seed, args.first_seed + args.seeds))
     generate_references(pkg, prompt, seeds, REFERENCE_ASPECTS[args.aspect])
     reference_sheet(pkg)
+    reference_shapes(pkg, read_brief(pkg))
+    wanted = (read_brief(pkg) or {}).get("counts")
+    if wanted:
+        print("count on each picture before choosing: " + ", ".join(f"{k}={v}" for k, v in wanted.items()) + ". --use needs --counted for each.")
     print(f"next: open the sheet, then  python tools/asset_generate.py reference {args.name} --use <n>")
 
 
 # ---------------------------------------------------------------- generation
 
 
-def generate_candidates(pkg, image, seeds, args):
+DRAFT_RESOLUTION = "512"  # enough to choose a shape; the picked seed is run once more at FINAL
+FINAL_RESOLUTION = "1024"
+MORE_NEEDS_REASON = 2  # with this many candidates already made, another needs --why
+
+
+def generate_candidates(pkg, image, seeds, args, final=False):
+    """Make one candidate per seed. Returns "ok", or "quota" when the GPU quota ran out.
+
+    A draft is trials/seed-N/candidate.glb. A final is the same seed at full resolution,
+    trials/seed-N/final.glb, made once for the seed that was picked. Every finished run is
+    cached outside the repo and logged with its wall time (tools/asset_gpu.py)."""
+    name = os.path.basename(pkg)
+    where = (read_brief(pkg) or {}).get("where")
+    file_name = "final.glb" if final else "candidate.glb"
+    kind = "final" if final else "draft"
+    todo = [s for s in seeds if not os.path.isfile(os.path.join(pkg, "trials", f"seed-{s}", file_name))]
+    for seed in seeds:
+        if seed not in todo:
+            print(f"seed {seed}: already generated, skipping")
+
+    def record_for(seed):
+        return {
+            "space": SPACE,
+            "seed": seed,
+            "resolution": args.resolution,
+            "decimationTarget": args.decimation,
+            "textureSize": args.texture,
+            "reference": os.path.basename(image),
+            "generatedOn": time.strftime("%Y-%m-%d"),
+        }
+
+    def keep(seed, glb):
+        out_dir = os.path.join(pkg, "trials", f"seed-{seed}")
+        os.makedirs(out_dir, exist_ok=True)
+        shutil.copyfile(glb, os.path.join(out_dir, file_name))
+        note = os.path.join(out_dir, "generation.json")
+        if final and os.path.isfile(note):
+            shutil.copyfile(note, os.path.join(out_dir, "draft.json"))
+        write_json(note, record_for(seed))
+
+    # The cache first: a renamed or cleaned-up package does not pay for the same run twice.
+    keys = {seed: gpu.cache_key(image, seed, args.resolution, args.decimation, args.texture, SPACE) for seed in todo}
+    for seed in list(todo):
+        cached = gpu.cache_get(keys[seed])
+        if cached:
+            keep(seed, cached)
+            gpu.log_run(name, where, kind, seed, args.resolution, 0, "cached", rules.owner())
+            print(f"seed {seed}: taken from the cache, no GPU used")
+            todo.remove(seed)
+    if not todo:
+        return "ok"
+
+    picture = gpu.image_id(image)
+    if gpu.crashes(image, args.resolution) >= gpu.CRASH_LIMIT and not getattr(args, "try_anyway", False):
+        print(f"this picture has already crashed the generator {gpu.CRASH_LIMIT} times at {args.resolution}. Not calling the Space again.")
+        return "crash"
+    waiting = gpu.retry_after()
+    if waiting and not getattr(args, "try_anyway", False):
+        print(f"GPU quota was used up; it is expected back about {waiting}. Not calling the Space.")
+        return "quota"
+
     try:
         from gradio_client import Client, handle_file
     except ImportError:
         sys.exit("gradio_client is missing: python -m pip install gradio_client")
-
-    todo = [s for s in seeds if not os.path.isfile(os.path.join(pkg, "trials", f"seed-{s}", "candidate.glb"))]
-    for seed in seeds:
-        if seed not in todo:
-            print(f"seed {seed}: already generated, skipping")
-    if not todo:
-        return
-
     token = os.environ.get("HF_TOKEN")
     if not token:
         print("HF_TOKEN is not set: calling anonymously, which has very little GPU quota.")
-    client = Client(SPACE, token=token, verbose=False)
-    client.predict(api_name="/start_session")
-    prepared = client.predict(input=handle_file(image), api_name="/preprocess_image")
+    try:
+        client = Client(SPACE, token=token, verbose=False)
+        client.predict(api_name="/start_session")
+        prepared = client.predict(input=handle_file(image), api_name="/preprocess_image")
+    except Exception as error:  # noqa: BLE001 - nothing was generated, so nothing was spent
+        print(f"could not reach the generator: {printable(str(error))[:300]}")
+        if gpu.classify(str(error)) == "quota":
+            gpu.note_quota(str(error))
+            return "quota"
+        return "busy"
     if isinstance(prepared, dict):
         prepared = prepared.get("path")
 
+    busy = 0
     for seed in todo:
-        out_dir = os.path.join(pkg, "trials", f"seed-{seed}")
-        os.makedirs(out_dir, exist_ok=True)
         started = time.time()
         print(f"seed {seed}: generating at {args.resolution}...", flush=True)
         try:
@@ -449,31 +572,66 @@ def generate_candidates(pkg, image, seeds, args):
                 api_name="/extract_glb",
             )
         except Exception as error:  # noqa: BLE001 - the Space reports quota and queue errors as text
-            print(f"seed {seed}: FAILED after {time.time() - started:.0f}s: {error}")
+            print(f"seed {seed}: FAILED after {time.time() - started:.0f}s: {printable(str(error))[:300]}")
             if "quota" in str(error).lower():
-                print("GPU quota is used up. Set HF_TOKEN or wait, then rerun; finished seeds are kept.")
-                return
+                back = gpu.note_quota(str(error))
+                gpu.log_run(name, where, kind, seed, args.resolution, time.time() - started, "quota", rules.owner())
+                print(f"GPU quota is used up; expected back about {back}. Finished seeds are kept.")
+                return "quota"
+            outcome = gpu.classify(str(error))
+            gpu.log_run(name, where, kind, seed, args.resolution, time.time() - started, outcome, rules.owner(), str(error)[:200], image=picture)
+            if outcome == "busy":
+                busy += 1
+                if busy >= 2:
+                    return "busy"
+                print("the generator was busy or the connection dropped; the next seed is tried once.")
+                continue
+            # A crash is about the picture and the settings, not the seed: the hedge crashed five
+            # times running. Stop at the limit instead of spending the remaining seeds on it.
+            if gpu.crashes(image, args.resolution) >= gpu.CRASH_LIMIT:
+                print(f"that is {gpu.CRASH_LIMIT} crashes on this picture at {args.resolution}; stopping.")
+                return "crash"
             continue
         glb = result[0] if isinstance(result, (list, tuple)) else result
         if isinstance(glb, dict):
             glb = glb.get("path")
-        shutil.copyfile(glb, os.path.join(out_dir, "candidate.glb"))
-        with open(os.path.join(out_dir, "generation.json"), "w", encoding="utf-8") as handle:
-            json.dump(
-                {
-                    "space": SPACE,
-                    "seed": seed,
-                    "resolution": args.resolution,
-                    "decimationTarget": args.decimation,
-                    "textureSize": args.texture,
-                    "reference": os.path.basename(image),
-                    "generatedOn": time.strftime("%Y-%m-%d"),
-                },
-                handle,
-                indent=2,
+        keep(seed, glb)
+        gpu.cache_put(keys[seed], glb, record_for(seed))
+        gpu.clear_quota_note()
+        seconds = time.time() - started
+        gpu.log_run(name, where, kind, seed, args.resolution, seconds, "ok", rules.owner(), getattr(args, "why", None))
+        print(f"seed {seed}: done in {seconds:.0f}s, {os.path.getsize(glb) / 1e6:.1f} MB")
+    return "ok"
+
+
+def plan_gate(name, brief):
+    """Stop a generation the map's asset plan does not cover. Returns nothing; exits with what to do."""
+    where = brief.get("where")
+    plan = gpu.plan_for(where)
+    if not plan:
+        others = gpu.unplanned_assets(where, name)
+        if len(others) >= gpu.UNPLANNED_ASSETS:
+            sys.exit(
+                f"{where} already has {len(others)} generated assets and no asset plan ({', '.join(others)}). Before a third, list what "
+                f"the map needs and what each one costs:  asset_generate.py plan \"{where}\" --add <name> --what \"...\" --source reuse|shapes|generate\n"
+                "then put the table to the user and record the runs they approve."
             )
-        size_mb = os.path.getsize(glb) / 1e6
-        print(f"seed {seed}: done in {time.time() - started:.0f}s, {size_mb:.1f} MB")
+        return
+    row = next((r for r in plan["assets"] if r["name"] == name), None)
+    if not row:
+        sys.exit(f"{name} is not in the asset plan for {plan['map']}. Add it first:  asset_generate.py plan \"{plan['map']}\" --add {name} --what \"...\" --source ...")
+    if row["source"] != "generate":
+        sys.exit(f"the plan for {plan['map']} says {name} is '{row['source']}', which uses no GPU. Change the plan and have the user approve it, or follow it.")
+    approved = plan.get("approvedRuns")
+    if approved is None:
+        sys.exit(f"the asset plan for {plan['map']} is not approved. Show the user:  asset_generate.py plan \"{plan['map']}\"")
+    used = gpu.plan_runs(plan)
+    if used >= approved:
+        sys.exit(
+            f"the plan for {plan['map']} has used its {approved} approved GPU runs. Tell the user what is left to make and ask for more:  "
+            f"asset_generate.py plan \"{plan['map']}\" --approve <runs> --said \"...\""
+        )
+    print(f"plan: {plan['map']} has used {used} of {approved} approved GPU runs.")
 
 
 # ----------------------------------------------------------------- appraisal
@@ -754,6 +912,27 @@ def contact_sheet(pkg):
 # ------------------------------------------------------------------ commands
 
 
+def crash_advice(resolution):
+    """What to do when a picture has crashed the generator CRASH_LIMIT times at one resolution."""
+    if str(resolution) != DRAFT_RESOLUTION:
+        return (
+            f"the generator crashed {gpu.CRASH_LIMIT} times on this picture at {resolution}. Another try at the same settings is not expected to differ, "
+            f"and may still use quota. Use the {DRAFT_RESOLUTION} draft (pick --keep-draft), or change the picture."
+        )
+    return (
+        f"the generator crashed {gpu.CRASH_LIMIT} times on this picture at {resolution}, the lowest setting. The picture is the cause: simplify it "
+        "(reference --edit, or a new prompt with fewer loose or see-through parts), or build this asset from shapes (brief --route clean)."
+    )
+
+
+def trial_shape(trial, brief):
+    """Proportion problems of one candidate against the brief, from its appraisal."""
+    record = os.path.join(trial, "appraisal.json")
+    if not brief or not os.path.isfile(record):
+        return []
+    return shape.mesh_problems(read_json(record).get("measurements", {}).get("size"), brief)
+
+
 def cmd_generate(args):
     pkg = package_dir(args.name)
     brief = require_brief(pkg, args.name, args.no_brief)
@@ -773,18 +952,194 @@ def cmd_generate(args):
             rules.write_reference_record(pkg, "user-supplied", args.made_with, args.prompt_text)
     for problem in rules.reference_problems(reference):
         print(f"reference: {problem}.")
-    count = args.seeds
-    if count is None:
-        # On the clean route the mesh is only a shape guide for the hand-written builder,
-        # so one candidate is enough; on the scan route the mesh is the asset, so compare.
-        route = planned_route(brief) if brief else "scan"
-        count = 1 if route == "clean" else 3
-        print(f"route {route}: generating {count} candidate(s)" + (" as a shape guide for the clean builder." if route == "clean" else "."))
+    if brief and not args.final:
+        problem = shape.image_problem(reference, brief)[3]
+        if problem and not (args.accept or "").strip():
+            sys.exit(f"reference: {problem}. No GPU was used. Fix the picture or the brief's size, or pass --accept \"<reason>\".")
+        if problem:
+            accept(pkg, "generate", args.accept + " [shape: " + problem + "]")
+    if brief and not args.final:
+        plan_gate(args.name, brief)
+    count = args.seeds if args.seeds is not None else 1
     seeds = list(range(args.first_seed, args.first_seed + count))
-    generate_candidates(pkg, reference, seeds, args)
+    made = [d for d in trial_dirs(pkg) if os.path.isfile(os.path.join(d, "candidate.glb"))]
+    wanted_new = [s for s in seeds if not os.path.isfile(os.path.join(pkg, "trials", f"seed-{s}", "candidate.glb"))]
+    if wanted_new and len(made) >= MORE_NEEDS_REASON and not args.why:
+        sys.exit(
+            f"{args.name} already has {len(made)} candidates. If they fail the same way the picture is the cause, and another seed "
+            "will fail too: fix it with  reference --edit  and start again. If you still want another, say what was wrong with the "
+            "ones you have:  --why \"...\""
+        )
+    if args.seeds is None:
+        print("one candidate first, as a 512 draft. Look at it before asking for another (--seeds 2).")
+    status = generate_candidates(pkg, reference, seeds, args)
+    if status == "quota":
+        argv = ["generate", "--name", args.name, "--seeds", str(count), "--first-seed", str(args.first_seed), "--resolution", str(args.resolution)]
+        if args.why:
+            argv += ["--why", args.why]
+        added = gpu.queue_add(args.name, argv, rules.owner())
+        print(("queued" if added else "already queued") + ": it will run with  asset_generate.py queue --run  once the quota is back. Carry on with other work.")
+    elif status == "busy":
+        argv = ["generate", "--name", args.name, "--seeds", str(count), "--first-seed", str(args.first_seed), "--resolution", str(args.resolution)]
+        gpu.queue_add(args.name, argv + (["--why", args.why] if args.why else []), rules.owner())
+        print("the generator was busy or unreachable twice. Queued (asset_generate.py queue --run); carry on with other work.")
+    elif status == "crash":
+        print(crash_advice(args.resolution))
+    appraise_trials(pkg)
+    if any(os.path.isfile(os.path.join(d, "candidate.glb")) for d in trial_dirs(pkg)):
+        contact_sheet(pkg)
+        for trial in trial_dirs(pkg):
+            for problem in trial_shape(trial, brief):
+                print(f"shape: {os.path.basename(trial)} is {problem}. pick will refuse it without --accept.")
+        print(f"next: open the sheet, then  python tools/asset_generate.py pick {args.name} --seed <n>")
+
+
+IMPORT_SEED_BASE = 200  # models made outside this tool are filed as seed-201, seed-202, ...
+
+
+def made_by(trial):
+    """Who made a candidate: the outside service it was imported from, or the Space and its resolution."""
+    note = os.path.join(trial, "generation.json")
+    note = read_json(note) if os.path.isfile(note) else {}
+    if note.get("service"):
+        return note["service"]
+    return f"TRELLIS.2 at {note['resolution']}" if note.get("resolution") else "unknown"
+
+
+def cmd_import(args):
+    """File a model made by another service as a candidate, so the same checks score it."""
+    pkg = package_dir(args.name)
+    brief = require_brief(pkg, args.name, False)
+    rules.claim(pkg, "import")
+    if not os.path.isfile(args.file):
+        sys.exit(f"no such file: {args.file}")
+    with open(args.file, "rb") as handle:
+        if handle.read(4) != b"glTF":
+            sys.exit(f"{args.file} is not a binary glTF file. Download the model as GLB (not FBX, OBJ, USDZ or a zip) and import that.")
+    digest = sha256(args.file)
+    seed = None
+    for trial in trial_dirs(pkg):
+        note = os.path.join(trial, "generation.json")
+        if os.path.isfile(note) and read_json(note).get("sha256") == digest:
+            seed = int(trial.rsplit("-", 1)[1])
+            print(f"this file is already imported as seed {seed}; refreshing its record")
+    if seed is None:
+        taken = [int(d.rsplit("-", 1)[1]) for d in trial_dirs(pkg)]
+        seed = max([IMPORT_SEED_BASE] + [n for n in taken if n > IMPORT_SEED_BASE]) + 1
+    trial = os.path.join(pkg, "trials", f"seed-{seed}")
+    os.makedirs(trial, exist_ok=True)
+    shutil.copyfile(args.file, os.path.join(trial, "candidate.glb"))
+    reference = reference_image(pkg)
+    write_json(
+        os.path.join(trial, "generation.json"),
+        {
+            "service": args.service,
+            "space": None,
+            "seed": seed,
+            "resolution": "imported",  # not a draft: pick takes it as it is
+            "file": os.path.basename(args.file),
+            "sha256": digest,
+            "settings": args.settings,
+            "reference": os.path.basename(reference) if reference else None,
+            "importedOn": time.strftime("%Y-%m-%d"),
+        },
+    )
+    print(f"imported {os.path.basename(args.file)} from {args.service} as seed {seed}")
     appraise_trials(pkg)
     contact_sheet(pkg)
-    print(f"next: open the sheet, then  python tools/asset_generate.py pick {args.name} --seed <n>")
+    for problem in trial_shape(trial, brief):
+        print(f"shape: seed {seed} is {problem}.")
+    print(f"next: python tools/asset_generate.py compare {args.name}   (then pick {args.name} --seed {seed} to build from it)")
+
+
+def cmd_compare(args):
+    """Every candidate of one asset on the same measures, whoever made it."""
+    from PIL import Image, ImageDraw
+
+    pkg = package_dir(args.name)
+    brief = read_brief(pkg)
+    if not brief:
+        sys.exit(f"no brief.json in {rel(pkg)}; the comparison is against the brief")
+    allowed = rules.ROLE_BUDGETS[brief["role"]]
+    wanted = shape.target(brief)
+    rows = []
+    for trial in trial_dirs(pkg):
+        candidate = os.path.join(trial, "candidate.glb")
+        record = os.path.join(trial, "appraisal.json")
+        if not os.path.isfile(candidate):
+            continue
+        if not os.path.isfile(record):
+            appraise(candidate, record)
+        measured = read_json(record).get("measurements", {}) if os.path.isfile(record) else {}
+        audit = os.path.join(trial, "audit.json")
+        audited = read_json(audit) if os.path.isfile(audit) else None
+        if (not audited or audited.get("sourceSha256") != sha256(candidate)) and not args.no_audit:
+            audited = run_audit(pkg, candidate, trial, height_studs=brief.get("heightStuds", 0.0))
+        triangles = measured.get("triangles") or 0
+        size = measured.get("size")
+        long_side, short_side = shape.mesh_studs(size, brief) if size and size[2] > 0 else (None, None)
+        rows.append(
+            {
+                "seed": int(trial.rsplit("-", 1)[1]),
+                "madeBy": made_by(trial),
+                "triangles": triangles,
+                # What our own reduction would have to remove. It is where the radio tower tore.
+                "cutNeeded": round(max(0.0, 1 - allowed * BUDGET_START / triangles), 3) if triangles > allowed else 0.0,
+                "studs": [round(long_side, 1), round(short_side, 1)] if long_side else None,
+                "shapeProblems": trial_shape(trial, brief),
+                "holesPercent": audited["worstBackFacePercent"] if audited else None,
+                "openEdges": measured.get("openEdges"),
+                "closeups": rel(os.path.join(trial, "audit_closeups.png")) if audited else None,
+                "views": os.path.join(trial, "views.png"),
+            }
+        )
+    if not rows:
+        sys.exit(f"{args.name} has no candidates. Generate one, or bring one in:  asset_generate.py import <file.glb> --name {args.name} --from <service>")
+
+    def line(row):
+        cut = "fits the budget as delivered" if not row["cutNeeded"] else f"needs a {row['cutNeeded']:.0%} cut"
+        size = f"{row['studs'][0]:g} x {row['studs'][1]:g} studs" if row["studs"] else "size unknown"
+        fit = "" if not wanted else ("  OFF the brief" if row["shapeProblems"] else "  fits the brief")
+        holes = "not audited" if row["holesPercent"] is None else f"{row['holesPercent']:g}% see-through"
+        return f"seed {row['seed']:<4} {row['madeBy']:<20} {row['triangles']:>9,} tris, {cut}   {size}{fit}   {holes}   open edges {row['openEdges']}"
+
+    print(f"{args.name}: role {brief['role']}, budget {allowed:,} triangles" + (f", brief {wanted[0]:g} x {wanted[1]:g} x {wanted[2]:g} studs" if wanted else ", brief has no length or width"))
+    for row in rows:
+        print("  " + line(row))
+    counts = brief.get("counts") or {}
+    if counts:
+        print("  count on each by eye: " + ", ".join(f"{k}={v}" for k, v in counts.items()))
+    print("  see-through: over %g%% warns, over %g%% fails a build. A cut past %.0f%% is where shape is lost." % (rules.HOLES_WARN, rules.HOLES_FAIL, CLEAN_REDUCTION * 100))
+
+    row_h, label_h = 420, 30
+    shown = [(row, Image.open(row["views"]).convert("RGB")) for row in rows if os.path.isfile(row["views"])]
+    review = os.path.join(pkg, "review")
+    os.makedirs(review, exist_ok=True)
+    out = None
+    if shown:
+        shown = [(row, im.resize((round(im.width * row_h / im.height), row_h))) for row, im in shown]
+        ref_path = reference_image(pkg)
+        ref = Image.open(ref_path).convert("RGB") if ref_path else None
+        if ref:
+            ref = ref.resize((round(ref.width * row_h / ref.height), row_h))
+        ref_w = ref.width + 12 if ref else 0
+        sheet = Image.new("RGB", (ref_w + max(im.width for _, im in shown), (row_h + label_h) * len(shown)), "white")
+        draw = ImageDraw.Draw(sheet)
+        font = sheet_font(16)
+        for index, (row, im) in enumerate(shown):
+            top = index * (row_h + label_h)
+            draw.text((8, top + 6), line(row), fill="black", font=font)
+            if ref:
+                sheet.paste(ref, (0, top + label_h))
+            sheet.paste(im, (ref_w, top + label_h))
+        out = os.path.join(review, "compare.png")
+        sheet.save(out)
+    for row in rows:
+        row.pop("views")
+    write_json(os.path.join(review, "compare.json"), {"asset": args.name, "comparedOn": time.strftime("%Y-%m-%d %H:%M"), "budget": allowed, "brief": wanted, "candidates": rows})
+    print(f"sheet: {rel(out) if out else 'none (no views rendered)'}; numbers: {rel(os.path.join(review, 'compare.json'))}")
+    print("LOOK at each candidate's close-ups before choosing: " + ", ".join(row["closeups"] for row in rows if row["closeups"]))
+    print("Not measured here: how each survives the build's reduction (pick and build one to find out), or how it looks in Studio.")
 
 
 def cmd_review(args):
@@ -804,6 +1159,33 @@ def cmd_pick(args):
     if os.path.isfile(target) and not args.replace:
         sys.exit(f"{os.path.relpath(target, ROOT)} already exists; pass --replace to overwrite it")
     os.makedirs(os.path.dirname(target), exist_ok=True)
+    # Before the 1024 pass and the build are spent on it: is it the briefed shape, with the briefed parts?
+    shape_gate(pkg, args.name, f"mesh seed {args.seed}", trial_shape(trial, read_brief(pkg)), args.counted, args.accept)
+    # A draft is enough to choose a shape. On the scan route the mesh is the asset, so the
+    # chosen seed is run once more at full resolution. On the clean route it is only a
+    # guide for the builder, and the draft is kept.
+    brief_now = read_brief(pkg) or {}
+    made_at = str(read_json(os.path.join(trial, "generation.json")).get("resolution")) if os.path.isfile(os.path.join(trial, "generation.json")) else FINAL_RESOLUTION
+    final = os.path.join(trial, "final.glb")
+    needs_final = made_at == DRAFT_RESOLUTION and planned_route(brief_now) != "clean" and not args.keep_draft
+    if needs_final and not os.path.isfile(final):
+        reference = reference_image(pkg)
+        if not reference:
+            sys.exit("the draft's reference image is gone from source/; cannot run the final pass. Pass --keep-draft to use the draft.")
+        print(f"seed {args.seed} was a {DRAFT_RESOLUTION} draft; running it once at {FINAL_RESOLUTION} for the build.")
+        final_args = argparse.Namespace(resolution=FINAL_RESOLUTION, decimation=args.decimation, texture=args.texture, why=None, try_anyway=False)
+        status = generate_candidates(pkg, reference, [args.seed], final_args, final=True)
+        if status == "crash":
+            sys.exit(crash_advice(FINAL_RESOLUTION) + " Nothing was picked.")
+        if status != "ok" or not os.path.isfile(final):
+            again = ["pick", args.name, "--seed", str(args.seed)] + (["--replace"] if args.replace else [])
+            for item in args.counted or ():
+                again += ["--counted", item]
+            gpu.queue_add(args.name, again + (["--accept", args.accept] if args.accept else []), rules.owner())
+            sys.exit("the final pass did not run. It is queued (asset_generate.py queue --run). Nothing was picked; or pass --keep-draft to build from the draft.")
+        print("LOOK: the final should be the draft's shape with more detail. Compare trials/seed-%d/final.glb with the sheet before building." % args.seed)
+    if needs_final or os.path.isfile(final) and not args.keep_draft:
+        candidate = final
     shutil.copyfile(candidate, target)
     print(f"picked seed {args.seed} -> {os.path.relpath(target, ROOT)}")
     rules.write_provenance(pkg, args.name, args.seed)
@@ -836,15 +1218,22 @@ RETRY_TILE_TARGET = 8500  # what a retry aims the worst tile at, leaving room fo
 RETRY_MAX_TILES = 64  # past this many meshes, cut triangles instead of adding tiles
 RETRY_MIN_KEEP = 0.15  # never decimate below this share of the source; panels crumple
 BUILD_ATTEMPTS = 5
+BUDGET_ATTEMPTS = 3  # extra rebuilds allowed to bring the total under the role's budget
+BUDGET_START = 0.75  # first try keeps this share of the budget: cutting into tiles adds triangles
+BUDGET_AIM = 0.97  # each further try aims just under the budget
 
 
 ROUTES = ("auto", "scan", "clean")
 # Surface error from tools/outline_check.py: the share of the source's visible surface the
 # export gets wrong, worst view. Calibrated on the wave runner: its good 12-mesh build scores
 # 0.040 and the broken tank 0.061; the build that came out crumpled scores 0.231 and the one
-# full of holes 0.347.
+# full of holes 0.347. Those four were scored with 600,000 sample points. At the 4,000,000
+# used since 2026-11-16 good builds score 0.012-0.036 and the torn radio tower 0.109; the
+# two bad wave runner builds are no longer on disk to rescore. The lines were left where
+# they were: nothing measured so far falls between 0.036 and 0.109.
 DETAIL_WARN = 0.08
 DETAIL_FAIL = 0.15
+DETAIL_NOISE = 0.02  # a source that scores more than this against itself: the measure is short of points
 # A copied slab of ground: the bottom slice fills this much of the footprint, and this many
 # times what the slice above it fills. The radio tower's dirt patch scores 0.86 and 2.8; a
 # sculpture on a plinth 1.0 and 1.9; five other builds under 0.2 and 0.5. It is a finding to
@@ -931,13 +1320,16 @@ def detail_check(source, export, sheet_path):
     import outline_check
 
     scores, a, b = outline_check.compare(source, export)
-    errors = outline_check.surface_error(source, export)
+    measure = outline_check.surface_measure(source, export)
+    errors = {name: found["error"] for name, found in measure.items()}
     os.makedirs(os.path.dirname(sheet_path), exist_ok=True)
     outline_check.sheet(sheet_path, a, b)
     return {
         "outlineOverlap": {k: round(v, 3) for k, v in scores.items()},
         "surfaceError": {k: round(v, 3) for k, v in errors.items()},
         "worstSurfaceError": round(max(errors.values()), 3),
+        # The source scored against itself: near zero, or the error above cannot be trusted.
+        "noise": round(max(found["noise"] for found in measure.values()), 3),
         "sheet": rel(sheet_path),
     }
 
@@ -997,7 +1389,10 @@ def scene_spec(name, pkg, brief):
         measured = read_json(record).get("measurements", {})
         source_tris = measured.get("triangles", 0)
         if source_tris > DENSE_SOURCE_TRIS:
-            budget = int(source_tris * DENSE_KEEP)
+            # Start inside the role's budget: a fifth of a 290,000-triangle mesh is 58,000, which
+            # no decor asset (30,000) can keep, so every one failed its first build.
+            allowed = rules.ROLE_BUDGETS[brief["role"]]
+            budget = int(source_tris * DENSE_KEEP) if (brief.get("budgetWaiver") or "").strip() else min(int(source_tris * DENSE_KEEP), int(allowed * BUDGET_START))
             tiles = -(-budget // DENSE_TRIS_PER_TILE)
             sx, sy = (measured.get("size") or [1, 1, 1])[:2]
             grids = [(nx, -(-tiles // nx)) for nx in range(1, 7)]
@@ -1036,6 +1431,7 @@ def cmd_brief(args):
         ("budgetWaiver", args.budget_waiver),
         ("kind", args.kind),
         ("lengthStuds", args.length),
+        ("widthStuds", args.width),
         ("gameName", args.game_name),
         ("where", args.where),
         ("copies", args.copies),
@@ -1059,6 +1455,11 @@ def cmd_brief(args):
     brief.setdefault("meshes", "auto")
     brief.setdefault("route", "auto")
     brief.setdefault("scene", {})
+    if args.count:
+        try:
+            brief["counts"] = shape.parse_counts(args.count, "--count")
+        except ValueError as error:
+            sys.exit(str(error))
     unanswered = [k for k in rules.INTAKE_REQUIRED if brief.get(k) in (None, "")]
     kind = brief.get("kind", "prop")  # left out of the file until the user has said, so it counts as unanswered
     for item in args.mount or ():
@@ -1088,6 +1489,10 @@ def cmd_brief(args):
             "intake: not answered yet: " + ", ".join(unanswered) + ". reference and generate will stop until they are. "
             "Ask the user (asset_generate.py questions), or pass --assumed with what you chose for them."
         )
+    if "counts" not in brief:
+        print("counts: not set. List what must come out as an exact number (--count seats=8), or --count none. reference and generate stop until then.")
+    elif brief["counts"]:
+        print("counts: " + ", ".join(f"{k}={v}" for k, v in brief["counts"].items()) + ". Each is counted on the picture, the mesh and the build.")
     if brief.get("share") == "public":
         print("share: public. Fill in the rights note in provenance.json before it leaves this game.")
     if brief.get("thin") == "yes" and brief.get("route") == "scan":
@@ -1202,7 +1607,7 @@ def cmd_build(args):
     record = os.path.join(pkg, "appraisal.json")
     measured = read_json(record).get("measurements", {}) if os.path.isfile(record) else {}
     kit = os.path.join(ROOT, "tools", "blender", "scene_kit.py")
-    attempts, changed = [], {}
+    attempts, changed, budget_tries = [], {}, 0
     while True:
         write_json(manifest, {"_comment": "Generated from brief.json by tools/asset_generate.py build.", "assets": {args.name: spec}})
         built = subprocess.run(
@@ -1233,7 +1638,22 @@ def cmd_build(args):
             print(printable(inspect_text.rstrip()))
             passed = inspect.returncode == 0
             worst = max(mesh_triangles(inspect_text), default=0)
-        attempts.append({"tile": spec.get("tile"), "decimate": spec.get("decimate"), "worstMesh": worst, "passed": passed})
+        total = sum(mesh_triangles(inspect_text))
+        attempts.append({"tile": spec.get("tile"), "decimate": spec.get("decimate"), "worstMesh": worst, "triangles": total, "passed": passed})
+        # Under the cap but over the role's budget: the tower, the cabinet wall, the sofa and
+        # the daybed were each rebuilt by hand two or three times to find the number. Cutting
+        # into tiles adds triangles, so aim from what this build measured, not from a guess.
+        allowed = rules.ROLE_BUDGETS[brief["role"]]
+        if passed and total > allowed and not (brief.get("budgetWaiver") or "").strip() and not args.no_retry and budget_tries < BUDGET_ATTEMPTS and spec.get("decimate"):
+            budget_tries += 1
+            lowered = int(spec["decimate"] * allowed / total * BUDGET_AIM)
+            floor = int(measured.get("triangles", 0) * RETRY_MIN_KEEP)
+            print(f"budget: {total:,} triangles is over the {allowed:,} for role {brief['role']}; rebuilding to keep {lowered:,} before tiling (was {spec['decimate']:,}).", flush=True)
+            if lowered < floor:
+                print(f"budget: that is under {RETRY_MIN_KEEP:.0%} of the source ({floor:,}). Shape may be lost; the detail and hole checks below decide.")
+            spec["decimate"] = lowered
+            changed["decimate"] = lowered
+            continue
         if passed or args.no_retry or len(attempts) >= BUILD_ATTEMPTS or worst <= TRI_CAP:
             break
         change = retry_spec(spec, attempts, measured)
@@ -1266,6 +1686,8 @@ def cmd_build(args):
     detail["limit"] = limit
     detail["passed"] = worst_error <= limit or args.allow_detail_loss
     print(f"detail: surface error {worst_error:.3f} worst view (warn over {DETAIL_WARN}, fail over {limit}); sheet {detail['sheet']}")
+    if detail["noise"] > DETAIL_NOISE:
+        print(f"detail: the source scores {detail['noise']:.3f} against itself, so about that much of the error is the measure, not the build. Judge this one from the close-ups, and raise SAMPLES in tools/outline_check.py.")
     ground, bleed = surface_findings(out)
     print(f"base: bottom slice fills {ground['bottomFill']:.0%} of the footprint, {ground['ratio']:g} times the slice above it." + (" A slab is under the model: copied ground, or a wanted base? Ask the user." if ground["flagged"] else ""))
     route, reasons = recommend_route(brief, measured, spec)
@@ -1351,6 +1773,18 @@ def cmd_build(args):
     )
 
 
+def clean_appraisal(pkg, export, brief):
+    """A shape build with no generated mesh has nothing appraised, and check_assets fails every
+    built package without an appraisal. Appraise the export itself and state what it is for."""
+    record = os.path.join(pkg, "appraisal.json")
+    if os.path.isfile(record) and read_json(record).get("sourceSha256") != sha256(export) and glob.glob(os.path.join(pkg, "source", "*.glb")):
+        return  # the appraisal describes the generated mesh; leave it
+    if appraise(export, record):
+        data = read_json(record)
+        data["decision"] = decision_text(brief)
+        write_json(record, data)
+
+
 def build_clean(name, pkg, source, blender, brief):
     """Clean route: run the asset's hand-written builder, then check and record its export.
 
@@ -1375,6 +1809,7 @@ def build_clean(name, pkg, source, blender, brief):
     detail = detail_check(source, out, os.path.join(pkg, "review", "clean-detail.png")) if source else {"outlineOverlap": None}
     detail["passed"] = None  # informational on this route
     budget, contract = gate_export(name, pkg, brief, "clean", out, sum(mesh_triangles(inspect.stdout)))
+    clean_appraisal(pkg, out, brief)
     # A hand-built mesh can have flipped or missing faces too, and the user needs the same
     # close-ups to approve. Same audit as a scan, same hole lines.
     audited = run_audit(pkg, out, os.path.join(pkg, "review"))
@@ -1607,17 +2042,29 @@ def cmd_findings(args):
     if not validation:
         sys.exit(f"{args.name} has no validated build of the export on disk; run build first")
     measured = machine_findings(validation)
+    wanted = (read_brief(pkg) or {}).get("counts") or {}
     if not args.defect and not args.none:
         print(REVIEW_GUIDE)
+        if wanted:
+            print("\nCount on the build and pass each with --counted name=<n>: " + ", ".join(f"{k} (brief: {v})" for k, v in wanted.items()))
         if measured:
             print("\nAlready measured:\n  " + "\n  ".join(measured))
         sys.exit(1)
     if args.defect and args.none:
         sys.exit("--none and --defect together; pick one")
+    try:
+        counted = shape.parse_counts(args.counted, "--counted")
+    except ValueError as error:
+        sys.exit(str(error))
+    missing, wrong = shape.count_problems(wanted, counted)
+    if missing:
+        sys.exit("count these on the build first and pass what you counted: " + " ".join(f"--counted {k}=<n>" for k in missing) + f"  (the brief says " + ", ".join(f"{k}={wanted[k]}" for k in missing) + ")")
+    measured = measured + ["count: " + line for line in wrong]
     record = {
         "exportSha256": validation["exportSha256"],
         "reviewedBy": rules.owner(),
         "measured": measured,
+        "counted": counted,
         "seen": args.defect or [],
         "recordedOn": time.strftime("%Y-%m-%d %H:%M"),
     }
@@ -1626,6 +2073,87 @@ def cmd_findings(args):
     print(f"recorded {len(total)} finding(s) for {args.name}. Put this to the user with the two sheets, then ask: does it look right, or what should change?")
     for line in total or ["nothing found by the checks or by you"]:
         print(f"  - {line}")
+
+
+def cmd_quota(args):
+    del args
+    print(gpu.usage_report())
+
+
+def cmd_queue(args):
+    pending = gpu.queue_list()
+    if args.drop:
+        for entry in [e for e in pending if e["asset"] == args.drop]:
+            gpu.queue_remove(entry)
+            print("dropped: " + " ".join(entry["argv"]))
+        return
+    if not pending:
+        print("the queue is empty.")
+        return
+    if not args.run_now:
+        for entry in pending:
+            print(f"  {entry['queuedOn']}  {entry['owner']:<18} {' '.join(entry['argv'])}   ({entry['root']})")
+        waiting = gpu.retry_after()
+        print(f"quota expected back about {waiting}." if waiting else "quota is not known to be out; run them:  asset_generate.py queue --run")
+        return
+    waiting = gpu.retry_after()
+    if waiting:
+        print(f"quota is still out until about {waiting}; nothing run.")
+        return
+    for entry in pending:
+        print("running: " + " ".join(entry["argv"]), flush=True)
+        script = os.path.join(entry["root"], "tools", "asset_generate.py")
+        done = subprocess.run([sys.executable, script] + entry["argv"], cwd=entry["root"], capture_output=True, text=True, encoding="utf-8", errors="replace")
+        print(printable(done.stdout.rstrip()[-1500:]))
+        if gpu.retry_after():
+            print("the quota ran out again; the rest stays queued.")
+            return
+        gpu.queue_remove(entry)
+        if done.returncode != 0:
+            print(f"that request failed for another reason and was dropped from the queue: {printable(done.stderr[-300:])}")
+
+
+def cmd_find(args):
+    hits = gpu.find(" ".join(args.words))
+    if not hits:
+        print("nothing in assets/models or the runtime models matches. That is not proof nothing fits: check the prop folders too.")
+        return
+    for name, state, purpose in hits:
+        print(f"  {name:<34} {state:<34} {purpose}")
+    print("Reuse, rescale or recolour one of these before making a new asset.")
+
+
+def cmd_plan(args):
+    plan = gpu.read_plan(args.map) or {"map": args.map, "assets": [], "approvedRuns": None}
+    changed = False
+    if args.add:
+        if not args.source or not args.what:
+            sys.exit("--add needs --what and --source reuse|shapes|generate")
+        if args.source == "reuse" and not args.reuses:
+            sys.exit("--source reuse needs --reuses <existing package or model>")
+        plan["assets"] = [row for row in plan["assets"] if row["name"] != args.add]
+        plan["assets"].append({"name": args.add, "what": args.what, "source": args.source, "reuses": args.reuses, "why": args.why})
+        changed = True
+        if args.source != "reuse":
+            hits = gpu.find(args.add + " " + args.what)[:4]
+            if hits:
+                print("already in the repo, check before making a new one:")
+                for name, state, purpose in hits:
+                    print(f"  {name:<34} {state:<30} {purpose}")
+    if args.remove:
+        plan["assets"] = [row for row in plan["assets"] if row["name"] != args.remove]
+        changed = True
+    if args.approve is not None:
+        said = (args.said or "").strip()
+        if not said:
+            sys.exit("--approve needs --said: the user's own words agreeing to this number of GPU runs")
+        plan.update(approvedRuns=args.approve, approvedSaid=said, approvedOn=time.strftime("%Y-%m-%d"))
+        changed = True
+    if changed:
+        gpu.write_plan(plan)
+    elif not plan["assets"]:
+        sys.exit(f"no asset plan for {args.map} yet. Add each asset the map needs:  plan \"{args.map}\" --add <name> --what \"...\" --source reuse|shapes|generate")
+    print(gpu.plan_text(plan))
 
 
 def cmd_calibrate(args):
@@ -1681,17 +2209,23 @@ def main():
     ref.add_argument("--use", type=int, metavar="SEED", help="promote this candidate to source/reference.png")
     ref.add_argument("--replace", action="store_true", help="with --use, overwrite an existing reference")
     ref.add_argument("--no-brief", action="store_true", help="generate before a brief exists")
+    ref.add_argument("--counted", action="append", metavar="NAME=N", help="with --use: what you counted on that picture, for each count in the brief")
+    ref.add_argument("--accept", metavar="REASON", help="with --use: go on although its shape or a count does not match the brief")
     ref.set_defaults(run=cmd_reference)
 
     gen = sub.add_parser("generate", help="image -> candidates -> contact sheet")
     gen.add_argument("image", nargs="?", help="omit to use the package's source/reference.*")
     gen.add_argument("--name", required=True, help="package name, kebab-case")
-    gen.add_argument("--seeds", type=int, help="how many candidates (default 3; 1 on the clean route)")
+    gen.add_argument("--seeds", type=int, help="how many candidates in all (default 1; ask for a second only after looking at the first)")
+    gen.add_argument("--why", help="what was wrong with the candidates you have; needed for a third")
+    gen.add_argument("--try-anyway", action="store_true", help="call the Space even though the quota was recorded as used up")
+    gen.add_argument("--final", action="store_true", help=argparse.SUPPRESS)
+    gen.add_argument("--accept", metavar="REASON", help="go on although the picture's outline does not fit the brief's size")
     gen.add_argument("--no-brief", action="store_true", help="generate before a brief exists")
     gen.add_argument("--made-with", help="tool that made the reference image, e.g. Midjourney (for provenance)")
     gen.add_argument("--prompt-text", help="the prompt that made the reference image (for provenance)")
     gen.add_argument("--first-seed", type=int, default=1)
-    gen.add_argument("--resolution", choices=["512", "1024", "1536"], default="1024")
+    gen.add_argument("--resolution", choices=["512", "1024", "1536"], default=DRAFT_RESOLUTION, help="512 drafts; pick runs the chosen seed at 1024")
     gen.add_argument("--decimation", type=int, default=300000, help="Space-side triangle target")
     gen.add_argument("--texture", type=int, default=2048, help="Space-side texture size")
     gen.set_defaults(run=cmd_generate)
@@ -1705,6 +2239,11 @@ def main():
     pick.add_argument("name")
     pick.add_argument("--seed", type=int, required=True)
     pick.add_argument("--replace", action="store_true")
+    pick.add_argument("--keep-draft", action="store_true", help="build from the 512 draft; skip the 1024 final pass")
+    pick.add_argument("--counted", action="append", metavar="NAME=N", help="what you counted on this candidate, for each count in the brief")
+    pick.add_argument("--accept", metavar="REASON", help="go on although its proportions or a count do not match the brief")
+    pick.add_argument("--decimation", type=int, default=300000, help="Space-side triangle target for the final pass")
+    pick.add_argument("--texture", type=int, default=2048, help="Space-side texture size for the final pass")
     pick.set_defaults(run=cmd_pick)
 
     brief = sub.add_parser("brief", help="record what the asset is for and how big it is")
@@ -1717,7 +2256,9 @@ def main():
     brief.add_argument("--route", choices=ROUTES, help="scan keeps the generated mesh; clean rebuilds it from shapes")
     brief.add_argument("--kind", choices=sorted(rules.KINDS), help="vehicle and weapon need mounts; prop (default) does not")
     brief.add_argument("--mount", action="append", metavar="NAME=x,y,z", help="a named point in studs from the pivot, -z forward; repeatable")
-    brief.add_argument("--length", type=float, help="finished front-to-back length in studs (weapons)")
+    brief.add_argument("--length", type=float, help="finished front-to-back length in studs")
+    brief.add_argument("--width", type=float, help="finished side-to-side width in studs")
+    brief.add_argument("--count", action="append", metavar="NAME=N", help="a part that must come out as an exact number, e.g. seats=8; repeatable; 'none' if nothing")
     brief.add_argument("--game-name", help="the name game code uses for it, e.g. WaveRunner or WhiteSniper")
     brief.add_argument("--where", help="the map or place it goes in")
     brief.add_argument("--copies", type=int, help="about how many are on screen at once")
@@ -1771,7 +2312,44 @@ def main():
     fnd.add_argument("name")
     fnd.add_argument("--defect", action="append", metavar='"where: what"', help="one defect you can see; repeatable")
     fnd.add_argument("--none", action="store_true", help="every panel is sound")
+    fnd.add_argument("--counted", action="append", metavar="NAME=N", help="what you counted on the build, for each count in the brief")
     fnd.set_defaults(run=cmd_findings)
+
+    imp = sub.add_parser("import", help="file a model made by another service as a candidate, to be checked like any other")
+    imp.add_argument("file", help="the downloaded .glb")
+    imp.add_argument("--name", required=True, help="package name; it needs a brief")
+    imp.add_argument("--from", dest="service", required=True, help="who made it, e.g. meshy, tripo")
+    imp.add_argument("--settings", help="what you asked the service for, e.g. 'image to 3D, 30k triangles, PBR'")
+    imp.set_defaults(run=cmd_import)
+
+    cmp = sub.add_parser("compare", help="every candidate of one asset on the same measures, whoever made it")
+    cmp.add_argument("name")
+    cmp.add_argument("--no-audit", action="store_true", help="skip the hole renders for candidates not audited yet")
+    cmp.set_defaults(run=cmd_compare)
+
+    quota = sub.add_parser("quota", help="GPU runs in the last day, measured seconds per run, and when the quota is back")
+    quota.set_defaults(run=cmd_quota)
+
+    queue = sub.add_parser("queue", help="requests parked when the GPU quota ran out; --run tries them again")
+    queue.add_argument("--run", dest="run_now", action="store_true", help="try the parked requests again")
+    queue.add_argument("--drop", metavar="ASSET", help="remove this asset's parked requests")
+    queue.set_defaults(run=cmd_queue)
+
+    find = sub.add_parser("find", help="what already in the repo could be reused, before making something new")
+    find.add_argument("words", nargs="+")
+    find.set_defaults(run=cmd_find)
+
+    plan = sub.add_parser("plan", help="a map's asset list: reuse, shapes or generate each, and the GPU runs the user approved")
+    plan.add_argument("map")
+    plan.add_argument("--add", metavar="NAME", help="package name of an asset the map needs")
+    plan.add_argument("--what", help="what it is, in a few words")
+    plan.add_argument("--source", choices=gpu.SOURCES, help="reuse something owned, build from shapes (no GPU), or generate")
+    plan.add_argument("--reuses", help="the existing package or model a reuse row points at")
+    plan.add_argument("--why", help="why this source, e.g. 'organic, seen up close'")
+    plan.add_argument("--remove", metavar="NAME")
+    plan.add_argument("--approve", type=int, metavar="RUNS", help="GPU runs the user agreed to for this map")
+    plan.add_argument("--said", help="the user's own words approving that number")
+    plan.set_defaults(run=cmd_plan)
 
     cal = sub.add_parser("calibrate", help="surface-error scores beside verdicts: are the gate's lines right?")
     cal.set_defaults(run=cmd_calibrate)

@@ -1,0 +1,20 @@
+{
+  "purpose": "Provider test: steel lattice radio tower, same picture as radio-tower",
+  "role": "decor",
+  "heightStuds": 60.0,
+  "route": "scan",
+  "kind": "prop",
+  "lengthStuds": 17.0,
+  "widthStuds": 13.5,
+  "where": "ProviderTest",
+  "copies": 1,
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "yes",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "counts": {
+    "platforms": 2
+  }
+}

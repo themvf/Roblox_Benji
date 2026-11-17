@@ -1,0 +1,17 @@
+{
+  "looks": "good",
+  "said": "It looks great. Please replace and make it driveable",
+  "findingsShown": [
+    "under the bow: a small see-through sliver where the collar bends tightest (0.28% of the bottom view); below the waterline",
+    "seats: helm plus four, where the reference has nine; simplified on purpose",
+    "windscreen: a solid dark slab, not see-through glass",
+    "radar arch: a plain A-frame with a light bar, beacon and dome; the reference arch is curved with a horn",
+    "colour: collar and hull are close shades of near-black, so the boat reads as one dark shape from a distance",
+    "no realistic version to compare: the generator's GPU quota ran out before any mesh was made"
+  ],
+  "note": null,
+  "exportSha256": "1047670a070fb4839d427ee0ca58de36e4185f769c4b9c2b0e9e8be24f935019",
+  "worstSurfaceError": null,
+  "worstBackFacePercent": 0.28,
+  "recordedOn": "2026-11-16"
+}

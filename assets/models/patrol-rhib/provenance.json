@@ -1,0 +1,21 @@
+{
+  "asset": "patrol-rhib",
+  "recordedOn": "2026-11-16",
+  "reference": {
+    "file": "assets/models/patrol-rhib/source/reference.png",
+    "sha256": "8595ce2869f05e293856f6d65ead03732875d9c8cb28783a619d3d63934fe407",
+    "origin": "user-supplied",
+    "madeWith": "user-supplied product render (uploaded in chat); manufacturer logo painted out before generation",
+    "prompt": null
+  },
+  "mesh": {
+    "file": null,
+    "sha256": null,
+    "generator": null,
+    "builder": "tools/blender/build_patrol_rhib.py"
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is.",
+    "checkedOn": null
+  }
+}

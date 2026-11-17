@@ -140,7 +140,13 @@ def compare(source, export):
     return scores, a, b
 
 
-SAMPLES = 600_000  # surface points per model; about ten per covered pixel
+# Surface points per model. 600,000 was too few: on a model with much hidden or layered
+# surface, a pixel often got no point from its nearest face and read through to the one
+# behind. A sculpture scored 0.272 against its export and 0.265 against ITSELF, and three
+# sound builds were waived past the gate. Measured 2026-11-16 at 4,000,000: self-noise
+# 0.000-0.006 on six models; sculpture 0.016, cabinet wall 0.036 (was 0.388), sofa 0.012,
+# wave runner 0.029, Black Hawk 0.035, and the torn radio tower still 0.109.
+SAMPLES = 4_000_000
 DEPTH_TOLERANCE = 0.015  # of the model's longest side: closer than this counts as the same surface
 # Each depth view: across axis, up axis, depth axis, and which way the camera looks along it.
 DEPTH_VIEWS = {
@@ -150,14 +156,17 @@ DEPTH_VIEWS = {
 }
 
 
-def depth_maps(tris):
+NOISE_SEED = 11  # a second scattering of the source, to check the measure against itself
+
+
+def depth_maps(tris, seed=7):
     """Nearest-surface depth from six sides, by scattering points over the surface.
 
     A silhouette cannot see a hole in a hull, because the far side fills it in. Depth
     can: through a hole the nearest surface is suddenly the far wall. Depths are in
     units of the model's longest side, so two scales compare directly.
     """
-    rng = np.random.default_rng(7)  # fixed seed: the same file always scores the same
+    rng = np.random.default_rng(seed)  # fixed seed: the same file always scores the same
     edge1, edge2 = tris[:, 1] - tris[:, 0], tris[:, 2] - tris[:, 0]
     area = np.linalg.norm(np.cross(edge1, edge2), axis=1)
     pick = rng.choice(len(tris), size=SAMPLES, p=area / area.sum())
@@ -180,20 +189,34 @@ def depth_maps(tris):
     return maps
 
 
-def surface_error(source, export):
-    """{view: share of the source's visible surface the export gets wrong}.
+def surface_measure(source, export):
+    """{view: {"error", "noise"}} for an export against its source.
 
-    Wrong means missing, or nearer or farther than DEPTH_TOLERANCE. 0.0 is a perfect
-    copy; holes, torn faces and collapsed detail all raise it.
+    error: share of the source's visible surface the export gets wrong (missing, or nearer
+    or farther than DEPTH_TOLERANCE). 0.0 is a perfect copy; holes, torn faces and
+    collapsed detail all raise it.
+
+    noise: the same score for the source against a second scattering of itself. It should
+    be near zero. If it is not, the measure is short of points for this model and the
+    error cannot be trusted; raise SAMPLES.
     """
-    a, b = depth_maps(triangles(source)), depth_maps(triangles(export))
-    errors = {}
+    source_tris = triangles(source)
+    a, again, b = depth_maps(source_tris), depth_maps(source_tris, NOISE_SEED), depth_maps(triangles(export))
+    out = {}
     for name in DEPTH_VIEWS:
         seen = np.isfinite(a[name])
+        total = max(seen.sum(), 1)
         with np.errstate(invalid="ignore"):
-            wrong = seen & ~(np.abs(a[name] - b[name]) <= DEPTH_TOLERANCE)
-        errors[name] = float(wrong.sum() / max(seen.sum(), 1))
-    return errors
+            out[name] = {
+                "error": float((seen & ~(np.abs(a[name] - b[name]) <= DEPTH_TOLERANCE)).sum() / total),
+                "noise": float((seen & ~(np.abs(a[name] - again[name]) <= DEPTH_TOLERANCE)).sum() / total),
+            }
+    return out
+
+
+def surface_error(source, export):
+    """{view: error} from surface_measure, for callers that only want the score."""
+    return {name: found["error"] for name, found in surface_measure(source, export).items()}
 
 
 def sheet(path, a, b):

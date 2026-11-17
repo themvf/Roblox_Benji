@@ -25,7 +25,7 @@ gates are `tools/check_asset_registry.luau` and `tools/check_large_files.luau`, 
 | 0. Ask | `asset_generate.py questions` | the model asks the user ten questions in one message; the only check-in before the final report |
 | 1. Brief | `asset_generate.py brief <name> --purpose --role --kind --height --where --copies --share --nearest --thin` | the answers, and from them role, size, route and triangle budget, before any GPU time |
 | 2. Reference | `prompt` (Midjourney) or `reference` (built in) | one subject, white background, nothing cropped; checked on intake |
-| 3. Mesh | `generate`, then `pick` | one candidate on the clean route, three on scan; `pick` writes `provenance.json` |
+| 3. Mesh | `generate`, then `pick` | one 512 draft first; `pick` runs the chosen seed once at 1024 for a scan build and writes `provenance.json` |
 | 4. Build | `build` | per-mesh cap, role budget, size and pivot against the brief, detail against the source, holes |
 | 5. Review | `findings --defect "where: what"` or `--none` | the model reads every close-up and writes down what is wrong, so the user is handed a list, not a hunt |
 | 5b. Approve | show the user that list and the review sheets; `verdict --looks good\|bad --said "<their words>"` | the user's eye is the gate for looks; a model's opinion, or a bare "continue", is refused |
@@ -106,13 +106,92 @@ a second session is told who holds it. `claim <name> --release` when finished.
 **Large files.** Nothing over 5 MB is committed without a line in
 `tools/large_files.json` saying why it cannot be rebuilt. `trials/` is ignored by git.
 
+## Hosted GPU is a shared daily budget
+
+The generator runs on one free quota per account per day, shared by every session. On
+2026-11-16 ten penthouse props took about 23 generations nobody had budgeted, and the next
+asset arrived to an empty quota. `tools/asset_gpu.py` holds the rules; the usage record,
+cache and queue live outside the repo in `%LOCALAPPDATA%/RobloxCodex/gpu`, so every checkout
+on the machine shares them.
+
+| Practice | Command | What it does |
+| --- | --- | --- |
+| Look before making | `find <words>` | lists packages and runtime models that already match; reuse, rescale or recolour first |
+| Plan a map's assets | `plan "<Map>" --add <name> --what "..." --source reuse\|shapes\|generate` | every asset is marked reuse, built from shapes (no GPU) or generated |
+| Get the budget approved | `plan "<Map>" --approve <runs> --said "<their words>"` | the user agrees a number of GPU runs; about two per generated asset |
+| One draft first | `generate --name <name>` | one candidate at 512; a second only after looking, a third needs `--why` |
+| Final once | `pick --seed <n>` | the chosen seed is run once at 1024 for a scan build; a clean build keeps the draft |
+| Never pay twice | automatic | a finished run is cached on the image, seed and settings |
+| Out of quota | `queue`, `queue --run` | the request is parked and rerun after the reset; the session carries on |
+| Measure | `quota` | runs in the last day, seconds per run at each resolution, when the quota is back |
+
+`generate` refuses an asset that its map's plan does not list as `generate`, a plan the user has
+not approved, and a plan whose runs are used up. A map with no plan may have two generated
+assets; the third needs a plan. Spend generation on organic things seen up close (trees, rocks,
+sculptures, wrecks); boxes, furniture, and anything thin, driven or held are built from shapes.
+
+To drain the queue without anyone watching, schedule `python tools/asset_generate.py queue --run`
+(hourly is fine: it does nothing until the recorded reset time has passed). `HF_TOKEN` must be
+set for the account the task runs as.
+
+Not yet measured: how much GPU a 512 draft saves over 1024, and whether a 1024 final always
+keeps its draft's shape. `quota` reports the first once both have been run; compare the two
+files by eye for the second.
+
+## Errors the tool now stops early
+
+Read from the failure notes of 68 packages on 2026-11-16. Each row is a mistake that used to
+be found late, by hand, after GPU or build time had been spent.
+
+| Mistake | Where it is caught now | How |
+| --- | --- | --- |
+| Wrong proportions (a 22-stud sofa that came out 15) | `reference --use`, `generate`, `pick` | The brief holds `--height --length --width`. A picture whose outline cannot belong to that size is refused before any mesh run; a draft mesh more than 20% (or half a stud) off in length or depth is refused before the 1024 pass and the build |
+| Wrong counts (five seats for eight, four paintings for three) | `reference --use`, `pick`, `findings` | The brief lists them: `--count seats=8`, or `--count none`. Each step needs `--counted seats=<n>` with what you counted on that picture, mesh or build |
+| The generator crashes and is retried blind | `generate`, `pick` | Failures are sorted into quota, busy and crash. Two crashes on one picture at one resolution and the tool stops calling: at 1024 use the draft (`pick --keep-draft`), at 512 change the picture or build from shapes |
+| Triangle budget found by rebuilding by hand | `build` | The first build starts inside the role's budget, and a build that lands over it is rebuilt from what it measured, up to three times. Do not set `scene.decimate` by hand |
+| Detail check failing sound builds | `build` | The check used too few sample points and scored a sculpture 0.272 against its export and 0.265 against itself. It now uses 4,000,000; the same build scores 0.016 and the torn radio tower still 0.109 |
+
+A check that fails can be passed with `--accept "<reason>"`. The reason and what failed are
+written into `brief.json` under `accepted` and belong in the final report.
+
+Limits, measured: the picture check is loose, because a reference's camera angle is not
+known. The sofa's picture fits both the 22-stud brief and the 15-stud result; only the mesh
+check caught it. A detail score recorded before 2026-11-16 used the old sampling and reads
+high; rebuild to get a comparable one. `--allow-detail-loss` waivers given for the sculpture,
+aquarium and elevator were for the measuring fault and are no longer needed.
+
+## Models made by another service
+
+A model from Meshy, Tripo or any other generator is filed as a candidate and held to the same
+checks as one made here. Download it as GLB.
+
+```
+python tools/asset_generate.py import <file.glb> --name <name> --from meshy --settings "image to 3D, 30k triangles"
+python tools/asset_generate.py compare <name>
+```
+
+`import` needs a brief, files the model as `trials/seed-201` upward, records who made it (this
+reaches `provenance.json` when it is picked) and checks its proportions. `compare` puts every
+candidate of the asset in one table and on `review/compare.png`: triangles as delivered and
+the cut our build would have to make, size against the brief, see-through share in the worst
+view, and open edges. After that an imported candidate is picked and built like any other
+(`pick --seed 201`).
+
+`compare` does not show how a candidate survives the build's reduction, which is where the
+radio tower tore; pick and build one to find out. A model that fits the budget as delivered
+skips that risk, which is the main thing to look for in the table.
+
+The four `test-*` packages (`test-sofa`, `test-hedge`, `test-tower`, `test-boat`) hold the
+briefs and pictures for comparing services on the cases TRELLIS.2 got wrong. Their TRELLIS
+baselines are in `trials/`, which is not committed; re-import them from the original packages.
+
 ## Generating candidates from a reference image
 
 `tools/asset_generate.py` replaces the by-hand TRELLIS.2 loop. It calls the same
 Hugging Face Space through its API, so set `HF_TOKEN` to use your own GPU quota.
 
 ```bash
-python tools/asset_generate.py generate <image> --name wooden-crate --seeds 3
+python tools/asset_generate.py generate <image> --name wooden-crate
 python tools/asset_generate.py pick wooden-crate --seed 2
 ```
 
@@ -122,7 +201,7 @@ white background), then leave the image argument off `generate`:
 ```bash
 python tools/asset_generate.py reference wooden-crate --prompt "..." --seeds 8
 python tools/asset_generate.py reference wooden-crate --use 2
-python tools/asset_generate.py generate --name wooden-crate --seeds 2
+python tools/asset_generate.py generate --name wooden-crate
 ```
 
 The `asset-from-prompt` skill runs this whole section unattended, from one sentence to

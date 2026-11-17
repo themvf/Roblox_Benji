@@ -80,7 +80,12 @@ INTAKE = [
         "a: --role decor --kind prop | b: --role cover --kind prop | c: --role interactive --kind vehicle | "
         "d: --role held --kind weapon | e: --role scenery --kind prop | f: --role interactive --kind prop",
     ),
-    ("size", "How big is it? Studs, or a comparison such as 'as tall as a player' (a player is about 5.5 studs).", "--height, and --length for a gun"),
+    (
+        "size",
+        "How big is it: height, length and width? Studs, or a comparison such as 'as tall as a player and three times as long' "
+        "(a player is about 5.5 studs tall).",
+        "--height --length --width; the reference picture and the draft mesh are both checked against these",
+    ),
     (
         "nearest",
         "How close can a player get to it? 'Can touch it', or the nearest distance in studs.",
@@ -108,7 +113,7 @@ INTAKE = [
     ),
 ]
 # Answers a brief must hold before anything is generated.
-INTAKE_REQUIRED = ("purpose", "role", "kind", "heightStuds", "where", "copies", "share", "nearestStuds", "thin")
+INTAKE_REQUIRED = ("purpose", "role", "kind", "heightStuds", "lengthStuds", "widthStuds", "where", "copies", "share", "nearestStuds", "thin")
 
 
 def intake_text():

@@ -34,6 +34,13 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
   those questions to the user in one message, skipping what the request already answers. Record the
   answers in the brief. That is the only check-in; after it, run hands-off and report once.
   `reference` and `generate` refuse to run on a brief without the answers.
+- **Hosted GPU is a shared daily quota.** Before generating: `asset_generate.py find <words>` for something
+  to reuse, and build boxy, thin, driven or held things from shapes (no GPU). A map's third generated asset
+  needs `asset_generate.py plan "<Map>"` with a run count the user approved. `generate` makes one 512 draft;
+  `pick` runs the winner once at 1024. Out of quota means queued, not stopped: carry on with other work.
+- The brief holds size (`--height --length --width`) and counts (`--count seats=8` or `--count none`).
+  `reference --use`, `pick` and `findings` need `--counted` with what you counted; a wrong shape or count
+  is refused unless `--accept "<reason>"`. `build` finds the triangle count for the budget itself.
 - Order is brief -> reference -> mesh -> build -> approve -> publish -> Studio, all through
   `python tools/asset_generate.py`; the table is at the top of
   [ASSET_DELIVERY_WORKFLOW.md](docs/design/ASSET_DELIVERY_WORKFLOW.md). Write the brief first: its role
