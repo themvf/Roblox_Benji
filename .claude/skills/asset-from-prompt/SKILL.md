@@ -95,17 +95,23 @@ for this session; if one says another session holds it, pick a different asset.
    by hand: more cuts along the long axis, an even count across it, `decimate` no lower than
    15% of the source triangles.
 5. **Audit the export.** `build` ends by running `audit`, which is the file that would be
-   uploaded seen from ten sides plus six close-ups. Read both sheets every time:
+   uploaded seen from ten sides plus close-ups at most 16 studs across. The textured views are
+   one-sided, as Roblox draws a mesh, so a gap in them is a gap in game. Read both sheets every time:
    - `review/audit.png`: reference top left, textured views (brightened, so dark assets show
      detail), then the hole map. Compare against the reference part by part and recount
      anything countable; a part hidden in one view shows in another.
    - `review/audit_closeups.png`: surface quality. Look for crumpled panels, smeared texture,
      fused or broken thin parts.
    - Hole map: grey is a front face, magenta a back face. Roblox draws one side only, so a
-     magenta patch is see-through in game. Hairline magenta along seams is normal for
-     generated meshes (the Black Hawk shows up to 0.8% per view); `audit.json` flags a view
-     only when it holds a solid patch. An opening with grey behind it is a modelled recess,
-     not a hole.
+     magenta pixel is see-through in game. A little along seams is normal for generated
+     meshes (builds that looked right score up to 1.25% of the model in their worst view).
+     Over 1% is a warning that needs a written reason before upload; over 1.5% fails the
+     build. The radio tower scored 8.66%: its source had no holes, the reduction tore every
+     strut, and the old check missed it because it only counted solid patches. An opening
+     with grey behind it is a modelled recess, not a hole.
+   - Thin bars, railings, antennas and open framework do not survive the scan route. If the
+     subject has them the brief says `--thin yes` and the asset is built from shapes
+     (`--route clean`), with the generated mesh as a guide only.
    - Unsure about one spot: `audit <name> --focus x,y,z --zoom 5` (fractions of the bounding
      box) adds a close-up pair there, and the single panels in `review/audit/` are full size.
    What to do with a finding:
@@ -130,6 +136,16 @@ One message, when the audit is done or the run has failed:
 - the assumptions you made (role, height, style) in one line each
 - flaws you can still see, stated plainly; a build that passed its checks can still look wrong
 - the one decision that is theirs: approve it for upload, or say what to change
+
+Before you report, write your own review: `asset_generate.py findings <name>` prints what to look
+for; go through every close-up panel and record each defect with `--defect "where: what"`, or `--none`.
+Finding defects is your job, not the user's. Lead the report with that list (the command prints it,
+with what the checks measured), so their part is a yes or no.
+
+Ask them directly whether it looks right, including up close, and record their answer in their
+own words: `asset_generate.py verdict <name> --looks good|bad --said "..."`. "Continue" or "ok"
+is not an answer to that question; the command refuses it, and `publish --confirm` refuses to
+upload without a `good` verdict on that exact build. Never write the verdict from your own opinion.
 
 Never upload. Stages 5-7 (visual approval, Studio, map placement) need the user and Studio, and
 `tools/roblox/upload_asset.ps1` runs only after they approve the views.

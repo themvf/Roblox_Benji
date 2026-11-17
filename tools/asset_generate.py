@@ -185,8 +185,11 @@ def trial_dirs(pkg):
 
 
 def reference_image(pkg):
+    # Images only: source/reference.json (provenance) sorts before reference.png, and
+    # handing that to PIL crashed generate, review, build and audit.
     for path in sorted(glob.glob(os.path.join(pkg, "source", "reference.*"))):
-        return path
+        if os.path.splitext(path)[1].lower() in (".png", ".jpg", ".jpeg", ".webp"):
+            return path
     return None
 
 
@@ -572,7 +575,10 @@ def audit_sheets(pkg, base, source):
         # of them per view with no real hole. Erode the lines away and judge what is left: patches.
         solid = np.asarray(Image.fromarray(np.uint8(back) * 255).filter(ImageFilter.MinFilter(5))) > 0
         patches = round(100.0 * float(solid.sum()) / area, 2)
-        flagged = patches > AUDIT_FLAG_PERCENT
+        # Erosion is blind to anything thinner than five pixels, which is every bar of a
+        # lattice: the radio tower scored 0% patches with 2-4% of its pixels see-through.
+        # So the unfiltered share is judged as well.
+        flagged = patches > AUDIT_FLAG_PERCENT or percent > rules.HOLES_FAIL
         views.append(
             {
                 "name": view["name"],
@@ -603,11 +609,11 @@ def audit_sheets(pkg, base, source):
     lines = [
         f"AUDIT  {rel(source)}",
         "Left: the reference it was generated from." if reference else "No reference image in the package.",
-        "Rows 1-2: textured, every side." + (f" Brightened (gamma {gamma:.2f}); darker in game." if gamma < 1.0 else ""),
+        "Rows 1-2: textured and one-sided, as Roblox draws it." + (f" Brightened (gamma {gamma:.2f}); darker in game." if gamma < 1.0 else ""),
         "Rows 3-4: front faces grey, BACK faces magenta.",
         "Magenta is where Roblox shows straight through:",
         "a hole, a flipped patch, or a one-sided sheet.",
-        f"Patches over {AUDIT_FLAG_PERCENT:g}%: " + (", ".join(flagged) if flagged else "none"),
+        f"Over {rules.HOLES_FAIL:g}% back faces or {AUDIT_FLAG_PERCENT:g}% patches: " + (", ".join(flagged) if flagged else "none"),
     ]
     draw = ImageDraw.Draw(header)
     for index, line in enumerate(lines):
@@ -634,6 +640,8 @@ def audit_sheets(pkg, base, source):
         "sourceSha256": sha256(source),
         "brightenGamma": round(gamma, 3),
         "flagPercent": AUDIT_FLAG_PERCENT,
+        "holesWarnPercent": rules.HOLES_WARN,
+        "holesFailPercent": rules.HOLES_FAIL,
         "worstBackFacePercent": max((view["backFacePercent"] for view in views), default=0.0),
         "worstPatchPercent": max((view["backFacePatchPercent"] for view in views), default=0.0),
         "flagged": flagged,
@@ -642,11 +650,12 @@ def audit_sheets(pkg, base, source):
         "panels": rel(panels),
         "limitations": "Blender renders, not Roblox. Lighting, materials and transparency in Studio are not checked.",
     }
+    record["passed"] = record["worstBackFacePercent"] <= rules.HOLES_FAIL
     write_json(os.path.join(base, "audit.json"), record)
     return record
 
 
-def run_audit(pkg, source, base, focus=(), zoom=3.0):
+def run_audit(pkg, source, base, focus=(), zoom=3.0, height_studs=0.0):
     """Render `source` from every side into <base>/audit/ and write the sheets beside it."""
     blender = find_blender()
     if not blender:
@@ -656,7 +665,7 @@ def run_audit(pkg, source, base, focus=(), zoom=3.0):
     if os.path.isdir(panels):
         shutil.rmtree(panels)
     command = [blender, "-b", "-noaudio", "--python", AUDITOR, "--", "--source", source, "--out-dir", panels]
-    command += ["--zoom", str(zoom)]
+    command += ["--zoom", str(zoom), "--closeup-studs", str(rules.CLOSEUP_STUDS), "--height-studs", str(height_studs or 0.0)]
     for point in focus:
         command += ["--focus", point]
     print(f"audit: rendering {rel(source)} from every side...", flush=True)
@@ -667,10 +676,13 @@ def run_audit(pkg, source, base, focus=(), zoom=3.0):
     record = audit_sheets(pkg, base, source)
     for sheet in record["sheets"]:
         print(f"audit sheet: {sheet}")
+    worst = record["worstBackFacePercent"]
+    print(
+        f"audit: {worst:g}% of the model shows a back face in the worst view (warn over {rules.HOLES_WARN:g}, "
+        f"fail over {rules.HOLES_FAIL:g}); patches {record['worstPatchPercent']:g}%."
+    )
     if record["flagged"]:
-        print(f"audit: back-face patches over {AUDIT_FLAG_PERCENT:g}% in: {', '.join(record['flagged'])}. LOOK at the magenta.")
-    else:
-        print(f"audit: no view has back-face patches over {AUDIT_FLAG_PERCENT:g}% (worst {record['worstPatchPercent']:g}%).")
+        print(f"audit: see-through in: {', '.join(record['flagged'])}. Every magenta pixel is a hole in game. LOOK at the close-ups.")
     return record
 
 
@@ -685,7 +697,9 @@ def cmd_audit(args):
     if not os.path.isfile(source):
         sys.exit(f"nothing to audit at {rel(source)}")
     os.makedirs(base, exist_ok=True)
-    if not run_audit(pkg, source, base, args.focus or (), args.zoom):
+    # A candidate is not in studs yet; its close-ups are framed from the brief's height.
+    height = (read_brief(pkg) or {}).get("heightStuds", 0.0) if args.seed is not None else 0.0
+    if not run_audit(pkg, source, base, args.focus or (), args.zoom, height):
         sys.exit(1)
 
 
@@ -831,6 +845,56 @@ ROUTES = ("auto", "scan", "clean")
 # full of holes 0.347.
 DETAIL_WARN = 0.08
 DETAIL_FAIL = 0.15
+# A copied slab of ground: the bottom slice fills this much of the footprint, and this many
+# times what the slice above it fills. The radio tower's dirt patch scores 0.86 and 2.8; a
+# sculpture on a plinth 1.0 and 1.9; five other builds under 0.2 and 0.5. It is a finding to
+# put to the user (keep it, or cut it), not a failure: a plinth is the same shape.
+GROUND_FILL = 0.5
+GROUND_RATIO = 1.5
+
+
+def is_close(brief):
+    """Can a player get near enough to see bent bars and crumpled panels?"""
+    nearest = brief.get("nearestStuds")
+    if nearest is None:  # briefs written before the question existed
+        return brief.get("role") != "scenery"
+    return nearest < rules.SCENERY_MIN_STUDS
+
+
+def detail_limit(brief):
+    """The surface error a build may not exceed. Up close the warning line is the limit: the
+    radio tower scored 0.122, between the two lines, with every strut visibly bent."""
+    return DETAIL_WARN if is_close(brief) else DETAIL_FAIL
+
+
+def surface_findings(export):
+    """Ground patch and texture bleed of the written file (tools/surface_checks.py)."""
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import surface_checks
+
+    ground = surface_checks.ground_patch(export)
+    ground["flagged"] = ground["bottomFill"] > GROUND_FILL and ground["ratio"] > GROUND_RATIO
+    return ground, surface_checks.texture_bleed(export)
+
+
+def machine_findings(validation):
+    """What the checks already know is wrong or doubtful with a build, in plain words."""
+    found = []
+    audit = validation.get("audit") or {}
+    seen_through = audit.get("worstBackFacePercent") or 0.0
+    if seen_through > rules.HOLES_WARN:
+        found.append(f"holes: {seen_through:g}% of the model is see-through in the worst view ({', '.join(audit.get('flaggedViews') or []) or 'no view over the fail line'})")
+    detail = validation.get("detail") or {}
+    if validation.get("route") != "clean" and (detail.get("worstSurfaceError") or 0.0) > DETAIL_WARN:
+        found.append(f"shape: the surface has drifted from the source (error {detail['worstSurfaceError']:.3f}); expect bent bars or crumpled panels")
+    ground = validation.get("ground") or {}
+    if ground.get("flagged"):
+        w, d = ground["footprintStuds"]
+        found.append(f"base: a slab about {w:g} by {d:g} studs sits under the model, wider than what stands on it. Copied ground, or a wanted base?")
+    budget = validation.get("budget") or {}
+    if budget and not budget.get("within", True):
+        found.append(f"weight: {budget['triangles']:,} triangles against a budget of {budget['budget']:,}")
+    return found
 CLEAN_REDUCTION = 0.9  # ASSET_INTAKE_AND_LESSONS.md: past ~90% reduction the silhouette is gone
 
 
@@ -842,6 +906,8 @@ def recommend_route(brief, measured, spec):
     reasons = []
     if brief.get("role") in rules.CLOSE_ROLES:
         reasons.append(f"the role is {brief['role']}, so players are right next to it and its parts may need to move")
+    if brief.get("thin") == "yes":
+        reasons.append("it has thin bars or open framework, which a generated mesh tears and a reduction tears further")
     source_tris = measured.get("triangles", 0)
     kept = spec.get("decimate")
     if source_tris and kept and 1 - kept / source_tris > CLEAN_REDUCTION:
@@ -975,6 +1041,10 @@ def cmd_brief(args):
         ("copies", args.copies),
         ("moving", args.moving),
         ("share", args.share),
+        ("nearestStuds", args.nearest),
+        ("thin", args.thin),
+        ("holesWaiver", args.holes_waiver),
+        ("detailWaiver", args.detail_waiver),
         ("assumed", args.assumed),
     ):
         if value is not None:
@@ -996,6 +1066,12 @@ def cmd_brief(args):
         if not found:
             sys.exit(f"--mount takes Name=x,y,z in studs from the pivot (-z is forward), got {item!r}")
         brief.setdefault("mounts", {})[found.group(1)] = [float(found.group(i)) for i in (2, 3, 4)]
+    nearest = brief.get("nearestStuds")
+    if brief["role"] == "scenery" and nearest is not None and nearest < rules.SCENERY_MIN_STUDS:
+        sys.exit(
+            f"a player can get within {nearest:g} studs of it, so it is not scenery (that role is for {rules.SCENERY_MIN_STUDS}+ studs "
+            "and has the loosest rules). Use --role decor for something walked past, or --role cover."
+        )
     needed = rules.KIND_ROLE.get(kind)
     if needed and brief["role"] != needed:
         sys.exit(f"kind {kind} goes with role {needed}, not {brief['role']}; pass --role {needed}")
@@ -1014,6 +1090,8 @@ def cmd_brief(args):
         )
     if brief.get("share") == "public":
         print("share: public. Fill in the rights note in provenance.json before it leaves this game.")
+    if brief.get("thin") == "yes" and brief.get("route") == "scan":
+        print("thin parts on the scan route: expect torn bars. build will fail on holes unless --holes-waiver says why that is acceptable.")
     if brief.get("moving") and planned_route(brief) != "clean":
         print("moving parts: set --route clean, so each moving part is built as its own piece.")
     if brief["role"] == "cover":
@@ -1101,15 +1179,17 @@ def cmd_build(args):
         sys.exit(f"no brief.json in {rel(pkg)}; run: asset_generate.py brief {args.name} ...")
     spec = scene_spec(args.name, pkg, brief)
     source = os.path.join(ROOT, spec["source"])
-    if not os.path.isfile(source):
-        sys.exit(f"no source at {spec['source']}; pick a candidate first")
     blender = find_blender()
     if not blender:
         sys.exit("Blender not found; set the BLENDER environment variable")
 
-    if brief.get("route", "auto") == "clean":
-        build_clean(args.name, pkg, source, blender, brief)
+    if brief.get("route", "auto") == "clean" or (brief.get("route", "auto") == "auto" and brief.get("thin") == "yes"):
+        # A clean build is modelled from shapes, so it does not need a generated mesh. With
+        # one it is compared for information; without one (no GPU quota) it still builds.
+        build_clean(args.name, pkg, source if os.path.isfile(source) else None, blender, brief)
         return
+    if not os.path.isfile(source):
+        sys.exit(f"no source at {spec['source']}; pick a candidate first")
 
     manifest = os.path.join(pkg, "scene.json")
     out = os.path.join(ROOT, spec["out"])
@@ -1182,8 +1262,12 @@ def cmd_build(args):
     # Did the reduction keep the shape? Cheap, so it runs before the slow renders.
     detail = detail_check(source, out, os.path.join(review, "detail.png"))
     worst_error = detail["worstSurfaceError"]
-    detail["passed"] = worst_error <= DETAIL_FAIL or args.allow_detail_loss
-    print(f"detail: surface error {worst_error:.3f} worst view (warn over {DETAIL_WARN}, fail over {DETAIL_FAIL}); sheet {detail['sheet']}")
+    limit = detail_limit(brief)
+    detail["limit"] = limit
+    detail["passed"] = worst_error <= limit or args.allow_detail_loss
+    print(f"detail: surface error {worst_error:.3f} worst view (warn over {DETAIL_WARN}, fail over {limit}); sheet {detail['sheet']}")
+    ground, bleed = surface_findings(out)
+    print(f"base: bottom slice fills {ground['bottomFill']:.0%} of the footprint, {ground['ratio']:g} times the slice above it." + (" A slab is under the model: copied ground, or a wanted base? Ask the user." if ground["flagged"] else ""))
     route, reasons = recommend_route(brief, measured, spec)
     if worst_error > DETAIL_WARN:
         print("detail: the export has drifted from the source; look at the sheet (red is surface it lost).")
@@ -1201,12 +1285,16 @@ def cmd_build(args):
             "triangleCapPassed": passed,
             "route": {"brief": brief.get("route", "auto"), "suggested": route, "reasons": reasons},
             "detail": detail,
+            "ground": ground,
+            "textureBleed": bleed,
             "budget": budget,
             "contract": contract,
             "buildAttempts": attempts,
             "inspect": inspect_text.strip().splitlines(),
             "views": "review/views.png" if rendered else None,
             "audit": {
+                "passed": audited["passed"] or bool((brief.get("holesWaiver") or "").strip()),
+                "waiver": (brief.get("holesWaiver") or "").strip() or None,
                 "sheets": audited["sheets"],
                 "flaggedViews": audited["flagged"],
                 "worstBackFacePercent": audited["worstBackFacePercent"],
@@ -1237,19 +1325,30 @@ def cmd_build(args):
                 "- None yet.\n"
             )
     print(f"built {spec['out']}; views: {rel(os.path.join(review, 'views.png'))}")
-    if worst_error > DETAIL_FAIL and not args.allow_detail_loss:
+    if worst_error > limit and not args.allow_detail_loss:
         sys.exit(
-            f"FAIL: detail lost. Surface error {worst_error:.3f} is over {DETAIL_FAIL}; this export should not be uploaded. "
+            f"FAIL: detail lost. Surface error {worst_error:.3f} is over {limit}"
+            + (" (the limit for something a player can get close to)" if limit < DETAIL_FAIL else "")
+            + "; this export should not be uploaded. "
             f"Use the clean route (asset_generate.py brief {args.name} --route clean, then write "
             f"{rel(clean_builder(args.name))}), keep more triangles under scene.decimate in the brief, "
             "or pass --allow-detail-loss if it is only ever seen from far away."
         )
     failures = gate_failures(args.name, budget, contract)
+    if audited and not audited["passed"] and not (brief.get("holesWaiver") or "").strip():
+        failures.append(
+            f"FAIL: holes. {audited['worstBackFacePercent']:g}% of the model is see-through in the worst view (limit {rules.HOLES_FAIL:g}); "
+            f"look at review/audit_closeups.png. Use the clean route (asset_generate.py brief {args.name} --route clean, then write "
+            f"{rel(clean_builder(args.name))}), or record why it is acceptable with brief --holes-waiver."
+        )
     if failures:
         sys.exit("\n".join(failures))
     if route == "clean" and brief.get("route", "auto") != "scan":
         print("route: the numbers suggest a clean rebuild for this asset because " + "; ".join(reasons) + ".")
-    print(f"next: look at review/audit.png and audit_closeups.png; once approved: asset_generate.py publish {args.name} --confirm")
+    print(
+        f"next: look at review/audit_closeups.png yourself and record what is wrong: asset_generate.py findings {args.name}. "
+        "Then give the user that list with the sheets and record their answer with verdict. publish --confirm needs both."
+    )
 
 
 def build_clean(name, pkg, source, blender, brief):
@@ -1273,9 +1372,13 @@ def build_clean(name, pkg, source, blender, brief):
         capture_output=True, text=True, encoding="utf-8", errors="replace",
     )
     print(printable(inspect.stdout.rstrip()))
-    detail = detail_check(source, out, os.path.join(pkg, "review", "clean-detail.png"))
+    detail = detail_check(source, out, os.path.join(pkg, "review", "clean-detail.png")) if source else {"outlineOverlap": None}
     detail["passed"] = None  # informational on this route
     budget, contract = gate_export(name, pkg, brief, "clean", out, sum(mesh_triangles(inspect.stdout)))
+    # A hand-built mesh can have flipped or missing faces too, and the user needs the same
+    # close-ups to approve. Same audit as a scan, same hole lines.
+    audited = run_audit(pkg, out, os.path.join(pkg, "review"))
+    waiver = (brief.get("holesWaiver") or "").strip()
     write_json(
         os.path.join(pkg, "validation-clean.json"),
         {
@@ -1289,6 +1392,16 @@ def build_clean(name, pkg, source, blender, brief):
             "detail": detail,
             "budget": budget,
             "contract": contract,
+            "audit": {
+                "passed": audited["passed"] or bool(waiver),
+                "waiver": waiver or None,
+                "sheets": audited["sheets"],
+                "flaggedViews": audited["flagged"],
+                "worstBackFacePercent": audited["worstBackFacePercent"],
+                "worstPatchPercent": audited["worstPatchPercent"],
+            }
+            if audited
+            else None,
             "limitations": "Local checks only. Shape fidelity is judged by eye on the builder's renders.",
         },
     )
@@ -1296,14 +1409,30 @@ def build_clean(name, pkg, source, blender, brief):
         sys.exit("FAIL: the clean export breaks a Roblox limit; see the inspect output above.")
     print(f"built {rel(out)} by the clean route; outline against the source: {detail['outlineOverlap']} (information only)")
     failures = gate_failures(name, budget, contract)
+    if audited and not audited["passed"] and not waiver:
+        failures.append(
+            f"FAIL: holes. {audited['worstBackFacePercent']:g}% of the model is see-through in the worst view (limit {rules.HOLES_FAIL:g}); "
+            "a face in the builder is flipped or missing. Look at review/audit_closeups.png."
+        )
     if failures:
         sys.exit("\n".join(failures))
-    print(f"next: look at the review/clean-*.png renders; once approved: asset_generate.py publish {name} --confirm")
+    print(
+        f"next: look at review/audit_closeups.png yourself and record what is wrong: asset_generate.py findings {name}. "
+        "Then give the user that list with the sheets and record their answer with verdict. publish --confirm needs both."
+    )
 
 
 # ------------------------------------------------- publish / registry / records
 
 UPLOADER = os.path.join(ROOT, "tools", "roblox", "upload_asset.ps1")
+
+
+def current_export(pkg, name):
+    """The export the registry holds for this asset (a clean build is <Name>Clean.glb), else the scan export."""
+    entry = rules.read_registry().get(name) or {}
+    if entry.get("export") and os.path.isfile(os.path.join(ROOT, entry["export"])):
+        return os.path.join(ROOT, entry["export"])
+    return os.path.join(pkg, "exports", pascal(name) + ".glb")
 
 
 def latest_validation(pkg, export_sha):
@@ -1342,19 +1471,39 @@ def cmd_publish(args):
             ("detail", (validation.get("detail") or {}).get("passed") is not False),
             ("budget", (validation.get("budget") or {}).get("passed")),
             ("size and pivot", (validation.get("contract") or {}).get("passed")),
+            ("holes", (validation.get("audit") or {}).get("passed") is not False),
         )
         if not ok
     ]
     if blocked:
         sys.exit("not uploading: the last build failed " + ", ".join(blocked) + ". Fix it and build again.")
     brief = read_brief(pkg) or {}
+    # A warning is not a pass. Each one needs a written reason before anything is uploaded.
+    warned = []
+    error = 0.0 if validation.get("route") == "clean" else (validation.get("detail") or {}).get("worstSurfaceError") or 0.0
+    if error > DETAIL_WARN and not (brief.get("detailWaiver") or "").strip():
+        warned.append(f"detail warning (surface error {error:.3f}, over {DETAIL_WARN}); reason goes in brief --detail-waiver")
+    seen_through = (validation.get("audit") or {}).get("worstBackFacePercent") or 0.0
+    if seen_through > rules.HOLES_WARN and not (brief.get("holesWaiver") or "").strip():
+        warned.append(f"holes warning ({seen_through:g}% see-through, over {rules.HOLES_WARN:g}); reason goes in brief --holes-waiver")
+    if validation.get("audit") is None:
+        warned.append("this build was never audited for holes; run build again")
+    if warned:
+        sys.exit("not uploading until each warning has a written reason:\n  " + "\n  ".join(warned))
+    verdict = read_json(rules.verdict_path(pkg)) if os.path.isfile(rules.verdict_path(pkg)) else {}
+    approved = verdict.get("exportSha256") == current and verdict.get("looks") == "good" and verdict.get("said")
+    if args.confirm and not approved:
+        sys.exit(
+            "not uploading: the user has not approved this exact build. Show them review/audit.png and review/audit_closeups.png, "
+            f"ask whether it looks right, then record their words: asset_generate.py verdict {args.name} --looks good --said \"...\""
+        )
     command = ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", UPLOADER, "-File", export]
     if brief.get("purpose"):
         command += ["-Description", brief["purpose"]]
     if not args.confirm:
         done = subprocess.run(command + ["-DryRun"], capture_output=True, text=True, encoding="utf-8", errors="replace")
         print(printable(done.stdout.rstrip()))
-        print(f"dry run only. {entry['export']} passed its gates and is ready. After the review sheets are approved by the user:")
+        print(f"dry run only. {entry['export']} passed its gates." + ("" if approved else " Still needed: the user's verdict on the review sheets (asset_generate.py verdict)."))
         print(f"  python tools/asset_generate.py publish {args.name} --confirm")
         return
     done = subprocess.run(command, capture_output=True, text=True, encoding="utf-8", errors="replace")
@@ -1390,21 +1539,93 @@ def cmd_verify(args):
 def cmd_verdict(args):
     """Record how the current scan build looks, beside its surface-error score."""
     pkg = package_dir(args.name)
-    path = os.path.join(pkg, "validation.json")
-    if not os.path.isfile(path) or "detail" not in read_json(path):
-        sys.exit(f"{args.name} has no scored scan build; run build first")
-    validation = read_json(path)
+    export = current_export(pkg, args.name)
+    validation = latest_validation(pkg, sha256(export)) if os.path.isfile(export) else None
+    if not validation:
+        sys.exit(f"{args.name} has no validated build of the export on disk; run build first")
+    said = (args.said or "").strip()
+    if said.lower().strip(" .!") in rules.NOT_A_VERDICT:
+        sys.exit(
+            f"{said!r} does not say the user looked at the build. Show them review/audit.png and review/audit_closeups.png and ask: "
+            "'Does this look right, including up close?' Record what they answer."
+        )
+    if not said:
+        sys.exit("--said is required: the user's own words about the review sheets. A model's opinion is not a verdict.")
+    found = current_findings(pkg, validation["exportSha256"])
+    if not found:
+        sys.exit(
+            f"no written review of this build yet. Look at the close-ups yourself first and record what is wrong "
+            f"(asset_generate.py findings {args.name}), give the user that list, and then record their answer."
+        )
+    error = (validation.get("detail") or {}).get("worstSurfaceError")
     write_json(
         rules.verdict_path(pkg),
         {
             "looks": args.looks,
+            "said": said,
+            "findingsShown": found["measured"] + found["seen"],
             "note": args.note,
             "exportSha256": validation["exportSha256"],
-            "worstSurfaceError": validation["detail"]["worstSurfaceError"],
+            "worstSurfaceError": error,
+            "worstBackFacePercent": (validation.get("audit") or {}).get("worstBackFacePercent"),
             "recordedOn": time.strftime("%Y-%m-%d"),
         },
     )
-    print(f"recorded: {args.name} looks {args.looks} at surface error {validation['detail']['worstSurfaceError']:.3f}")
+    print(f"recorded: the user says {args.name} looks {args.looks}" + (f" (surface error {error:.3f})" if error is not None else ""))
+
+
+REVIEW_GUIDE = """Open review/audit_closeups.png and review/audit.png and go through every panel. The user should
+not have to find defects; you do, and they answer yes or no to your list. Look for:
+  - bars, rails, antennas or wires that are bent, ragged, broken off or fused together
+  - gaps you can see through in the textured rows (those are drawn the way Roblox draws them)
+  - panels that are crumpled, melted or smeared
+  - parts in the reference that are missing, or counted wrong (legs, wheels, blades, rungs)
+  - things copied from the reference that are not the subject: ground, floor, cables, shadows
+  - anything that would look wrong from as close as a player can get
+Record each as  --defect "where: what"  (repeatable), or --none if every panel is sound.
+What the checks measured is added for you."""
+
+
+def findings_path(pkg):
+    return os.path.join(pkg, "review", "findings.json")
+
+
+def current_findings(pkg, export_sha):
+    path = findings_path(pkg)
+    if os.path.isfile(path):
+        data = read_json(path)
+        if data.get("exportSha256") == export_sha:
+            return data
+    return None
+
+
+def cmd_findings(args):
+    """The model's own written review of the close-ups, before the user is asked anything."""
+    pkg = package_dir(args.name)
+    export = current_export(pkg, args.name)
+    validation = latest_validation(pkg, sha256(export)) if os.path.isfile(export) else None
+    if not validation:
+        sys.exit(f"{args.name} has no validated build of the export on disk; run build first")
+    measured = machine_findings(validation)
+    if not args.defect and not args.none:
+        print(REVIEW_GUIDE)
+        if measured:
+            print("\nAlready measured:\n  " + "\n  ".join(measured))
+        sys.exit(1)
+    if args.defect and args.none:
+        sys.exit("--none and --defect together; pick one")
+    record = {
+        "exportSha256": validation["exportSha256"],
+        "reviewedBy": rules.owner(),
+        "measured": measured,
+        "seen": args.defect or [],
+        "recordedOn": time.strftime("%Y-%m-%d %H:%M"),
+    }
+    write_json(findings_path(pkg), record)
+    total = measured + record["seen"]
+    print(f"recorded {len(total)} finding(s) for {args.name}. Put this to the user with the two sheets, then ask: does it look right, or what should change?")
+    for line in total or ["nothing found by the checks or by you"]:
+        print(f"  - {line}")
 
 
 def cmd_calibrate(args):
@@ -1502,6 +1723,10 @@ def main():
     brief.add_argument("--copies", type=int, help="about how many are on screen at once")
     brief.add_argument("--moving", help="parts that move by themselves, e.g. 'wheels, rotor'; empty string for none")
     brief.add_argument("--share", choices=["game", "public"], help="stays in this game, or may be sold or given away")
+    brief.add_argument("--nearest", type=float, metavar="STUDS", help="how close a player can get; 0 for can touch it")
+    brief.add_argument("--thin", choices=["yes", "no"], help="has thin bars, railings, wires or open framework")
+    brief.add_argument("--holes-waiver", metavar="REASON", help="why see-through patches in this asset are acceptable")
+    brief.add_argument("--detail-waiver", metavar="REASON", help="why a detail warning on this asset is acceptable")
     brief.add_argument("--assumed", help="answers you chose because the user said to decide; shown in the final report")
     brief.add_argument("--budget-waiver", metavar="REASON", help="why this asset may exceed its role's triangle budget")
     brief.set_defaults(run=cmd_brief)
@@ -1535,11 +1760,18 @@ def main():
     ver.add_argument("--check", action="append", choices=rules.STUDIO_CHECKS)
     ver.set_defaults(run=cmd_verify)
 
-    verdict = sub.add_parser("verdict", help="record how the current scan build looks, for calibration")
+    verdict = sub.add_parser("verdict", help="record what the user said about the current build's review sheets")
     verdict.add_argument("name")
     verdict.add_argument("--looks", choices=["good", "bad"], required=True)
+    verdict.add_argument("--said", help="the user's own words after looking at the review sheets; required")
     verdict.add_argument("--note")
     verdict.set_defaults(run=cmd_verdict)
+
+    fnd = sub.add_parser("findings", help="record what you see wrong in the review sheets, before asking the user")
+    fnd.add_argument("name")
+    fnd.add_argument("--defect", action="append", metavar='"where: what"', help="one defect you can see; repeatable")
+    fnd.add_argument("--none", action="store_true", help="every panel is sound")
+    fnd.set_defaults(run=cmd_findings)
 
     cal = sub.add_parser("calibrate", help="surface-error scores beside verdicts: are the gate's lines right?")
     cal.set_defaults(run=cmd_calibrate)

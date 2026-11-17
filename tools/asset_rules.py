@@ -37,6 +37,21 @@ ROLE_BUDGETS = {
 }
 # Roles a player is close enough to that a reduced scan reads as broken.
 CLOSE_ROLES = ("held", "interactive")
+# `scenery` has the loosest rules because nobody gets near it. Closer than this and it is
+# decor or cover. The radio tower was briefed as scenery and placed beside a fortress wall.
+SCENERY_MIN_STUDS = 100
+
+# Holes: the share of the model's pixels that show a back face, worst view of the audit.
+# Roblox draws one side of a face, so each of those pixels is see-through in game.
+# Six builds: five that looked right score 0.01-0.82; the radio tower, whose every strut
+# was torn, scores 1.56-4.25 depending on the view. Starting lines, like the budgets.
+HOLES_WARN = 1.0
+HOLES_FAIL = 1.5
+# Close-ups frame at most this many studs, so a 0.4-stud bar is about 16 pixels wide.
+CLOSEUP_STUDS = 16
+
+# Replies that do not say the user looked at anything. `verdict --said` refuses them.
+NOT_A_VERDICT = ("continue", "ok", "okay", "yes", "y", "go", "go ahead", "proceed", "sure", "next", "do it", "fine", "k")
 
 HEIGHT_TOLERANCE = 0.05  # export height against the brief
 PIVOT_TOLERANCE = 0.03  # of the largest dimension
@@ -57,8 +72,7 @@ CALIBRATION_SEED = [
 # One message, all at once, skipping anything the request already answers. After that the
 # run is hands-off. `asset_generate.py questions` prints this list for any model to use.
 INTAKE = [
-    ("purpose", "What is it, in one sentence?", "--purpose"),
-    ("where", "Which map or place does it go in?", "--where"),
+    ("purpose", "What is it, in one sentence, and which map or place does it go in?", "--purpose, --where"),
     (
         "use",
         "What does a player do with it? (a) walk past it  (b) take cover behind it  (c) drive or ride it  "
@@ -67,6 +81,16 @@ INTAKE = [
         "d: --role held --kind weapon | e: --role scenery --kind prop | f: --role interactive --kind prop",
     ),
     ("size", "How big is it? Studs, or a comparison such as 'as tall as a player' (a player is about 5.5 studs).", "--height, and --length for a gun"),
+    (
+        "nearest",
+        "How close can a player get to it? 'Can touch it', or the nearest distance in studs.",
+        f"--nearest (0 for can touch it); under {SCENERY_MIN_STUDS} studs it cannot be scenery, whatever it is called",
+    ),
+    (
+        "thin",
+        "Is any of it thin bars, railings, wires, antennas, mesh or open framework you can see through?",
+        "--thin yes|no; yes means the clean route, because a generated mesh tears on anything thin",
+    ),
     ("reference", "Do you have a picture of it (give the file), or should one be generated? Realistic, stylized or blocky?", "generate <image>, or reference --style"),
     ("copies", "About how many will be on screen at once?", "--copies; many copies of a heavy model is what slows phones down"),
     ("moving", "Does any part need to move by itself, such as wheels, a door or a rotor?", "--moving; moving parts mean the clean route, built as separate pieces"),
@@ -76,11 +100,15 @@ INTAKE = [
         "Gun: which existing weapon should it behave like, and what is it called in game?",
         "--game-name; seats become mounts; the existing weapon is the kit base in tools/build_weapons.luau",
     ),
-    ("share", "Will it stay in this game, or might you sell it or give it away?", "--share game|public; public needs the rights note in provenance.json filled in"),
-    ("stop", "Should I stop at the finished local build for your approval (the default), or also upload once you approve the pictures?", "nothing is ever uploaded without approval"),
+    (
+        "share",
+        "Will it stay in this game, or might you sell it or give it away? And should I stop at the finished local "
+        "build (the default), or also upload once you have looked at the pictures and approved them?",
+        "--share game|public; public needs the rights note in provenance.json filled in. Nothing is uploaded without approval",
+    ),
 ]
 # Answers a brief must hold before anything is generated.
-INTAKE_REQUIRED = ("purpose", "role", "kind", "heightStuds", "where", "copies", "share")
+INTAKE_REQUIRED = ("purpose", "role", "kind", "heightStuds", "where", "copies", "share", "nearestStuds", "thin")
 
 
 def intake_text():
@@ -394,7 +422,8 @@ def write_provenance(pkg, name, seed=None):
     Needed the day an asset is sold or given away, and not recoverable later: trials/ is
     not committed. Returns the record, or None when there is no source to describe."""
     sources = [p for p in glob.glob(os.path.join(pkg, "source", "*.glb")) if os.path.isfile(p)]
-    if not sources:
+    builder = os.path.join(ROOT, "tools", "blender", "build_" + name.replace("-", "_") + ".py")
+    if not sources and not os.path.isfile(builder):
         return None
     path = os.path.join(pkg, "provenance.json")
     previous = read_json(path) if os.path.isfile(path) else {}
@@ -411,6 +440,15 @@ def write_provenance(pkg, name, seed=None):
         reference.update({k: previous["reference"].get(k) for k in ("origin", "madeWith", "prompt")})
     record["reference"] = reference
 
+    if not sources:
+        # Built from shapes with no generated mesh at all: the builder script is the origin.
+        record["mesh"] = {"file": None, "sha256": None, "generator": None, "builder": rel(builder)}
+        record["rights"] = previous.get("rights") or {
+            "note": "Fill in before selling or giving this asset away: whose work the reference is.",
+            "checkedOn": None,
+        }
+        write_json(path, record)
+        return record
     source = sources[0]
     mesh = {"file": rel(source), "sha256": sha256(source)}
     generation = None
@@ -493,7 +531,8 @@ def calibration_rows():
         looks = None
         if os.path.isfile(verdict_path(pkg)):
             verdict = read_json(verdict_path(pkg))
-            if verdict.get("exportSha256") == data.get("exportSha256"):
+            # A verdict without the user's words was a model's guess; it does not move the lines.
+            if verdict.get("exportSha256") == data.get("exportSha256") and verdict.get("said"):
                 looks = verdict.get("looks")
         rows.append((os.path.basename(pkg), detail["worstSurfaceError"], looks))
     return sorted(rows, key=lambda row: row[1])

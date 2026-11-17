@@ -23,12 +23,13 @@ gates are `tools/check_asset_registry.luau` and `tools/check_large_files.luau`, 
 | Step | Command | What it settles |
 | --- | --- | --- |
 | 0. Ask | `asset_generate.py questions` | the model asks the user ten questions in one message; the only check-in before the final report |
-| 1. Brief | `asset_generate.py brief <name> --purpose --role --kind --height --where --copies --share` | the answers, and from them role, size, route and triangle budget, before any GPU time |
+| 1. Brief | `asset_generate.py brief <name> --purpose --role --kind --height --where --copies --share --nearest --thin` | the answers, and from them role, size, route and triangle budget, before any GPU time |
 | 2. Reference | `prompt` (Midjourney) or `reference` (built in) | one subject, white background, nothing cropped; checked on intake |
 | 3. Mesh | `generate`, then `pick` | one candidate on the clean route, three on scan; `pick` writes `provenance.json` |
-| 4. Build | `build` | per-mesh cap, role budget, size and pivot against the brief, detail against the source |
-| 5. Approve | look at the review sheets; `verdict --looks good\|bad` for a scan | the eye is the gate for looks |
-| 6. Publish | `publish` (dry run), then `publish --confirm` | uploads once, records the id in `src/shared/AssetRegistry.json` |
+| 4. Build | `build` | per-mesh cap, role budget, size and pivot against the brief, detail against the source, holes |
+| 5. Review | `findings --defect "where: what"` or `--none` | the model reads every close-up and writes down what is wrong, so the user is handed a list, not a hunt |
+| 5b. Approve | show the user that list and the review sheets; `verdict --looks good\|bad --said "<their words>"` | the user's eye is the gate for looks; a model's opinion, or a bare "continue", is refused |
+| 6. Publish | `publish` (dry run), then `publish --confirm` | refuses without a `good` verdict on that exact build, or with a warning that has no written reason; uploads once, records the id in `src/shared/AssetRegistry.json` |
 | 7. Studio | `verify --check loads --check facing ...` | what only Studio shows; the gate lists what is still open |
 
 **Roles and budgets** (total triangles over all meshes; Roblox's 10,000 is per mesh):
@@ -36,6 +37,36 @@ gates are `tools/check_asset_registry.luau` and `tools/check_large_files.luau`, 
 These are starting values, not measurements; the device test in
 [performance/DEVICE_TEST.md](performance/DEVICE_TEST.md) is how they get replaced with measured ones. An asset that has to exceed its budget
 records why: `brief <name> --budget-waiver "<reason>"`.
+
+**Scenery means nobody gets near it.** The brief records how close a player can get
+(`--nearest`, 0 for can touch it). Under 100 studs the `scenery` role is refused; use `decor`
+or `cover`.
+
+**Thin parts go on the clean route.** Bars, railings, wires, antennas and open framework
+(`--thin yes`) are built from shapes. The radio tower is why: its generated mesh had no holes,
+the cut from 299,000 to 59,000 triangles tore every strut, and it was uploaded with every
+check passing.
+
+**Holes are measured, and a warning is not a pass.** The audit counts the share of the model
+that shows a back face, which Roblox draws as see-through. Builds that looked right score up
+to 1.25% in their worst view; the tower scored 8.66%. Over 1.5% fails the build. Over 1%, or a
+detail score over 0.08, blocks `publish` until the brief holds a reason (`--holes-waiver`,
+`--detail-waiver`). These lines rest on seven builds.
+
+**Up close, the warning line is the limit.** For anything a player can get within 100 studs
+of, a detail score over 0.08 fails the build; the looser 0.15 is for distant scenery only.
+
+**A slab under the model is put to the user.** `build` measures whether the bottom slice of
+the model fills far more of the footprint than the slice above it, which is what a copied
+patch of ground looks like (and a plinth). It is listed as a finding: keep it, or cut it.
+
+**The model reviews before the user does.** `findings` with no arguments prints what to look
+for. `verdict` refuses until a written review of that exact build exists, and stores the list
+the user was shown beside their answer. What the checks measured is added automatically.
+
+**Measured and ruled out: texture bleed.** `tools/surface_checks.py` also records how much an
+atlas changes brightness when shrunk. The tower's white specks were suspected to be that and
+were not (0.19%); they were holes with snow behind them. The number is recorded, with no line.
 
 **Asset ids live in the registry, never in a script.** Game code reads
 `require(ReplicatedStorage.Shared.AssetRegistry)["<name>"].assetId`. The gate fails when a
@@ -119,10 +150,9 @@ out over the 10,000-triangle cap, `build` rebuilds with a finer tile grid (up to
 attempts) and records the grid that passed in the brief.
 
 `build` then runs `audit` (also `python tools/asset_generate.py audit <name>` by itself,
-about 90 seconds). It renders the written file from ten sides plus six close-ups, twice:
-textured and brightened, and as a hole map where front faces are grey and back faces
-magenta. Roblox draws a mesh one-sided, so a magenta patch is a spot the game shows
-straight through. Outputs: `review/audit.png` (with the reference alongside),
+about 90 seconds). It renders the written file from ten sides plus close-ups at most 16 studs across, twice:
+textured, brightened and one-sided as Roblox draws it, and as a hole map where front faces
+are grey and back faces magenta. A magenta pixel is a spot the game shows straight through. Outputs: `review/audit.png` (with the reference alongside),
 `review/audit_closeups.png`, single panels in `review/audit/`, and `review/audit.json` with
 the back-face share per view. `--focus x,y,z` adds a close-up at a point of the bounding
 box; `--seed N` audits a candidate before it is picked. The audit finds flaws; it does not
@@ -141,6 +171,13 @@ Every brief carries a `route`. `brief` and `build` print which one the numbers s
 cut. Set it with `asset_generate.py brief <name> --route clean`; `build` then runs
 `tools/blender/build_<name>.py`, the asset's hand-written builder.
 `tools/blender/build_military_wave_runner.py` is the worked example.
+
+A clean build gets the same hole audit, close-up sheets, written review and verdict as a
+scan. It does not need a generated mesh: with no GPU quota, write the builder from the
+reference picture and `build` still runs (the comparison with a generated source is
+information only, and is skipped when there is none). A builder must make sure each closed
+shape faces outward; the first patrol boat build had its whole hull inside out and failed
+the hole check at 53%.
 
 A scan build is also checked against its source by `tools/outline_check.py`, which compares
 flat outlines and nearest-surface depth from six sides and writes `review/detail.png`.

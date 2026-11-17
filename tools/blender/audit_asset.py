@@ -8,15 +8,15 @@ hid a fourth rotor blade and could not say whether two pale rectangles were hole
 
 Each view is rendered twice into --out-dir:
 
-  color_<view>.png   textured, lit from the sky as well as the sun, transparent background.
-  holes_<view>.png   front faces grey, BACK faces magenta. Roblox draws a mesh one-sided, so
-                     any magenta you can see is a place the game shows straight through:
-                     a hole into the hollow inside, a flipped patch, or a sheet with no
-                     reverse side. Cycles draws both sides, so the colour render hides all
-                     three.
+  color_<view>.png   textured, lit from the sky as well as the sun, transparent background,
+                     back faces invisible: one-sided, the way Roblox draws a mesh.
+  holes_<view>.png   front faces grey, BACK faces magenta. Any magenta you can see is a
+                     place the game shows straight through: a hole into the hollow inside,
+                     a flipped patch, or a sheet with no reverse side.
 
 Views: front, back, left, right, top, bottom, four three-quarter views from above, then
-close-ups of three sections along the longest ground axis from both sides. --focus x,y,z
+close-ups of three to six sections along the longest axis from both sides, each at most
+--closeup-studs across. --focus x,y,z
 (fractions of the bounding box, repeatable) adds a close-up pair at a point of your choice.
 
 views.json lists what was rendered. Nothing here judges the asset.
@@ -76,6 +76,33 @@ def hole_material():
     return mat
 
 
+def cull_back_faces(meshes):
+    """Make every back face invisible in the colour pass, as Roblox does.
+
+    Cycles draws both sides, so a missing or flipped face used to render as solid, textured
+    surface: the radio tower's colour views looked whole while every strut was see-through
+    in game. With this, a hole in the colour view is a hole in Roblox."""
+    seen = set()
+    for obj in meshes:
+        for slot in obj.material_slots:
+            mat = slot.material
+            if mat is None or mat.name in seen or not mat.use_nodes:
+                continue
+            seen.add(mat.name)
+            tree = mat.node_tree
+            out = next((n for n in tree.nodes if n.type == "OUTPUT_MATERIAL" and n.is_active_output), None)
+            if out is None or not out.inputs["Surface"].links:
+                continue
+            surface = out.inputs["Surface"].links[0].from_socket
+            mix = tree.nodes.new("ShaderNodeMixShader")
+            geometry = tree.nodes.new("ShaderNodeNewGeometry")
+            clear = tree.nodes.new("ShaderNodeBsdfTransparent")
+            tree.links.new(geometry.outputs["Backfacing"], mix.inputs["Fac"])
+            tree.links.new(surface, mix.inputs[1])
+            tree.links.new(clear.outputs["BSDF"], mix.inputs[2])
+            tree.links.new(mix.outputs["Shader"], out.inputs["Surface"])
+
+
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     ap = argparse.ArgumentParser(prog="audit_asset")
@@ -84,6 +111,8 @@ def main():
     ap.add_argument("--size", type=int, default=640, help="pixels per view")
     ap.add_argument("--zoom", type=float, default=3.0, help="close-up magnification for --focus")
     ap.add_argument("--focus", action="append", default=[], help="x,y,z as fractions of the bounding box")
+    ap.add_argument("--closeup-studs", type=float, default=0.0, help="a close-up frames at most this many studs (0: a third of the model)")
+    ap.add_argument("--height-studs", type=float, default=0.0, help="finished height, for a source that is not in studs yet (0: one unit is one stud)")
     args = ap.parse_args(argv)
 
     out_dir = os.path.abspath(args.out_dir)  # Blender resolves relative render paths against its own directory
@@ -123,6 +152,8 @@ def main():
     sun.rotation_euler = (0.8, 0.2, 0.6)
     sun.data.energy = 2.0
     holes = hole_material()
+    cull_back_faces(meshes)
+    sc.cycles.transparent_max_bounces = 32  # a lattice stacks many culled faces along one ray
 
     cam = bpy.data.objects.new("audit", bpy.data.cameras.new("audit"))
     cam.data.type = "ORTHO"
@@ -167,16 +198,28 @@ def main():
     ):
         shoot(name, "overview", direction, mid)
 
-    # Close-ups: three sections along the longer ground axis, looked at from each side.
+    # Close-ups: sections along the longest axis, looked at from each side. They used to be
+    # framed on the model's height, so a 60-stud tower got six more pictures of the whole
+    # tower with struts three pixels wide. Now a frame is at most --closeup-studs across.
     along = 0 if span.x >= span.y else 1
     across = 1 - along
-    for index, fraction in enumerate((1 / 6, 1 / 2, 5 / 6)):
+    units_per_stud = span.z / args.height_studs if args.height_studs > 0 else 1.0
+    frame = max(span[along] / 3, span.z) * 1.2
+    tall = False
+    if args.closeup_studs > 0 and frame > args.closeup_studs * units_per_stud:
+        frame = args.closeup_studs * units_per_stud
+        tall = span.z > max(span.x, span.y)
+    walk = 2 if tall else along  # step up a tower, along a wall
+    stations = min(6, max(3, int(span[walk] / frame + 0.999)))
+    for index in range(stations):
         target = mid.copy()
-        target[along] = lo[along] + span[along] * fraction
+        target[walk] = lo[walk] + span[walk] * (index + 0.5) / stations
         for side, sign in (("a", -1), ("b", 1)):
             direction = [0.0, 0.0, 0.45]
             direction[across] = sign
-            shoot("section-%d%s" % (index + 1, side), "closeup", direction, target, max(span[along] / 3, span.z) * 1.2)
+            if tall:
+                direction[along] = 0.5 * sign  # off the axis, so the near and far faces do not line up
+            shoot("section-%d%s" % (index + 1, side), "closeup", direction, target, frame)
 
     for index, text in enumerate(args.focus):
         fx, fy, fz = [float(v) for v in text.split(",")]

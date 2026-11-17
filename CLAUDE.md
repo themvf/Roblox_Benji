@@ -44,6 +44,11 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - Never type an uploaded asset id into a script. `publish` writes it to `src/shared/AssetRegistry.json`
   and code reads `require(ReplicatedStorage.Shared.AssetRegistry)[name].assetId`.
 - `publish --confirm` uploads, so it needs the user's approval of the review sheets first.
+  First read every close-up yourself and record the defects (`findings <name>`); the user gets your list.
+  Show them `review/audit.png` and `review/audit_closeups.png`, ask whether it looks right up close, and
+  record their own words with `verdict <name> --looks good|bad --said "..."`. "Continue" is not approval.
+- Thin bars, railings, antennas or open framework (`--thin yes`) are built from shapes, not scanned, and
+  nothing a player can get within 100 studs of is `scenery`. A radio tower passed every gate with torn struts.
 - Gates: `lune run tools/check_asset_registry.luau` (hashes, stale uploads, budgets, template settings,
   ids typed into `src/`) and `lune run tools/check_large_files.luau` (nothing over 5 MB without a reason
   in `tools/large_files.json`). Both run in CI.
