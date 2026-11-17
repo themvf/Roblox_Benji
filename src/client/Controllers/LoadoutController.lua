@@ -11,9 +11,12 @@ local UserInputService = game:GetService("UserInputService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local AlterEgos = require(ReplicatedStorage.Shared.AlterEgos)
 local Celebrations = require(ReplicatedStorage.Shared.Celebrations)
+local CharacterSkins = require(ReplicatedStorage.Shared.CharacterSkins.Definitions)
+local CharacterSkinVisuals = require(ReplicatedStorage.Shared.CharacterSkins.Visuals)
 local Skins = require(ReplicatedStorage.Shared.Skins)
 local WeaponPreview = require(ReplicatedStorage.Shared.WeaponPreview)
 local Weapons = require(ReplicatedStorage.Shared.Weapons)
+local Theme = require(script.Parent.Parent.UI.Theme)
 
 local LoadoutController = Knit.CreateController({ Name = "LoadoutController" })
 
@@ -25,9 +28,10 @@ local TEXT = Color3.fromRGB(245, 245, 250)
 local MUTED = Color3.fromRGB(160, 165, 180)
 local RED = Color3.fromRGB(255, 105, 105)
 local LOADOUT_SLOTS = { "Primary", "Secondary", "Melee", "Utility", "AlterEgo" }
-local CUSTOMIZE_CATEGORIES = { "Celebration", "Skins" }
+local CUSTOMIZE_CATEGORIES = { "Celebration", "Skins", "Character" }
 local NONE = "__NONE__"
 local DEFAULT_SKIN = "__DEFAULT__"
+local DEFAULT_CHARACTER = "__DEFAULT_CHARACTER__"
 
 local SLOT_COLORS = {
     Primary = Color3.fromRGB(80, 230, 120),
@@ -37,6 +41,7 @@ local SLOT_COLORS = {
     AlterEgo = Color3.fromRGB(255, 120, 40),
     Celebration = ACCENT,
     Skins = Color3.fromRGB(90, 205, 220),
+    Character = Theme.Color.Fly,
 }
 
 local TIER_COLORS = {
@@ -407,6 +412,51 @@ function LoadoutController:SetPreviewWeapon(weaponName, skinId)
     self.PreviewCamera = camera
     self.PreviewCenter = center
     self.PreviewDistance = distance
+    self.PreviewOrbitAngle = 0
+end
+
+function LoadoutController:SetPreviewCharacter(skinId)
+    for _, child in self.Viewport:GetChildren() do
+        if not child:IsA("TextLabel") then
+            child:Destroy()
+        end
+    end
+    self.PreviewModel = nil
+    self.PreviewGlyph.Visible = false
+    local character = Players.LocalPlayer.Character
+    if not character then
+        self:SetTextPreview("CHARACTER")
+        return
+    end
+    local wasArchivable = character.Archivable
+    character.Archivable = true
+    local model = character:Clone()
+    character.Archivable = wasArchivable
+    if not model then
+        self:SetTextPreview("CHARACTER")
+        return
+    end
+    for _, child in model:GetDescendants() do
+        if child:IsA("Script") or child:IsA("LocalScript") or child:IsA("Tool") then
+            child:Destroy()
+        elseif child:IsA("BasePart") then
+            child.Anchored = true
+        end
+    end
+    model:PivotTo(CFrame.new(0, 3, 0))
+    model.Parent = self.Viewport
+    if skinId and not CharacterSkinVisuals.apply(model, skinId) then
+        model:Destroy()
+        self:SetTextPreview("R15 REQUIRED")
+        return
+    end
+    local camera, center, distance = frameWeapon(self.Viewport, model)
+    self.PreviewModel = model
+    self.PreviewCamera = camera
+    self.PreviewCenter = center
+    self.PreviewDistance = distance
+    self.PreviewOrbitAngle = -math.pi / 2
+    camera.CFrame = CFrame.lookAt(center + Vector3.new(0, distance * 0.1, -distance), center)
 end
 
 function LoadoutController:SetTextPreview(glyph)
@@ -481,6 +531,12 @@ function LoadoutController:ShowActivePreview()
                 and "Previewable draft. Unlock requirement: asset setup must be completed."
             or (selected and selected.Concept or "Original weapon appearance.")
         self:SetPreviewWeapon(self.ActiveSkinWeapon, id ~= DEFAULT_SKIN and id or nil)
+    elseif category == "Character" then
+        local definition = CharacterSkins[id]
+        self.NameLabel.Text = definition and definition.name:upper() or "DEFAULT AVATAR"
+        self.DetailLabel.Text = definition and (definition.description .. "\nAppearance only; weapons remain separate.")
+            or "Use your usual Roblox avatar in matches."
+        self:SetPreviewCharacter(definition and id or nil)
     end
     self:RefreshEquipButton()
 end
@@ -499,6 +555,9 @@ function LoadoutController:IsEquipped(category, id)
     if category == "Skins" then
         local equipped = self.EquippedSkins[self.ActiveSkinWeapon]
         return (id == DEFAULT_SKIN and equipped == nil) or equipped == id
+    end
+    if category == "Character" then
+        return (id == DEFAULT_CHARACTER and not self.EquippedCharacterSkin) or self.EquippedCharacterSkin == id
     end
     return false
 end
@@ -641,6 +700,22 @@ function LoadoutController:RenderCards()
                 Requirement = not skin.Ready and "COMING SOON" or nil,
             })
         end
+    elseif category == "Character" then
+        table.insert(items, { Id = DEFAULT_CHARACTER, Name = "DEFAULT AVATAR", Glyph = "AVATAR", Color = MUTED })
+        local ids = {}
+        for id in CharacterSkins do
+            table.insert(ids, id)
+        end
+        table.sort(ids)
+        for _, id in ids do
+            local definition = CharacterSkins[id]
+            table.insert(items, {
+                Id = id,
+                Name = definition.name:upper(),
+                Glyph = id == "SciFiSentry" and "SENTRY" or "OPERATOR",
+                Color = SLOT_COLORS.Character,
+            })
+        end
     end
 
     for index, item in items do
@@ -714,6 +789,8 @@ function LoadoutController:SelectCategory(category)
         self:RenderSkinWeapons()
         self.ActiveItem = self.ActiveSkinWeapon and (self.EquippedSkins[self.ActiveSkinWeapon] or DEFAULT_SKIN) or nil
         self:LoadSkins(self.ActiveSkinWeapon)
+    elseif category == "Character" then
+        self.ActiveItem = self.EquippedCharacterSkin or DEFAULT_CHARACTER
     end
     self:Render()
 end
@@ -823,6 +900,18 @@ function LoadoutController:EquipActive()
                 end
                 finish(ok, reason)
             end)
+    elseif category == "Character" then
+        Knit.GetService("CharacterSkinService")
+            :Select(id == DEFAULT_CHARACTER and "" or id)
+            :andThen(function(ok, reason)
+                if ok then
+                    self.EquippedCharacterSkin = id == DEFAULT_CHARACTER and nil or id
+                end
+                finish(ok, reason)
+            end)
+            :catch(function()
+                finish(false, "request_failed")
+            end)
     end
 end
 
@@ -882,6 +971,13 @@ function LoadoutController:Open(section)
             self:Render()
         end
     end)
+    Knit.GetService("CharacterSkinService"):GetOptions():andThen(function(_options, current)
+        self.EquippedCharacterSkin = current ~= "" and current or nil
+        if self.Gui.Enabled and self.ActiveCategory == "Character" then
+            self.ActiveItem = self.EquippedCharacterSkin or DEFAULT_CHARACTER
+            self:Render()
+        end
+    end)
 end
 
 function LoadoutController:Close()
@@ -906,6 +1002,7 @@ function LoadoutController:KnitStart()
     self.Options = { Primary = {}, Secondary = {}, Melee = {}, Utility = {} }
     self.Equipped = { AlterEgo = AlterEgos.DEFAULT }
     self.EquippedSkins = {}
+    self.EquippedCharacterSkin = nil
     self.SkinOptions = {}
     self.Favorites = { Celebrations.DEFAULT_ID }
     self:BuildGui()
@@ -917,16 +1014,20 @@ function LoadoutController:KnitStart()
         end
     end)
 
-    local angle = 0
     RunService.RenderStepped:Connect(function(delta)
         if not self.Gui.Enabled or not self.PreviewModel or Players.LocalPlayer:GetAttribute("ReducedEffects") then
             return
         end
-        angle += delta * 0.65
+        self.PreviewOrbitAngle = (self.PreviewOrbitAngle or 0) + delta * 0.65
         local distance = self.PreviewDistance or 8
         local center = self.PreviewCenter
         self.PreviewCamera.CFrame = CFrame.lookAt(
-            center + Vector3.new(math.cos(angle) * distance, distance * 0.2, math.sin(angle) * distance),
+            center
+                + Vector3.new(
+                    math.cos(self.PreviewOrbitAngle) * distance,
+                    distance * 0.2,
+                    math.sin(self.PreviewOrbitAngle) * distance
+                ),
             center
         )
     end)

@@ -1,6 +1,8 @@
 # Lobby navigation and preparation — design packet
 
-Status: G1 In progress · Owner: Codex · Updated: 2026-09-20
+Status: G1 In progress · Owner: Codex · Updated: 2026-10-11
+
+The 2026-11-09 [lobby and screens fix specification](LOBBY_AND_SCREENS_FIX_SPEC.md) records the current Studio baseline, implementation order, responsive states, kit dependency, and acceptance tests for the professionalism pass. Its later observations supersede this packet's older unverified arrival assumptions; retain the existing queue and loadout decisions below.
 
 ## 1. Identity and intent
 
@@ -40,7 +42,7 @@ Lobby ── Join(mode, team) ──> Queued ── roster ready ──> Committ
 
 | Frame | Player view / visual link | Player question | Decision/action | Feedback and next state | Shared component |
 | --- | --- | --- | --- | --- | --- |
-| 1 Arrival | **Implemented, capture pending:** persistent bottom navigation | What can I do? | Pick PLAY, LOADOUT, CUSTOMIZE, or PROFILE | Selected surface opens | Lobby navigation |
+| 1 Arrival | **Source prototype, capture pending:** [arrival concept](arrival-concept.svg); PLAY gate and three destination signs | What can I do? | Pick PLAY, LOADOUT, CUSTOMIZE, or PROFILE, or walk to a destination | Selected surface opens; the gate leads to mode pads | Lobby navigation and wayfinding |
 | 2 Prepare | **Implemented, capture pending:** five equipped slots | What am I bringing? | Select one slot | One item grid and preview appear | Loadout strip |
 | 3 Equip | **Implemented, capture pending:** card + preview | Is this the item I want? | Preview, then EQUIP NOW | Card and strip say EQUIPPED; server state updates | Item card / service mutation |
 | 4 Queue | **Implemented, capture pending:** Play drawer | Which mode and team? | Join Red or Blue | SEARCHING banner, counts, and current loadout remain visible | Queue card |
@@ -101,3 +103,38 @@ Dependencies / unresolved choices: progression ownership/unlock metadata; a redu
 Changes to shared consumers needing regression: physical pad queueing, weapon grants, skin equips, celebration favorites, Alter Ego selection, respawn equipment, and match cleanup.
 
 Decision log: 2026-09-20 — adopted “Menus are for doing; the lobby world is for playing,” separated Loadout/Customize, made queue menu and pads share one server queue, and treated `InMatch` as the current authoritative commit boundary.
+
+## 10. Studio-editable lobby source · 2026-10-12
+
+**Decided:** the user will edit the lobby with the same Build → Play → Stop loop as authored maps. [Editing walkthrough](EDITING.md) names the editable source and save/convert steps. The existing rectangular PLAY hall seeds the first source; no visual reset is required.
+
+The [source model handoff](../../../assets/environment/source/Lobby.HANDOFF.md) records local evidence and the first unverified Studio step.
+
+**Implemented in source:** `LobbyAuthoring` is the shared marker reader for live Workspace testing and the saved project copy. Geometry comes from the model's `Geometry` folder. `Authoring` markers control spawn, queue-pad, station, sign and light transforms; signs and lights also accept editable attributes and colors. Queue kind, team size and mode rules stay in the existing server code. The converter validates the source before updating the playable copy. A broken Studio edit falls back to the last validated lobby. Rojo maps the validated model through the existing `BakedMaps` folder.
+
+| ID | Requirement | Evidence / status |
+| --- | --- | --- |
+| LOB-EDIT-01 | Move a pad/sign/spawn in Studio; next Play reflects it without a file step | Shared reader and source checks pass; Studio session pending |
+| LOB-EDIT-02 | Save source and convert; standalone build uses the same positions and geometry | Converter, source freshness check and Rojo build pass; Studio capture pending |
+| LOB-EDIT-03 | Invalid marker never replaces the last playable lobby | Off-floor/missing marker checks implemented; runtime fallback test pending |
+| LOB-EDIT-04 | Queue behavior remains server-owned and unchanged when a marker moves | Mode/team-size preservation check passes; multiplayer pad regression pending |
+
+G1 is ready for user review. G2 remains in progress until a Studio edit, Stop/Play cycle and saved-copy test are observed. The source model is not proof of the actual in-game appearance.
+
+## 9. Arrival redesign slice · 2026-10-11
+
+The user authorized a RIVALS-inspired entry redesign. RIVALS' public game description confirms physical duel pads; its exact current lobby framing, camera and UI have not been captured. This slice adopts the clear destination and physical join pattern, using Arena's Convergence gate and Alter Ego bay as its own identity. [Arrival concept](arrival-concept.svg) is a source-based plan, **not an in-engine screenshot**.
+
+**Implemented in source:** all five lobby spawns face one rectangular PLAY hall. Distinct zones inside it offer Duel 1v1, Duel 2v2, Convergence, Team Deathmatch 5v5, and Practice. ARMORY and ALTER EGO remain side bays. Two non-colliding path lights lead from the spawn row to PLAY. The menu and physical join pads share QueueService; its TDM entry offers Red/Blue join and current counts. The TDM pad requires five humans per team and routes to the map-independent TDMService; Snow Fortress is currently the sole public arena for both Convergence and TDM. [TDM mode and map packet](../team-deathmatch/design-packet.md) records rules and acceptance.
+
+**Acceptance to collect:**
+
+| ID | Scenario | Threshold / evidence | Status |
+| --- | --- | --- | --- |
+| ARR-01 | Fresh spawn at each of five spawn points | PLAY is readable and the route to the gate is obvious without moving the camera; comparable captures from each spawn | Source prototype; Studio captures pending |
+| ARR-02 | Open PLAY and enter Convergence or Duel by menu and pad | Same team/count/queue state and explicit Leave behavior through both routes, with two clients | Existing service path; runtime regression pending |
+| ARR-03 | Small notched phone, iPad Split View, desktop, controller | PLAY remains reachable; no navigation/hotbar overlap, clipped drawer action, or controller focus trap | Source layout updated; device verification pending |
+| ARR-04 | Queue, edit loadout, commit, return to lobby | Queue persists while editing; committed choice spawns; wayfinding and navigation restore once | Runtime verification pending |
+| ARR-05 | Inspect and join TDM from PLAY hall or menu | 5v5 Red/Blue choices and counts are visible; ten players launch an approved TDM map; leaving a queue works | Source route and first map validated; ten-client Studio test pending |
+
+Source checks establish structure, not in-engine visibility or usability. Next action: run a fresh Studio session, capture ARR-01 on every spawn and ARR-03 on target devices, then run ARR-05 with ten clients and correct any blocked sightline or queue fault. Record the place revision, viewport, device and client setup with those captures.

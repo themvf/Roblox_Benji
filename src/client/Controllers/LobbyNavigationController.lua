@@ -6,16 +6,35 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Lore = require(ReplicatedStorage.Shared.Lore)
+local Screen = require(script.Parent.Parent.UI.Screen)
+local Theme = require(script.Parent.Parent.UI.Theme)
 
 local LobbyNavigationController = Knit.CreateController({ Name = "LobbyNavigationController" })
 
-local PANEL = Color3.fromRGB(28, 30, 38)
-local PANEL_LIGHT = Color3.fromRGB(44, 47, 58)
-local ACCENT = Color3.fromRGB(255, 200, 70)
-local TEXT = Color3.fromRGB(245, 245, 250)
-local MUTED = Color3.fromRGB(160, 165, 180)
-local RED = Color3.fromRGB(230, 85, 85)
-local BLUE = Color3.fromRGB(75, 140, 255)
+local PANEL = Theme.Color.PanelRaised
+local PANEL_LIGHT = Theme.Color.PanelHigh
+local ACCENT = Theme.Color.Accent
+local TEXT = Theme.Color.Text
+local MUTED = Theme.Color.TextMuted
+local RED = Theme.team("Red")
+local BLUE = Theme.team("Blue")
+
+local function textSize(size)
+    local step
+    if size >= 26 then
+        step = Theme.Type.Display
+    elseif size >= 20 then
+        step = Theme.Type.Title
+    elseif size >= 15 then
+        step = Theme.Type.Body
+    else
+        step = Theme.Type.Label
+    end
+    -- The drawer uses proportional sizing rather than UIScale, so convert the
+    -- theme's design size to the same physical size as a scaled panel.
+    return math.max(Theme.Type.Label, math.floor(Theme.textSize(step) * Screen.get().Scale + 0.5))
+end
 
 local LOADOUT_SLOTS = { "Primary", "Secondary", "Melee", "Utility", "AlterEgo" }
 local PROFILE_STATS = {
@@ -48,7 +67,8 @@ local function label(parent, text, size, color, font)
     local ui = Instance.new("TextLabel")
     ui.BackgroundTransparency = 1
     ui.Text = text
-    ui.TextSize = size
+    ui.TextSize = textSize(size)
+    ui:SetAttribute("DesignTextSize", size)
     ui.TextColor3 = color or TEXT
     ui.Font = font or Enum.Font.GothamBold
     ui.TextXAlignment = Enum.TextXAlignment.Left
@@ -62,7 +82,8 @@ local function button(parent, text, color)
     ui.BackgroundColor3 = color or PANEL_LIGHT
     ui.Text = text
     ui.TextColor3 = TEXT
-    ui.TextSize = 16
+    ui.TextSize = textSize(16)
+    ui:SetAttribute("DesignTextSize", 16)
     ui.Font = Enum.Font.GothamBold
     ui.Selectable = true
     ui.Parent = parent
@@ -86,11 +107,7 @@ local function clearContent(parent)
 end
 
 function LobbyNavigationController:BuildGui()
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "LobbyNavigationGui"
-    gui.ResetOnSpawn = false
-    gui.IgnoreGuiInset = true
-    gui.DisplayOrder = 30
+    local gui = Screen.newScreenGui("LobbyNavigationGui", Screen.Layers.Lobby)
     gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
     self.Gui = gui
 
@@ -99,10 +116,11 @@ function LobbyNavigationController:BuildGui()
     nav.Position = UDim2.new(0.5, 0, 1, -18)
     nav.Size = UDim2.fromOffset(600, 64)
     nav.BackgroundColor3 = PANEL
-    nav.BackgroundTransparency = 0.08
+    nav.BackgroundTransparency = Theme.Transparency.Panel
     nav.Parent = gui
     corner(nav, 14)
-    outline(nav, Color3.fromRGB(70, 74, 88), 1)
+    outline(nav, Theme.Color.PanelSelected, 1)
+    Screen.autoScale(nav)
     local padding = Instance.new("UIPadding")
     padding.PaddingLeft = UDim.new(0, 8)
     padding.PaddingRight = UDim.new(0, 8)
@@ -146,7 +164,7 @@ function LobbyNavigationController:BuildGui()
     for index, action in actions do
         local navButton = button(nav, action[1], index == 1 and ACCENT or PANEL_LIGHT)
         navButton.Size = UDim2.fromOffset(138, 48)
-        navButton.TextColor3 = index == 1 and PANEL or TEXT
+        navButton.TextColor3 = index == 1 and Theme.Color.Panel or TEXT
         navButton.LayoutOrder = index
         navButton.Activated:Connect(action[2])
         self.NavButtons[action[1]] = navButton
@@ -156,11 +174,13 @@ function LobbyNavigationController:BuildGui()
     queueBadge.AnchorPoint = Vector2.new(0.5, 1)
     queueBadge.Position = UDim2.new(0.5, 0, 1, -86)
     queueBadge.Size = UDim2.fromOffset(560, 28)
-    queueBadge.BackgroundTransparency = 0.12
+    queueBadge.BackgroundTransparency = Theme.Transparency.Panel
     queueBadge.BackgroundColor3 = PANEL
     queueBadge.TextXAlignment = Enum.TextXAlignment.Center
+    queueBadge.TextSize = Theme.textSize(Theme.Type.Label)
     queueBadge.Visible = false
     corner(queueBadge, 8)
+    Screen.autoScale(queueBadge)
     self.QueueBadge = queueBadge
 
     local drawer = Instance.new("Frame")
@@ -171,10 +191,8 @@ function LobbyNavigationController:BuildGui()
     drawer.Visible = false
     drawer.Parent = gui
     corner(drawer, 16)
-    outline(drawer, Color3.fromRGB(75, 79, 94), 2)
-    local constraint = Instance.new("UISizeConstraint")
-    constraint.MaxSize = Vector2.new(820, 650)
-    constraint.Parent = drawer
+    outline(drawer, Theme.Color.PanelSelected, 2)
+    self.DrawerConstraint = Screen.fitWithin(drawer, 0.92, 0.88)
     self.Drawer = drawer
 
     local drawerTitle = label(drawer, "PLAY", 30, ACCENT, Enum.Font.GothamBlack)
@@ -201,29 +219,45 @@ function LobbyNavigationController:BuildGui()
     content.Parent = drawer
     self.Content = content
 
-    self:ApplyResponsiveLayout()
-    workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
-        self:ApplyResponsiveLayout()
+    Screen.onChange(function(state)
+        self:ApplyResponsiveLayout(state)
     end)
 end
 
-function LobbyNavigationController:ApplyResponsiveLayout()
-    local width = workspace.CurrentCamera.ViewportSize.X
-    if width < 680 then
-        self.Nav.Size = UDim2.new(1, -16, 0, 58)
-        for _, navButton in self.NavButtons do
-            navButton.Size = UDim2.new(0.25, -10, 0, 42)
-            navButton.TextSize = 12
+function LobbyNavigationController:ApplyResponsiveLayout(state)
+    for _, descendant in self.Gui:GetDescendants() do
+        local designSize = descendant:GetAttribute("DesignTextSize")
+        if designSize then
+            descendant.TextSize = textSize(designSize)
         end
-        self.Drawer.Size = UDim2.fromScale(0.94, 0.74)
+    end
+    local buttonHeight = state.Touch and math.ceil(Screen.tapSize(48) / state.Scale) or 48
+    self.Nav.Size = UDim2.fromOffset(600, buttonHeight + 16)
+    for name, navButton in self.NavButtons do
+        navButton.Size = UDim2.fromOffset(name == "PLAY" and 160 or 132, buttonHeight)
+        navButton.TextSize = Theme.textSize(state.Touch and Theme.Type.Label or Theme.Type.Body)
+    end
+    self.QueueBadge.TextSize = Theme.textSize(Theme.Type.Label)
+    self.DrawerConstraint.MaxSize =
+        Vector2.new(math.min(820, state.Viewport.X * 0.92), math.min(650, state.Viewport.Y * 0.88))
+
+    if state.Touch then
+        -- The touch hotbar and movement controls own the bottom edge in the lobby too.
+        self.Nav.AnchorPoint = Vector2.new(1, 0)
+        self.Nav.Position = UDim2.new(1, -state.Insets.Right, 0, state.Insets.Top + 4)
+        self.QueueBadge.AnchorPoint = Vector2.new(1, 0)
+        self.QueueBadge.Position =
+            UDim2.new(1, -state.Insets.Right, 0, state.Insets.Top + (buttonHeight + 16) * state.Scale + 12)
+        self.Drawer.Size = UDim2.fromScale(0.94, 0.82)
     else
-        self.Nav.Size = UDim2.fromOffset(600, 64)
-        for _, navButton in self.NavButtons do
-            navButton.Size = UDim2.fromOffset(138, 48)
-            navButton.TextSize = 16
-        end
+        self.Nav.AnchorPoint = Vector2.new(0.5, 1)
+        -- Reserve the bottom centre for Roblox's backpack hotbar.
+        self.Nav.Position = UDim2.new(0.5, 0, 1, -state.Insets.Bottom - 110)
+        self.QueueBadge.AnchorPoint = Vector2.new(0.5, 1)
+        self.QueueBadge.Position = UDim2.new(0.5, 0, 1, -state.Insets.Bottom - 178)
         self.Drawer.Size = UDim2.fromScale(0.76, 0.7)
     end
+    self:RefreshQueueBadge()
 end
 
 function LobbyNavigationController:OpenEditor(section)
@@ -246,7 +280,7 @@ end
 function LobbyNavigationController:CloseDrawer()
     self.Drawer.Visible = false
     self.ActiveDrawer = nil
-    GuiService.SelectedObject = nil
+    GuiService.SelectedObject = Screen.get().Class == "Console" and self.Nav.Visible and self.NavButtons.PLAY or nil
 end
 
 function LobbyNavigationController:AddLoadoutStrip(parent, y)
@@ -296,19 +330,11 @@ function LobbyNavigationController:RenderPlay()
     end
     clearContent(self.Content)
     self.DrawerTitle.Text = "PLAY"
-    self:AddLoadoutStrip(self.Content, 0)
-
-    local edit = button(self.Content, "EDIT LOADOUT", PANEL_LIGHT)
-    edit.Position = UDim2.fromOffset(0, 100)
-    edit.Size = UDim2.fromOffset(170, 42)
-    edit.Activated:Connect(function()
-        self:OpenEditor("Loadout")
-    end)
 
     local queuedMode = Players.LocalPlayer:GetAttribute("QueuedMode")
     local queuedTeam = Players.LocalPlayer:GetAttribute("QueuedTeam")
     local queueState = Players.LocalPlayer:GetAttribute("QueueState")
-    local y = 154
+    local y = 0
     if queueState == "Queued" and queuedMode then
         local banner = label(
             self.Content,
@@ -362,9 +388,12 @@ function LobbyNavigationController:RenderPlay()
         info.Size = UDim2.new(1, -260, 0, 44)
         info.TextWrapped = true
 
-        local redText = queuedMode == status.Mode and queuedTeam == "Red" and "QUEUED RED"
-            or ("RED %d/%d"):format(status.Red, status.TeamSize)
+        -- crew name on top, count underneath: "INSTITUTE" alone nearly fills the 112-px button
+        local redName = Lore.teamName("Red"):upper()
+        local redText = queuedMode == status.Mode and queuedTeam == "Red" and ("QUEUED\n" .. redName)
+            or ("%s\n%d/%d"):format(redName, status.Red, status.TeamSize)
         local red = button(card, redText, RED)
+        red.TextWrapped = true
         red.AnchorPoint = Vector2.new(1, 0)
         red.Position = UDim2.new(1, -128, 0, 18)
         red.Size = UDim2.fromOffset(112, 64)
@@ -372,9 +401,11 @@ function LobbyNavigationController:RenderPlay()
             self:QueueAction(status.Mode, "Red")
         end)
 
-        local blueText = queuedMode == status.Mode and queuedTeam == "Blue" and "QUEUED BLUE"
-            or ("BLUE %d/%d"):format(status.Blue, status.TeamSize)
+        local blueName = Lore.teamName("Blue"):upper()
+        local blueText = queuedMode == status.Mode and queuedTeam == "Blue" and ("QUEUED\n" .. blueName)
+            or ("%s\n%d/%d"):format(blueName, status.Blue, status.TeamSize)
         local blue = button(card, blueText, BLUE)
+        blue.TextWrapped = true
         blue.AnchorPoint = Vector2.new(1, 0)
         blue.Position = UDim2.new(1, -10, 0, 18)
         blue.Size = UDim2.fromOffset(112, 64)
@@ -388,6 +419,15 @@ function LobbyNavigationController:RenderPlay()
         loading.Position = UDim2.fromOffset(0, y)
         loading.Size = UDim2.new(1, 0, 0, 40)
     end
+
+    local setupY = y + math.max(#self.Statuses * 112, 52) + 18
+    self:AddLoadoutStrip(self.Content, setupY)
+    local edit = button(self.Content, "EDIT LOADOUT", PANEL_LIGHT)
+    edit.Position = UDim2.fromOffset(0, setupY + 100)
+    edit.Size = UDim2.fromOffset(170, 42)
+    edit.Activated:Connect(function()
+        self:OpenEditor("Loadout")
+    end)
 end
 
 function LobbyNavigationController:RenderProfile()
@@ -424,7 +464,11 @@ function LobbyNavigationController:RefreshQueueBadge()
     local team = Players.LocalPlayer:GetAttribute("QueuedTeam")
     self.QueueBadge.Visible = state == "Queued" and mode ~= nil
     if self.QueueBadge.Visible then
-        self.QueueBadge.Text = ("SEARCHING: %s • %s TEAM • LOADOUT EDITING AVAILABLE"):format(mode, team or "")
+        if Screen.get().Touch then
+            self.QueueBadge.Text = ("SEARCHING: %s • %s"):format(mode, team or "")
+        else
+            self.QueueBadge.Text = ("SEARCHING: %s • %s TEAM • LOADOUT EDITING AVAILABLE"):format(mode, team or "")
+        end
     end
 end
 
@@ -442,11 +486,15 @@ function LobbyNavigationController:RefreshVisibility()
 end
 
 function LobbyNavigationController:KnitStart()
+    Screen.start()
     self.Statuses = {}
     self.ActiveDrawer = nil
     self.QueueError = nil
     self:BuildGui()
     self:RefreshVisibility()
+    if Screen.get().Class == "Console" and self.Nav.Visible then
+        GuiService.SelectedObject = self.NavButtons.PLAY
+    end
 
     local queueService = Knit.GetService("QueueService")
     queueService:GetStatus():andThen(function(statuses)

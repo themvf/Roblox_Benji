@@ -2,6 +2,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Lore = require(ReplicatedStorage.Shared.Lore)
 local Screen = require(script.Parent.Parent.UI.Screen)
 local Theme = require(script.Parent.Parent.UI.Theme)
 
@@ -227,10 +228,17 @@ function HudController:KnitStart()
             timer.Visible = false
         end
         if data.Winner then
-            text ..= " - " .. data.Winner .. " wins"
+            text ..= " - " .. Lore.teamName(data.Winner) .. " wins"
+        elseif data.Draw then
+            text ..= " - DRAW"
         end
         if data.Score then
-            text ..= "  Red " .. data.Score.Red .. " - " .. data.Score.Blue .. " Blue"
+            text ..= ("  %s %s - %s %s"):format(
+                Lore.teamName("Red"),
+                tostring(data.Score.Red),
+                tostring(data.Score.Blue),
+                Lore.teamName("Blue")
+            )
         end
         state.Text = text
     end)

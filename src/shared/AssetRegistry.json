@@ -1,0 +1,96 @@
+{
+  "military-wave-runner": {
+    "package": "assets/models/military-wave-runner",
+    "role": "interactive",
+    "route": "clean",
+    "export": "assets/models/military-wave-runner/exports/MilitaryWaveRunnerClean.glb",
+    "exportSha256": "99f94d10ea8519f91097a1fd2b272338b64420d37c1f26badd69971b09c41374",
+    "triangles": 1696,
+    "assetId": 134548593522969,
+    "uploadedSha256": "99f94d10ea8519f91097a1fd2b272338b64420d37c1f26badd69971b09c41374",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    },
+    "kind": "vehicle",
+    "gameName": "WaveRunner",
+    "mounts": {
+      "DriverSeat": [
+        0.0,
+        2.15,
+        0.92
+      ],
+      "HullCentre": [
+        0.0,
+        1.1,
+        0.0
+      ]
+    }
+  },
+  "military-wave-runner-scan": {
+    "package": "assets/models/military-wave-runner",
+    "role": "interactive",
+    "route": "scan",
+    "export": null,
+    "exportSha256": null,
+    "triangles": 70044,
+    "budgetWaiver": "Fallback only, drawn when the clean model fails to load. Kept so a place the asset owner does not own still shows a boat.",
+    "assetId": 102870506274928,
+    "uploadedSha256": null,
+    "uploadedOn": "2026-11-16",
+    "template": "assets/environment/runtime/MilitaryWaveRunner.rbxm",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": true,
+        "facing": true,
+        "scale": true,
+        "materials": false,
+        "collision": true
+      }
+    }
+  },
+  "patrol-rhib": {
+    "package": "assets/models/patrol-rhib",
+    "role": "interactive",
+    "route": "clean",
+    "export": "assets/models/patrol-rhib/exports/PatrolRhibClean.glb",
+    "exportSha256": "1047670a070fb4839d427ee0ca58de36e4185f769c4b9c2b0e9e8be24f935019",
+    "triangles": 2104,
+    "kind": "vehicle",
+    "gameName": "RHIB",
+    "mounts": {
+      "DriverSeat": [
+        0.0,
+        2.52,
+        -1.2
+      ],
+      "HullCentre": [
+        0.0,
+        1.2,
+        0.0
+      ]
+    },
+    "share": "public",
+    "assetId": 70498391528292,
+    "uploadedSha256": "1047670a070fb4839d427ee0ca58de36e4185f769c4b9c2b0e9e8be24f935019",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  }
+}

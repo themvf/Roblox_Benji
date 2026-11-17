@@ -30,6 +30,7 @@ Screen.Layers = {
     Objective = 4, -- Convergence top bar and zone chips
     Meter = 6, -- mutation / jetpack meters
     Touch = 8, -- on-screen buttons: always above the readouts they drive
+    Lobby = 9, -- lobby navigation above movement, below loadout and map vote
     MapVote = 12, -- lobby map vote: above the touch buttons, below the scoreboard
     Scoreboard = 15,
     Recap = 18,
@@ -265,7 +266,9 @@ function Screen.start()
         return Screen
     end
     Screen._started = true
-    recompute()
+    if recompute() then
+        fire()
+    end
     local function refresh()
         if recompute() then
             fire()

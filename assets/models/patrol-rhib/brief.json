@@ -1,0 +1,31 @@
+{
+  "purpose": "Black rigid inflatable patrol boat with a centre console, outboard engines and a tubular radar arch; replaces the block-built RHIBs at the Five Islands Hurricane docks",
+  "role": "interactive",
+  "heightStuds": 8.0,
+  "route": "clean",
+  "kind": "vehicle",
+  "lengthStuds": 30.0,
+  "gameName": "RHIB",
+  "where": "Five Islands Hurricane",
+  "copies": 4,
+  "moving": "",
+  "share": "public",
+  "nearestStuds": 0.0,
+  "thin": "yes",
+  "assumed": "height 8 studs from the picture's proportions at the agreed 30-stud length; no self-moving parts (not answered); game name RHIB, the existing vehicle kind it replaces; package name patrol-rhib",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "mounts": {
+    "DriverSeat": [
+      0.0,
+      2.52,
+      -1.2
+    ],
+    "HullCentre": [
+      0.0,
+      1.2,
+      0.0
+    ]
+  }
+}

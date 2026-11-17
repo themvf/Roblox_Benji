@@ -1,0 +1,21 @@
+{
+  "purpose": "Provider test: patrol RIB boat, same picture as patrol-rhib, logo removed",
+  "role": "decor",
+  "heightStuds": 8.0,
+  "route": "scan",
+  "kind": "prop",
+  "lengthStuds": 30.0,
+  "widthStuds": 10.2,
+  "where": "ProviderTest",
+  "copies": 1,
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "yes",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "counts": {
+    "seats": 6,
+    "engines": 2
+  }
+}

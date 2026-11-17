@@ -2,6 +2,7 @@
 --   Loadout   { Primary, Secondary, Melee, Utility }
 --   Favorites "id,id,id" (celebrations)
 --   Skins     { [WeaponName] = skinId }
+--   CharacterSkin  optional R15 armor appearance id
 --   Stats     { Wins, Kills, Matches }
 -- The rest of the game reads and writes player attributes as before; this service loads
 -- the profile into attributes on join and mirrors attribute changes back into the profile.
@@ -18,6 +19,7 @@ local TEMPLATE = {
     Loadout = {},
     Favorites = "",
     Skins = {},
+    CharacterSkin = "",
     Stats = {
         Wins = 0,
         Losses = 0,
@@ -69,6 +71,7 @@ local function applyToAttributes(player, data)
     for weapon, skinId in data.Skins do
         player:SetAttribute("Skin_" .. weapon, skinId)
     end
+    player:SetAttribute("CharacterSkin", data.CharacterSkin or "")
     for _, stat in STATS do
         player:SetAttribute(stat, data.Stats[stat] or 0)
     end
@@ -92,6 +95,10 @@ local function mirrorAttribute(player, data, name)
     local weapon = name:match("^Skin_(.+)$")
     if weapon then
         data.Skins[weapon] = value
+        return
+    end
+    if name == "CharacterSkin" then
+        data.CharacterSkin = type(value) == "string" and value or ""
         return
     end
     if table.find(STATS, name) and type(value) == "number" then

@@ -14,7 +14,7 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - Build gates: `lune run tools/check_skins.luau`, `lune run tools/check_celebrations.luau`,
   `lune run tools/check_maps.luau`, `lune run tools/check_assets.luau`,
   `lune run tools/check_decor.luau`, `lune run tools/check_bake.luau`, `lune run tools/check_map_authoring.luau`,
-  `lune run tools/check_live_map.luau`, `lune run tools/check_movement.luau`,
+  `lune run tools/check_live_map.luau`, `lune run tools/check_lobby_authoring.luau`, `lune run tools/check_movement.luau`,
   `lune run tools/build_weapons.luau` (regenerates weapon tools from `src/shared/Weapons`).
 - Lune scripts need datatypes imported from the roblox lib (`local Vector3 = roblox.Vector3` etc.).
 
@@ -29,7 +29,43 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - Line endings are LF everywhere (`.gitattributes`, `eol=lf`). Git for Windows sets `core.autocrlf=true`
   system-wide, which otherwise makes `stylua --check src` fail on every file locally while CI passes.
 
+## Generated assets: one flow, enforced
+- **Ask before you build.** For any new asset, run `python tools/asset_generate.py questions` and put
+  those questions to the user in one message, skipping what the request already answers. Record the
+  answers in the brief. That is the only check-in; after it, run hands-off and report once.
+  `reference` and `generate` refuse to run on a brief without the answers.
+- **Hosted GPU is a shared daily quota.** Before generating: `asset_generate.py find <words>` for something
+  to reuse, and build boxy, thin, driven or held things from shapes (no GPU). A map's third generated asset
+  needs `asset_generate.py plan "<Map>"` with a run count the user approved. `generate` makes one 512 draft;
+  `pick` runs the winner once at 1024. Out of quota means queued, not stopped: carry on with other work.
+- The brief holds size (`--height --length --width`) and counts (`--count seats=8` or `--count none`).
+  `reference --use`, `pick` and `findings` need `--counted` with what you counted; a wrong shape or count
+  is refused unless `--accept "<reason>"`. `build` finds the triangle count for the budget itself.
+- Order is brief -> reference -> mesh -> build -> approve -> publish -> Studio, all through
+  `python tools/asset_generate.py`; the table is at the top of
+  [ASSET_DELIVERY_WORKFLOW.md](docs/design/ASSET_DELIVERY_WORKFLOW.md). Write the brief first: its role
+  sets the triangle budget and whether the mesh is kept (`scan`) or rebuilt from shapes (`clean`).
+- A vehicle or a gun is `brief --kind vehicle|weapon` with named mounts (`DriverSeat`, `HullCentre`;
+  `Grip`, `Muzzle`), a `--game-name`, and code the workflow doc lists per kind. `build` draws the
+  mounts and the front on `review/mounts.png`; look at it. Game code reads mounts from the registry.
+- Never type an uploaded asset id into a script. `publish` writes it to `src/shared/AssetRegistry.json`
+  and code reads `require(ReplicatedStorage.Shared.AssetRegistry)[name].assetId`.
+- `publish --confirm` uploads, so it needs the user's approval of the review sheets first.
+  First read every close-up yourself and record the defects (`findings <name>`); the user gets your list.
+  Show them `review/audit.png` and `review/audit_closeups.png`, ask whether it looks right up close, and
+  record their own words with `verdict <name> --looks good|bad --said "..."`. "Continue" is not approval.
+- Thin bars, railings, antennas or open framework (`--thin yes`) are built from shapes, not scanned, and
+  nothing a player can get within 100 studs of is `scenery`. A radio tower passed every gate with torn struts.
+- Gates: `lune run tools/check_asset_registry.luau` (hashes, stale uploads, budgets, template settings,
+  ids typed into `src/`) and `lune run tools/check_large_files.luau` (nothing over 5 MB without a reason
+  in `tools/large_files.json`). Both run in CI.
+- One session per asset package. If a command says another session holds the package, work on
+  something else; do not `--take-over` unless the user says that session is finished.
+
 ## External art: appraise before you build
+- For asset handoff and resumption, follow [ASSET_DELIVERY_WORKFLOW.md](docs/design/ASSET_DELIVERY_WORKFLOW.md). Read the asset package's `HANDOFF.md` before rebuilding; record approved decisions and continue from the first unverified stage. The server rack is the worked example.
+- A new asset asked for by description alone ("make me a palm tree") goes through the `asset-from-prompt`
+  skill (.claude/skills): run text -> reference -> mesh -> local build without check-ins, report once at the end.
 - **Any** model, scan or scenery pack gets appraised before a pipeline is pointed at it:
   `blender -b -noaudio --python tools/blender/appraise_asset.py -- --source "<file>" --record assets/<kind>/<name>/appraisal.json`
   Then fill in `decision`, stating what the asset is for. `check_assets` fails until you do.
@@ -77,6 +113,11 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
   in any order. The Weapons Kit's own sprint/aim-slow are switched off in `tools/build_weapons.luau`.
 
 ## UI and screens
+The lobby world is editable in Studio through `assets/environment/source/Lobby.rbxm`.
+Follow [the lobby editing walkthrough](docs/design/lobby-experience/EDITING.md): edit the
+Workspace source, Play to preview, then Save to File and run `tools/save_lobby.cmd`.
+Do not hand-edit the generated playable copy or the temporary `Workspace.Lobby`.
+
 Layout goes through `src/client/UI/Screen.lua`: safe-area insets, device class, a UIScale per panel, 44pt
 tap targets (96pt ceiling), one DisplayOrder table, and reserved zones (crosshair, thumbstick, jump button,
 hotbar). Never build a raw `ScreenGui` or position off a raw screen edge. World-space `BillboardGui` sizes

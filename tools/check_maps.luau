@@ -28,6 +28,11 @@ require = function(target)
     end
     return luneRequire(target)
 end
+preloaded.Snow = luneRequire("../src/shared/Maps/Snow")
+preloaded.SnowFortress = luneRequire("../src/shared/Maps/SnowFortress")
+-- MyMapPublic wraps the generated MyMap, and MyMapTDM wraps MyMapPublic.
+preloaded.MyMap = luneRequire("../src/shared/Maps/MyMap")
+preloaded.MyMapPublic = luneRequire("../src/shared/Maps/MyMapPublic")
 
 local files = fs.readDir(dir)
 table.sort(files)
@@ -42,7 +47,11 @@ for _, file in files do
         -- Where a map is baked, check the geometry that actually ships. It carries
         -- collision the layout never described -- the facade kit authors 282 parts on
         -- Snow Fortress alone -- so tracing against it is stricter, not looser.
-        local solids = Baked.load(layout.Name or file:sub(1, -5), Validate)
+        local solids = Baked.load(layout.BakedMap or layout.Name or file:sub(1, -5), Validate)
+        if layout.RequiresBake and not solids then
+            failures += 1
+            print(("FAIL  %s requires a missing baked map %q"):format(file, layout.BakedMap or layout.Name))
+        end
         local ok, errors, warnings, info = Validate.check(layout, Weapons, solids)
         if ok then
             print(
@@ -70,7 +79,7 @@ end
 -- Drafts from the map authoring tools are for testing (/explore, /map) and are held to
 -- looser fairness rules, so none may sit in a public rotation.
 local Config = require("../src/shared/Config")
-for _, pool in { "Maps", "ConvergenceMaps" } do
+for _, pool in { "Maps", "ConvergenceMaps", "TDMMaps" } do
     for _, name in Config[pool] or {} do
         local layout = layouts[name]
         if not layout then
@@ -79,6 +88,9 @@ for _, pool in { "Maps", "ConvergenceMaps" } do
         elseif layout.Draft then
             failures += 1
             print(("FAIL  Config.%s lists %q, which is a draft; drafts stay out of rotation"):format(pool, name))
+        elseif pool == "TDMMaps" and layout.Mode ~= "TDM" then
+            failures += 1
+            print(("FAIL  Config.TDMMaps lists %q, which does not declare Mode = TDM"):format(name))
         end
     end
 end

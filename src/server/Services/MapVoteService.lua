@@ -41,10 +41,16 @@ end
 --
 -- In Studio with a map in Workspace (MapService.ExploreMap), that map is the default: the
 -- designer is testing it, and a vote between other maps would get in the way.
-local function forcedMap()
+local function forcedMap(kind)
     local t = tuning()
     local forced = t and t:GetAttribute("Debug_ForceMap")
     local MapService = Knit.GetService("MapService")
+    if kind == "TDM" then
+        if type(forced) == "string" and table.find(Config.TDMMaps, forced) then
+            return MapService:FindMap(forced)
+        end
+        return nil -- public TDM never loads an editable or non-TDM forced map
+    end
     if type(forced) == "string" and forced ~= "" then
         return MapService:FindMap(forced)
     end
@@ -54,6 +60,8 @@ end
 local function pool(kind)
     if kind == "Convergence" then
         return Config.ConvergenceMaps or { "Forest" }, "Convergence"
+    elseif kind == "TDM" then
+        return Config.TDMMaps, "TDM"
     end
     return Config.Maps or { "Forest" }, "Duel"
 end
@@ -150,7 +158,7 @@ function MapVoteService:Begin(players, teamSize, kind, onDecided, solo)
         return false
     end
 
-    local forced = forcedMap()
+    local forced = forcedMap(kind)
     local seconds = tonumber(Config.MapVoteSeconds) or 12
     if forced or Config.MapVoteEnabled ~= true or seconds <= 0 then
         local name = forced or (candidates(kind))[1]

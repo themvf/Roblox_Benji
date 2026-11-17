@@ -49,7 +49,7 @@ local map = {
         {
             Id = "keep",
             Name = "C — Fortress Upper Floor",
-            pos = { 0, 18.2, 0 },
+            pos = { 0, 19.1, 0 },
             radius = 18,
             halfHeight = 7,
             Phases = { 1, 2, 3 },
@@ -66,7 +66,7 @@ local map = {
         { name = "Red exterior", pos = { 200, 1, 0 } },
         { name = "North field", pos = { 0, 1, -128 } },
         { name = "South field", pos = { 0, 1, 128 } },
-        { name = "Fortress upper centre", pos = { 0, 19, 0 } },
+        { name = "Fortress upper centre", pos = { 0, 20, 0 } },
         { name = "Upper landing southwest", pos = { -60, 19, 46 } },
         { name = "Upper landing northeast", pos = { 60, 19, -46 } },
     },
@@ -139,8 +139,46 @@ local map = {
     Mirrored = {},
     -- Scenery. Built into its own folder and never part of the gameplay model, so a
     -- change here needs no review and cannot move a wall by accident.
-    Decor = {},
-    Symmetry = { SniperOutposts = "rotational" },
+    --
+    -- BrokenWall: assets/models/brokenwall (TRELLIS wall, 9k tris, built by scene_kit,
+    -- uploaded as a model). Its long axis is Z and its broken face looks down -X, so yaw
+    -- 90 turns the face to +Z for the north wall and -90 to -Z for the south one. They sit
+    -- on the field edges, 40+ studs from every route, and are rotationally paired.
+    -- Non-colliding like all decor: it is dressing, not cover.
+    Decor = {
+        {
+            kind = "prop",
+            name = "BrokenWallNorth",
+            assetId = 140016313341883,
+            pos = { -60, 0, -168 },
+            rot = { 0, 90, 0 },
+            fit = 20,
+            sit = true,
+        },
+        {
+            kind = "prop",
+            name = "BrokenWallSouth",
+            assetId = 140016313341883,
+            pos = { 60, 0, 168 },
+            rot = { 0, -90, 0 },
+            fit = 20,
+            sit = true,
+        },
+    },
+    Turrets = {
+        { Id = "BlueOuter", Team = "Blue", pos = { -170, 2, -60 }, facing = { 1, 0, 0 } },
+        { Id = "RedOuter", Team = "Red", pos = { 170, 2, 60 }, facing = { -1, 0, 0 } },
+    },
+    -- One Sniper in each outpost, on the deck (top y 18) inside the door and a few studs back
+    -- from the east firing window, so a player collects it on the way to the sill. The
+    -- outposts are a rotational pair, so the pickups are too. Takes the kit Sniper's stats;
+    -- it expires on death or after `duration`, and returns after `respawn` (3 minutes).
+    Pickups = {
+        { kind = "weapon", weapon = "Sniper", pos = { -135, 20.2, -126 }, respawn = 180, duration = 45 },
+        { kind = "weapon", weapon = "Sniper", pos = { 172.6, 20.6, 122 }, respawn = 180, duration = 45 },
+    },
+    -- The Studio-authored outposts are offset differently; their pickup sites follow the actual decks.
+    Symmetry = { SniperOutposts = "asymmetric", Pickups = "asymmetric" },
     GroundRoutes = {
         {
             DistrictId = "gate",
@@ -259,14 +297,14 @@ local map = {
         {
             Id = "northwest",
             Name = "Northwest Outpost",
-            pos = { -145, 19, -126 },
+            pos = { -135, 21.5, -126 },
             radius = 12,
             GroundRouteId = "blue-north",
         },
         {
             Id = "southeast",
             Name = "Southeast Outpost",
-            pos = { 145, 19, 126 },
+            pos = { 172.6, 21.9, 122 },
             radius = 12,
             GroundRouteId = "red-south",
         },
@@ -277,7 +315,7 @@ local map = {
             Id = "Blue-north-launch",
             pos = { -125, 0.3, -30 },
             size = 8,
-            target = { -84, 2, -5 },
+            target = { -84, 3, -5 },
             vy = 62,
         },
         {
@@ -285,7 +323,7 @@ local map = {
             Id = "Blue-south-launch",
             pos = { -125, 0.3, 30 },
             size = 8,
-            target = { -84, 2, 5 },
+            target = { -84, 3, 5 },
             vy = 62,
         },
         {
@@ -293,7 +331,7 @@ local map = {
             Id = "Red-north-launch",
             pos = { 125, 0.3, -30 },
             size = 8,
-            target = { 84, 2, -5 },
+            target = { 84, 3, -5 },
             vy = 62,
         },
         {
@@ -301,7 +339,7 @@ local map = {
             Id = "Red-south-launch",
             pos = { 125, 0.3, 30 },
             size = 8,
-            target = { 84, 2, 5 },
+            target = { 84, 3, 5 },
             vy = 62,
         },
     },
@@ -309,14 +347,14 @@ local map = {
         {
             Id = "southwest-upper",
             From = { -150, 4, 130 },
-            To = { -55, 38, 50 },
+            To = { -55, 40, 50 },
             GroundAlternative = "blue-centre",
             Purpose = "Southwest exterior to roof hatch",
         },
         {
             Id = "northeast-upper",
-            From = { 150, 4, -130 },
-            To = { 55, 38, -50 },
+            From = { 150, 4, -100 },
+            To = { 55, 43, -50 },
             GroundAlternative = "red-centre",
             Purpose = "Northeast exterior to roof hatch",
         },

@@ -1,0 +1,4 @@
+{
+  "_comment": "Tracked files over 5 MB, each with the reason it cannot be rebuilt from something smaller. Enforced by tools/check_large_files.luau.",
+  "assets/models/military-wave-runner/source/MilitaryWaveRunner.glb": "picked TRELLIS candidate; a rerun of the generator does not reproduce it byte for byte"
+}

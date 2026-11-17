@@ -86,7 +86,9 @@ jobs:
         run: lune run tools/check_celebrations.luau
 
       - name: Validate maps
-        run: lune run tools/check_maps.luau
+        run: |
+          lune run tools/check_maps.luau
+          lune run tools/check_fortress_modes.luau
 
       # A baked map has something to stand on and no authoring scaffolding, and a map
       # converted from an editable source matches what that source generates now.
@@ -103,6 +105,9 @@ jobs:
       - name: Live map in Studio
         run: lune run tools/check_live_map.luau
 
+      - name: Editable lobby source
+        run: lune run tools/check_lobby_authoring.luau
+
       # Sprint / crouch / slide rules, the speed-effect resolver, one WalkSpeed writer,
       # and the Weapons Kit's own sprint switched off.
       - name: Movement
@@ -116,6 +121,15 @@ jobs:
       # Every built asset must carry an appraisal that states what it is for.
       - name: Validate asset appraisals
         run: lune run tools/check_assets.luau
+
+      # Registered pipeline assets: export hashes, stale uploads, triangle budgets,
+      # template settings, and no asset id typed into game code.
+      - name: Validate asset registry
+        run: lune run tools/check_asset_registry.luau
+
+      # Nothing over 5 MB is tracked without a reason in tools/large_files.json.
+      - name: Large files
+        run: lune run tools/check_large_files.luau
 
       # build_weapons is deterministic, so regenerating must leave the tree clean.
       # A diff here means someone edited src/shared/Weapons without rebuilding.

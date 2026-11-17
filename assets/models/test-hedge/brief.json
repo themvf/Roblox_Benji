@@ -1,0 +1,18 @@
+{
+  "purpose": "Provider test: clipped hedge in a stone planter, same picture as penthouse-hedge",
+  "role": "decor",
+  "heightStuds": 8.0,
+  "route": "scan",
+  "kind": "prop",
+  "lengthStuds": 8.0,
+  "widthStuds": 4.0,
+  "where": "ProviderTest",
+  "copies": 1,
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "counts": {}
+}

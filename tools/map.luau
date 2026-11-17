@@ -209,7 +209,11 @@ local function changes(old, layout, parts, bakeBytes)
             if math.abs(b.radius - o.radius) > 0.01 or math.abs((b.halfHeight or 0) - o.halfHeight) > 0.01 then
                 table.insert(
                     lines,
-                    ("objective %s capture area now radius %s, height %s"):format(o.Id, C.num(o.radius), C.num(o.halfHeight))
+                    ("objective %s capture area now radius %s, height %s"):format(
+                        o.Id,
+                        C.num(o.radius),
+                        C.num(o.halfHeight)
+                    )
                 )
             end
             if b.Name ~= o.Name then
@@ -417,13 +421,15 @@ local function convert(name, opts)
     for _, line in changes(old, layout, #parts, result.bakeBytes) do
         say("  - " .. line)
     end
-    say(("\nPlayable version UPDATED: %s  (%d parts, %d objectives, %d + %d spawns)"):format(
-        layout.Revision,
-        #parts,
-        #layout.Objectives,
-        #layout.Spawns.Blue,
-        #layout.Spawns.Red
-    ))
+    say(
+        ("\nPlayable version UPDATED: %s  (%d parts, %d objectives, %d + %d spawns)"):format(
+            layout.Revision,
+            #parts,
+            #layout.Objectives,
+            #layout.Spawns.Blue,
+            #layout.Spawns.Red
+        )
+    )
     if result.presentationIsNew then
         say("  created " .. P.relPresentation .. " with default sky and terrain (optional to edit)")
     end
@@ -444,7 +450,7 @@ local function status(name)
         local src = ROOT .. "/assets/environment/source"
         if fs.isDir(src) then
             for _, f in fs.readDir(src) do
-                if f:sub(-5) == ".rbxm" then
+                if f:sub(-5) == ".rbxm" and f ~= "Lobby.rbxm" then
                     table.insert(names, f:sub(1, -6))
                 end
             end
@@ -498,12 +504,14 @@ local function restore(name, which)
     if not which then
         say(("Earlier versions of %s (newest last):"):format(name))
         for _, s in list do
-            say(("  %3d  %s  %s%s"):format(
-                s.n,
-                s.info.saved or "?",
-                s.info.revision,
-                s.info.revision == current and "  <- current source" or ""
-            ))
+            say(
+                ("  %3d  %s  %s%s"):format(
+                    s.n,
+                    s.info.saved or "?",
+                    s.info.revision,
+                    s.info.revision == current and "  <- current source" or ""
+                )
+            )
         end
         say(("\nRestore one with: bash tools/save_map.sh restore %s <number>"):format(name))
         return
@@ -522,13 +530,20 @@ local function restore(name, which)
     if fs.isFile(pick.dir .. "/presentation.lua") then
         fs.writeFile(P.presentation, fs.readFile(pick.dir .. "/presentation.lua"))
     end
-    say(("Restored %s to version %d (%s). The version you replaced is kept in the history too."):format(
-        name,
-        pick.n,
-        pick.info.revision
-    ))
+    say(
+        ("Restored %s to version %d (%s). The version you replaced is kept in the history too."):format(
+            name,
+            pick.n,
+            pick.info.revision
+        )
+    )
     say("Next: in Studio, delete the old editable copy from Workspace, re-open this one")
-    say(("(right-click Workspace > Insert from File > %s), then run: bash tools/save_map.sh %s"):format(P.relSource, name))
+    say(
+        ("(right-click Workspace > Insert from File > %s), then run: bash tools/save_map.sh %s"):format(
+            P.relSource,
+            name
+        )
+    )
 end
 
 local function new(name)
