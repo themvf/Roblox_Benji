@@ -14,6 +14,7 @@ local TweenService = game:GetService("TweenService")
 local InsertService = game:GetService("InsertService")
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
+local AssetRegistry = require(ReplicatedStorage.Shared.AssetRegistry)
 local MapAuthoring = require(ReplicatedStorage.Shared.MapAuthoring)
 local LobbyAuthoring = require(ReplicatedStorage.Shared.LobbyAuthoring)
 
@@ -36,6 +37,8 @@ local GREY = Color3.fromRGB(160, 160, 160)
 -- Theme palette; overwritten from layout.Palette when a map is built
 local ROCK = Color3.fromRGB(96, 98, 92)
 local ROCK_EDGE = nil
+local ROCK_MATERIAL = nil
+local MATERIAL_VARIANTS = {}
 local BARK = Color3.fromRGB(78, 56, 40)
 local WOOD = Color3.fromRGB(110, 75, 45)
 local NEEDLE = { Color3.fromRGB(34, 68, 44), Color3.fromRGB(42, 80, 50), Color3.fromRGB(28, 58, 40) }
@@ -48,10 +51,14 @@ local PREFABS = {}
 local function applyPalette(pal)
     PALETTE = pal or {}
     if not pal then
+        ROCK_MATERIAL = nil
+        MATERIAL_VARIANTS = {}
         return
     end
     ROCK = pal.Rock or ROCK
     ROCK_EDGE = pal.RockEdge
+    ROCK_MATERIAL = pal.RockMaterial
+    MATERIAL_VARIANTS = pal.MaterialVariants or {}
     BARK = pal.Bark or BARK
     WOOD = pal.Wood or WOOD
     NEEDLE = pal.Needles or NEEDLE
@@ -72,10 +79,15 @@ local function cframe(pos, rot)
 end
 
 local function makePart(folder, name, pos, size, rot, color, material, shape)
-    local part = Instance.new("Part")
+    local part
+    if shape == "Wedge" then
+        part = Instance.new("WedgePart")
+    else
+        part = Instance.new("Part")
+        part.Shape = shape or Enum.PartType.Block
+    end
     part.Name = name
     part.Anchored = true
-    part.Shape = shape or Enum.PartType.Block
     part.Size = v3(size)
     part.CFrame = cframe(pos, rot)
     part.Color = color or GREY
@@ -92,8 +104,12 @@ local function makeRock(folder, name, pos, size, rot, rng)
     -- A few overlapping blocks with slight tilt reads as a boulder.
     local model = Instance.new("Model")
     model.Name = name
-    local base =
-        makePart(model, "Base", { pos[1], pos[2] + size[2] / 2, pos[3] }, size, rot, ROCK, Enum.Material.SmoothPlastic)
+    local rockMat = ROCK_MATERIAL or Enum.Material.SmoothPlastic
+    local rockVariant = MATERIAL_VARIANTS.Rock
+    local base = makePart(model, "Base", { pos[1], pos[2] + size[2] / 2, pos[3] }, size, rot, ROCK, rockMat)
+    if rockVariant then
+        base.MaterialVariant = rockVariant
+    end
     if ROCK_EDGE then
         -- accent band near the top so cover height reads instantly
         local band = makePart(
@@ -114,11 +130,14 @@ local function makeRock(folder, name, pos, size, rot, rng)
             size[3] * rng:NextNumber(0.5, 0.8),
         }
         local off = { rng:NextNumber(-0.3, 0.3) * size[1], size[2] * 0.15 * i, rng:NextNumber(-0.3, 0.3) * size[3] }
-        makePart(model, "Lump" .. i, { pos[1] + off[1], pos[2] + s[2] / 2 + off[2], pos[3] + off[3] }, s, {
+        local lump = makePart(model, "Lump" .. i, { pos[1] + off[1], pos[2] + s[2] / 2 + off[2], pos[3] + off[3] }, s, {
             rng:NextNumber(-12, 12),
             rng:NextNumber(0, 360),
             rng:NextNumber(-12, 12),
-        }, ROCK, Enum.Material.SmoothPlastic)
+        }, ROCK, rockMat)
+        if rockVariant then
+            lump.MaterialVariant = rockVariant
+        end
     end
     model.PrimaryPart = base
     model.Parent = folder
@@ -229,6 +248,9 @@ local function buildTerrain(layout)
     local terrain = workspace.Terrain
     terrain:Clear()
     local t = layout.Terrain
+    if t.Void then
+        return
+    end
     if t.GroundColor then
         terrain:SetMaterialColor(t.GroundMaterial, t.GroundColor)
     end
@@ -334,9 +356,16 @@ local function applySky(env)
     -- identical to one that was never wired, and telling those apart from the
     -- outside cost a long round of guessing.
     if not spec then
-        -- A map that declares no Sky leaves whatever the place has alone. Destroying
-        -- it would mean a skybox chosen in Studio -- which is how you actually shop
-        -- for one -- gets wiped on every build.
+        -- A map that declares no Sky leaves whatever the place has alone, unless HideCelestial is
+        -- explicitly requested (e.g., overcast hurricane clouds hiding a bright sun disc).
+        if env.HideCelestial ~= nil then
+            local skybox = existing or Instance.new("Sky")
+            skybox.CelestialBodiesShown = not env.HideCelestial
+            skybox.StarCount = env.HideCelestial and 0 or 3000
+            skybox.Parent = Lighting
+        elseif existing then
+            existing.CelestialBodiesShown = true
+        end
         if missing then
             warn(("[MapSky] %s face is unresolved; leaving the place's own sky"):format(missing))
         else
@@ -363,8 +392,8 @@ local function applyLighting(env)
     Lighting.FogStart = env.FogStart
     Lighting.FogEnd = env.FogEnd
     Lighting.GlobalShadows = true
-    Lighting.EnvironmentDiffuseScale = 0.6
-    Lighting.EnvironmentSpecularScale = 0.4
+    Lighting.EnvironmentDiffuseScale = env.EnvironmentDiffuseScale or 0.6
+    Lighting.EnvironmentSpecularScale = env.EnvironmentSpecularScale or 0.4
 
     -- Lighting.LightingStyle and Lighting.PrioritizeLightingQuality are NOT set here on purpose.
     -- Both are Security.Write = RobloxScriptSecurity in the API dump, so a game script cannot write
@@ -410,7 +439,10 @@ local function applyLighting(env)
     atmo.Haze = env.Atmosphere.Haze
     atmo.Glare = env.Atmosphere.Glare
     atmo.Color = env.Atmosphere.Color
-    atmo.Decay = Color3.fromRGB(120, 110, 100)
+    atmo.Decay = env.Atmosphere.Decay or Color3.fromRGB(120, 110, 100)
+    if env.Atmosphere.Offset then
+        atmo.Offset = env.Atmosphere.Offset
+    end
     atmo.Parent = Lighting
 
     local rays = Instance.new("SunRaysEffect")
@@ -428,6 +460,22 @@ local function applyLighting(env)
     cc.Contrast = env.Contrast or 0.08
     cc.TintColor = env.Tint or Color3.fromRGB(240, 235, 225)
     cc.Parent = Lighting
+
+    local oldClouds = workspace.Terrain:FindFirstChild("MapClouds")
+    if oldClouds then
+        oldClouds:Destroy()
+    end
+    if env.Clouds then
+        local clouds = Instance.new("Clouds")
+        clouds.Name = "MapClouds"
+        clouds.Cover = env.Clouds.Cover or 0.9
+        clouds.Density = env.Clouds.Density or 0.9
+        clouds.Color = env.Clouds.Color or Color3.fromRGB(50, 58, 72)
+        clouds.Enabled = true
+        clouds.Parent = workspace.Terrain
+    end
+    workspace:SetAttribute("MapBaseBrightness", env.Brightness)
+    workspace:SetAttribute("MapWeather", env.Weather or "")
 end
 
 -- ===== Lobby =====
@@ -545,7 +593,7 @@ local function buildLobby(self, layout)
         sign.Name = "Wayfinding"
         sign.Size = UDim2.fromScale(spec.size[1], spec.size[2])
         sign.AlwaysOnTop = true
-        sign.MaxDistance = 110
+        sign.MaxDistance = 170 -- the hub's PLAY sign is about 125 studs from the arrival point
         sign.Parent = anchor
 
         local title = Instance.new("TextLabel")
@@ -608,12 +656,20 @@ local function buildLobby(self, layout)
 
     self.Pads = {}
     for _, spec in layout.Pads do
+        if spec.disabled then
+            continue
+        end
         if spec.kind == "Convergence" and not spec.solo then
             -- team sizes come from Config/Tuning so tests can shrink the featured mode.
             -- A solo pad is exempt: its whole point is that one person can start, and
-            -- inheriting a team size of six would make it as unusable as the pad it
+            -- inheriting a team size of five would make it as unusable as the pad it
             -- exists to work around.
             local rules = Config.GetConvergence()
+            spec = table.clone(spec)
+            spec.teamSize = rules.TeamSize
+            spec.minTeamSize = rules.MinTeamSize
+        elseif spec.kind == "TDM" and not spec.solo then
+            local rules = Config.GetTDM()
             spec = table.clone(spec)
             spec.teamSize = rules.TeamSize
             spec.minTeamSize = rules.MinTeamSize
@@ -719,6 +775,8 @@ local function buildLobby(self, layout)
     for _, p in layout.Spawns do
         table.insert(self.LobbySpawns, v3(at(p)))
     end
+    local fall = layout.FallRecovery
+    self.LobbyFall = fall and { min = v3(at(fall.min)), max = v3(at(fall.max)) } or nil
 
     -- Leaderboard wall
     local b = layout.Board
@@ -728,7 +786,7 @@ local function buildLobby(self, layout)
             "LeaderboardWall",
             at({ b.pos[1], b.pos[2] + b.size[2] / 2, b.pos[3] }),
             b.size,
-            nil,
+            { 0, b.yaw or 0, 0 },
             pal.Wall
         )
         local sg = Instance.new("SurfaceGui")
@@ -766,6 +824,8 @@ local function buildLobby(self, layout)
     -- Weapon kiosk
     local k = layout.Kiosk
     if k then
+        -- The kiosk turns as one piece about its marker; the sign is on the -Z (Front) side.
+        local kioskAt = CFrame.new(v3(at(k.pos))) * CFrame.Angles(0, math.rad(k.yaw or 0), 0)
         local counter = makePart(
             folder,
             "WeaponKiosk",
@@ -774,6 +834,7 @@ local function buildLobby(self, layout)
             nil,
             pal.Pillar
         )
+        counter.CFrame = kioskAt * CFrame.new(0, k.size[2] / 2, 0)
         local top = makePart(
             folder,
             "KioskTop",
@@ -783,6 +844,7 @@ local function buildLobby(self, layout)
             pal.Accent,
             Enum.Material.Neon
         )
+        top.CFrame = kioskAt * CFrame.new(0, k.size[2] + 0.2, 0)
         top.CanCollide = false
         local backboard = makePart(
             folder,
@@ -792,6 +854,7 @@ local function buildLobby(self, layout)
             nil,
             pal.Wall
         )
+        backboard.CFrame = kioskAt * CFrame.new(0, 7, -k.size[3] / 2 - 0.5)
 
         local sign = Instance.new("SurfaceGui")
         sign.Face = Enum.NormalId.Front
@@ -840,8 +903,7 @@ local function buildLobby(self, layout)
             show:ScaleTo(2.5)
             local _, size = show:GetBoundingBox()
             show:PivotTo(
-                CFrame.new(v3(at({ k.pos[1], k.pos[2] + k.size[2] + 0.4 + size.Y / 2 + 1, k.pos[3] })))
-                    * CFrame.Angles(0, math.rad(90), 0)
+                kioskAt * CFrame.new(0, k.size[2] + 0.4 + size.Y / 2 + 1, 0) * CFrame.Angles(0, math.rad(90), 0)
             )
             show.Parent = folder
             self.Showcase = show
@@ -1113,8 +1175,20 @@ local function placePiece(folder, prefix, piece, rng, mirror)
                 tint = Color3.fromRGB(190, 190, 120)
             end
         end
-        local part =
-            makePart(folder, name, pos, piece.size, rot, tint, piece.material and Enum.Material[piece.material] or nil)
+        local part = makePart(
+            folder,
+            name,
+            pos,
+            piece.size,
+            rot,
+            tint,
+            piece.material and Enum.Material[piece.material] or nil,
+            piece.shape
+        )
+        local variant = piece.materialVariant or (type(piece.color) == "string" and MATERIAL_VARIANTS[piece.color])
+        if variant then
+            part.MaterialVariant = variant
+        end
         if piece.transparency then
             part.Transparency = piece.transparency
         end
@@ -1138,7 +1212,19 @@ local function placePiece(folder, prefix, piece, rng, mirror)
         -- has to answer raycasts as well, because cover that stops players but not
         -- bullets -- or the reverse -- is worse than no cover at all. The gates still
         -- cannot see it, so a collidable prop is a deliberate, reviewed exception.
-        local template = propTemplate(piece.assetId)
+        -- `asset` names an entry in Shared.AssetRegistry; an entry that is not uploaded
+        -- yet has no id, and its prop is simply not drawn.
+        local assetId = piece.assetId
+        if assetId == nil and piece.asset then
+            local entry = AssetRegistry[piece.asset]
+            assetId = entry and entry.assetId
+            if assetId == nil then
+                warn(
+                    ("[MapService] prop %s: asset %q is not uploaded yet; it will be missing"):format(name, piece.asset)
+                )
+            end
+        end
+        local template = propTemplate(assetId)
         if template then
             local model = template:Clone()
             local solid = piece.collide == true
@@ -1477,6 +1563,21 @@ function MapService:Build(layout)
     end
     if baked then
         cloneBaked(folder, baked)
+        local decor = folder:FindFirstChild("Decor")
+        if not decor then
+            decor = Instance.new("Folder")
+            decor.Name = "Decor"
+            decor.Parent = folder
+        end
+        authoredDecor(decor, layout.BakedMap or layout.Name)
+        -- An authored map's props are markers in its source: they arrive as a Decor list
+        -- and are not in the bake. Maps baked from a built map already hold their props
+        -- in the bake, and placing their lists as well would draw every one twice.
+        if layout.Authored then
+            for _, piece in layout.Decor or {} do
+                placePiece(decor, "", piece, rng, nil)
+            end
+        end
     else
         -- Outer walls: visible for greybox, invisible for themed maps
         local half = layout.Size / 2
@@ -1554,10 +1655,18 @@ function MapService:Build(layout)
     end
 
     Knit.GetService("TurretService"):Build(layout, folder)
+    Knit.GetService("VehicleService"):Build(layout, folder)
 
     if layout.Environment then
         applyLighting(layout.Environment)
         applySky(layout.Environment)
+    else
+        local oldClouds = workspace.Terrain:FindFirstChild("MapClouds")
+        if oldClouds then
+            oldClouds:Destroy()
+        end
+        workspace:SetAttribute("MapBaseBrightness", nil)
+        workspace:SetAttribute("MapWeather", "")
     end
 
     -- Studio's template place adds these; the map provides its own
@@ -1660,6 +1769,40 @@ function MapService:PlaceCharacter(player, character)
         -- face the pads (toward -Z of the lobby)
         root.CFrame = CFrame.lookAt(pos, pos + Vector3.new(0, 0, -10))
     end
+end
+
+-- The lobby floats over a void. Anyone outside a match who drops into the box under the
+-- islands (Maps/Lobby.lua FallRecovery) is put back on an arrival spawn: in the lobby a fall
+-- is a slip, not a lost fight, so there is no penalty. The box is far from every match map.
+function MapService:WatchLobbyFalls()
+    task.spawn(function()
+        while true do
+            task.wait(0.5)
+            local box = self.LobbyFall
+            local points = self.LobbySpawns
+            if box and points and #points > 0 then
+                for _, player in Players:GetPlayers() do
+                    local character = player.Character
+                    local root = character and character:FindFirstChild("HumanoidRootPart")
+                    if root and not player:GetAttribute("InMatch") then
+                        local p = root.Position
+                        if
+                            p.X > box.min.X
+                            and p.X < box.max.X
+                            and p.Y > box.min.Y
+                            and p.Y < box.max.Y
+                            and p.Z > box.min.Z
+                            and p.Z < box.max.Z
+                        then
+                            local pos = pickSpawn(points, character) + Vector3.new(0, 3, 0)
+                            root.AssemblyLinearVelocity = Vector3.zero
+                            root.CFrame = CFrame.lookAt(pos, pos + Vector3.new(0, 0, -10))
+                        end
+                    end
+                end
+            end
+        end
+    end)
 end
 
 -- ===== Map events (signature moments) =====
@@ -2022,6 +2165,7 @@ function MapService:KnitInit()
         self.ExploreMap = startup
     end
     buildLobby(self, self:ReadLobbyLayout())
+    self:WatchLobbyFalls()
 
     -- Hook spawns here, in KnitInit, so this runs before RoundService (KnitStart) can
     -- load anyone's character. Otherwise the first spawn lands at the world origin.

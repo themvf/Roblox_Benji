@@ -1,0 +1,162 @@
+Extensions: writing cache failed ([Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\extensions\\.cache\\compat.dat').
+Traceback (most recent call last):
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 1027, in register
+    Tracker.initialize(
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 295, in initialize
+    self.set_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 466, in set_tracker_json
+    self.save_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 479, in save_tracker_json
+    outf = open(jpath, 'w')
+           ^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\scripts\\addons\\MCprep_addon\\mcprep_addon_tracker.json'
+
+Failed to register scene update handler
+Reloading external rigs...
+Reloading external metarigs...
+🔄 blenderkit: Verbose is enabled
+🔄 blenderkit: Read in JSON settings from file
+ℹ️  blenderkit: Unregistering BlenderKit add-on [15:31:57.595, __init__.py:2558]
+15:31:57 | INFO: Data are loaded, start creating Blender stuff
+15:31:57 | INFO: Blender create Mesh node Sphere
+15:31:57 | INFO: Blender create Mesh node Cube
+15:31:57 | INFO: Blender create Mesh node Cube.001
+15:31:57 | INFO: Blender create Mesh node Cube.002
+15:31:57 | INFO: Blender create Mesh node Cube.003
+15:31:57 | INFO: Blender create Mesh node Sphere.001
+15:31:57 | INFO: Blender create Mesh node Cylinder
+15:31:57 | INFO: Blender create Mesh node Cube.004
+15:31:57 | INFO: Blender create Mesh node Cube.005
+15:31:57 | INFO: Blender create Mesh node Sphere.002
+15:31:57 | INFO: Blender create Mesh node Cube.006
+15:31:57 | INFO: Blender create Mesh node Cube.007
+15:31:57 | INFO: Blender create Mesh node Cube.008
+15:31:57 | INFO: Blender create Mesh node Cube.009
+15:31:57 | INFO: Blender create Mesh node Cube.010
+15:31:57 | INFO: Blender create Mesh node Cube.011
+15:31:57 | INFO: Blender create Mesh node Sphere.003
+15:31:57 | INFO: Blender create Mesh node Cube.012
+15:31:57 | INFO: Blender create Mesh node Cube.013
+15:31:57 | INFO: Blender create Mesh node Sphere.004
+15:31:57 | INFO: Blender create Mesh node Cylinder.001
+15:31:57 | INFO: Blender create Mesh node Cube.014
+15:31:57 | INFO: Blender create Mesh node Cube.015
+15:31:57 | INFO: Blender create Mesh node Sphere.005
+15:31:57 | INFO: Blender create Mesh node Cube.016
+15:31:57 | INFO: Blender create Mesh node Cube.017
+15:31:57 | INFO: Blender create Mesh node Cube.018
+15:31:57 | INFO: Blender create Mesh node Cube.019
+15:31:57 | INFO: Blender create Mesh node Cube.020
+15:31:57 | INFO: Blender create Mesh node Cube.021
+15:31:57 | INFO: Blender create Mesh node Sphere.006
+15:31:57 | INFO: Blender create Mesh node Cube.022
+15:31:57 | INFO: Blender create Mesh node Cube.023
+15:31:57 | INFO: Blender create Mesh node Cube.024
+15:31:57 | INFO: Blender create Mesh node Cube.025
+15:31:57 | INFO: Blender create Mesh node Cube.026
+15:31:57 | INFO: Blender create Mesh node Cube.027
+15:31:57 | INFO: Blender create Mesh node Cube.028
+15:31:57 | INFO: Blender create Mesh node Cube.029
+15:31:57 | INFO: glTF import finished in 0.04s
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+Fra:1 Mem:15.44M (Peak 15.44M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane
+Fra:1 Mem:15.44M (Peak 15.44M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin foot.001
+Fra:1 Mem:15.45M (Peak 15.45M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin leg.003
+Fra:1 Mem:15.47M (Peak 15.47M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin leg.002
+Fra:1 Mem:15.49M (Peak 15.49M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin foot
+Fra:1 Mem:15.50M (Peak 15.50M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin leg.001
+Fra:1 Mem:15.52M (Peak 15.52M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin leg
+Fra:1 Mem:15.54M (Peak 15.54M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin arm.005
+Fra:1 Mem:15.56M (Peak 15.56M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin arm.004
+Fra:1 Mem:15.57M (Peak 15.57M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin arm.003
+Fra:1 Mem:15.59M (Peak 15.59M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Head__helmet-shell
+Fra:1 Mem:15.59M (Peak 15.59M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin arm.002
+Fra:1 Mem:17.61M (Peak 17.61M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Head__helmet-brow
+Fra:1 Mem:17.61M (Peak 17.61M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin arm.001
+Fra:1 Mem:17.63M (Peak 17.63M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin arm
+Fra:1 Mem:17.65M (Peak 17.65M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin lower torso
+Fra:1 Mem:17.67M (Peak 17.67M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin upper torso
+Fra:1 Mem:17.68M (Peak 17.68M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | mannequin head
+Fra:1 Mem:17.70M (Peak 17.70M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | UpperTorso__backpack-cap
+Fra:1 Mem:17.70M (Peak 17.70M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Head__visor-shadow
+Fra:1 Mem:17.71M (Peak 17.71M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Head__cyan-visor-line
+Fra:1 Mem:17.71M (Peak 17.71M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Head__jaw-guard
+Fra:1 Mem:17.70M (Peak 17.71M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | UpperTorso__backpack
+Fra:1 Mem:17.71M (Peak 17.71M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Head__left-ear-pod
+Fra:1 Mem:17.72M (Peak 17.72M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Head__left-antenna
+Fra:1 Mem:17.72M (Peak 17.72M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LowerTorso__abdomen-ridge
+Fra:1 Mem:17.73M (Peak 17.73M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | UpperTorso__left-chest
+Fra:1 Mem:17.74M (Peak 17.74M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LowerTorso__abdomen
+Fra:1 Mem:17.74M (Peak 17.74M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | UpperTorso__left-collar
+Fra:1 Mem:17.76M (Peak 17.76M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LeftUpperArm__left-shoulder
+Fra:1 Mem:17.76M (Peak 17.76M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | UpperTorso__chest-core-light
+Fra:1 Mem:17.76M (Peak 17.76M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LeftUpperArm__left-shoulder-ridge
+Fra:1 Mem:17.78M (Peak 17.78M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | UpperTorso__chest-core
+Fra:1 Mem:17.78M (Peak 17.78M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LeftUpperArm__left-bicep-plate
+Fra:1 Mem:17.77M (Peak 17.78M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | RightFoot__right-boot
+Fra:1 Mem:17.77M (Peak 17.78M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | RightLowerLeg__right-shin
+Fra:1 Mem:17.78M (Peak 17.78M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | RightLowerLeg__right-knee
+Fra:1 Mem:17.80M (Peak 17.80M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | RightUpperLeg__right-thigh-inset
+Fra:1 Mem:17.80M (Peak 17.80M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | RightUpperLeg__right-thigh-shell
+Fra:1 Mem:17.80M (Peak 17.80M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | RightHand__right-hand-guard
+Fra:1 Mem:17.81M (Peak 17.81M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | RightLowerArm__right-forearm-shell
+Fra:1 Mem:17.81M (Peak 17.81M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | RightUpperArm__right-bicep-plate
+Fra:1 Mem:17.81M (Peak 17.81M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | RightUpperArm__right-shoulder-ridge
+Fra:1 Mem:17.81M (Peak 17.81M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | RightUpperArm__right-shoulder
+Fra:1 Mem:17.84M (Peak 17.84M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | UpperTorso__right-collar
+Fra:1 Mem:17.84M (Peak 17.84M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | UpperTorso__right-chest
+Fra:1 Mem:17.84M (Peak 17.84M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Head__right-antenna
+Fra:1 Mem:17.85M (Peak 17.85M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Head__right-ear-pod
+Fra:1 Mem:17.87M (Peak 17.87M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LeftFoot__left-boot
+Fra:1 Mem:17.87M (Peak 17.87M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LeftLowerLeg__left-shin
+Fra:1 Mem:17.88M (Peak 17.88M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LeftLowerLeg__left-knee
+Fra:1 Mem:17.90M (Peak 17.90M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LeftUpperLeg__left-thigh-inset
+Fra:1 Mem:17.90M (Peak 17.90M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LeftUpperLeg__left-thigh-shell
+Fra:1 Mem:17.90M (Peak 17.90M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LeftHand__left-hand-guard
+Fra:1 Mem:17.91M (Peak 17.91M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | LeftLowerArm__left-forearm-shell
+Fra:1 Mem:17.91M (Peak 17.91M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:15.67M (Peak 17.91M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:15.67M (Peak 17.91M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:15.67M (Peak 17.91M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:15.67M (Peak 17.91M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:15.76M (Peak 17.91M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:15.76M (Peak 17.91M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:15.76M (Peak 17.91M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:15.76M (Peak 17.91M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:15.76M (Peak 17.91M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:15.76M (Peak 17.91M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:15.77M (Peak 17.91M) | Time:00:00.01 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:15.77M (Peak 17.91M) | Time:00:00.01 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:15.77M (Peak 17.91M) | Time:00:00.01 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:15.78M (Peak 17.91M) | Time:00:00.01 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:15.85M (Peak 17.91M) | Time:00:00.01 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:15.90M (Peak 17.91M) | Time:00:00.01 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:15.90M (Peak 17.91M) | Time:00:00.01 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:15.90M (Peak 17.91M) | Time:00:00.01 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:15.90M (Peak 17.91M) | Time:00:00.01 | Mem:0.22M, Peak:0.22M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:15.90M (Peak 17.91M) | Time:00:00.01 | Mem:0.40M, Peak:0.55M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:15.90M (Peak 17.91M) | Time:00:00.01 | Mem:0.40M, Peak:0.55M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:16.11M (Peak 17.91M) | Time:00:00.01 | Mem:0.40M, Peak:0.55M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:16.11M (Peak 17.91M) | Time:00:00.01 | Mem:0.61M, Peak:0.61M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:16.11M (Peak 17.91M) | Time:00:00.01 | Mem:0.61M, Peak:0.61M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:16.11M (Peak 17.91M) | Time:00:00.01 | Mem:0.61M, Peak:0.61M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:16.11M (Peak 17.91M) | Time:00:00.01 | Mem:0.61M, Peak:0.61M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:16.11M (Peak 17.91M) | Time:00:00.01 | Mem:0.61M, Peak:0.61M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:16.11M (Peak 17.91M) | Time:00:00.01 | Mem:0.69M, Peak:0.69M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:16.11M (Peak 17.91M) | Time:00:00.01 | Mem:0.69M, Peak:0.69M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:16.11M (Peak 17.91M) | Time:00:00.02 | Mem:0.70M, Peak:0.70M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:16.11M (Peak 17.91M) | Time:00:00.02 | Mem:0.70M, Peak:0.70M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:16.12M (Peak 17.91M) | Time:00:00.02 | Mem:0.62M, Peak:0.70M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:16.12M (Peak 17.91M) | Time:00:00.02 | Mem:0.70M, Peak:0.70M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:16.12M (Peak 17.91M) | Time:00:00.02 | Mem:0.70M, Peak:0.70M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:16.12M (Peak 17.91M) | Time:00:00.02 | Mem:0.70M, Peak:0.70M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:16.12M (Peak 17.91M) | Time:00:00.02 | Mem:0.70M, Peak:0.70M | Scene, ViewLayer | Sample 0/24
+Fra:1 Mem:62.57M (Peak 62.57M) | Time:00:00.31 | Remaining:00:06.81 | Mem:47.09M, Peak:47.09M | Scene, ViewLayer | Sample 1/24
+Fra:1 Mem:82.10M (Peak 111.40M) | Time:00:10.14 | Mem:47.09M, Peak:47.09M | Scene, ViewLayer | Sample 24/24
+Fra:1 Mem:82.10M (Peak 111.40M) | Time:00:10.14 | Mem:47.09M, Peak:47.09M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\ninja-soldier-skins\review\SciFiSentry-front.png'
+Time: 00:10.44 (Saving: 00:00.29)
+
+RENDERED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\ninja-soldier-skins\review\SciFiSentry-front.png
+
+Blender quit

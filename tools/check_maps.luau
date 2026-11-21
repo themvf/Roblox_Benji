@@ -33,6 +33,10 @@ preloaded.SnowFortress = luneRequire("../src/shared/Maps/SnowFortress")
 -- MyMapPublic wraps the generated MyMap, and MyMapTDM wraps MyMapPublic.
 preloaded.MyMap = luneRequire("../src/shared/Maps/MyMap")
 preloaded.MyMapPublic = luneRequire("../src/shared/Maps/MyMapPublic")
+preloaded.SciFiFoundry = luneRequire("../src/shared/Maps/SciFiFoundry")
+preloaded.FiveIslands = luneRequire("../src/shared/Maps/FiveIslands")
+preloaded.ChokeRidge = luneRequire("../src/shared/Maps/ChokeRidge")
+preloaded.HighwayOverpass = luneRequire("../src/shared/Maps/HighwayOverpass")
 
 local files = fs.readDir(dir)
 table.sort(files)

@@ -1,0 +1,26 @@
+{
+  "asset": "test-suv",
+  "comparedOn": "2026-11-17 04:36",
+  "budget": 30000,
+  "brief": [
+    16.5,
+    6.5,
+    6.0
+  ],
+  "candidates": [
+    {
+      "seed": 201,
+      "madeBy": "tripo",
+      "triangles": 23426,
+      "cutNeeded": 0.0,
+      "studs": [
+        16.3,
+        7.7
+      ],
+      "shapeProblems": [],
+      "holesPercent": 0.0,
+      "openEdges": 8932,
+      "closeups": "assets/models/test-suv/trials/seed-201/audit_closeups.png"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "checkedAtUtc": "2026-10-04T21:45:58.459287+00:00",
+  "sourceSha256": "0bceb38af8d30b754ae7940f728cc8c6386b5828315d751274dfeff75251fe81",
+  "exportSha256": "9e8681bbd7f5d8b4c759c046c91a0d230b911851c5ab09ff13f142709a0355c4",
+  "textureSha256": {
+    "BaseColor.png": "c64d82f0f3afc657b932855b97856143a6075909f512d5dfdc756babb22d515c",
+    "MetallicRoughness.png": "1562c66c7f10d8edfa84abeef8fafa37fe1f4954009d5dc99c27fe11b38e1d86"
+  },
+  "meshNames": [
+    "Tank_S01_01",
+    "Tank_S02_01",
+    "Tank_S03_01",
+    "Tank_S03_02",
+    "Tank_S04_01",
+    "Tank_S04_02",
+    "Tank_S05_01",
+    "Tank_S06_01",
+    "Tank_S06_02",
+    "Tank_S07_01",
+    "Tank_S07_02",
+    "Tank_S08_01"
+  ],
+  "trianglesPerMesh": [
+    5630,
+    6700,
+    9000,
+    2233,
+    9000,
+    3402,
+    8982,
+    9000,
+    1142,
+    9000,
+    248,
+    8467
+  ],
+  "totalTriangles": 72804,
+  "meshCount": 12,
+  "boundsGlbYUp": {
+    "min": [
+      -8.590604782104492,
+      0,
+      -8.645709037780762
+    ],
+    "max": [
+      8.590604782104492,
+      6,
+      8.645709037780762
+    ]
+  },
+  "checks": {
+    "meshTriangleLimit": true,
+    "height6Studs": true,
+    "bottomAtZero": true,
+    "embeddedPngTextures": true,
+    "tankPartNames": true
+  },
+  "studioImport": "unverified; user will upload",
+  "mapPlacement": "unverified"
+}

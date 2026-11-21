@@ -1,0 +1,16 @@
+{
+  "looks": "good",
+  "said": "Remove the logo, and upload it to replace the current boat. Then make it driveable",
+  "findingsShown": [
+    "weight: 27,348 triangles against a budget of 15,000",
+    "collar, both sides amidships: one small flipped sliver each, see-through (0.09% of the model)",
+    "collar, port side near the stern: a faintly lighter rectangle where the maker's label was painted out",
+    "seats and engine cowls: lumpy and faceted at this triangle count",
+    "console screen: the display is a smeared texture, not readable instruments"
+  ],
+  "note": "Said after seeing the audit sheets of this same Tripo 25,000-triangle model before the label was removed and the model turned; the user has not yet seen the sheets of this exact build.",
+  "exportSha256": "b73895a3e9acd963d8494a5fc2e609953e0209fa1638bf106fd4a63b351e5fb8",
+  "worstSurfaceError": 0.002,
+  "worstBackFacePercent": 0.09,
+  "recordedOn": "2026-11-17"
+}

@@ -1,0 +1,58 @@
+{
+  "checkedAtUtc": "2026-10-18T18:15:05.425587+00:00",
+  "status": "passed",
+  "mode": "check",
+  "baseBlueSha256": "e9f08426a558e02bff92aa3b6bbc1ca682a2c6e43ae41f91743543c7fd0dc3ce",
+  "exportSha256": "0a0a39809bd529db4c923a4b2efa42685584ef93c0c5e9d84ab646e2c10f5ae9",
+  "meshCount": 11,
+  "trianglesPerMesh": {
+    "Tube_Recessed_graphite": 2168,
+    "Tube_Dark_rubber_gasket": 1276,
+    "Tube_Polished_steel_edge": 3196,
+    "Tube_Glossy_cobalt_blue_enamel": 3732,
+    "Tube_Indicator_bright_cyan": 1456,
+    "Tube_Cyan_energy_core": 252,
+    "Tube_Cyan_glass_shell": 512,
+    "Tube_Worn_light_blue_panels": 1808,
+    "Tube_Diagnostic_screen": 108,
+    "Tube_Warm_status_light": 120,
+    "Tube_Faint_human_shadow": 52
+  },
+  "totalTriangles": 14680,
+  "boundsGlbYUp": {
+    "min": [
+      -4.783285617828369,
+      0,
+      -3.477780342102051
+    ],
+    "max": [
+      4.654874801635742,
+      12.100000381469727,
+      3.156754493713379
+    ]
+  },
+  "exportBytes": 558272,
+  "sha256": {
+    "assets/models/bluetube-glossy/exports/BlueTube_Glossy.glb": "e9f08426a558e02bff92aa3b6bbc1ca682a2c6e43ae41f91743543c7fd0dc3ce",
+    "assets/models/bluetube-glossy/exports/BlueTube_GreenCore.glb": "4846123480dac45e03e1184988ffeddf7a786ef4f81a4bb64bc08998d6385d93",
+    "assets/models/bluetube-glossy/exports/BlueTube_NeonYellowCore.glb": "b229a998309dace3fd3d8aca7b58f3ceea829df14f75917b1a8429262d1a07fd",
+    "assets/models/bluetube-glossy/exports/BlueTube_CrackedOozing.glb": "b91152dc8ff9551b2f50d778c9877197a688e51027abc02e75c19216eaee40ee",
+    "assets/models/bluetube-glossy/exports/BlueTube_FaintOccupant.glb": "0a0a39809bd529db4c923a4b2efa42685584ef93c0c5e9d84ab646e2c10f5ae9",
+    "assets/models/bluetube-glossy/source/FaintOccupantTube.blend": "b2f892f4ca9588e67cd9459c0d26bd076fa43319d8fad1ae3ef2db33d669dbe4",
+    "tools/blender/build_bluetube_faint_occupant.py": "52608a30d115e0cf7dda022ccf3e74d91a392059bbbe7868e64165455b902771",
+    "tools/blender/render_bluetube_glossy.py": "1ed30deb74a9df84008cc450ff1ec9a50174e4188f42720106d6aa35e93e9e22",
+    "assets/models/bluetube-glossy/review/occupant-front.png": "b40ded8485d149ae07d4f0ea03fd968f73305c2b069b92f2b41f6c2c83560be4",
+    "assets/models/bluetube-glossy/review/occupant-side.png": "96bad99e8f753fc5b2d627e32b7431350f48a5dbe16854e4f7fcb518461c5370",
+    "assets/models/bluetube-glossy/review/occupant-rear.png": "11c01ad53943fe8d8f53315371bbe60a9dcb2e7195320d884409179b9987ec19",
+    "assets/models/bluetube-glossy/review/occupant-quarter.png": "1ea94111982172da29703a565d0bff1f5559d100e889d8d473d45f2c34a5d279",
+    "assets/models/bluetube-glossy/review/occupant-top.png": "370485717b42f94aba7fac31f33ca8e51fb1948ed6c1fb979d4e152a06784996",
+    "assets/models/bluetube-glossy/review/occupant-night.png": "656089add4622682bb0457a2357a3e654490a9008a20069bb825d35a3d193f2b"
+  },
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "limitations": [
+    "The occupant is a faint, static silhouette; no character or animation is inside the chamber.",
+    "The transparent shadow and glass appearance require Studio verification under intended lighting."
+  ]
+}

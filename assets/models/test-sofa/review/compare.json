@@ -1,0 +1,44 @@
+{
+  "asset": "test-sofa",
+  "comparedOn": "2026-11-17 03:30",
+  "budget": 30000,
+  "brief": [
+    22.0,
+    4.0,
+    3.5
+  ],
+  "candidates": [
+    {
+      "seed": 201,
+      "madeBy": "TRELLIS.2 1024",
+      "triangles": 292443,
+      "cutNeeded": 0.923,
+      "studs": [
+        15.4,
+        4.4
+      ],
+      "shapeProblems": [
+        "15.4 studs long at the brief's height, where the brief says 22"
+      ],
+      "holesPercent": 0.0,
+      "openEdges": 71153,
+      "closeups": "assets/models/test-sofa/trials/seed-201/audit_closeups.png"
+    },
+    {
+      "seed": 202,
+      "madeBy": "tripo",
+      "triangles": 1962964,
+      "cutNeeded": 0.989,
+      "studs": [
+        15.0,
+        4.5
+      ],
+      "shapeProblems": [
+        "15.0 studs long at the brief's height, where the brief says 22"
+      ],
+      "holesPercent": 0.0,
+      "openEdges": 61176,
+      "closeups": "assets/models/test-sofa/trials/seed-202/audit_closeups.png"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "package": "assets/models/dark-fantasy-demon-female",
+  "stage": "5-visual-review-v21-awaiting-owner-approval",
+  "checkedAt": "2026-11-14T20:05:11.843573+00:00",
+  "visualApproval": {
+    "approved": false,
+    "priorV18ApprovedAt": "2026-11-14T06:55:43-05:00",
+    "note": "Rebuilt in v19-v21 after v18 audit (3D eye sockets/eyeballs/mouth cavity, bold 8-plate horns, sculpted fanned shoulder/wrist feathers, official Roblox template cages, TeamRed/TeamBlue variants); awaits owner Stage 5 review of v21 9-view renders before Studio import."
+  },
+  "palette": "Dark-Fantasy Charcoal, Obsidian & Accent Trim (Violet default + TeamRed / TeamBlue shooter variants, 3D Dynamic Head orbital sockets/eyeballs/teeth/tongue, 8-plate wide U-horns, sculpted multi-tier shoulder & wrist feather blades, official Roblox Clothing_Cage_Template & Body_Cage_Template conformal cages)",
+  "inputs": {
+    "source/DarkFantasyDemonFemaleSource.glb": {
+      "sha256": "1e43724c86c74d4ffd2b3d0789c50cd4603cff86a51276eb8ed3f87607278760",
+      "triangles": 299619,
+      "openEdges": 258133,
+      "nonManifoldEdges": 0
+    },
+    "source/DarkFantasyDemonFemaleReference.png": {
+      "sha256": "0d99fabbb97b9552b7691975f8a469b01f717f265b207a184f997d0b1a8fa438",
+      "present": true
+    }
+  },
+  "marketplaceReadiness": "marketplace_readiness.json",
+  "localReadinessPassed": true,
+  "bodyTriangles": 9580,
+  "accessoryTriangles": {
+    "DemonHorns.glb": 3072,
+    "DemonHair.glb": 3456,
+    "FeatheredShoulderMantle.glb": 1776,
+    "HipTassets.glb": 3456,
+    "LeftWristFeathers.glb": 288,
+    "RightWristFeathers.glb": 288
+  },
+  "limitations": [
+    "Local game-skin checks (gameSkinPassed=true) and Marketplace local prechecks (marketplaceLocalPrecheckPassed=true) pass on v21 exports; awaits owner Stage 5 visual approval of v21 renders.",
+    "STOP before upload (marketplaceUploadReady=false): Studio Avatar Setup must generate 17+ FACS FaceControls on Head, validate official template cage deformation in motion, and confirm creator/place ownership before Marketplace submission."
+  ],
+  "exports": {
+    "DarkFantasyDemonFemaleBody.glb": "842c854bbfa28696433979b2631e68ffd88dcee13b68abd0c780ecef9fcf8591",
+    "DarkFantasyDemonFemaleFull.glb": "53b9df32eb4a2d5d4494a742f42b98b5107cf3c852b32e6d5e9ba62f34fdfbda",
+    "DemonHair.glb": "4adbb684b6ff5a525e2845593021870fa1d70b7b9e87bea5ca03175caee74181",
+    "DemonHorns.glb": "b166c3ff5777276206a12864a46f5ec620b51c4d66d5c7d5c385358ce63242ea",
+    "FeatheredShoulderMantle.glb": "5bcb6a32ed40a7ba268c41c6254225ff779d5e76fab183bdcbd1f432838b6b47",
+    "HipTassets.glb": "04c58e4594436d7152962049ac5139be2c534d1aefce5ad90e92de391a0001db",
+    "LeftWristFeathers.glb": "4cdf04db7d321ba4d9e99105495416647682c7248bd507aa14194cc6733fc6bc",
+    "RightWristFeathers.glb": "436b7658603ebb0d52f0ee34289fe6f6377cb659a5aab02e06847df82b416a5f"
+  },
+  "textures": {
+    "DarkFantasyDemonAcc_ALB.png": "2ae4723311c62de3f38b752cb587da3e3b5cd34fd6af9a177faa35442ec9f8d6",
+    "DarkFantasyDemonAcc_NRM.png": "3255677590ac9efcfed3db963689721bb1ac3868269c3d9bf8069d742e5451a3",
+    "DarkFantasyDemonAcc_RGH.png": "8c2fe43fbd1fc0a937aea449753dc96898af44f6dc43b0ee00ba5560051ec532",
+    "DarkFantasyDemonAcc_TeamBlue_ALB.png": "790b32cda0960db411b37f4313fac150cc0befe9db0b8962dac2ef4682a7e57b",
+    "DarkFantasyDemonAcc_TeamRed_ALB.png": "e5ba2fee26f8e96e01ba908ec69629b05c91fc6dc5c0aa57b1036266c21d9e0b",
+    "DarkFantasyDemonBody_ALB.png": "1a0993946e5238d04df6cff6317de2b857ab697e8b137aa68e92f4088d2710ef",
+    "DarkFantasyDemonBody_NRM.png": "5fb8158232da252df9aa40bd84112444104ea57d3c41e93d2c5a7401ed21905e",
+    "DarkFantasyDemonBody_RGH.png": "aacce8b41d53e8fade1ae4a63154520b43d145d845f8acf7d71cf633d3f738b8",
+    "DarkFantasyDemonBody_TeamBlue_ALB.png": "505e333add8e680007b8b2edf1dabbb8c121752938dc2f4ce0da90b04313606e",
+    "DarkFantasyDemonBody_TeamRed_ALB.png": "851ebb25909457429b4b7c64deddec2c89c0095829841110cbcee19f64d8ccd7"
+  },
+  "review": {
+    "front.png": "b88afd7724a080a68bbe6cd58d4d60f208232d7312f01460c52dc4268191762c",
+    "head_closeup.png": "4c85056f6b1e9c48d7c3f04085c9d6e1a25bba457a0b3b5a9a10972287ae937f",
+    "ingame_scale.png": "cb72e2224b77656085fa82b6b26d4c58b3641029a8b4e0f800b3ecd874ecb19a",
+    "posed_limbs.png": "12b19817a5236b41405dfef3d3e6e3599c3dca1d8231ecd6ad3893367c1c86fa",
+    "posed_stress_side.png": "562265b913151152c5a4cd05ba96a1b1e155cbfa182824d041f1eba4499cd1ab",
+    "quarter.png": "872f3078179ba61c1d5f4cd955bdb419a83d460605f4c5e6fc0bf72e5d5f2454",
+    "rear.png": "069f812ca1da7758ce99660426d6689219cc9aa5795345024240d9efb83bf60a",
+    "side.png": "fa57d5f017545e28c2fd8229d034a54b6a83dab0d4b8b8689d75c96ee735c440",
+    "team_colors.png": "eb1900c117612d0d23c2e2e202e12e41787fd2efa383df93965816d818bedf6d"
+  },
+  "gameSkinPassed": true,
+  "marketplaceLocalPrecheckPassed": true,
+  "marketplaceUploadReady": false,
+  "remainingStudioBlockers": [
+    "Dynamic Head FACS animation poses (17+ poses / FaceControls) require Roblox Studio Avatar Setup / Character Auto-Setup execution & verification",
+    "Layered Accessory cage deformation and Studio Character Validation pass must be confirmed inside Roblox Studio before Marketplace submission"
+  ]
+}

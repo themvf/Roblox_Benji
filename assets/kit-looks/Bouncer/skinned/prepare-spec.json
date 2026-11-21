@@ -1,0 +1,49 @@
+{
+ "source": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\model.glb",
+ "out": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\skinned",
+ "turn": -90,
+ "marks": {
+  "neck": 0.69,
+  "waist": 0.43,
+  "hip": 0.37,
+  "knee": 0.23,
+  "ankle": 0.06,
+  "shoulder": [
+   0.245,
+   0.64
+  ],
+  "elbow": [
+   0.255,
+   0.53
+  ],
+  "wrist": [
+   0.262,
+   0.415
+  ],
+  "armRadius": 0.12,
+  "armInner": 0.165,
+  "legOuter": 0.195,
+  "handLength": 0.16,
+  "remove": [
+   {
+    "x": [
+     0.004,
+     0.032
+    ],
+    "y": [
+     -0.3,
+     -0.125
+    ],
+    "z": [
+     0.24,
+     0.68
+    ]
+   }
+  ]
+ },
+ "swing": 20,
+ "voxel": 0.004,
+ "faces": 12000,
+ "texture": 1024,
+ "fbx": "Bouncer-AvatarSetup.fbx"
+}

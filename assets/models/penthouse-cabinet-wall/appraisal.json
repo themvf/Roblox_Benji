@@ -1,0 +1,33 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-16",
+  "source": "PenthouseCabinetWall.glb",
+  "sourceSha256": "11b92d3c697417f4d9236253da0d69eb02b62d8c821575636ef3e176a0b2600f",
+  "measurements": {
+    "triangles": 282995,
+    "size": [
+      0.914,
+      0.334,
+      1.002
+    ],
+    "reliefRatio": 0.3331,
+    "openEdges": 178317,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "Too dense to survive as ONE mesh.",
+    "  Tiling instead: 8 meshes keeps 25% of the detail (70,748 triangles);",
+    "  Tiling instead: 15 meshes keeps 50% of the detail (141,497 triangles);",
+    "  the 10,000 cap is PER MESH, so `tile` beats `decimate` for anything",
+    "  broad that the player gets close to. Weigh the part count against",
+    "  your device budget.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Kitchen cabinet wall with ovens and fridge, repeated along kitchen cover blocks in the Penthouse (role: decor, about 10 studs tall)"
+}

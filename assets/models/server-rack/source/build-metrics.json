@@ -1,0 +1,14 @@
+{
+  "triangles": 4096,
+  "blenderDimensions": [
+    3.200000047683716,
+    3.7100000381469727,
+    8.0
+  ],
+  "heightStuds": 8,
+  "front": "glTF +Z",
+  "role": "background decoration",
+  "materialCount": 1,
+  "surfaceDetail": "recreated PNG atlas, not source GLB bake",
+  "sourceComponents": 168
+}

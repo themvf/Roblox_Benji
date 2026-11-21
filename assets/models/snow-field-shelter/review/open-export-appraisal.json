@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-10-22",
+  "source": "SnowFieldShelter_OpenDoor.glb",
+  "sourceSha256": "c4586dde18080abadf410d38d582f42066dc2bc46bbebf258b86933c19f6f1c4",
+  "measurements": {
+    "triangles": 16780,
+    "size": [
+      24.56,
+      35.617,
+      14.231
+    ],
+    "reliefRatio": 0.3996,
+    "openEdges": 22184,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Separate open-front-door decoration variant with a cut-through entry, outward-swinging door, threshold, and short interior walkway; not yet Studio-verified or approved for player passage."
+}

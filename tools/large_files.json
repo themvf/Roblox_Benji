@@ -1,4 +1,6 @@
 {
   "_comment": "Tracked files over 5 MB, each with the reason it cannot be rebuilt from something smaller. Enforced by tools/check_large_files.luau.",
-  "assets/models/military-wave-runner/source/MilitaryWaveRunner.glb": "picked TRELLIS candidate; a rerun of the generator does not reproduce it byte for byte"
+  "assets/models/military-wave-runner/source/MilitaryWaveRunner.glb": "picked TRELLIS candidate; a rerun of the generator does not reproduce it byte for byte",
+  "assets/models/radio-tower/source/RadioTower.glb": "picked TRELLIS candidate (seed 2); a rerun of the generator does not reproduce it byte for byte",
+  "assets/models/radio-tower/exports/RadioTower.glb": "scan-route export of 59k triangles in 45 meshes with two 1024 textures; the registry hash pins this exact build"
 }

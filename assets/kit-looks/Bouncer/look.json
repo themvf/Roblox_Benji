@@ -1,0 +1,1101 @@
+{
+  "kit": "Bouncer",
+  "bar": {
+    "outline": "a tall popped-up jacket collar, spiky swept-back black hair and a coiled earpiece wire breaking the silhouette",
+    "glow": "one magenta neon glow: the shutter-shade sunglasses only (the user had the zip's magenta removed from the chest, 2026-11-19)",
+    "texture": "hand-painted black leather with deep creases, scuffs and worn pale edges, visible stitching",
+    "proportions": "huge broad shoulders and chest, oversized gloved fists, chunky heavy boots, small head"
+  },
+  "bodyColor": "#1E2430",
+  "concept": "assets/kit-looks/Bouncer/concept.jpg",
+  "approved": {
+    "said": "I like c too (concept C: shutter-shade glowing glasses, popped collar, coiled wires, magenta zip, even lighting)",
+    "on": "2026-11-19"
+  },
+  "pieces": {
+    "Head": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/Head.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 4269
+    },
+    "UpperTorso": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/UpperTorso.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 4778
+    },
+    "LowerTorso": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/LowerTorso.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 914
+    },
+    "LeftUpperArm": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/LeftUpperArm.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 511
+    },
+    "LeftLowerArm": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/LeftLowerArm.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 703
+    },
+    "LeftHand": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/LeftHand.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 1035
+    },
+    "LeftUpperLeg": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/LeftUpperLeg.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 943
+    },
+    "LeftLowerLeg": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/LeftLowerLeg.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 1041
+    },
+    "LeftFoot": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/LeftFoot.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 671
+    },
+    "RightUpperArm": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/RightUpperArm.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 564
+    },
+    "RightLowerArm": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/RightLowerArm.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 702
+    },
+    "RightHand": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/RightHand.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 1039
+    },
+    "RightUpperLeg": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/RightUpperLeg.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 919
+    },
+    "RightLowerLeg": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/RightLowerLeg.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 1025
+    },
+    "RightFoot": {
+      "file": "assets/kit-looks/Bouncer/pieces/whole/RightFoot.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 686
+    }
+  },
+  "glowPlan": "sunglasses lenses",
+  "team": "a band round both upper sleeves in team colour (Palette.World); the magenta glow stays the same on both teams",
+  "drawStyle": "hand-painted black leather with deep creases, scuffs and worn cream edges, visible stitching, hand-painted stylized 3D game asset like a top Roblox kit, even studio lighting, plain dark navy background, no text --ar 1:1",
+  "glows": [
+    {
+      "part": "Head",
+      "centre": [
+        0,
+        -0.92,
+        5.44
+      ],
+      "size": [
+        0.66,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0.482,
+        -0.766,
+        5.44
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": 36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.482,
+        -0.766,
+        5.44
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": -36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0,
+        -0.92,
+        5.51
+      ],
+      "size": [
+        0.66,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0.482,
+        -0.766,
+        5.51
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": 36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.482,
+        -0.766,
+        5.51
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": -36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0,
+        -0.92,
+        5.58
+      ],
+      "size": [
+        0.66,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0.482,
+        -0.766,
+        5.58
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": 36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.482,
+        -0.766,
+        5.58
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": -36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0,
+        -0.92,
+        5.65
+      ],
+      "size": [
+        0.66,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0.482,
+        -0.766,
+        5.65
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": 36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.482,
+        -0.766,
+        5.65
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": -36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0,
+        -0.92,
+        5.72
+      ],
+      "size": [
+        0.66,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0.482,
+        -0.766,
+        5.72
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": 36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.482,
+        -0.766,
+        5.72
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": -36
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        2.0782,
+        0.1467,
+        3.8
+      ],
+      "size": [
+        0.3329,
+        0.035,
+        0.26
+      ],
+      "turn": 100.18,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -2.0782,
+        0.1467,
+        3.8
+      ],
+      "size": [
+        0.3329,
+        0.035,
+        0.26
+      ],
+      "turn": -100.18,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.9663,
+        0.4289,
+        3.8
+      ],
+      "size": [
+        0.3752,
+        0.035,
+        0.26
+      ],
+      "turn": 120.82,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.9663,
+        0.4289,
+        3.8
+      ],
+      "size": [
+        0.3752,
+        0.035,
+        0.26
+      ],
+      "turn": -120.82,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.7185,
+        0.6331,
+        3.8
+      ],
+      "size": [
+        0.4054,
+        0.035,
+        0.26
+      ],
+      "turn": 157.71,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.7185,
+        0.6331,
+        3.8
+      ],
+      "size": [
+        0.4054,
+        0.035,
+        0.26
+      ],
+      "turn": -157.71,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.369,
+        0.6742,
+        3.8
+      ],
+      "size": [
+        0.4361,
+        0.035,
+        0.26
+      ],
+      "turn": -172.88,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.369,
+        0.6742,
+        3.8
+      ],
+      "size": [
+        0.4361,
+        0.035,
+        0.26
+      ],
+      "turn": 172.88,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.5951,
+        0.2199,
+        3.8
+      ],
+      "size": [
+        1.4116,
+        0.035,
+        0.26
+      ],
+      "turn": -47.85,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.5951,
+        0.2199,
+        3.8
+      ],
+      "size": [
+        1.4116,
+        0.035,
+        0.26
+      ],
+      "turn": 47.85,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        2.0565,
+        -0.127,
+        3.8
+      ],
+      "size": [
+        0.3174,
+        0.035,
+        0.26
+      ],
+      "turn": 69.4,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -2.0565,
+        -0.127,
+        3.8
+      ],
+      "size": [
+        0.3174,
+        0.035,
+        0.26
+      ],
+      "turn": -69.4,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        2.0782,
+        0.1467,
+        3.8
+      ],
+      "size": [
+        0.3329,
+        0.035,
+        0.26
+      ],
+      "turn": 100.18,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -2.0782,
+        0.1467,
+        3.8
+      ],
+      "size": [
+        0.3329,
+        0.035,
+        0.26
+      ],
+      "turn": -100.18,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.6324,
+        -0.1825,
+        3.8
+      ],
+      "size": [
+        1.4253,
+        0.035,
+        0.26
+      ],
+      "turn": -133.29,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.6324,
+        -0.1825,
+        3.8
+      ],
+      "size": [
+        1.4253,
+        0.035,
+        0.26
+      ],
+      "turn": 133.29,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.3778,
+        -0.5885,
+        3.8
+      ],
+      "size": [
+        0.414,
+        0.035,
+        0.26
+      ],
+      "turn": 8.02,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.3778,
+        -0.5885,
+        3.8
+      ],
+      "size": [
+        0.414,
+        0.035,
+        0.26
+      ],
+      "turn": -8.02,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.689,
+        -0.5129,
+        3.8
+      ],
+      "size": [
+        0.3289,
+        0.035,
+        0.26
+      ],
+      "turn": 22.47,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.689,
+        -0.5129,
+        3.8
+      ],
+      "size": [
+        0.3289,
+        0.035,
+        0.26
+      ],
+      "turn": -22.47,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.9154,
+        -0.3584,
+        3.8
+      ],
+      "size": [
+        0.3114,
+        0.035,
+        0.26
+      ],
+      "turn": 47.45,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.9154,
+        -0.3584,
+        3.8
+      ],
+      "size": [
+        0.3114,
+        0.035,
+        0.26
+      ],
+      "turn": -47.45,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        2.0565,
+        -0.127,
+        3.8
+      ],
+      "size": [
+        0.3174,
+        0.035,
+        0.26
+      ],
+      "turn": 69.4,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -2.0565,
+        -0.127,
+        3.8
+      ],
+      "size": [
+        0.3174,
+        0.035,
+        0.26
+      ],
+      "turn": -69.4,
+      "color": "team",
+      "neon": false
+    }
+  ],
+  "whole": {
+    "drawing": "whole-body.jpg",
+    "model": "assets/kit-looks/Bouncer/pieces/whole/model.glb",
+    "from": "model.glb",
+    "triangles": 16875,
+    "frame": {
+      "centre": [
+        0,
+        0.499755859375
+      ],
+      "side": 1.07947265625,
+      "pixels": 1024,
+      "height": 0.99951171875,
+      "width": 0.68408203125
+    },
+    "marks": {
+      "neck": 0.69,
+      "waist": 0.43,
+      "hip": 0.37,
+      "knee": 0.23,
+      "ankle": 0.06,
+      "shoulder": [
+        0.245,
+        0.64
+      ],
+      "elbow": [
+        0.255,
+        0.53
+      ],
+      "wrist": [
+        0.262,
+        0.415
+      ],
+      "armRadius": 0.12,
+      "armInner": 0.165,
+      "legOuter": 0.195,
+      "handLength": 0.16,
+      "handScale": 1.25,
+      "overlap": 0.02,
+      "overlapHip": 0.045,
+      "decimate": {
+        "Head": 0.6
+      },
+      "remove": [
+        {
+          "x": [
+            0.004,
+            0.032
+          ],
+          "y": [
+            -0.3,
+            -0.125
+          ],
+          "z": [
+            0.24,
+            0.68
+          ]
+        }
+      ],
+      "collar": {
+        "z": [
+          0.655,
+          0.75
+        ],
+        "rMin": 0.118,
+        "scaleZ": 1.6,
+        "flare": 1.12
+      }
+    },
+    "unlight": [
+      {
+        "x": [
+          -0.13,
+          0.14
+        ],
+        "z": [
+          0.775,
+          0.865
+        ],
+        "front": true,
+        "darken": 0.35
+      }
+    ],
+    "detail": {
+      "grainFrom": [
+        230,
+        330,
+        500,
+        620
+      ]
+    }
+  },
+  "setAside": {
+    "pieces": {
+      "helmet": {
+        "crop": null,
+        "file": "assets/kit-looks/Bouncer/pieces/helmet.glb",
+        "turn": -90,
+        "triangles": 3878,
+        "subject": "a single chunky blocky Roblox character head, matte black face with no features, spiky swept-up black hair, glowing magenta shutter-shade sunglasses, a coiled black earpiece wire on each side, shown alone with no neck, no collar and no body, front view",
+        "source": "drawn",
+        "drawing": "head.png",
+        "from": "model.glb",
+        "flip": false
+      },
+      "chest": {
+        "crop": null,
+        "file": "assets/kit-looks/Bouncer/pieces/chest.glb",
+        "turn": -90,
+        "triangles": 2985,
+        "subject": "a single sleeveless black leather vest, chunky and boxy like a block, a tall popped-up collar, a glowing magenta zip line down the front over a black t-shirt, the armholes cut flat and square at the shoulders, shown whole and alone on an invisible mannequin, front view",
+        "source": "drawn",
+        "drawing": "vest.jpg",
+        "from": "model.glb",
+        "flip": false,
+        "slot": {
+          "sleeve": null,
+          "fillWidth": 2.95,
+          "box": [
+            2.95,
+            1.7,
+            2.4
+          ],
+          "centre": [
+            0,
+            0,
+            3.73
+          ],
+          "fillHeight": 2.95
+        }
+      },
+      "waist": {
+        "crop": null,
+        "file": "assets/kit-looks/Bouncer/pieces/waist.glb",
+        "turn": -90,
+        "triangles": 922,
+        "subject": "a single wide black leather belt with a square buckle and the bottom hem of a leather jacket around it, shown alone with no body inside, front view",
+        "source": "drawn",
+        "drawing": "belt.jpg",
+        "from": "model.glb",
+        "flip": false,
+        "slot": {
+          "fillWidth": 2.7
+        }
+      },
+      "pauldron": {
+        "crop": null,
+        "file": "assets/kit-looks/Bouncer/pieces/pauldron.glb",
+        "turn": -90,
+        "triangles": 1440,
+        "subject": "a single short puffy black leather jacket sleeve for an upper arm, a short thick tube standing straight upright, open at both ends, shown alone with no arm inside, three-quarter view",
+        "source": "drawn",
+        "from": "model.glb",
+        "flip": false,
+        "slot": {
+          "upright": true,
+          "centre": [
+            1.44,
+            0,
+            4.0
+          ],
+          "box": [
+            1.3,
+            1.3,
+            1.35
+          ],
+          "sleeve": null
+        },
+        "drawing": "shoulder-sleeve.png",
+        "finish": {
+          "like": "gauntlet",
+          "glow": "#14161C",
+          "scratches": true
+        }
+      },
+      "gauntlet": {
+        "crop": null,
+        "file": "assets/kit-looks/Bouncer/pieces/gauntlet.glb",
+        "turn": -90,
+        "triangles": 958,
+        "subject": "a single black leather jacket forearm sleeve with a turned-back worn cuff, a short thick tube standing straight upright, open at both ends, shown alone with no arm inside, three-quarter view",
+        "source": "drawn",
+        "drawing": "sleeve-tube.jpg",
+        "from": "model.glb",
+        "flip": false,
+        "slot": {
+          "box": [
+            1.12,
+            1.12,
+            1.25
+          ]
+        },
+        "trim": 0.88
+      },
+      "fist": {
+        "crop": null,
+        "file": "assets/kit-looks/Bouncer/pieces/fist.glb",
+        "turn": -90,
+        "triangles": 552,
+        "subject": "a single oversized black leather LEFT-hand glove, clenched into a fist, hanging straight down with the wrist cuff at the top and the knuckles at the bottom, shown alone, front view",
+        "source": "drawn",
+        "drawing": "glove.jpg",
+        "handed": "left",
+        "from": "model.glb",
+        "flip": false
+      },
+      "thigh": {
+        "crop": null,
+        "file": "assets/kit-looks/Bouncer/pieces/thigh.glb",
+        "turn": -90,
+        "triangles": 958,
+        "subject": "a single baggy black leather trouser leg section for a thigh, a thick tube standing straight upright, open at both ends, shown alone with no leg inside, three-quarter view",
+        "source": "draw",
+        "from": "model.glb",
+        "flip": false,
+        "sharedFrom": "gauntlet"
+      },
+      "greave": {
+        "crop": null,
+        "file": "assets/kit-looks/Bouncer/pieces/greave.glb",
+        "turn": -90,
+        "triangles": 958,
+        "subject": "a single baggy black leather trouser leg section for a shin with a scuffed knee, a thick tube standing straight upright, open at both ends, shown alone with no leg inside, three-quarter view",
+        "source": "draw",
+        "from": "model.glb",
+        "flip": false,
+        "sharedFrom": "gauntlet",
+        "trim": 0.88
+      },
+      "boot": {
+        "crop": null,
+        "file": "assets/kit-looks/Bouncer/pieces/boot.glb",
+        "turn": -90,
+        "triangles": 728,
+        "subject": "a single heavy chunky black leather ankle boot with a thick sole and worn cream scuffs, low, ending just above the ankle, shown alone, three-quarter view from the front",
+        "source": "drawn",
+        "drawing": "boot.jpg",
+        "from": "model.glb",
+        "flip": false,
+        "trim": 0.6,
+        "slot": {
+          "box": [
+            1.2,
+            1.85,
+            0.7
+          ],
+          "centre": [
+            0.55,
+            -0.16,
+            0.3
+          ]
+        }
+      }
+    },
+    "glows": [
+      {
+        "part": "Head",
+        "centre": [
+          0.04,
+          -0.975,
+          5.39
+        ],
+        "size": [
+          1.2,
+          0.03,
+          0.05
+        ],
+        "color": "#FF3CDC"
+      },
+      {
+        "part": "Head",
+        "centre": [
+          0.04,
+          -0.975,
+          5.3
+        ],
+        "size": [
+          1.2,
+          0.03,
+          0.05
+        ],
+        "color": "#FF3CDC"
+      },
+      {
+        "part": "Head",
+        "centre": [
+          0.04,
+          -0.975,
+          5.21
+        ],
+        "size": [
+          1.2,
+          0.03,
+          0.05
+        ],
+        "color": "#FF3CDC"
+      },
+      {
+        "part": "Head",
+        "centre": [
+          0.395,
+          -0.975,
+          5.12
+        ],
+        "size": [
+          0.5,
+          0.03,
+          0.05
+        ],
+        "color": "#FF3CDC"
+      },
+      {
+        "part": "Head",
+        "centre": [
+          -0.355,
+          -0.975,
+          5.12
+        ],
+        "size": [
+          0.42,
+          0.03,
+          0.05
+        ],
+        "color": "#FF3CDC"
+      },
+      {
+        "part": "Head",
+        "centre": [
+          0.395,
+          -0.975,
+          5.03
+        ],
+        "size": [
+          0.5,
+          0.03,
+          0.05
+        ],
+        "color": "#FF3CDC"
+      },
+      {
+        "part": "Head",
+        "centre": [
+          -0.355,
+          -0.975,
+          5.03
+        ],
+        "size": [
+          0.42,
+          0.03,
+          0.05
+        ],
+        "color": "#FF3CDC"
+      }
+    ]
+  },
+  "glowColor": "#FF3CDC",
+  "skinned": {
+    "prepared": {
+      "shells": 24,
+      "accessoryShells": 12,
+      "remeshTriangles": 292908,
+      "bodyTriangles": 12000,
+      "bodyOpenEdges": 0,
+      "height": 6.05,
+      "HairTriangles": 4028,
+      "HeadgearTriangles": 2256
+    },
+    "stage": "prepared for Avatar Setup"
+  },
+  "skinned-trellis": {
+    "prepared": {
+      "debrisFacesDropped": 752,
+      "shells": 136,
+      "accessoryShells": 35,
+      "HeadgearTriangles": 0,
+      "remeshTriangles": 468368,
+      "hairFlecksCleaned": 20528,
+      "bodyTriangles": 12000,
+      "bodyOpenEdges": 0,
+      "height": 5.757,
+      "HairTriangles": 4000
+    },
+    "stage": "prepared for Avatar Setup",
+    "source": "assets/kit-looks/Bouncer/compare/trellis-tpose/seed-101-1024.glb"
+  }
+}

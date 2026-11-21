@@ -1,0 +1,48 @@
+{
+  "checkedAtUtc": "20261011T002508943416Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "filesSha256": {
+    "source/design-reference.png": "437d4e7934da004cc6dbbfe5747115958e9552a304f743db32e47bd0bee5c15f",
+    "source/trellis-original.glb": "341ac0d42e80d5b3895335bb0eae03f6e5331d29bbcc7c4cec094f40fe8936c2",
+    "source/ShippingContainer.blend": "9a2bf70e6c00487e49491168948114b493b99b44b6ec54eb43651f0de9a6ffdf",
+    "exports/ShippingContainer.glb": "f781c6134eec998be2b858cd752a5e3c971b858329a07691938d9b4557fb8fb7",
+    "textures/Container_Color.png": "a1c95d1c98c4ad5bbc1a5951cc723f11e5a86a28c98f8387ce2269a1820c1d75",
+    "textures/Container_Roughness.png": "dc76932c3c62b1342e4cab0bffc56696d9fdf37af359efd50a789ac252e2d4a0",
+    "textures/Container_Metalness.png": "ac521bec6684e21929af9d8ae1517e57e9beb983bbe816111ecefdfd52c250d8",
+    "appraisal.json": "c8bdfe43f53645e67b3d7b7aa5554369ced927bd80cac24447f793b278ad1563",
+    "views.png": "0f61421eed7b4d1f4b7c18e74a950ecdf4e74f6eca5b6d3a4465d04a2ee3540f",
+    "SetupDecoration.luau": "e4196ffb5466ade1b3392c696a88219e37a00d56bcfb067c8bf04742b90487ff",
+    "review/final-quarter.png": "ee64ee35e4285d022723ab2849ecc3373545cb654faf728af8d528c6596f97dc",
+    "review/final-doors.png": "36e5192985b2a63e24c08fbe7af32fce20fc9896dd505e8c35c25d52c51b4a83",
+    "review/final-side.png": "7b938995287abf024af79eddf5532a34072b19b4737cc09fa70962fb1519fcf0",
+    "review/final-rear.png": "945e7ef19c8de4d97e652fe37679e7349cc9e5d0e6d548e22aa8b1feacf24c91"
+  },
+  "measured": {
+    "triangles": 7824,
+    "boundsGlbYUp": {
+      "min": [
+        -11.10099983215332,
+        0,
+        -4.019999980926514
+      ],
+      "max": [
+        11.324999809265137,
+        10.779999732971191,
+        4.033999919891357
+      ]
+    },
+    "embeddedTextureFormats": [
+      "image/png",
+      "image/png"
+    ],
+    "exportBytes": 395496
+  },
+  "limitations": [
+    "Local checks and Blender renders do not establish visual approval or Studio import.",
+    "The 22-stud nominal length and decoration role are provisional.",
+    "Check-only verifies saved files and hashes; it does not regenerate views."
+  ]
+}

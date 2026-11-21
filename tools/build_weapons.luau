@@ -4,6 +4,7 @@
 --   assets/WeaponsSystem.rbxm          the kit's system folder (once)
 --   assets/weapons/tools/<Name>.rbxm   one Tool per Rivals weapon
 local fs = require("@lune/fs")
+local serde = require("@lune/serde")
 local roblox = require("@lune/roblox")
 local Instance = roblox.Instance
 local Enum = roblox.Enum
@@ -26,6 +27,7 @@ local BASE = {
     Shotgun = "Shotgun",
     Shorty = "Shotgun",
     Sniper = "SniperRifle",
+    WhiteSniper = "SniperRifle",
     Handgun = "Pistol",
     Revolver = "Pistol",
     Spray = "Pistol",
@@ -98,9 +100,56 @@ local function applyStats(tool, name, stats)
     else
         setValue(config, "FireMode", "StringValue", stats.Auto and "Automatic" or "Semiautomatic")
     end
-    setValue(config, "HasScope", "BoolValue", name == "Sniper")
+    setValue(config, "HasScope", "BoolValue", name == "Sniper" or name == "WhiteSniper")
+    if stats.DamageFractionOfMaxHealth then
+        setValue(config, "DamageFractionOfMaxHealth", "NumberValue", stats.DamageFractionOfMaxHealth)
+    end
     -- Crit multiplier read by our damage callback for headshots
     setValue(config, "CritMultiplier", "NumberValue", stats.Crit[1] / stats.Damage[1])
+end
+
+local function attachWhiteSniperArt(tool)
+    local manifest = serde.decode("json", fs.readFile("assets/models/white-sniper/studio_import.json"))
+    assert(#manifest.parts == 8, "White Sniper Studio import must have eight mesh sections")
+    local model = tool:FindFirstChild("Sniper")
+    local rifle = model and model:FindFirstChild("Rifle")
+    assert(rifle and model.PrimaryPart == rifle, "Sniper kit Rifle and firing attachments must remain intact")
+
+    -- The kit model still supplies the muzzle, bolt, and grip used by its scripts.
+    -- Hide only its geometry, then weld the uploaded visual to the same rifle.
+    for _, descendant in model:GetDescendants() do
+        if descendant:IsA("BasePart") then
+            descendant.Transparency = 1
+        end
+    end
+    local alignment = rifle.CFrame * CFrame.Angles(0, math.pi, 0)
+    for _, record in manifest.parts do
+        local mesh = Instance.new("MeshPart")
+        mesh.Name = record.name
+        mesh.MeshId = record.meshId
+        mesh.Size = Vector3.new(unpack(record.size))
+        mesh.CFrame = alignment * CFrame.new(unpack(record.offset))
+        mesh.Color = Color3.new(1, 1, 1)
+        mesh.Anchored = false
+        mesh.CanCollide = false
+        mesh.CanTouch = false
+        mesh.CanQuery = false
+        mesh.Massless = true
+        local surface = Instance.new("SurfaceAppearance")
+        surface.ColorMap = record.colorMap
+        surface.MetalnessMap = record.metalnessMap
+        surface.RoughnessMap = record.roughnessMap
+        if record.normalMap ~= "" then
+            surface.NormalMap = record.normalMap
+        end
+        surface.Parent = mesh
+        mesh.Parent = model
+        local joint = Instance.new("WeldConstraint")
+        joint.Name = "ArtWeld"
+        joint.Part0 = rifle
+        joint.Part1 = mesh
+        joint.Parent = mesh
+    end
 end
 
 -- 1. System folder, taken once from the Pistol download
@@ -284,6 +333,9 @@ for name, base in BASE do
         embedded:Destroy()
     end
     applyStats(tool, name, stats)
+    if name == "WhiteSniper" then
+        attachWhiteSniperArt(tool)
+    end
     fs.writeFile("assets/weapons/tools/" .. name .. ".rbxm", roblox.serializeModel({ tool }))
     count += 1
 end

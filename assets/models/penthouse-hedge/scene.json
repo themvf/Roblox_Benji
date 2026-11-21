@@ -1,0 +1,23 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "penthouse-hedge": {
+      "description": "Clipped hedge in a stone planter, repeated along terrace cover blocks in the Penthouse (role: decor, about 8 studs tall)",
+      "source": "assets/models/penthouse-hedge/source/PenthouseHedge.glb",
+      "out": "assets/models/penthouse-hedge/exports/PenthouseHedge.glb",
+      "fit": {
+        "axis": "z",
+        "size": 8.0
+      },
+      "decimate": 56859,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      },
+      "tile": [
+        6,
+        2
+      ]
+    }
+  }
+}

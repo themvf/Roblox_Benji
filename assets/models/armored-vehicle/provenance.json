@@ -1,0 +1,31 @@
+{
+  "asset": "armored-vehicle",
+  "recordedOn": "2026-11-17",
+  "reference": {
+    "file": null,
+    "sha256": null,
+    "origin": "unknown",
+    "madeWith": null,
+    "prompt": null
+  },
+  "mesh": {
+    "file": "assets/models/armored-vehicle/source/ArmoredVehicle.glb",
+    "sha256": "36d894ac3a62726088ed9d534ea56402d640a7b9c7df5bb285829e54ffb9a956",
+    "generator": {
+      "service": "tripo",
+      "space": null,
+      "seed": 201,
+      "resolution": "imported",
+      "file": "ArmoredVehicleTripo.glb",
+      "sha256": "36d894ac3a62726088ed9d534ea56402d640a7b9c7df5bb285829e54ffb9a956",
+      "settings": "Tripo simplified export (23,907 triangles). Roughness set to 0.85 and metal to 0 in its texture, and the model turned nose-forward, by tools here",
+      "decoded": null,
+      "reference": null,
+      "importedOn": "2026-11-17"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "checkedOn": "2026-11-16 19:45",
+  "export": "assets/models/penthouse-aquarium/exports/PenthouseAquarium.glb",
+  "exportSha256": "aafb567f85878433794014a71c8515e530c1a300f35c3e9b0ad5b91bd6ee3447",
+  "sourceSha256": "8ba989a66cc6bf2aa6f87227ddcc892c3e9fafa185b6461f139bf0862e5a68ab",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "auto",
+    "suggested": "clean",
+    "reasons": [
+      "it needs a 95% triangle cut, past the 90% where shape is lost"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.994,
+      "side": 0.989,
+      "top": 0.996
+    },
+    "surfaceError": {
+      "front": 0.114,
+      "back": 0.105,
+      "right": 0.181,
+      "left": 0.181,
+      "top": 0.037,
+      "bottom": 0.058
+    },
+    "worstSurfaceError": 0.181,
+    "sheet": "assets/models/penthouse-aquarium/review/detail.png",
+    "limit": 0.08,
+    "passed": true
+  },
+  "ground": {
+    "bottomFill": 0.905,
+    "aboveFill": 0.178,
+    "ratio": 5.09,
+    "footprintStuds": [
+      12.7,
+      2.1
+    ],
+    "flagged": true
+  },
+  "textureBleed": {
+    "image": 0,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.754,
+    "backgroundBrightness": 0.365,
+    "surfaceBrightness": 0.393,
+    "bleedPercent": 0.04
+  },
+  "budget": {
+    "role": "decor",
+    "budget": 30000,
+    "triangles": 18442,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      12.733,
+      10.027,
+      2.107
+    ],
+    "heightStuds": 10.0,
+    "kind": "prop",
+    "mounts": {},
+    "mountSheet": "assets/models/penthouse-aquarium/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        2,
+        2
+      ],
+      "decimate": 15000,
+      "worstMesh": 5957,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     PenthouseAquarium.glb (3.38 MB)",
+    "           geometry_0.001                   3,171 tris",
+    "           geometry_0.002                   5,079 tris",
+    "           geometry_0.003                   4,235 tris",
+    "           geometry_0.004                   5,957 tris",
+    "           total                           18,442 tris (4 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/penthouse-aquarium/review/audit.png",
+      "assets/models/penthouse-aquarium/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.16,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

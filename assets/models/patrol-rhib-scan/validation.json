@@ -1,0 +1,125 @@
+{
+  "checkedOn": "2026-11-17 04:11",
+  "export": "assets/models/patrol-rhib-scan/exports/PatrolRhibScan.glb",
+  "exportSha256": "b73895a3e9acd963d8494a5fc2e609953e0209fa1638bf106fd4a63b351e5fb8",
+  "sourceSha256": "ccfdc94e1b938ef9284c888c882bec8575ff3d6b8b7b6e2717e5f6dc3104fc3d",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "scan",
+    "suggested": "clean",
+    "reasons": [
+      "the role is interactive, so players are right next to it and its parts may need to move",
+      "it has thin bars or open framework, which a generated mesh tears and a reduction tears further"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 1.0,
+      "side": 1.0,
+      "top": 0.999
+    },
+    "surfaceError": {
+      "front": 0.001,
+      "back": 0.002,
+      "right": 0.002,
+      "left": 0.001,
+      "top": 0.001,
+      "bottom": 0.0
+    },
+    "worstSurfaceError": 0.002,
+    "noise": 0.002,
+    "sheet": "assets/models/patrol-rhib-scan/review/detail.png",
+    "limit": 0.08,
+    "passed": true
+  },
+  "ground": {
+    "bottomFill": 0.003,
+    "aboveFill": 0.747,
+    "ratio": 0.0,
+    "footprintStuds": [
+      10.91,
+      29.96
+    ],
+    "flagged": false
+  },
+  "textureBleed": {
+    "image": 1,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.3,
+    "backgroundBrightness": 0.053,
+    "surfaceBrightness": 0.154,
+    "bleedPercent": 1.22
+  },
+  "budget": {
+    "role": "interactive",
+    "budget": 15000,
+    "triangles": 27348,
+    "waiver": "Kept at Tripo's own 25,154-triangle retopology. Cutting it to the 15,000 vehicle budget here made 3.33% of it see-through (build of 2026-11-17); a lighter version has to come from Tripo's Retopo, not from our reduction. At most 4 copies on the map.",
+    "passed": true,
+    "within": false
+  },
+  "contract": {
+    "sizeStuds": [
+      10.921,
+      11.57,
+      29.97
+    ],
+    "heightStuds": 11.57,
+    "kind": "vehicle",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.95,
+        0.0
+      ],
+      "DriverSeat": [
+        -0.9,
+        6.6,
+        0.6
+      ]
+    },
+    "mountSheet": "assets/models/patrol-rhib-scan/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        2,
+        2
+      ],
+      "decimate": 25000,
+      "worstMesh": 8579,
+      "triangles": 27348,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     PatrolRhibScan.glb (1.96 MB)",
+    "           tripo_mesh_e3676336-31d4-4126-bd5d-6132232e0266.001     5,340 tris",
+    "           tripo_mesh_e3676336-31d4-4126-bd5d-6132232e0266.002     8,579 tris",
+    "           tripo_mesh_e3676336-31d4-4126-bd5d-6132232e0266.003     4,916 tris",
+    "           tripo_mesh_e3676336-31d4-4126-bd5d-6132232e0266.004     8,513 tris",
+    "           total                           27,348 tris (4 meshes)",
+    "           texture                      1024x1024  image/jpeg",
+    "           texture                      1024x1024  image/jpeg",
+    "           texture                      1024x1024  image/jpeg"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/patrol-rhib-scan/review/audit.png",
+      "assets/models/patrol-rhib-scan/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.09,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

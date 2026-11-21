@@ -995,6 +995,7 @@ def cmd_generate(args):
 
 
 IMPORT_SEED_BASE = 200  # models made outside this tool are filed as seed-201, seed-202, ...
+PACKED_EXTENSIONS = ("EXT_meshopt_compression", "KHR_draco_mesh_compression", "KHR_mesh_quantization")
 
 
 def made_by(trial):
@@ -1028,7 +1029,23 @@ def cmd_import(args):
         seed = max([IMPORT_SEED_BASE] + [n for n in taken if n > IMPORT_SEED_BASE]) + 1
     trial = os.path.join(pkg, "trials", f"seed-{seed}")
     os.makedirs(trial, exist_ok=True)
-    shutil.copyfile(args.file, os.path.join(trial, "candidate.glb"))
+    # Services ship compressed files (Tripo: gltfpack with EXT_meshopt_compression), which
+    # Blender cannot open: the first Tripo import appraised as 0 triangles and the comparison
+    # called it a fit. Decode to a plain file first; the geometry is unchanged.
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import outline_check
+
+    packed = [e for e in outline_check.read_glb(args.file)[0].get("extensionsUsed", []) if e in PACKED_EXTENSIONS]
+    if packed:
+        import gltf_post
+
+        print(f"decoding {', '.join(packed)} so Blender can open it...", flush=True)
+        gltf_post.cli("dequantize", args.file, os.path.join(trial, "candidate.glb"))
+    else:
+        shutil.copyfile(args.file, os.path.join(trial, "candidate.glb"))
+    for stale in ("appraisal.json", "audit.json", "views.png"):
+        if os.path.isfile(os.path.join(trial, stale)):
+            os.remove(os.path.join(trial, stale))
     reference = reference_image(pkg)
     write_json(
         os.path.join(trial, "generation.json"),
@@ -1040,12 +1057,16 @@ def cmd_import(args):
             "file": os.path.basename(args.file),
             "sha256": digest,
             "settings": args.settings,
+            "decoded": packed or None,
             "reference": os.path.basename(reference) if reference else None,
             "importedOn": time.strftime("%Y-%m-%d"),
         },
     )
     print(f"imported {os.path.basename(args.file)} from {args.service} as seed {seed}")
     appraise_trials(pkg)
+    record = os.path.join(trial, "appraisal.json")
+    if not os.path.isfile(record) or not read_json(record).get("measurements", {}).get("triangles"):
+        sys.exit(f"FAIL: Blender could not read seed {seed} ({os.path.basename(args.file)}); see the error above. It cannot be compared or built until it opens.")
     contact_sheet(pkg)
     for problem in trial_shape(trial, brief):
         print(f"shape: seed {seed} is {problem}.")
@@ -1076,6 +1097,9 @@ def cmd_compare(args):
         if (not audited or audited.get("sourceSha256") != sha256(candidate)) and not args.no_audit:
             audited = run_audit(pkg, candidate, trial, height_studs=brief.get("heightStuds", 0.0))
         triangles = measured.get("triangles") or 0
+        if not triangles:
+            print(f"  seed {trial.rsplit('-', 1)[1]} ({made_by(trial)}): could not be read by Blender; left out. Import it again.")
+            continue
         size = measured.get("size")
         long_side, short_side = shape.mesh_studs(size, brief) if size and size[2] > 0 else (None, None)
         rows.append(
@@ -1798,7 +1822,15 @@ def build_clean(name, pkg, source, blender, brief):
             "tools/blender/build_military_wave_runner.py is the worked example."
         )
     out = os.path.join(pkg, "exports", pascal(name) + "Clean.glb")
-    built = subprocess.run([blender, "-b", "-noaudio", "--python", builder], capture_output=True, text=True, encoding="utf-8", errors="replace")
+    # Blender exits 0 when a script raises unless told otherwise. A builder that failed its own
+    # check left the previous export in place, and that old file was audited and reported as
+    # the new build (the red SUV, 2026-11-17). So: fail on an exception, and on a stale file.
+    started = time.time()
+    built = subprocess.run(
+        [blender, "-b", "-noaudio", "--python-exit-code", "1", "--python", builder], capture_output=True, text=True, encoding="utf-8", errors="replace"
+    )
+    if built.returncode == 0 and os.path.isfile(out) and os.path.getmtime(out) < started - 2:
+        sys.exit(f"FAIL: {rel(builder)} ran but did not write {rel(out)}; the file on disk is from an earlier build.\n" + printable(built.stdout[-800:]))
     if built.returncode != 0 or not os.path.isfile(out):
         sys.exit("clean build failed. " + printable((built.stdout + built.stderr)[-800:]))
     inspect = subprocess.run(

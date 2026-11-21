@@ -1,0 +1,107 @@
+{
+  "source": "PenthouseSofa.glb",
+  "size": [
+    15.41,
+    4.46,
+    3.511
+  ],
+  "longAxis": "x",
+  "views": [
+    {
+      "name": "front",
+      "kind": "overview",
+      "color": "color_front.png",
+      "holes": "holes_front.png"
+    },
+    {
+      "name": "back",
+      "kind": "overview",
+      "color": "color_back.png",
+      "holes": "holes_back.png"
+    },
+    {
+      "name": "left",
+      "kind": "overview",
+      "color": "color_left.png",
+      "holes": "holes_left.png"
+    },
+    {
+      "name": "right",
+      "kind": "overview",
+      "color": "color_right.png",
+      "holes": "holes_right.png"
+    },
+    {
+      "name": "top",
+      "kind": "overview",
+      "color": "color_top.png",
+      "holes": "holes_top.png"
+    },
+    {
+      "name": "bottom",
+      "kind": "overview",
+      "color": "color_bottom.png",
+      "holes": "holes_bottom.png"
+    },
+    {
+      "name": "front-left",
+      "kind": "overview",
+      "color": "color_front-left.png",
+      "holes": "holes_front-left.png"
+    },
+    {
+      "name": "front-right",
+      "kind": "overview",
+      "color": "color_front-right.png",
+      "holes": "holes_front-right.png"
+    },
+    {
+      "name": "back-left",
+      "kind": "overview",
+      "color": "color_back-left.png",
+      "holes": "holes_back-left.png"
+    },
+    {
+      "name": "back-right",
+      "kind": "overview",
+      "color": "color_back-right.png",
+      "holes": "holes_back-right.png"
+    },
+    {
+      "name": "section-1a",
+      "kind": "closeup",
+      "color": "color_section-1a.png",
+      "holes": "holes_section-1a.png"
+    },
+    {
+      "name": "section-1b",
+      "kind": "closeup",
+      "color": "color_section-1b.png",
+      "holes": "holes_section-1b.png"
+    },
+    {
+      "name": "section-2a",
+      "kind": "closeup",
+      "color": "color_section-2a.png",
+      "holes": "holes_section-2a.png"
+    },
+    {
+      "name": "section-2b",
+      "kind": "closeup",
+      "color": "color_section-2b.png",
+      "holes": "holes_section-2b.png"
+    },
+    {
+      "name": "section-3a",
+      "kind": "closeup",
+      "color": "color_section-3a.png",
+      "holes": "holes_section-3a.png"
+    },
+    {
+      "name": "section-3b",
+      "kind": "closeup",
+      "color": "color_section-3b.png",
+      "holes": "holes_section-3b.png"
+    }
+  ]
+}

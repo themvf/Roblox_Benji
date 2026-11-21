@@ -1,0 +1,29 @@
+{
+  "triangles": {
+    "Head": 3646,
+    "UpperTorso": 2921,
+    "LowerTorso": 1178,
+    "LeftUpperArm": 974,
+    "LeftLowerArm": 984,
+    "LeftHand": 908,
+    "LeftUpperLeg": 976,
+    "LeftLowerLeg": 990,
+    "LeftFoot": 954,
+    "RightUpperArm": 941,
+    "RightLowerArm": 972,
+    "RightHand": 940,
+    "RightUpperLeg": 965,
+    "RightLowerLeg": 984,
+    "RightFoot": 984
+  },
+  "gaps": {
+    "front": {
+      "area": 0.0,
+      "holes": []
+    },
+    "back": {
+      "area": 0.0,
+      "holes": []
+    }
+  }
+}

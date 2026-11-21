@@ -1,0 +1,3081 @@
+<roblox version="4">
+  <Item class="Folder" referent="RBX0">
+    <Properties>
+      <string name="Name">SciFiFoundry</string>
+    </Properties>
+    <Item class="MeshPart" referent="RBX1">
+      <Properties>
+        <string name="Name">Red_CryoTelemetryPanel</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://127623062517526</url></Content>
+        <Vector3 name="Size"><X>1.678058</X><Y>3.744000</Y><Z>1.138135</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-78.000000</X>
+          <Y>2.192000</Y>
+          <Z>-113.000000</Z>
+          <R00>-0.529919</R00>
+          <R01>0.000000</R01>
+          <R02>0.848048</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.848048</R20>
+          <R21>0.000000</R21>
+          <R22>-0.529919</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX2">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://121775128193262</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://83721507994467</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://114180133863411</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://103931753673895</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX3">
+      <Properties>
+        <string name="Name">Blue_CryoTelemetryPanel</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://127623062517526</url></Content>
+        <Vector3 name="Size"><X>1.678058</X><Y>3.744000</Y><Z>1.138135</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>78.000000</X>
+          <Y>2.192000</Y>
+          <Z>-113.000000</Z>
+          <R00>-0.529919</R00>
+          <R01>0.000000</R01>
+          <R02>-0.848048</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>0.848048</R20>
+          <R21>0.000000</R21>
+          <R22>-0.529919</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX4">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://121775128193262</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://83721507994467</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://114180133863411</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://103931753673895</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX5">
+      <Properties>
+        <string name="Name">Red_CryoTubeConsole</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://127623062517526</url></Content>
+        <Vector3 name="Size"><X>1.678058</X><Y>3.744000</Y><Z>1.138135</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-42.000000</X>
+          <Y>2.192000</Y>
+          <Z>-118.000000</Z>
+          <R00>0.978148</R00>
+          <R01>0.000000</R01>
+          <R02>0.207912</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.207912</R20>
+          <R21>0.000000</R21>
+          <R22>0.978148</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX6">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://121775128193262</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://83721507994467</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://114180133863411</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://103931753673895</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX7">
+      <Properties>
+        <string name="Name">Blue_CryoTubeConsole</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://127623062517526</url></Content>
+        <Vector3 name="Size"><X>1.678058</X><Y>3.744000</Y><Z>1.138135</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>42.000000</X>
+          <Y>2.192000</Y>
+          <Z>-118.000000</Z>
+          <R00>0.978148</R00>
+          <R01>0.000000</R01>
+          <R02>-0.207912</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>0.207912</R20>
+          <R21>0.000000</R21>
+          <R22>0.978148</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX8">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://121775128193262</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://83721507994467</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://114180133863411</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://103931753673895</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX9">
+      <Properties>
+        <string name="Name">Red_PortalControl</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://127623062517526</url></Content>
+        <Vector3 name="Size"><X>1.678058</X><Y>3.744000</Y><Z>1.138135</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-24.000000</X>
+          <Y>2.192000</Y>
+          <Z>-26.500000</Z>
+          <R00>0.939693</R00>
+          <R01>0.000000</R01>
+          <R02>-0.342020</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>0.342020</R20>
+          <R21>0.000000</R21>
+          <R22>0.939693</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX10">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://121775128193262</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://83721507994467</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://114180133863411</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://103931753673895</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX11">
+      <Properties>
+        <string name="Name">Blue_PortalControl</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://127623062517526</url></Content>
+        <Vector3 name="Size"><X>1.678058</X><Y>3.744000</Y><Z>1.138135</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>24.000000</X>
+          <Y>2.192000</Y>
+          <Z>-26.500000</Z>
+          <R00>0.939693</R00>
+          <R01>0.000000</R01>
+          <R02>0.342020</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.342020</R20>
+          <R21>0.000000</R21>
+          <R22>0.939693</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX12">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://121775128193262</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://83721507994467</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://114180133863411</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://103931753673895</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX13">
+      <Properties>
+        <string name="Name">Red_ReactorTelemetryPanel</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://127623062517526</url></Content>
+        <Vector3 name="Size"><X>1.678058</X><Y>3.744000</Y><Z>1.138135</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-80.000000</X>
+          <Y>2.192000</Y>
+          <Z>116.000000</Z>
+          <R00>0.848048</R00>
+          <R01>0.000000</R01>
+          <R02>0.529919</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.529919</R20>
+          <R21>0.000000</R21>
+          <R22>0.848048</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX14">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://121775128193262</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://83721507994467</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://114180133863411</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://103931753673895</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX15">
+      <Properties>
+        <string name="Name">Blue_ReactorTelemetryPanel</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://127623062517526</url></Content>
+        <Vector3 name="Size"><X>1.678058</X><Y>3.744000</Y><Z>1.138135</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>80.000000</X>
+          <Y>2.192000</Y>
+          <Z>116.000000</Z>
+          <R00>0.848048</R00>
+          <R01>0.000000</R01>
+          <R02>-0.529919</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>0.529919</R20>
+          <R21>0.000000</R21>
+          <R22>0.848048</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX16">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://121775128193262</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://83721507994467</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://114180133863411</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://103931753673895</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX17">
+      <Properties>
+        <string name="Name">Red_CryoContainer</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.976982</X><Y>2.929819</Y><Z>3.080000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-24.500000</X>
+          <Y>1.784910</Y>
+          <Z>-55.500000</Z>
+          <R00>0.000000</R00>
+          <R01>0.000000</R01>
+          <R02>1.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-1.000000</R20>
+          <R21>0.000000</R21>
+          <R22>0.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX18">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX19">
+      <Properties>
+        <string name="Name">Blue_CryoContainer</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.976982</X><Y>2.929819</Y><Z>3.080000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>24.500000</X>
+          <Y>1.784910</Y>
+          <Z>-55.500000</Z>
+          <R00>0.000000</R00>
+          <R01>0.000000</R01>
+          <R02>-1.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>1.000000</R20>
+          <R21>0.000000</R21>
+          <R22>0.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX20">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX21">
+      <Properties>
+        <string name="Name">Red_CryoCornerContainer</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.976982</X><Y>2.929819</Y><Z>3.080000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-66.000000</X>
+          <Y>1.784910</Y>
+          <Z>-116.000000</Z>
+          <R00>0.906308</R00>
+          <R01>0.000000</R01>
+          <R02>-0.422618</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>0.422618</R20>
+          <R21>0.000000</R21>
+          <R22>0.906308</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX22">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX23">
+      <Properties>
+        <string name="Name">Blue_CryoCornerContainer</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.976982</X><Y>2.929819</Y><Z>3.080000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>66.000000</X>
+          <Y>1.784910</Y>
+          <Z>-116.000000</Z>
+          <R00>0.906308</R00>
+          <R01>0.000000</R01>
+          <R02>0.422618</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.422618</R20>
+          <R21>0.000000</R21>
+          <R22>0.906308</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX24">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX25">
+      <Properties>
+        <string name="Name">Red_ForgeContainer</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.976982</X><Y>2.929819</Y><Z>3.080000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-14.000000</X>
+          <Y>1.784910</Y>
+          <Z>118.000000</Z>
+          <R00>-1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>-1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX26">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX27">
+      <Properties>
+        <string name="Name">Blue_ForgeContainer</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.976982</X><Y>2.929819</Y><Z>3.080000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>14.000000</X>
+          <Y>1.784910</Y>
+          <Z>118.000000</Z>
+          <R00>-1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>-1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX28">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX29">
+      <Properties>
+        <string name="Name">Red_SpawnCrateN</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.706347</X><Y>2.663472</Y><Z>2.800000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-122.000000</X>
+          <Y>1.651736</Y>
+          <Z>-24.000000</Z>
+          <R00>0.866025</R00>
+          <R01>0.000000</R01>
+          <R02>0.500000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.500000</R20>
+          <R21>0.000000</R21>
+          <R22>0.866025</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX30">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX31">
+      <Properties>
+        <string name="Name">Blue_SpawnCrateN</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.706347</X><Y>2.663472</Y><Z>2.800000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>122.000000</X>
+          <Y>1.651736</Y>
+          <Z>-24.000000</Z>
+          <R00>0.866025</R00>
+          <R01>0.000000</R01>
+          <R02>-0.500000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>0.500000</R20>
+          <R21>0.000000</R21>
+          <R22>0.866025</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX32">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX33">
+      <Properties>
+        <string name="Name">Red_SpawnCrateS</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.706347</X><Y>2.663472</Y><Z>2.800000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-122.000000</X>
+          <Y>1.651736</Y>
+          <Z>24.000000</Z>
+          <R00>0.866025</R00>
+          <R01>0.000000</R01>
+          <R02>-0.500000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>0.500000</R20>
+          <R21>0.000000</R21>
+          <R22>0.866025</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX34">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX35">
+      <Properties>
+        <string name="Name">Blue_SpawnCrateS</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.706347</X><Y>2.663472</Y><Z>2.800000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>122.000000</X>
+          <Y>1.651736</Y>
+          <Z>24.000000</Z>
+          <R00>0.866025</R00>
+          <R01>0.000000</R01>
+          <R02>0.500000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.500000</R20>
+          <R21>0.000000</R21>
+          <R22>0.866025</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX36">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX37">
+      <Properties>
+        <string name="Name">Red_GantryNCrate</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.706347</X><Y>2.663472</Y><Z>2.800000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-44.000000</X>
+          <Y>12.831736</Y>
+          <Z>-82.000000</Z>
+          <R00>0.819152</R00>
+          <R01>0.000000</R01>
+          <R02>0.573576</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.573576</R20>
+          <R21>0.000000</R21>
+          <R22>0.819152</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX38">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX39">
+      <Properties>
+        <string name="Name">Blue_GantryNCrate</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.706347</X><Y>2.663472</Y><Z>2.800000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>44.000000</X>
+          <Y>12.831736</Y>
+          <Z>-82.000000</Z>
+          <R00>0.819152</R00>
+          <R01>0.000000</R01>
+          <R02>-0.573576</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>0.573576</R20>
+          <R21>0.000000</R21>
+          <R22>0.819152</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX40">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX41">
+      <Properties>
+        <string name="Name">Red_GantrySCrate</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.706347</X><Y>2.663472</Y><Z>2.800000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-40.000000</X>
+          <Y>12.831736</Y>
+          <Z>110.000000</Z>
+          <R00>0.819152</R00>
+          <R01>0.000000</R01>
+          <R02>-0.573576</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>0.573576</R20>
+          <R21>0.000000</R21>
+          <R22>0.819152</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX42">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX43">
+      <Properties>
+        <string name="Name">Blue_GantrySCrate</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://130331310814567</url></Content>
+        <Vector3 name="Size"><X>2.706347</X><Y>2.663472</Y><Z>2.800000</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>40.000000</X>
+          <Y>12.831736</Y>
+          <Z>110.000000</Z>
+          <R00>0.819152</R00>
+          <R01>0.000000</R01>
+          <R02>0.573576</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.573576</R20>
+          <R21>0.000000</R21>
+          <R22>0.819152</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX44">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://76859172271463</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://91574480680855</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://72431067255628</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://98051894001588</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX45">
+      <Properties>
+        <string name="Name">Red_CryoGenerator</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://131758847316064</url></Content>
+        <Vector3 name="Size"><X>8.370000</X><Y>4.030011</Y><Z>4.183684</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-48.000000</X>
+          <Y>2.335006</Y>
+          <Z>-104.000000</Z>
+          <R00>1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX46">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://101163715733909</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://77221028656075</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://138353581812443</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://90834354473226</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX47">
+      <Properties>
+        <string name="Name">Blue_CryoGenerator</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://131758847316064</url></Content>
+        <Vector3 name="Size"><X>8.370000</X><Y>4.030011</Y><Z>4.183684</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>48.000000</X>
+          <Y>2.335006</Y>
+          <Z>-104.000000</Z>
+          <R00>1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX48">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://101163715733909</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://77221028656075</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://138353581812443</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://90834354473226</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX49">
+      <Properties>
+        <string name="Name">Red_ReactorGenerator</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://131758847316064</url></Content>
+        <Vector3 name="Size"><X>8.370000</X><Y>4.030011</Y><Z>4.183684</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-62.000000</X>
+          <Y>2.335006</Y>
+          <Z>74.000000</Z>
+          <R00>1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX50">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://101163715733909</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://77221028656075</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://138353581812443</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://90834354473226</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX51">
+      <Properties>
+        <string name="Name">Blue_ReactorGenerator</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">true</bool>
+        <bool name="CanQuery">true</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">false</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://131758847316064</url></Content>
+        <Vector3 name="Size"><X>8.370000</X><Y>4.030011</Y><Z>4.183684</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>62.000000</X>
+          <Y>2.335006</Y>
+          <Z>74.000000</Z>
+          <R00>1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX52">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://101163715733909</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://77221028656075</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://138353581812443</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://90834354473226</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX53">
+      <Properties>
+        <string name="Name">Red_CryoChamber</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX54">
+        <Properties>
+          <string name="Name">Base</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://101858467157064</url></Content>
+          <Vector3 name="Size"><X>2.966683</X><Y>5.774999</Y><Z>2.966684</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-64.000000</X>
+            <Y>3.207500</Y>
+            <Z>-56.000000</Z>
+            <R00>0.939693</R00>
+            <R01>0.000000</R01>
+            <R02>0.342020</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.342020</R20>
+            <R21>0.000000</R21>
+            <R22>0.939693</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX55">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://91652780573796</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://133120130584107</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://89692045570467</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://73822917005144</url></Content>
+          </Properties>
+        </Item>
+        <Item class="PointLight" referent="RBX56">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.35</float>
+            <float name="Range">28.0</float>
+            <Color3 name="Color"><R>0.3500</R><G>0.8800</G><B>1.0000</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX57">
+        <Properties>
+          <string name="Name">Glass</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">1568</token>
+          <float name="Transparency">0.560</float>
+          <Color3 name="Color3uint8"><R>0.3500</R><G>0.8800</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://138562219324774</url></Content>
+          <Vector3 name="Size"><X>2.371701</X><Y>5.053704</Y><Z>2.371701</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-64.000000</X>
+            <Y>3.174579</Y>
+            <Z>-56.000000</Z>
+            <R00>0.939693</R00>
+            <R01>0.000000</R01>
+            <R02>0.342020</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.342020</R20>
+            <R21>0.000000</R21>
+            <R22>0.939693</R22>
+          </CoordinateFrame>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX58">
+      <Properties>
+        <string name="Name">Blue_CryoChamber</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX59">
+        <Properties>
+          <string name="Name">Base</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://101858467157064</url></Content>
+          <Vector3 name="Size"><X>2.966683</X><Y>5.774999</Y><Z>2.966684</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>64.000000</X>
+            <Y>3.207500</Y>
+            <Z>-56.000000</Z>
+            <R00>0.939693</R00>
+            <R01>0.000000</R01>
+            <R02>-0.342020</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>0.342020</R20>
+            <R21>0.000000</R21>
+            <R22>0.939693</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX60">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://91652780573796</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://133120130584107</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://89692045570467</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://73822917005144</url></Content>
+          </Properties>
+        </Item>
+        <Item class="PointLight" referent="RBX61">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.35</float>
+            <float name="Range">28.0</float>
+            <Color3 name="Color"><R>0.3500</R><G>0.8800</G><B>1.0000</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX62">
+        <Properties>
+          <string name="Name">Glass</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">1568</token>
+          <float name="Transparency">0.560</float>
+          <Color3 name="Color3uint8"><R>0.3500</R><G>0.8800</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://138562219324774</url></Content>
+          <Vector3 name="Size"><X>2.371701</X><Y>5.053704</Y><Z>2.371701</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>64.000000</X>
+            <Y>3.174579</Y>
+            <Z>-56.000000</Z>
+            <R00>0.939693</R00>
+            <R01>0.000000</R01>
+            <R02>-0.342020</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>0.342020</R20>
+            <R21>0.000000</R21>
+            <R22>0.939693</R22>
+          </CoordinateFrame>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX63">
+      <Properties>
+        <string name="Name">Red_WingChamber</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX64">
+        <Properties>
+          <string name="Name">Base</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://101858467157064</url></Content>
+          <Vector3 name="Size"><X>2.966683</X><Y>5.774999</Y><Z>2.966684</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-106.000000</X>
+            <Y>3.207500</Y>
+            <Z>-58.000000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX65">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://91652780573796</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://133120130584107</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://89692045570467</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://73822917005144</url></Content>
+          </Properties>
+        </Item>
+        <Item class="PointLight" referent="RBX66">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.35</float>
+            <float name="Range">28.0</float>
+            <Color3 name="Color"><R>0.3500</R><G>0.8800</G><B>1.0000</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX67">
+        <Properties>
+          <string name="Name">Glass</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">1568</token>
+          <float name="Transparency">0.560</float>
+          <Color3 name="Color3uint8"><R>0.3500</R><G>0.8800</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://138562219324774</url></Content>
+          <Vector3 name="Size"><X>2.371701</X><Y>5.053704</Y><Z>2.371701</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-106.000000</X>
+            <Y>3.174579</Y>
+            <Z>-58.000000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX68">
+      <Properties>
+        <string name="Name">Blue_WingChamber</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX69">
+        <Properties>
+          <string name="Name">Base</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://101858467157064</url></Content>
+          <Vector3 name="Size"><X>2.966683</X><Y>5.774999</Y><Z>2.966684</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>106.000000</X>
+            <Y>3.207500</Y>
+            <Z>-58.000000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX70">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://91652780573796</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://133120130584107</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://89692045570467</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://73822917005144</url></Content>
+          </Properties>
+        </Item>
+        <Item class="PointLight" referent="RBX71">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.35</float>
+            <float name="Range">28.0</float>
+            <Color3 name="Color"><R>0.3500</R><G>0.8800</G><B>1.0000</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX72">
+        <Properties>
+          <string name="Name">Glass</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">1568</token>
+          <float name="Transparency">0.560</float>
+          <Color3 name="Color3uint8"><R>0.3500</R><G>0.8800</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://138562219324774</url></Content>
+          <Vector3 name="Size"><X>2.371701</X><Y>5.053704</Y><Z>2.371701</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>106.000000</X>
+            <Y>3.174579</Y>
+            <Z>-58.000000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX73">
+      <Properties>
+        <string name="Name">Red_ReactorWingChamber</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX74">
+        <Properties>
+          <string name="Name">Base</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://101858467157064</url></Content>
+          <Vector3 name="Size"><X>2.966683</X><Y>5.774999</Y><Z>2.966684</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-106.000000</X>
+            <Y>3.207500</Y>
+            <Z>58.000000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX75">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://91652780573796</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://133120130584107</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://89692045570467</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://73822917005144</url></Content>
+          </Properties>
+        </Item>
+        <Item class="PointLight" referent="RBX76">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.35</float>
+            <float name="Range">28.0</float>
+            <Color3 name="Color"><R>1.0000</R><G>0.5600</G><B>0.2200</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX77">
+        <Properties>
+          <string name="Name">Glass</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">1568</token>
+          <float name="Transparency">0.560</float>
+          <Color3 name="Color3uint8"><R>1.0000</R><G>0.5600</G><B>0.2200</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://138562219324774</url></Content>
+          <Vector3 name="Size"><X>2.371701</X><Y>5.053704</Y><Z>2.371701</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-106.000000</X>
+            <Y>3.174579</Y>
+            <Z>58.000000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX78">
+      <Properties>
+        <string name="Name">Blue_ReactorWingChamber</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX79">
+        <Properties>
+          <string name="Name">Base</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://101858467157064</url></Content>
+          <Vector3 name="Size"><X>2.966683</X><Y>5.774999</Y><Z>2.966684</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>106.000000</X>
+            <Y>3.207500</Y>
+            <Z>58.000000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX80">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://91652780573796</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://133120130584107</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://89692045570467</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://73822917005144</url></Content>
+          </Properties>
+        </Item>
+        <Item class="PointLight" referent="RBX81">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.35</float>
+            <float name="Range">28.0</float>
+            <Color3 name="Color"><R>1.0000</R><G>0.5600</G><B>0.2200</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX82">
+        <Properties>
+          <string name="Name">Glass</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">1568</token>
+          <float name="Transparency">0.560</float>
+          <Color3 name="Color3uint8"><R>1.0000</R><G>0.5600</G><B>0.2200</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://138562219324774</url></Content>
+          <Vector3 name="Size"><X>2.371701</X><Y>5.053704</Y><Z>2.371701</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>106.000000</X>
+            <Y>3.174579</Y>
+            <Z>58.000000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX83">
+      <Properties>
+        <string name="Name">CryoWallValve_W</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX84">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://140621757979021</url></Content>
+          <Vector3 name="Size"><X>3.400000</X><Y>2.907000</Y><Z>1.122001</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-126.820000</X>
+            <Y>1.453500</Y>
+            <Z>-62.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX85">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX86">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel_Handle</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://116294421199609</url></Content>
+          <Vector3 name="Size"><X>1.258000</X><Y>0.272000</Y><Z>1.258000</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-126.820000</X>
+            <Y>2.652001</Y>
+            <Z>-62.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX87">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX88">
+      <Properties>
+        <string name="Name">CryoWallValve_E</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX89">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://140621757979021</url></Content>
+          <Vector3 name="Size"><X>3.400000</X><Y>2.907000</Y><Z>1.122001</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>126.820000</X>
+            <Y>1.453500</Y>
+            <Z>-62.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX90">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX91">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel_Handle</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://116294421199609</url></Content>
+          <Vector3 name="Size"><X>1.258000</X><Y>0.272000</Y><Z>1.258000</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>126.820000</X>
+            <Y>2.652001</Y>
+            <Z>-62.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX92">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX93">
+      <Properties>
+        <string name="Name">ReactorWallValve_W</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX94">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://140621757979021</url></Content>
+          <Vector3 name="Size"><X>3.400000</X><Y>2.907000</Y><Z>1.122001</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-126.820000</X>
+            <Y>1.453500</Y>
+            <Z>62.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX95">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX96">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel_Handle</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://116294421199609</url></Content>
+          <Vector3 name="Size"><X>1.258000</X><Y>0.272000</Y><Z>1.258000</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-126.820000</X>
+            <Y>2.652001</Y>
+            <Z>62.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX97">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX98">
+      <Properties>
+        <string name="Name">ReactorWallValve_E</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX99">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://140621757979021</url></Content>
+          <Vector3 name="Size"><X>3.400000</X><Y>2.907000</Y><Z>1.122001</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>126.820000</X>
+            <Y>1.453500</Y>
+            <Z>62.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX100">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX101">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel_Handle</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://116294421199609</url></Content>
+          <Vector3 name="Size"><X>1.258000</X><Y>0.272000</Y><Z>1.258000</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>126.820000</X>
+            <Y>2.652001</Y>
+            <Z>62.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX102">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX103">
+      <Properties>
+        <string name="Name">CryoBulkheadValve_W</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX104">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://140621757979021</url></Content>
+          <Vector3 name="Size"><X>3.400000</X><Y>2.907000</Y><Z>1.122001</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-28.000000</X>
+            <Y>1.453500</Y>
+            <Z>-29.820000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX105">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX106">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel_Handle</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://116294421199609</url></Content>
+          <Vector3 name="Size"><X>1.258000</X><Y>0.272000</Y><Z>1.258000</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-28.000000</X>
+            <Y>2.652001</Y>
+            <Z>-29.820000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX107">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX108">
+      <Properties>
+        <string name="Name">CryoBulkheadValve_E</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX109">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://140621757979021</url></Content>
+          <Vector3 name="Size"><X>3.400000</X><Y>2.907000</Y><Z>1.122001</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>28.000000</X>
+            <Y>1.453500</Y>
+            <Z>-29.820000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX110">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX111">
+        <Properties>
+          <string name="Name">Pipe_Valve_Wheel_Handle</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">1</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://116294421199609</url></Content>
+          <Vector3 name="Size"><X>1.258000</X><Y>0.272000</Y><Z>1.258000</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>28.000000</X>
+            <Y>2.652001</Y>
+            <Z>-29.820000</Z>
+            <R00>1.000000</R00>
+            <R01>0.000000</R01>
+            <R02>0.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-0.000000</R20>
+            <R21>0.000000</R21>
+            <R22>1.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX112">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://96847817790126</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://127881503052053</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://78684669990179</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://98070482982033</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX113">
+      <Properties>
+        <string name="Name">Sign_CryoPortalN_W</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">true</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://78465423936111</url></Content>
+        <Vector3 name="Size"><X>1.686400</X><Y>2.108000</Y><Z>0.029513</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-17.400000</X>
+          <Y>4.654000</Y>
+          <Z>-34.560000</Z>
+          <R00>-1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>-1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX114">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://104156966130379</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://133970048342429</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://74857482792648</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://85527548876837</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX115">
+      <Properties>
+        <string name="Name">Sign_CryoPortalN_E</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">true</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://78465423936111</url></Content>
+        <Vector3 name="Size"><X>1.686400</X><Y>2.108000</Y><Z>0.029513</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>17.400000</X>
+          <Y>4.654000</Y>
+          <Z>-34.560000</Z>
+          <R00>-1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>-1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX116">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://104156966130379</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://133970048342429</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://74857482792648</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://85527548876837</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX117">
+      <Properties>
+        <string name="Name">Sign_CryoPortalS_W</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">true</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://78465423936111</url></Content>
+        <Vector3 name="Size"><X>1.686400</X><Y>2.108000</Y><Z>0.029513</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-17.400000</X>
+          <Y>4.654000</Y>
+          <Z>-29.440000</Z>
+          <R00>1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX118">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://104156966130379</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://133970048342429</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://74857482792648</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://85527548876837</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX119">
+      <Properties>
+        <string name="Name">Sign_CryoPortalS_E</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">true</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://78465423936111</url></Content>
+        <Vector3 name="Size"><X>1.686400</X><Y>2.108000</Y><Z>0.029513</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>17.400000</X>
+          <Y>4.654000</Y>
+          <Z>-29.440000</Z>
+          <R00>1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX120">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://104156966130379</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://133970048342429</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://74857482792648</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://85527548876837</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX121">
+      <Properties>
+        <string name="Name">Sign_ReactorPortalN_W</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">true</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://78465423936111</url></Content>
+        <Vector3 name="Size"><X>1.686400</X><Y>2.108000</Y><Z>0.029513</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-17.400000</X>
+          <Y>4.654000</Y>
+          <Z>29.440000</Z>
+          <R00>-1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>-1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX122">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://104156966130379</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://133970048342429</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://74857482792648</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://85527548876837</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX123">
+      <Properties>
+        <string name="Name">Sign_ReactorPortalN_E</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">true</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://78465423936111</url></Content>
+        <Vector3 name="Size"><X>1.686400</X><Y>2.108000</Y><Z>0.029513</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>17.400000</X>
+          <Y>4.654000</Y>
+          <Z>29.440000</Z>
+          <R00>-1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>-1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX124">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://104156966130379</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://133970048342429</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://74857482792648</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://85527548876837</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX125">
+      <Properties>
+        <string name="Name">Sign_ReactorPortalS_W</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">true</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://78465423936111</url></Content>
+        <Vector3 name="Size"><X>1.686400</X><Y>2.108000</Y><Z>0.029513</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>-17.400000</X>
+          <Y>4.654000</Y>
+          <Z>34.560000</Z>
+          <R00>1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX126">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://104156966130379</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://133970048342429</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://74857482792648</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://85527548876837</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="MeshPart" referent="RBX127">
+      <Properties>
+        <string name="Name">Sign_ReactorPortalS_E</string>
+        <bool name="Anchored">true</bool>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <bool name="CastShadow">true</bool>
+        <bool name="DoubleSided">true</bool>
+        <token name="CollisionFidelity">2</token>
+        <token name="Material">256</token>
+        <float name="Transparency">0.000</float>
+        <Content name="MeshId"><url>rbxassetid://78465423936111</url></Content>
+        <Vector3 name="Size"><X>1.686400</X><Y>2.108000</Y><Z>0.029513</Z></Vector3>
+        <CoordinateFrame name="CFrame">
+          <X>17.400000</X>
+          <Y>4.654000</Y>
+          <Z>34.560000</Z>
+          <R00>1.000000</R00>
+          <R01>0.000000</R01>
+          <R02>0.000000</R02>
+          <R10>0.000000</R10>
+          <R11>1.000000</R11>
+          <R12>0.000000</R12>
+          <R20>-0.000000</R20>
+          <R21>0.000000</R21>
+          <R22>1.000000</R22>
+        </CoordinateFrame>
+      </Properties>
+      <Item class="SurfaceAppearance" referent="RBX128">
+        <Properties>
+          <string name="Name">SurfaceAppearance</string>
+          <token name="AlphaMode">0</token>
+          <Content name="ColorMap"><url>rbxassetid://104156966130379</url></Content>
+          <Content name="MetalnessMap"><url>rbxassetid://133970048342429</url></Content>
+          <Content name="NormalMap"><url>rbxassetid://74857482792648</url></Content>
+          <Content name="RoughnessMap"><url>rbxassetid://85527548876837</url></Content>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX129">
+      <Properties>
+        <string name="Name">LightCage_RedSpawnN</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX130">
+        <Properties>
+          <string name="Name">Light_Cage_Wall</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://104104323610061</url></Content>
+          <Vector3 name="Size"><X>1.632000</X><Y>1.632000</Y><Z>1.446546</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-127.068544</X>
+            <Y>8.416000</Y>
+            <Z>-14.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX131">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://81295133992292</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://132765954272792</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://106809109272131</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://74066780797341</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX132">
+        <Properties>
+          <string name="Name">Light_Cage_Wall_Glow</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">288</token>
+          <float name="Transparency">0.000</float>
+          <Color3 name="Color3uint8"><R>0.6500</R><G>0.9000</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://78457213058005</url></Content>
+          <Vector3 name="Size"><X>1.231418</X><Y>1.231418</Y><Z>0.741818</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-126.679092</X>
+            <Y>8.416000</Y>
+            <Z>-14.000003</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="PointLight" referent="RBX133">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.45</float>
+            <float name="Range">34.0</float>
+            <Color3 name="Color"><R>0.7200</R><G>0.9000</G><B>1.0000</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX134">
+      <Properties>
+        <string name="Name">LightCage_RedSpawnS</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX135">
+        <Properties>
+          <string name="Name">Light_Cage_Wall</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://104104323610061</url></Content>
+          <Vector3 name="Size"><X>1.632000</X><Y>1.632000</Y><Z>1.446546</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-127.068544</X>
+            <Y>8.416000</Y>
+            <Z>14.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX136">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://81295133992292</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://132765954272792</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://106809109272131</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://74066780797341</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX137">
+        <Properties>
+          <string name="Name">Light_Cage_Wall_Glow</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">288</token>
+          <float name="Transparency">0.000</float>
+          <Color3 name="Color3uint8"><R>0.6500</R><G>0.9000</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://78457213058005</url></Content>
+          <Vector3 name="Size"><X>1.231418</X><Y>1.231418</Y><Z>0.741818</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-126.679092</X>
+            <Y>8.416000</Y>
+            <Z>13.999997</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="PointLight" referent="RBX138">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.45</float>
+            <float name="Range">34.0</float>
+            <Color3 name="Color"><R>1.0000</R><G>0.7800</G><B>0.5600</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX139">
+      <Properties>
+        <string name="Name">LightCage_BlueSpawnN</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX140">
+        <Properties>
+          <string name="Name">Light_Cage_Wall</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://104104323610061</url></Content>
+          <Vector3 name="Size"><X>1.632000</X><Y>1.632000</Y><Z>1.446546</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>127.068544</X>
+            <Y>8.416000</Y>
+            <Z>-14.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX141">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://81295133992292</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://132765954272792</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://106809109272131</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://74066780797341</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX142">
+        <Properties>
+          <string name="Name">Light_Cage_Wall_Glow</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">288</token>
+          <float name="Transparency">0.000</float>
+          <Color3 name="Color3uint8"><R>0.6500</R><G>0.9000</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://78457213058005</url></Content>
+          <Vector3 name="Size"><X>1.231418</X><Y>1.231418</Y><Z>0.741818</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>126.679092</X>
+            <Y>8.416000</Y>
+            <Z>-13.999997</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="PointLight" referent="RBX143">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.45</float>
+            <float name="Range">34.0</float>
+            <Color3 name="Color"><R>0.7200</R><G>0.9000</G><B>1.0000</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX144">
+      <Properties>
+        <string name="Name">LightCage_BlueSpawnS</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX145">
+        <Properties>
+          <string name="Name">Light_Cage_Wall</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://104104323610061</url></Content>
+          <Vector3 name="Size"><X>1.632000</X><Y>1.632000</Y><Z>1.446546</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>127.068544</X>
+            <Y>8.416000</Y>
+            <Z>14.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX146">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://81295133992292</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://132765954272792</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://106809109272131</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://74066780797341</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX147">
+        <Properties>
+          <string name="Name">Light_Cage_Wall_Glow</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">288</token>
+          <float name="Transparency">0.000</float>
+          <Color3 name="Color3uint8"><R>0.6500</R><G>0.9000</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://78457213058005</url></Content>
+          <Vector3 name="Size"><X>1.231418</X><Y>1.231418</Y><Z>0.741818</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>126.679092</X>
+            <Y>8.416000</Y>
+            <Z>14.000003</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="PointLight" referent="RBX148">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.45</float>
+            <float name="Range">34.0</float>
+            <Color3 name="Color"><R>1.0000</R><G>0.7800</G><B>0.5600</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX149">
+      <Properties>
+        <string name="Name">LightCage_CryoW</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX150">
+        <Properties>
+          <string name="Name">Light_Cage_Wall</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://104104323610061</url></Content>
+          <Vector3 name="Size"><X>1.632000</X><Y>1.632000</Y><Z>1.446546</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-127.068544</X>
+            <Y>8.416000</Y>
+            <Z>-56.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX151">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://81295133992292</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://132765954272792</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://106809109272131</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://74066780797341</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX152">
+        <Properties>
+          <string name="Name">Light_Cage_Wall_Glow</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">288</token>
+          <float name="Transparency">0.000</float>
+          <Color3 name="Color3uint8"><R>0.6500</R><G>0.9000</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://78457213058005</url></Content>
+          <Vector3 name="Size"><X>1.231418</X><Y>1.231418</Y><Z>0.741818</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-126.679092</X>
+            <Y>8.416000</Y>
+            <Z>-56.000003</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="PointLight" referent="RBX153">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.45</float>
+            <float name="Range">34.0</float>
+            <Color3 name="Color"><R>0.6500</R><G>0.8800</G><B>1.0000</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX154">
+      <Properties>
+        <string name="Name">LightCage_CryoE</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX155">
+        <Properties>
+          <string name="Name">Light_Cage_Wall</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://104104323610061</url></Content>
+          <Vector3 name="Size"><X>1.632000</X><Y>1.632000</Y><Z>1.446546</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>127.068544</X>
+            <Y>8.416000</Y>
+            <Z>-56.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX156">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://81295133992292</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://132765954272792</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://106809109272131</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://74066780797341</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX157">
+        <Properties>
+          <string name="Name">Light_Cage_Wall_Glow</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">288</token>
+          <float name="Transparency">0.000</float>
+          <Color3 name="Color3uint8"><R>0.6500</R><G>0.9000</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://78457213058005</url></Content>
+          <Vector3 name="Size"><X>1.231418</X><Y>1.231418</Y><Z>0.741818</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>126.679092</X>
+            <Y>8.416000</Y>
+            <Z>-55.999997</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="PointLight" referent="RBX158">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.45</float>
+            <float name="Range">34.0</float>
+            <Color3 name="Color"><R>0.6500</R><G>0.8800</G><B>1.0000</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX159">
+      <Properties>
+        <string name="Name">LightCage_ReactorW</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX160">
+        <Properties>
+          <string name="Name">Light_Cage_Wall</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://104104323610061</url></Content>
+          <Vector3 name="Size"><X>1.632000</X><Y>1.632000</Y><Z>1.446546</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-127.068544</X>
+            <Y>8.416000</Y>
+            <Z>56.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX161">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://81295133992292</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://132765954272792</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://106809109272131</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://74066780797341</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX162">
+        <Properties>
+          <string name="Name">Light_Cage_Wall_Glow</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">288</token>
+          <float name="Transparency">0.000</float>
+          <Color3 name="Color3uint8"><R>0.6500</R><G>0.9000</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://78457213058005</url></Content>
+          <Vector3 name="Size"><X>1.231418</X><Y>1.231418</Y><Z>0.741818</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>-126.679092</X>
+            <Y>8.416000</Y>
+            <Z>55.999997</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>-1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="PointLight" referent="RBX163">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.45</float>
+            <float name="Range">34.0</float>
+            <Color3 name="Color"><R>1.0000</R><G>0.7600</G><B>0.5200</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="RBX164">
+      <Properties>
+        <string name="Name">LightCage_ReactorE</string>
+      </Properties>
+      <Item class="MeshPart" referent="RBX165">
+        <Properties>
+          <string name="Name">Light_Cage_Wall</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">256</token>
+          <float name="Transparency">0.000</float>
+          <Content name="MeshId"><url>rbxassetid://104104323610061</url></Content>
+          <Vector3 name="Size"><X>1.632000</X><Y>1.632000</Y><Z>1.446546</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>127.068544</X>
+            <Y>8.416000</Y>
+            <Z>56.000000</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="RBX166">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <token name="AlphaMode">0</token>
+            <Content name="ColorMap"><url>rbxassetid://81295133992292</url></Content>
+            <Content name="MetalnessMap"><url>rbxassetid://132765954272792</url></Content>
+            <Content name="NormalMap"><url>rbxassetid://106809109272131</url></Content>
+            <Content name="RoughnessMap"><url>rbxassetid://74066780797341</url></Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="RBX167">
+        <Properties>
+          <string name="Name">Light_Cage_Wall_Glow</string>
+          <bool name="Anchored">true</bool>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <bool name="CastShadow">true</bool>
+          <bool name="DoubleSided">false</bool>
+          <token name="CollisionFidelity">2</token>
+          <token name="Material">288</token>
+          <float name="Transparency">0.000</float>
+          <Color3 name="Color3uint8"><R>0.6500</R><G>0.9000</G><B>1.0000</B></Color3>
+          <Content name="MeshId"><url>rbxassetid://78457213058005</url></Content>
+          <Vector3 name="Size"><X>1.231418</X><Y>1.231418</Y><Z>0.741818</Z></Vector3>
+          <CoordinateFrame name="CFrame">
+            <X>126.679092</X>
+            <Y>8.416000</Y>
+            <Z>56.000003</Z>
+            <R00>0.000000</R00>
+            <R01>0.000000</R01>
+            <R02>1.000000</R02>
+            <R10>0.000000</R10>
+            <R11>1.000000</R11>
+            <R12>0.000000</R12>
+            <R20>-1.000000</R20>
+            <R21>0.000000</R21>
+            <R22>0.000000</R22>
+          </CoordinateFrame>
+        </Properties>
+        <Item class="PointLight" referent="RBX168">
+          <Properties>
+            <string name="Name">FixtureLight</string>
+            <bool name="Enabled">true</bool>
+            <bool name="Shadows">false</bool>
+            <float name="Brightness">1.45</float>
+            <float name="Range">34.0</float>
+            <Color3 name="Color"><R>1.0000</R><G>0.7600</G><B>0.5200</B></Color3>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+  </Item>
+</roblox>

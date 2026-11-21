@@ -652,6 +652,7 @@ function ConvergenceService:StartMatch(players, teamSize, mapName, solo)
                         -- Close atomically with the phase transition, retaining survivor ownership/progress.
                         local revealed = match.FinalePlan and match.Phase == 2 and FinalePlan.reveal(match.FinalePlan)
                         local finalZone
+                        local liveZones = 0
                         for _, zone in match.Zones do
                             if not zoneLive(match, zone, match.Phase) and not zone.Closed then
                                 zone.Closed = true
@@ -663,6 +664,9 @@ function ConvergenceService:StartMatch(players, teamSize, mapName, solo)
                                     { Zone = zone.Name, Index = zone.Index }
                                 )
                             end
+                            if not zone.Closed then
+                                liveZones += 1
+                            end
                             zone.IsFinal = FinalePlan.visibleFinal(match.FinalePlan, match.Phase) == zone.Id
                                 and zone.Id ~= nil
                             if zone.IsFinal then
@@ -670,12 +674,7 @@ function ConvergenceService:StartMatch(players, teamSize, mapName, solo)
                             end
                             paintZone(zone)
                         end
-                        self:FireAll(
-                            match,
-                            self.Client.Event,
-                            "Phase",
-                            { Phase = match.Phase, Zones = phaseCount - match.Phase + 1 }
-                        )
+                        self:FireAll(match, self.Client.Event, "Phase", { Phase = match.Phase, Zones = liveZones })
                         fireEventsForPhase(match.Phase)
                         if revealed and finalZone then
                             self:FireAll(match, self.Client.Event, "FinaleRevealed", {

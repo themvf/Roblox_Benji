@@ -8,6 +8,13 @@ local function relative(part, origin)
     return { p.X, p.Y, p.Z }
 end
 
+-- Turn about the vertical, in degrees, such that CFrame.Angles(0, rad(yaw), 0) reproduces it.
+local function yawOf(part)
+    local look = part.CFrame.LookVector
+    local degrees = math.deg(math.atan2(-look.X, -look.Z)) % 360
+    return math.floor(degrees * 100 + 0.5) / 100
+end
+
 function LobbyAuthoring.read(root, base)
     local errors = {}
     local function fail(message)
@@ -61,8 +68,11 @@ function LobbyAuthoring.read(root, base)
             if not item.Anchored or item.CanCollide or item.CanTouch or item.CanQuery then
                 fail("Marker must be anchored and noninteractive: " .. item:GetFullName())
             end
+            -- Stations (the leaderboard and the kiosk) may turn about the vertical to face
+            -- their island; every other marker is an axis-aligned volume.
             local right, up = item.CFrame.RightVector, item.CFrame.UpVector
-            if math.abs(right.X - 1) > 0.01 or math.abs(up.Y - 1) > 0.01 then
+            local turns = role == "Board" or role == "Kiosk"
+            if math.abs(up.Y - 1) > 0.01 or (not turns and math.abs(right.X - 1) > 0.01) then
                 fail("Marker rotation is not supported yet; move or resize " .. item:GetFullName())
             end
         end
@@ -126,13 +136,18 @@ function LobbyAuthoring.read(root, base)
     end
     local board = get("Board", "Board")
     if board then
-        layout.Board = { pos = relative(board, origin), size = { board.Size.X, board.Size.Y, board.Size.Z } }
+        layout.Board = {
+            pos = relative(board, origin),
+            size = { board.Size.X, board.Size.Y, board.Size.Z },
+            yaw = yawOf(board),
+        }
     end
     local kiosk = get("Kiosk", "Kiosk")
     if kiosk then
         layout.Kiosk = table.clone(base.Kiosk)
         layout.Kiosk.pos = relative(kiosk, origin)
         layout.Kiosk.size = { kiosk.Size.X, kiosk.Size.Y, kiosk.Size.Z }
+        layout.Kiosk.yaw = yawOf(kiosk)
         local showcase = kiosk:GetAttribute("Showcase")
         if showcase ~= nil and type(showcase) ~= "string" then
             fail("Kiosk Showcase must be a weapon name.")

@@ -88,20 +88,25 @@ binary answer would hide uncertainty.
 - [ ] VFX and audio communicate gameplay timing without obscuring targets, crosshairs,
       objectives, or other team effects.
 - [ ] Kit skins change presentation only; their definitions contain no gameplay values.
+- [ ] Visual priority resolves on the server/appearance layer as `Equipped Kit Skin > Base Kit Appearance > Generic CharacterSkin` while preserving the standard R15 collision capsule.
 
 ## 6. Data, ownership, and rotation — required before public access
 
 - [ ] The shared kit definition passes the kit validator and references a known
       server-side ability handler.
 - [ ] Selected kit and permanent ownership persist through the profile schema.
-- [ ] Server-side entitlement checks cover starter, owned, and currently rotating kits.
-- [ ] The two permanent starter kits always remain usable.
+- [ ] Server-side entitlement checks cover the starter kit, permanently owned kits, and
+      currently rotating trial kits.
+- [ ] The single permanent starter kit (`Titan` fallback) always remains usable alongside
+      the two weekly rotating trial kits (`3` usable free kits total).
 - [ ] The active rotation contains exactly two eligible, distinct, non-starter kits.
+- [ ] Standalone kit-skin purchases require server-verified ownership of the base kit
+      (with approved `Kit + Skin` bundles granting both atomically).
 - [ ] Rotation time and timezone are deterministic and visible in the lobby.
 - [ ] Rotation changes never remove a kit from an active or committed match.
 - [ ] Expired trials fall back safely in the lobby without deleting permanent ownership.
-- [ ] Failed or delayed entitlement checks fail to a starter kit rather than granting a
-      purchase or blocking play.
+- [ ] Failed or delayed entitlement checks fall back to the starter kit rather than
+      granting a purchase or blocking play.
 - [ ] Purchase receipt handling is idempotent and recoverable before any real-money
       product is enabled.
 

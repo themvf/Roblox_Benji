@@ -1,0 +1,38 @@
+{
+  "place": "ENGAGE",
+  "placeId": 121549226728648,
+  "importModelSourceAssetId": "136724154526766",
+  "importedMeshParts": 8,
+  "surfaceAppearances": 8,
+  "observedLengthStuds": 5.503973,
+  "visibleTexture": true,
+  "savedImportSource": [
+    "source/WhiteSniperImported.rbxm",
+    "source/WhiteSniperImported.rbxmx",
+    "studio_import.json"
+  ],
+  "privatePlay": {
+    "objectiveMap": "MyMapPublic loaded, two WhiteSniper pickups; first outpost collected",
+    "death": "carrier Tool destroyed and respawn timer started",
+    "respawn": "pickup ready after configured 24-second window",
+    "damage": "server callback left a 100-health dummy at 10 health, including a head hit",
+    "tdmMap": "MyMapTDM loaded, two WhiteSniper pickups; second outpost collected by live character",
+    "primaryPart": "runtime Rifle reference restored",
+    "studioOwnership": "Studio-owned template temporarily set to AmmoCapacity 5 in Play; equipped Tool read 5 with PrimaryPart Rifle; Edit template remained 4"
+  },
+  "ownership": {
+    "activeStudioPath": "ReplicatedStorage.StudioWeaponTools.WhiteSniper",
+    "retiredStudioPath": "ServerStorage.LegacyWeaponTools.WhiteSniperPreDetach",
+    "preDetachBackup": "source/WhiteSniperToolPreDetach.rbxm",
+    "rojoExclusionVerified": true,
+    "editPlaceSaved": true,
+    "published": false
+  },
+  "unverified": [
+    "clear in-hand visual review and creator approval",
+    "actual two-player aiming, firing, and hit registration",
+    "fresh Rojo restart and sync preservation of Studio-owned Tool",
+    "export of exact post-detachment Studio-owned Tool to a separate local model file",
+    "publication and post-publication behavior"
+  ]
+}

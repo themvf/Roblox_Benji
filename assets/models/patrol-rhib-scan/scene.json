@@ -1,0 +1,23 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "patrol-rhib-scan": {
+      "description": "Realistic black rigid inflatable patrol boat made by Tripo from the patrol boat picture; replaces the shape-built RHIB at the Five Islands Hurricane docks (role: interactive, about 11.57 studs tall)",
+      "source": "assets/models/patrol-rhib-scan/source/PatrolRhibScan.glb",
+      "out": "assets/models/patrol-rhib-scan/exports/PatrolRhibScan.glb",
+      "fit": {
+        "axis": "z",
+        "size": 11.57
+      },
+      "decimate": 25000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      },
+      "tile": [
+        2,
+        2
+      ]
+    }
+  }
+}

@@ -445,8 +445,12 @@ function Validate.check(layout, weapons, solids)
                 err("%s: color %q is not a Palette key", where, piece.color)
             end
             if Validate.KINDS[kind] and Validate.KINDS[kind].asset then
-                if type(piece.assetId) ~= "number" or piece.assetId <= 0 then
-                    err("%s: prop needs a numeric `assetId` from the Creator Store", where)
+                -- Either a model id, or `asset`: a key in Shared.AssetRegistry, which is how
+                -- a model this project uploaded is named (check_asset_registry keeps its
+                -- id out of code).
+                local keyed = type(piece.asset) == "string" and piece.asset ~= ""
+                if not keyed and (type(piece.assetId) ~= "number" or piece.assetId <= 0) then
+                    err("%s: prop needs a numeric `assetId`, or `asset` naming an AssetRegistry entry", where)
                 end
                 if piece.scale ~= nil and (type(piece.scale) ~= "number" or piece.scale <= 0) then
                     err("%s: prop `scale` must be a positive number", where)

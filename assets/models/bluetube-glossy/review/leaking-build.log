@@ -1,0 +1,68 @@
+Extensions: writing cache failed ([Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\extensions\\.cache\\compat.dat').
+Traceback (most recent call last):
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 1027, in register
+    Tracker.initialize(
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 295, in initialize
+    self.set_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 466, in set_tracker_json
+    self.save_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 479, in save_tracker_json
+    outf = open(jpath, 'w')
+           ^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\scripts\\addons\\MCprep_addon\\mcprep_addon_tracker.json'
+
+Failed to register scene update handler
+Reloading external rigs...
+Reloading external metarigs...
+🔄 blenderkit: Verbose is enabled
+🔄 blenderkit: Read in JSON settings from file
+ℹ️  blenderkit: Unregistering BlenderKit add-on [13:40:36.974, __init__.py:2558]
+13:40:37 | INFO: Data are loaded, start creating Blender stuff
+13:40:37 | INFO: Blender create Mesh node Tube_Recessed_graphite
+13:40:37 | INFO: Blender create Mesh node Tube_Dark_rubber_gasket
+13:40:37 | INFO: Blender create Mesh node Tube_Polished_steel_edge
+13:40:37 | INFO: Blender create Mesh node Tube_Glossy_cobalt_blue_enamel
+13:40:37 | INFO: Blender create Mesh node Tube_Indicator_neon_yellow
+13:40:37 | INFO: Blender create Mesh node Tube_Neon_yellow_energy_core
+13:40:37 | INFO: Blender create Mesh node Tube_Yellow_glass_shell
+13:40:37 | INFO: Blender create Mesh node Tube_Worn_light_blue_panels
+13:40:37 | INFO: Blender create Mesh node Tube_Diagnostic_screen
+13:40:37 | INFO: Blender create Mesh node Tube_Warm_status_light
+13:40:37 | INFO: glTF import finished in 0.03s
+Info: Saved "CrackedOozingTube.blend"
+INFO Draco mesh compression is available, use library at C:\Program Files\Blender Foundation\Blender 4.3\4.3\python\lib\site-packages\extern_draco.dll
+13:40:37 | INFO: Starting glTF 2.0 export
+13:40:37 | INFO: Extracting primitive: Tube_Recessed_graphite
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Dark_rubber_gasket
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Polished_steel_edge
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Glossy_cobalt_blue_enamel
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Indicator_neon_yellow
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Neon_yellow_energy_core
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Worn_light_blue_panels
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Diagnostic_screen
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Warm_status_light
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Cracked_yellow_glass_shell
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Glass_fractures
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Retained_glass_shards
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Fluorescent_ooze
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Extracting primitive: Tube_Thick_residue
+13:40:37 | INFO: Primitives created: 1
+13:40:37 | INFO: Finished glTF 2.0 export in 0.10942888259887695 s
+
+EXPORTED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\exports\BlueTube_CrackedOozing.glb
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+
+Blender quit

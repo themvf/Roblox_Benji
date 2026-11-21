@@ -1,0 +1,16 @@
+{
+  "SciFiSentry": {
+    "meshes": 39,
+    "triangles": 2016,
+    "largestMeshTriangles": 224,
+    "sha256": "aa7903d8f11ed632bfc175aef739ee4e42355407a5a3a87e4698527f3a7b345b",
+    "bytes": 99620
+  },
+  "TacticalOperator": {
+    "meshes": 33,
+    "triangles": 2336,
+    "largestMeshTriangles": 224,
+    "sha256": "a51bef0aa5fa16bfecad0f9b4bf2f307e19b22effb4d12c69280d5ea4f958058",
+    "bytes": 98952
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-11-14T02:02:32.938346+00:00",
+  "status": "local-pass",
+  "sourceSha256": "a8f893ebc6f1be4492fd0e3eb44a4d7b432688c313c3a066072b5b887e3b6c51",
+  "exportSha256": "d1e377b7c303c1eda920430f0279d76eb0ec692d20425f67db9d98d2bcfb42a9",
+  "blendSha256": "b65e266c71f7e379c7d1682d0c106f20f97c90f9dcde3f136c7059c2aa1f6040",
+  "meshTriangles": [
+    9500,
+    9500,
+    9500,
+    9500,
+    9500,
+    9500,
+    9500,
+    5500
+  ],
+  "totalTriangles": 72000,
+  "embeddedImageMimeTypes": [
+    "image/png",
+    "image/png"
+  ],
+  "texturedViews": [
+    "review/side.png",
+    "review/front.png",
+    "review/rear.png"
+  ],
+  "limits": "No Studio import, wield, in-game damage, death timer, or map placement verified by this check."
+}

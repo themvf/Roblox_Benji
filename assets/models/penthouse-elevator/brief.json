@@ -1,0 +1,24 @@
+{
+  "purpose": "Elevator doors in a marble surround, repeated along the spawn-hall cover block in the Penthouse",
+  "role": "decor",
+  "heightStuds": 12.0,
+  "kind": "prop",
+  "where": "Penthouse",
+  "copies": 3,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "copies=3 (repeated end to end along the block), share=game, doors stay closed and do not move, stop at local build; target proportions 11 long x 4 deep x 12 tall studs",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {
+    "decimate": 15000,
+    "tile": [
+      2,
+      2
+    ]
+  },
+  "detailWaiver": "Surface error 0.176 matches the sibling aquarium wall, whose error was the same at 68k and 18k triangles, so it is taken as a property of the soft generated source, not the reduction; audit views show flat faces and square ends. Build run with --allow-detail-loss; agent decision, not user-approved."
+}

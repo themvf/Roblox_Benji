@@ -1,0 +1,85 @@
+Extensions: writing cache failed ([Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\extensions\\.cache\\compat.dat').
+Traceback (most recent call last):
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 1027, in register
+    Tracker.initialize(
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 295, in initialize
+    self.set_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 466, in set_tracker_json
+    self.save_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 479, in save_tracker_json
+    outf = open(jpath, 'w')
+           ^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\scripts\\addons\\MCprep_addon\\mcprep_addon_tracker.json'
+
+Failed to register scene update handler
+Reloading external rigs...
+Reloading external metarigs...
+🔄 blenderkit: Verbose is enabled
+🔄 blenderkit: Read in JSON settings from file
+ℹ️  blenderkit: Unregistering BlenderKit add-on [13:31:38.817, __init__.py:2558]
+13:31:39 | INFO: Data are loaded, start creating Blender stuff
+13:31:39 | INFO: Blender create Mesh node Tube_Recessed_graphite
+13:31:39 | INFO: Blender create Mesh node Tube_Dark_rubber_gasket
+13:31:39 | INFO: Blender create Mesh node Tube_Polished_steel_edge
+13:31:39 | INFO: Blender create Mesh node Tube_Glossy_cobalt_blue_enamel
+13:31:39 | INFO: Blender create Mesh node Tube_Indicator_neon_yellow
+13:31:39 | INFO: Blender create Mesh node Tube_Neon_yellow_energy_core
+13:31:39 | INFO: Blender create Mesh node Tube_Yellow_glass_shell
+13:31:39 | INFO: Blender create Mesh node Tube_Worn_light_blue_panels
+13:31:39 | INFO: Blender create Mesh node Tube_Diagnostic_screen
+13:31:39 | INFO: Blender create Mesh node Tube_Warm_status_light
+13:31:39 | INFO: glTF import finished in 0.05s
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+Fra:1 Mem:14.25M (Peak 14.25M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Recessed_graphite
+Fra:1 Mem:14.25M (Peak 14.25M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Glossy_cobalt_blue_enamel
+Fra:1 Mem:16.26M (Peak 16.26M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Indicator_neon_yellow
+Fra:1 Mem:16.30M (Peak 16.30M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Neon_yellow_energy_core
+Fra:1 Mem:16.30M (Peak 16.30M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Yellow_glass_shell
+Fra:1 Mem:16.31M (Peak 16.31M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Worn_light_blue_panels
+Fra:1 Mem:16.57M (Peak 16.57M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane
+Fra:1 Mem:17.77M (Peak 17.77M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:16.80M (Peak 17.77M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:16.80M (Peak 17.77M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:16.80M (Peak 17.77M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:16.80M (Peak 17.77M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:16.89M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:16.89M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:16.89M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:16.89M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:16.89M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:16.89M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:16.89M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:16.89M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:16.89M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:16.89M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:17.12M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:17.28M (Peak 17.77M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:17.28M (Peak 17.77M) | Time:00:00.00 | Mem:0.17M, Peak:0.17M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:17.28M (Peak 17.77M) | Time:00:00.00 | Mem:0.17M, Peak:0.17M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:17.28M (Peak 17.77M) | Time:00:00.00 | Mem:0.62M, Peak:0.62M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:17.28M (Peak 17.77M) | Time:00:00.01 | Mem:1.16M, Peak:1.60M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:17.28M (Peak 17.77M) | Time:00:00.01 | Mem:1.16M, Peak:1.60M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:17.99M (Peak 17.99M) | Time:00:00.01 | Mem:1.16M, Peak:1.60M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:17.99M (Peak 17.99M) | Time:00:00.01 | Mem:1.87M, Peak:1.87M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:17.99M (Peak 17.99M) | Time:00:00.01 | Mem:1.87M, Peak:1.87M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:17.99M (Peak 17.99M) | Time:00:00.01 | Mem:1.87M, Peak:1.87M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:17.99M (Peak 17.99M) | Time:00:00.01 | Mem:1.87M, Peak:1.87M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:17.99M (Peak 17.99M) | Time:00:00.01 | Mem:1.87M, Peak:1.87M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:17.99M (Peak 17.99M) | Time:00:00.01 | Mem:1.95M, Peak:1.95M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:17.99M (Peak 17.99M) | Time:00:00.01 | Mem:1.95M, Peak:1.95M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:18.33M (Peak 18.33M) | Time:00:00.02 | Mem:2.29M, Peak:2.29M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:18.33M (Peak 18.33M) | Time:00:00.02 | Mem:2.29M, Peak:2.29M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:18.33M (Peak 18.33M) | Time:00:00.02 | Mem:2.21M, Peak:2.29M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:18.33M (Peak 18.33M) | Time:00:00.02 | Mem:2.29M, Peak:2.29M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:18.33M (Peak 18.33M) | Time:00:00.02 | Mem:2.29M, Peak:2.29M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:18.33M (Peak 18.33M) | Time:00:00.02 | Mem:2.29M, Peak:2.29M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:18.33M (Peak 18.33M) | Time:00:00.02 | Mem:2.29M, Peak:2.29M | Scene, ViewLayer | Sample 0/24
+Fra:1 Mem:77.11M (Peak 77.11M) | Time:00:00.48 | Remaining:00:10.70 | Mem:61.00M, Peak:61.00M | Scene, ViewLayer | Sample 1/24
+Fra:1 Mem:101.83M (Peak 138.91M) | Time:00:14.19 | Mem:61.00M, Peak:61.00M | Scene, ViewLayer | Sample 24/24
+Fra:1 Mem:101.83M (Peak 138.91M) | Time:00:14.19 | Mem:61.00M, Peak:61.00M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\yellow-night.png'
+Time: 00:14.48 (Saving: 00:00.29)
+
+RENDERED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\yellow-night.png
+
+Blender quit

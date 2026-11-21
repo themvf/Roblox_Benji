@@ -1,0 +1,54 @@
+{
+  "checkedOn": "2026-11-16 19:59",
+  "route": "clean",
+  "builder": "tools/blender/build_penthouse_hedge.py",
+  "export": "assets/models/penthouse-hedge/exports/PenthouseHedgeClean.glb",
+  "exportSha256": "4ff5370bc60906b5831f32619a0001f1aa6e1ec9b31d7c9a6d144603f631b3e4",
+  "triangleCapPassed": true,
+  "inspect": [
+    "file     PenthouseHedgeClean.glb (0.46 MB)",
+    "           PenthouseHedge                   1,900 tris",
+    "           texture                        512x512  image/png"
+  ],
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.836,
+      "side": 0.613,
+      "top": 0.553
+    },
+    "surfaceError": {
+      "front": 0.999,
+      "back": 1.0,
+      "right": 0.999,
+      "left": 0.999,
+      "top": 0.714,
+      "bottom": 0.447
+    },
+    "worstSurfaceError": 1.0,
+    "sheet": "assets/models/penthouse-hedge/review/clean-detail.png",
+    "passed": null
+  },
+  "budget": {
+    "role": "decor",
+    "budget": 30000,
+    "triangles": 1900,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      8.0,
+      7.938,
+      4.0
+    ],
+    "heightStuds": 8.0,
+    "kind": "prop",
+    "mounts": {},
+    "mountSheet": "assets/models/penthouse-hedge/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "limitations": "Local checks only. Shape fidelity is judged by eye on the builder's renders."
+}

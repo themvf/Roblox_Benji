@@ -1,0 +1,10 @@
+{
+  "triangles": 3800,
+  "boundaryEdges": 0,
+  "nonManifoldEdges": 0,
+  "textures": {
+    "color": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\models\\golden-oni-kit\\source\\mask-trial-color.png",
+    "normal": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\models\\golden-oni-kit\\source\\mask-trial-normal.png"
+  },
+  "status": "Unapproved geometry and texture baking trial"
+}

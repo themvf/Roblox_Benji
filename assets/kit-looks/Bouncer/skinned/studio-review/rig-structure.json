@@ -1,0 +1,134 @@
+{
+  "counts": {
+    "Accessory": 2,
+    "Animation": 27,
+    "AnimationConstraint": 15,
+    "Attachment": 54,
+    "BallSocketConstraint": 14,
+    "BindableFunction": 1,
+    "BodyColors": 1,
+    "CFrameValue": 195,
+    "FaceControls": 1,
+    "Folder": 1,
+    "Humanoid": 1,
+    "LocalScript": 1,
+    "MeshPart": 15,
+    "NoCollisionConstraint": 19,
+    "NumberValue": 18,
+    "Part": 3,
+    "RigidConstraint": 2,
+    "SpecialMesh": 2,
+    "StringValue": 37,
+    "SurfaceAppearance": 15,
+    "Vector3Value": 72,
+    "WrapTarget": 15
+  },
+  "file": "assets/kit-looks/Bouncer/skinned/BouncerRig.rbxm",
+  "meshParts": [
+    {
+      "meshContent": "Content(Uri=rbxassetid://132427822575580)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.Head",
+      "size": "2.3304572, 1.572368, 1.9928355",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://96187028349442)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.LeftUpperArm",
+      "size": "1.1012901, 0.9251835, 1.5182875",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://100512397852344)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.LowerTorso",
+      "size": "2.213657, 0.71083295, 1.750519",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://128897209332639)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.RightUpperArm",
+      "size": "1.3191576, 1.1784332, 1.5274575",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://139349561244423)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.RightFoot",
+      "size": "1.2417347, 0.9830413, 1.8518881",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://115275940666496)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.UpperTorso",
+      "size": "3.082447, 2.585956, 2.4642367",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://111277356910186)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.LeftLowerLeg",
+      "size": "1.3852395, 2.3137028, 1.4792969",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://79716449088235)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.RightUpperLeg",
+      "size": "1.1061733, 1.4348519, 1.3891392",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://139445682319372)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.LeftLowerArm",
+      "size": "1.6765689, 1.834358, 1.4604986",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://116361125059138)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.RightLowerArm",
+      "size": "1.7269834, 2.359457, 1.5893121",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://87843732669715)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.LeftFoot",
+      "size": "1.2596765, 0.81289184, 1.8484495",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://129065627036262)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.RightLowerLeg",
+      "size": "1.3400469, 2.2923813, 1.4759272",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://90319020359333)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.LeftHand",
+      "size": "1.0332731, 1.3498163, 1.3367949",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://98883845273933)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.LeftUpperLeg",
+      "size": "1.119153, 1.3750997, 1.3906349",
+      "textureId": "unavailable in local parser"
+    },
+    {
+      "meshContent": "Content(Uri=rbxassetid://100648429155165)",
+      "meshId": "unavailable in local parser",
+      "name": "Body_autosetup.RightHand",
+      "size": "1.0655918, 1.1674193, 1.3101008",
+      "textureId": "unavailable in local parser"
+    }
+  ]
+}

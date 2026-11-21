@@ -1,0 +1,35 @@
+{
+  "purpose": "Detailed, matte, shape-built off-road SUV from the user's picture: driven, two working seats, with a cabin for the view from the driver's seat",
+  "role": "interactive",
+  "heightStuds": 6.14,
+  "route": "clean",
+  "kind": "vehicle",
+  "lengthStuds": 16.9,
+  "widthStuds": 7.5,
+  "where": "not placed yet; drives like the combat buggy",
+  "copies": 2,
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "map not stated; two seats (driver and front passenger) per the user's rule of 2026-11-17; size from a real SUV at about 3 studs a metre; share game",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "counts": {
+    "wheels": 4
+  },
+  "gameName": "SUV",
+  "moving": "wheels",
+  "mounts": {
+    "HullCentre": [
+      0.0,
+      1.8,
+      0.0
+    ],
+    "DriverSeat": [
+      -1.1,
+      2.1,
+      1.1
+    ]
+  }
+}

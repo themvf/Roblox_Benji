@@ -1,0 +1,21 @@
+{
+  "purpose": "Outdoor daybed, visual shell over a low-cover block on the Penthouse terrace and gallery",
+  "role": "decor",
+  "heightStuds": 3.5,
+  "kind": "prop",
+  "where": "Penthouse",
+  "copies": 6,
+  "moving": "",
+  "share": "game",
+  "assumed": "copies=6, share=game, no moving parts, stop at local build; target block 8 x 4 x 3.5 studs",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {
+    "decimate": 25000,
+    "tile": [
+      2,
+      2
+    ]
+  }
+}

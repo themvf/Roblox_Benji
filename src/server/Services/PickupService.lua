@@ -13,6 +13,7 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local MeshDressing = require(ReplicatedStorage.Shared.MeshDressing)
 local Movement = require(ReplicatedStorage.Shared.Movement)
+local Config = require(ReplicatedStorage.Shared.Config)
 
 local PickupService = Knit.CreateService({
     Name = "PickupService",
@@ -123,9 +124,14 @@ local function timerBadge(parent, color)
     return bb, fill
 end
 
+local function weaponTemplate(name)
+    local folderName = name == "WhiteSniper" and "StudioWeaponTools" or "WeaponTools"
+    local tools = ReplicatedStorage:FindFirstChild(folderName)
+    return tools and tools:FindFirstChild(name)
+end
+
 local function weaponModel(name)
-    local tools = ReplicatedStorage:FindFirstChild("WeaponTools")
-    local tool = tools and tools:FindFirstChild(name)
+    local tool = weaponTemplate(name)
     local src = tool and tool:FindFirstChildOfClass("Model")
     if not src then
         return nil
@@ -193,6 +199,14 @@ local function makePickup(folder, spec, index)
     local kind = spec.kind
     local color = COLORS[kind] or Color3.new(1, 1, 1)
     local pos = Vector3.new(spec.pos[1], spec.pos[2], spec.pos[3])
+    if spec.marker then
+        local markers = workspace:FindFirstChild("WhiteSniperSpawns")
+        local marker = markers and markers:FindFirstChild(spec.marker)
+        if marker and marker:IsA("BasePart") then
+            pos = marker.Position
+            marker.Transparency = 1 -- edit-mode handle; the pickup pad is the in-game visual
+        end
+    end
     local pad = basePad(folder, ("Pickup_%s_%d"):format(kind, index), pos, color)
     local badge, badgeFill = timerBadge(pad, color)
     local model
@@ -205,6 +219,11 @@ local function makePickup(folder, spec, index)
     end
     if model then
         model.Name = "PickupModel"
+        for _, part in model:GetDescendants() do
+            if part:IsA("BasePart") then
+                part:SetAttribute("PickupSourceTransparency", part.Transparency)
+            end
+        end
         if kind == "weapon" then
             model:ScaleTo(1.6)
         end
@@ -217,6 +236,12 @@ local function makePickup(folder, spec, index)
         hl.Parent = model
     end
     local defaults = DEFAULTS[kind] or {}
+    local respawn = spec.respawn or defaults.Respawn or 30
+    if spec.respawnTuning == "WhiteSniperRespawnSeconds" then
+        local tuning = ReplicatedStorage:FindFirstChild("Tuning")
+        local value = tuning and tuning:GetAttribute(spec.respawnTuning)
+        respawn = (type(value) == "number" and value > 0 and value < 3600) and value or Config.WhiteSniperRespawnSeconds
+    end
     local pickup = {
         Kind = kind,
         Spec = spec,
@@ -226,7 +251,7 @@ local function makePickup(folder, spec, index)
         BadgeFill = badgeFill,
         Pos = pos,
         Ready = true,
-        Respawn = spec.respawn or defaults.Respawn or 30,
+        Respawn = respawn,
     }
     return pickup
 end
@@ -237,13 +262,14 @@ local function setReady(pickup, ready, secondsLeft)
     if pickup.Model then
         for _, d in pickup.Model:GetDescendants() do
             if d:IsA("BasePart") then
-                d.Transparency = ready and 0 or 0.9
+                local original = d:GetAttribute("PickupSourceTransparency") or 0
+                d.Transparency = ready and original or math.max(original, 0.9)
             end
         end
     end
     -- the bar fills toward ready, then disappears; the model coming back is the real signal
     if pickup.Badge then
-        pickup.Badge.Enabled = not ready
+        pickup.Badge.Enabled = not ready and secondsLeft ~= nil
         if not ready and secondsLeft then
             local total = pickup.Respawn or 30
             local done = math.clamp((total - secondsLeft) / total, 0, 1)
@@ -271,8 +297,7 @@ function PickupService:GiveWeapon(player, weaponName, duration)
     local character = player.Character
     local hum = character and character:FindFirstChildOfClass("Humanoid")
     local backpack = player:FindFirstChildOfClass("Backpack")
-    local tools = ReplicatedStorage:FindFirstChild("WeaponTools")
-    local template = tools and tools:FindFirstChild(weaponName)
+    local template = weaponTemplate(weaponName)
     if not hum or not backpack or not template then
         return
     end
@@ -290,12 +315,15 @@ function PickupService:GiveWeapon(player, weaponName, duration)
     tool.Parent = backpack
     Knit.GetService("SkinService"):Apply(tool, player)
     hum:EquipTool(tool)
-    task.delay(duration, function()
-        if tool.Parent then
-            tool:Destroy()
-            self.Client.Notice:Fire(player, weaponName .. " expired")
-        end
-    end)
+    if duration and duration > 0 then
+        task.delay(duration, function()
+            if tool.Parent then
+                tool:Destroy()
+                self.Client.Notice:Fire(player, weaponName .. " expired")
+            end
+        end)
+    end
+    return tool
 end
 
 function PickupService:GiveSpeed(player, mult, duration)
@@ -592,6 +620,34 @@ function PickupService:Build(layout)
     end)
 end
 
+local function beginRespawn(pickup)
+    if pickup.Respawning or not pickup.Pad.Parent then
+        return
+    end
+    pickup.Respawning = true
+    if pickup.DeathConn then
+        pickup.DeathConn:Disconnect()
+        pickup.DeathConn = nil
+    end
+    if pickup.LeaveConn then
+        pickup.LeaveConn:Disconnect()
+        pickup.LeaveConn = nil
+    end
+    local deadline = os.clock() + pickup.Respawn
+    task.spawn(function()
+        while pickup.Pad.Parent do
+            local left = math.max(0, deadline - os.clock())
+            if left <= 0 then
+                setReady(pickup, true)
+                pickup.Respawning = false
+                return
+            end
+            setReady(pickup, false, left)
+            task.wait(0.25)
+        end
+    end)
+end
+
 function PickupService:Collect(pickup, player)
     local kind = pickup.Kind
     local d = DEFAULTS[kind] or {}
@@ -606,7 +662,41 @@ function PickupService:Collect(pickup, player)
         self.Stats.SpeedUses += 1
         self.Client.Notice:Fire(player, "SPEED BOOST")
     elseif kind == "weapon" then
-        self:GiveWeapon(player, pickup.Spec.weapon, pickup.Spec.duration or d.Duration)
+        if pickup.Spec.respawnOnDeath then
+            -- Two outposts must not let one carrier strand a pickup by replacing its tool.
+            for _, container in { player:FindFirstChildOfClass("Backpack"), character } do
+                if container then
+                    for _, item in container:GetChildren() do
+                        if item:IsA("Tool") and item:GetAttribute("Pickup") then
+                            return
+                        end
+                    end
+                end
+            end
+        end
+        local duration
+        if not pickup.Spec.respawnOnDeath then
+            duration = pickup.Spec.duration or d.Duration
+        end
+        local tool = self:GiveWeapon(player, pickup.Spec.weapon, duration)
+        if not tool then
+            return
+        end
+        if pickup.Spec.respawnOnDeath then
+            setReady(pickup, false)
+            local hum = character and character:FindFirstChildOfClass("Humanoid")
+            pickup.DeathConn = hum.Died:Connect(function()
+                if tool.Parent then
+                    tool:Destroy()
+                end
+                beginRespawn(pickup)
+            end)
+            pickup.LeaveConn = Players.PlayerRemoving:Connect(function(leaving)
+                if leaving == player then
+                    beginRespawn(pickup)
+                end
+            end)
+        end
         self.Stats.WeaponUses += 1
         self.Client.Notice:Fire(player, (pickup.Spec.weapon or "WEAPON"):upper() .. " PICKED UP")
     elseif kind == "jetpack" then
@@ -615,20 +705,10 @@ function PickupService:Collect(pickup, player)
         self.Client.Notice:Fire(player, "JETPACK  hold Jump")
     end
     playSound(pickup.Pad, "upload:Pickup", 0.9)
-    setReady(pickup, false, pickup.Respawn)
-    task.spawn(function()
-        local left = pickup.Respawn
-        while left > 0 and pickup.Pad.Parent do
-            task.wait(1)
-            left -= 1
-            if not pickup.Ready then
-                setReady(pickup, false, left)
-            end
-        end
-        if pickup.Pad.Parent then
-            setReady(pickup, true)
-        end
-    end)
+    if not pickup.Spec.respawnOnDeath then
+        setReady(pickup, false, pickup.Respawn)
+        beginRespawn(pickup)
+    end
 end
 
 function PickupService:NoteDeath(position)
@@ -648,6 +728,14 @@ function PickupService:Clear()
     if self.Folder then
         self.Folder:Destroy()
         self.Folder = nil
+    end
+    for _, pickup in self.Pickups or {} do
+        if pickup.DeathConn then
+            pickup.DeathConn:Disconnect()
+        end
+        if pickup.LeaveConn then
+            pickup.LeaveConn:Disconnect()
+        end
     end
     self.Pickups = {}
     self.LaunchPads = {}

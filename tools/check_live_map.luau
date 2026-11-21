@@ -96,6 +96,7 @@ local function run(opts)
             MapAuthoring = "MapAuthoring",
             LobbyAuthoring = "LobbyAuthoring",
             Lore = "Lore",
+            AssetRegistry = "AssetRegistry",
             Maps = mapsFolder,
         },
     }
@@ -123,6 +124,7 @@ local function run(opts)
         Palette = { World = { Red = Color3.new(1, 0, 0), Blue = Color3.new(0, 0, 1) } },
         Config = { StartupMap = "SnowFortress" },
         Uploads = {},
+        AssetRegistry = {}, -- props are placed in Build, which this harness stubs
         Lore = Lore,
         Validate = Validate,
         MapAuthoring = MapAuthoring,

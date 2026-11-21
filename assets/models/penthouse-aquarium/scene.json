@@ -1,0 +1,23 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "penthouse-aquarium": {
+      "description": "Built-in aquarium wall, repeated along the foyer cover block in the Penthouse (role: decor, about 10 studs tall)",
+      "source": "assets/models/penthouse-aquarium/source/PenthouseAquarium.glb",
+      "out": "assets/models/penthouse-aquarium/exports/PenthouseAquarium.glb",
+      "fit": {
+        "axis": "z",
+        "size": 10.0
+      },
+      "decimate": 15000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      },
+      "tile": [
+        2,
+        2
+      ]
+    }
+  }
+}

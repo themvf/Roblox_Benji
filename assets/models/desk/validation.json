@@ -1,0 +1,41 @@
+{
+  "checkedAtUtc": "20260930T235605173369Z",
+  "mode": "check",
+  "status": "passed",
+  "visuallyApproved": false,
+  "studioVerified": false,
+  "filesSha256": {
+    "exports/Desk.glb": "d4a7d95cef08cf6bec3d2d4698e762977ce5d37fc599a4a65b2fc4f21693e4d2",
+    "source/Desk.blend": "270c2c80e2d3c0df456ce4df5554ec115a0362bb184a26b68ceeee981d7154c2",
+    "source/Desk_Authored.glb": "e0f77e2eeed447c780b3b2e9bcdeff47f1f43241e57b8f2138f754bd03a82f85",
+    "source/design-reference.png": "b5c5ac058aaba12a8c109365b81961289fe076aa78b909eadd327d5ed62a4d51",
+    "source/trellis-original.glb": "bf8e2377536b6dd0e8404b04d7b5edf804f5278b0c6761b3a337a8558c8e15b8",
+    "textures/Desk_Color.png": "76a623522063b38c9718e01745e8c20cacabe640ccd91d4ed3946ef5ff38453d",
+    "textures/Desk_Roughness.png": "f4e0548865cf620ee3a953ef7f1fb07e2d024e3edd62a229ef494623e9757352",
+    "textures/Desk_Metalness.png": "d2cedf370016979c9ccae80d798a28aeaec3fc17d8cb213ddd29ac2fcba2dead",
+    "SetupDecoration.luau": "50636b9620cf2b8997f13be4e738f7a577ef62efae1cb3341d1567fa94540f53",
+    "appraisal.json": "6f4616ccd094fe0ac58225d83a39b66a5bd42f33b0300b605f56ae0b89ee813b",
+    "review/prototype-front.png": "54cacfd546b81baff2f405bcc2a2c685b886ce957c6dd632925dd67e880cf7af",
+    "review/prototype-front-quarter.png": "ab3b523f3d7ac920351e253a6c69cb5cc27516152de95b5c46cf9e4a42266fab",
+    "review/prototype-rear-quarter.png": "82f8476206281a2f6ea671d091a33a5fd491eef2d97f5c923e94d44b5af132e7",
+    "review/prototype-end.png": "71a1827d06cd6e07355cc29740f69f5901c720a43d0507d11cdba721c06f8a0f"
+  },
+  "measured": {
+    "triangles": 5828,
+    "boundsMin": [
+      -7,
+      0,
+      -1.9410170316696167
+    ],
+    "boundsMax": [
+      7,
+      2.9993221759796143,
+      1.9410170316696167
+    ]
+  },
+  "limitations": [
+    "File checks do not establish visual approval or Studio import.",
+    "Check-only hashes existing previews; it does not regenerate them.",
+    "Dimensions and role are provisional until the user approves them."
+  ]
+}

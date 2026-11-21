@@ -1,0 +1,17 @@
+{
+  "exportSha256": "21412b9765649f9257c56f4631825980132452d19aa78e72670dc66a5c8f5dbc",
+  "reviewedBy": "session-695e8a9d",
+  "measured": [],
+  "counted": {
+    "wheels": 4
+  },
+  "seen": [
+    "wheel rims: a flat disc with a five-point star of spokes, plain up close",
+    "tyres: 24-sided with twelve tread blocks, still visibly faceted next to the car",
+    "interior: boxy seats and dashboard, no pedals, gauges are blank panels",
+    "driver's view: the dashboard and bonnet fill the lower half of the screen (review/clean-driver.png)",
+    "roof and cabin sides have no collision in game, so a standing player's head passes through the roof",
+    "colour: stored as dark maroon; my review render lights it brighter than the picture; not checked in Studio"
+  ],
+  "recordedOn": "2026-11-17 08:18"
+}

@@ -1,0 +1,61 @@
+<title>Hub Alternatives</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Same review-sheet look as the hub concept page. Summary first so the four can be compared
+   at a glance; each option then leads with its arrival view, as the concept page does. */
+:root{--bg:#f3f4f7;--card:#ffffff;--fg:#161922;--muted:#5b6274;--line:#d9dce5;--accent:#8a5a00;
+  --text:"Inter",system-ui,sans-serif;--head:"Space Grotesk","Inter",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#101218;--card:#181b24;--fg:#eef0f6;--muted:#a0a6b8;--line:#2b2f3c;--accent:#ffc846;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101218;--card:#181b24;--fg:#eef0f6;--muted:#a0a6b8;--line:#2b2f3c;--accent:#ffc846;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--text);font-size:15px;line-height:1.55;padding-block:28px 64px;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{font-family:var(--head);margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(26px,4vw,38px)} h2{font-size:26px} h3{font-size:15px;margin-bottom:8px}
+p{margin:0;max-width:72ch} .muted{color:var(--muted)}
+a{color:var(--accent)}
+section{display:flex;flex-direction:column;gap:14px;scroll-margin-top:16px}
+.eyebrow{font-family:var(--head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+figure{margin:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+figure img{display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--line)}
+.plan{overflow:auto;border-radius:8px;border:1px solid var(--line);aspect-ratio:16/9;background:#0b0d12}
+.plan svg{display:block;height:100%;width:auto;margin:0 auto}
+figcaption{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start}
+.tbl{overflow-x:auto} table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--head);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav a{border:1px solid var(--line);border-radius:999px;padding:6px 14px;text-decoration:none;color:var(--fg);background:var(--card);font-weight:500;min-height:36px;display:inline-flex;align-items:center}
+.pick{border-left:3px solid var(--accent);padding-left:14px;display:flex;flex-direction:column;gap:10px}
+.caveat{border-left:3px solid var(--line);padding-left:12px}
+</style>
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:12px">
+    <h1>Four other ways to build the hub</h1>
+    <p>Each keeps exactly what the fifth version holds: five arrival spawns, the same five queue pads at their gameplay sizes, an ARMORY, a KITS hall, a SHOP, the leaderboard, and the lobby's own canister, stone columns and purple columns. Floor area and wall height are about the same. What changes is how the pieces are arranged around the player, and what you see in the first five seconds.</p>
+    <p class="caveat muted">Blockout renders from Blender, built from the same parts as the concept page, with no roofs. They show layout, scale and sightlines, not final art or Roblox lighting. Walk times are straight-line distance at Roblox's default walk speed. None of these is built; the fifth version is what is in the lobby file now.</p>
+    <nav aria-label="Options"><a href="#orbit">A · Orbit</a><a href="#overlook">B · Overlook</a><a href="#boulevard">C · Boulevard</a><a href="#islands">D · Islands</a><a href="#pick">Recommendation</a></nav>
+  </header>
+
+  <section>
+    <h2>At a glance</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Layout</th><th>The idea</th><th>Seen on arrival</th><th>Walk to the gate</th><th>Walk to Armory / Kits</th><th>Build effort</th></tr></thead>
+      <tbody>__ROWS__</tbody>
+    </table></div>
+  </section>
+
+__SECTIONS__
+
+  <section id="pick" class="pick">
+    <h2>Recommendation</h2>
+    <p><b>Overlook.</b> It is the only layout that answers the question a new player has on arrival, "what can I play?", with one look: every pad and the gate are laid out below you. It keeps the open sky of the fifth version, needs no new systems, and the lobby markers already accept a raised arrival.</p>
+    <p><b>Worth combining:</b> the fifth version's plaza with an Overlook arrival. The spawns go on a raised terrace at the back of the plaza, so the first view looks down the avenue over the pads to the gate. That keeps the layout that is already built and changes only the arrival.</p>
+    <p class="muted">Orbit is the quickest to play; Boulevard is the simplest to extend; Islands is the most memorable but needs fall handling and the most work.</p>
+  </section>
+</div>

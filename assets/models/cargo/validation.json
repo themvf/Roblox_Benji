@@ -1,0 +1,42 @@
+{
+  "checkedAtUtc": "20261011T142211089771Z",
+  "mode": "check",
+  "status": "passed",
+  "visuallyApproved": false,
+  "studioVerified": false,
+  "filesSha256": {
+    "exports/CargoDestroyed.glb": "990cb74f94bbf68fd39f351dbfa3a90714bd1f61c69aa25d0929347bffac982b",
+    "source/Cargo.blend": "47bf38c25fc55646c2a87e059841948c740ff78daec4739ef2eb52c9a6e9de33",
+    "source/Cargo_Authored.glb": "e7d286dd4cd3bf4aea29f3722b38baafbd42ac27bd9c7c81ec179d41aa389284",
+    "source/design-reference.png": "03b7f087811706980fdfb97509a6c454fa16e7a4de9f074bb967d74b625ea902",
+    "source/trellis-original.glb": "9b5448b934441fe801a37b89cd3f6205e3c1ba39c7e8795706ca104a55064641",
+    "textures/Cargo_Color.png": "b69b01244796de4684d37e74a61bbab3ded1dca013f08b4bc1bb534ac7ca049c",
+    "textures/Cargo_Normal.png": "f07f3f9125595eea40773e0c02b2f7059a0e93fcc2a5ada56080f8b66ccfb277",
+    "textures/Cargo_Roughness.png": "791b188dc0f156aa734ce08bb1000294ec1239a890783a532c87a90022d117c9",
+    "textures/Cargo_Metalness.png": "6eb53c78974bb3b8d38b2ecdb57de616df59d03b214a1a794fe9bb62a144e230",
+    "SetupCargo.luau": "e4f6444914bca1540470a53e846eb80d77b7593da00cf6b7fdf4d0f7b6cb01df",
+    "appraisal.json": "bfb15b1509a34a2011ed4c66116830111bf2dae1e32ea20727a22db319ebe24e",
+    "review/prototype-front.png": "1b895e17f2c8fbbb72f993f5ecf7d1686cf5a0d59b38f4db3dc5e3a0e5e63b71",
+    "review/prototype-front-quarter.png": "087585c23708d0be5e9c243d29b0974dddf0907858d44d55f82b7257e9b3b658",
+    "review/prototype-rear-quarter.png": "f35ab7c34d5a1c85a6a763b0f959cb221239fc3ce5ab4c8746f3dd9b0d50aace",
+    "review/prototype-end.png": "8383cc1d26fc71cfc90d65bb5b740e6769f63e6ed2a359fa80c933b8dc5d17f4"
+  },
+  "measured": {
+    "triangles": 7470,
+    "boundsMin": [
+      -5.1564435958862305,
+      0,
+      -2.562255859375
+    ],
+    "boundsMax": [
+      5.1564435958862305,
+      5.999999523162842,
+      2.562255859375
+    ]
+  },
+  "limitations": [
+    "File checks do not establish visual approval or Studio import.",
+    "Check-only hashes existing previews; it does not regenerate them.",
+    "Height and role are provisional until the user approves them."
+  ]
+}

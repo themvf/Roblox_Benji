@@ -1,0 +1,18 @@
+{
+  "looks": "good",
+  "said": "Yes upload it",
+  "findingsShown": [
+    "weight: 25,303 triangles against a budget of 15,000",
+    "roof and rear deck: the texture has bright, almost white highlights baked in, so the top reads much paler than the sides",
+    "tyres: a few small see-through slivers at the bottom of the rear wheels (0.03% of the model)",
+    "turret: part of the body, it does not turn or fire",
+    "wheels: part of the body, so they do not turn",
+    "windows: opaque dark panels, no interior; the driver sits hidden inside",
+    "surface: made matte by changing the texture's roughness to 0.85 and metal to 0; not yet seen in Studio"
+  ],
+  "note": null,
+  "exportSha256": "471e75fc8ebd9ae8ae11c3f6e821ee3a51a81c017c039d3a5a01166a2da349bb",
+  "worstSurfaceError": 0.002,
+  "worstBackFacePercent": 0.03,
+  "recordedOn": "2026-11-17"
+}

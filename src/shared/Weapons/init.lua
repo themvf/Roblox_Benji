@@ -76,6 +76,27 @@ Weapons.Sniper = {
     Auto = false,
 }
 
+-- Snow Fortress map pickup. Never appears in the selectable loadout.
+Weapons.WhiteSniper = {
+    Slot = "Primary",
+    PickupOnly = true,
+    Damage = { 90, 90 },
+    Crit = { 90, 90 },
+    DamageFractionOfMaxHealth = 0.9,
+    DropoffStart = math.huge,
+    DropoffEnd = math.huge,
+    Cooldown = 1.50,
+    Spread = 15.0,
+    AimSpread = 0,
+    Pellets = 1,
+    Ammo = { 4, 12 },
+    Reload = 1.80,
+    EmptyReload = 2.13,
+    EquipTime = 1.15,
+    MoveSpeed = -0.20,
+    Auto = false,
+}
+
 Weapons.Wildcat = {
     Slot = "Primary",
     Damage = { 9, 2.2 },

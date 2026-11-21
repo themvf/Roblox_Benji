@@ -1,0 +1,28 @@
+{
+  "rawTriangles": 289373,
+  "sourceTriangles": 231792,
+  "triangles": 27376,
+  "keptGround": false,
+  "groundCutZ": -0.2754,
+  "arrivedDimensions": [
+    0.6166,
+    0.7892,
+    0.616
+  ],
+  "sourceDimensions": [
+    0.7892,
+    0.6166,
+    0.616
+  ],
+  "voxelSize": 0.018,
+  "shellKeepRatio": 0.02,
+  "tiles": 4,
+  "cageExtrusion": 0.010799999999999999,
+  "maxRayDistance": 0.0324,
+  "smoothDegrees": 20.0,
+  "islandMargin": 0.001,
+  "collapsed": false,
+  "method": "ground-disc plane cut, voxel remesh, small-shell prune, NO collapse, then selected-to-active bake (colour, normal, roughness, metalness); scene_kit tiles the result because the Roblox cap is per mesh",
+  "textureSize": 1024,
+  "materialCount": 1
+}

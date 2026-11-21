@@ -1,0 +1,79 @@
+{
+  "checkedAtUtc": "20261012T123623095201Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "filesSha256": {
+    "source/design-reference.png": "234ed01614627a0fd9786b672fdd11205230526096cd04703179edf74159794e",
+    "source/trellis-original.glb": "7c047dd46eba8482bf2799af0f0122d9eedcfc03b93f4e71f556b30e31bf5ce6",
+    "source/trellis-basecolor.png": "88e81072cc6f2d27b9aae6601ce3355ad6704535be89c87b14e4c2ea3a38a9c9",
+    "source/trellis-appraisal.json": "2f78004d50624189af69021a549f328d88d67bca4c61ea2eaa75968c1b923aef",
+    "source/OrangeBox_Ransacked.blend": "6c3c38d8753fdda75df8e02f4fa121c9f30e8e034d7ab0b8f5f6426707998e6a",
+    "exports/OrangeBoxRansacked.glb": "51ee49cdfbd6ce7e0b594ae34d8dc0fa1c50091e6e2be3e449a2d15e01b5efe7",
+    "textures/OrangeBox_Color.png": "03255e918e100c0f9d5e521bd45bfefad7d9e9685c77e9dbf055a1e152864bba",
+    "textures/OrangeBox_Roughness.png": "1b0c59b6575555325155a8822c78e7949b4ac77feeeb1f2bc1f60efa64f7a609",
+    "textures/OrangeBox_Metalness.png": "f1d5b62b1bcbc12a4194dc98035481922f9f0e2b5c0f95394ce71fbf2ff7ebaf",
+    "textures/OrangeBox_Normal.png": "fdc4a08c2a9a881970c159bfbf5573317becb8d9fb665e1bd27ecc5533f6502f",
+    "trials/OrangeBox_legacy_9000.glb": "a11bff9ffce1656e6674916b9f769265450ec41b703c26765a885bd14ec9def0",
+    "review/legacy-quarter.png": "8f33038348c787050c58f812b7ddd6a7e614804167501aa45306c80a3a47c18a",
+    "trials/OrangeBoxRansacked_v1.glb": "a161663b9c182fbd8a7bf4e22bc1895f4d68a582aac44a29e2c8837e03402826",
+    "trials/OrangeBoxRansacked_v1-front-quarter.png": "c90c06b95b6e5eec334043db7560100175bfd866fd94bd48809e530121bc5bad",
+    "trials/OrangeBoxRansacked_v2_detail.glb": "b8fb4b51ddfa97750dd84fcf3223bfdb9c112ecfb74d40ed6738997a6a1fdd7b",
+    "trials/OrangeBoxRansacked_v2_detail-front-quarter.png": "44356839365b53d02f5ea30ef30c1916ea87fad1b66d756410ad3786d96ee96d",
+    "trials/OrangeBoxRansacked_v3_blast.glb": "13322f33c34d35316e48f9cd45335552b5560c7568093ca094be4d8bb12def1e",
+    "trials/OrangeBoxRansacked_v3_blast-front-quarter.png": "14a02ce417290f0507f9a69802ca47672e3d7095810c8df6322a3c1087588b7b",
+    "SetupOrangeBox.luau": "de2a1a94b22a002d802a7ae13c12ca12fabe6b4b53502bcde4239bd4a4b9e20d",
+    "appraisal.json": "3a3f32c3500f6e53a1304090f277fb1b26c335711d419f9343ce6941a9ace6fd",
+    "review/ransacked-front-quarter.png": "51a25bd0cfa29e44743f8edb60c4eff105e7a17cab17ed0a374f661bb517b707",
+    "review/ransacked-side.png": "dedec427653cce7114ad849a35d8521999ef9587eea01e09efd1b27ac0a0183d",
+    "review/ransacked-end.png": "d9e663ac300a78e6570937aed5b41360410e57962e3da2b9183ec182ef647c72",
+    "review/ransacked-rear.png": "6c878bd472c40e15016a142e90fa817ee46ed92f0cd85b8f8457a1a3c265a039"
+  },
+  "measured": {
+    "triangles": 9011,
+    "meshes": 1,
+    "materials": 1,
+    "boundsMin": [
+      -3.4379019737243652,
+      0,
+      -2.6526365280151367
+    ],
+    "boundsMax": [
+      3.4379019737243652,
+      3.799999952316284,
+      2.6526365280151367
+    ],
+    "embeddedTextures": [
+      [
+        "image/png",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "image/png",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "image/png",
+        [
+          1024,
+          1024
+        ]
+      ]
+    ],
+    "exportBytes": 2949480
+  },
+  "limitations": [
+    "Local GLB checks and Blender renders do not establish user visual approval.",
+    "New export has not been imported into Studio or placed in a map.",
+    "3.8-stud height and decoration role are provisional.",
+    "Check-only hashes previews but does not regenerate them.",
+    "Repository-wide Lune gate could not start in this sandbox (cwd access denied)."
+  ]
+}

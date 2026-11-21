@@ -58,4 +58,21 @@ pad.CFrame *= roblox.CFrame.new(-200, 0, 0) * roblox.CFrame.Angles(0, math.rad(2
 local rotated, rotationErrors = Reader.read(root, base)
 assert(not rotated and table.concat(rotationErrors, " "):find("rotation is not supported"), "rotated pad was accepted")
 
+pad.CFrame = originalPadCFrame
+
+-- Stations may turn to face their island; the turn must reach the runtime layout.
+assert(math.abs(layout.Kiosk.yaw - (base.Kiosk.yaw or 0)) < 0.05, "kiosk yaw did not reach runtime layout")
+assert(math.abs(layout.Board.yaw - (base.Board.yaw or 0)) < 0.05, "leaderboard yaw did not reach runtime layout")
+local board = root.Authoring.Stations.Board
+board.CFrame = roblox.CFrame.new(board.CFrame.Position) * roblox.CFrame.Angles(0, math.rad(30), 0)
+local turned = assert(Reader.read(root, base), "a turned leaderboard was rejected")
+assert(math.abs(turned.Board.yaw - 30) < 0.05, "leaderboard turn did not reach runtime layout")
+
+-- The islands float: a lobby that has no fall box would leave a player falling forever.
+local fall = assert(layout.FallRecovery, "lobby needs a FallRecovery box under the islands")
+assert(fall.max[2] < 0, "FallRecovery must sit below the island tops")
+for index, point in layout.Spawns do
+    assert(point[2] > fall.max[2], "lobby spawn " .. index .. " is inside the fall box")
+end
+
 print("Editable lobby source, live marker moves, and playable copy passed")

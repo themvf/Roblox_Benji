@@ -1,0 +1,49 @@
+{
+  "checkedAtUtc": "20261010T235711148095Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "filesSha256": {
+    "source/reference-0.png": "09b758aa33f643e2c75a8af09e2ea16b21bebf1ddeb2ffa155ed24aaf68bc98e",
+    "source/reference-2.png": "47aa0c45477b32f5e00d7deff627493762e90f5a20829c6d12eb6105282b2beb",
+    "source/trellis-original.glb": "440f2010e8ca812778cfb628b71c1dbb8a51a5728686a0dedebf242b562ab2fd",
+    "source/SimpleSciFiDesk.blend": "b608eea448635d7b7fbf7bac0149f4ed5816ab7be8627a319748090468447ef7",
+    "exports/SimpleSciFiDesk.glb": "6c02702656aca7151fa091304687172e27fa606d8035891a57d36df2852f0e1c",
+    "textures/Desk_Color.png": "46c01bf07fa5fd20fc688e62a2ad59887ef2800349e5c92b0b91bf1b4b10b97c",
+    "textures/Desk_Roughness.png": "bbc2447ae4b897df2633b2ca78aea45324a87d0b8ad179f0d4395c6c78da2aa0",
+    "textures/Desk_Metalness.png": "046bcd9f5fb71d7d22cd445f3c7ebfa8995480745e1c5bdf1d257ea6642fd753",
+    "appraisal.json": "9fdaf7a9cb057fa77434c0a2f675651a905bd669673fa8f9eea3927dcc08304d",
+    "views.png": "51bdcc0dc43206e9eb0bc82cfe4e794738a33e96cf4d1576adeee6aef18112d5",
+    "SetupDecoration.luau": "8daf0285b7f2d5cf119548b2628b0cc52a0d85d026d0e97386b4ac96574a130b",
+    "review/final-front.png": "7fd8f95cd6dfa34ef8b1d4a34709696ee149f47d38bc26d363a268615f14fba2",
+    "review/final-side.png": "4ba3d73fb8cb5de3afdf6ac8f929967510520e6e5a69e05d17baca6bc947a379",
+    "review/final-rear.png": "2f0ab0a8b1df2bf3d51192a14c3931f9fcc3874ce085e50d97c564e4597da88c",
+    "review/final-quarter.png": "c28aa282122b5f8e665a9fcb087bba6af36369123e7fc7c078331f19418bebd0"
+  },
+  "measured": {
+    "triangles": 4268,
+    "boundsGlbYUp": {
+      "min": [
+        -4.599999904632568,
+        0,
+        -2.200000047683716
+      ],
+      "max": [
+        4.599999904632568,
+        5.424999713897705,
+        2.389000177383423
+      ]
+    },
+    "embeddedTextureFormats": [
+      "image/png",
+      "image/png"
+    ],
+    "exportBytes": 239100
+  },
+  "limitations": [
+    "Local checks and renders do not establish user visual approval or Studio import.",
+    "The 9.2-stud width and decoration role are provisional.",
+    "Check-only verifies saved files; it does not regenerate renders."
+  ]
+}

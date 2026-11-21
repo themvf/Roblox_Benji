@@ -1,0 +1,28 @@
+{
+  "asset": "radio-tower",
+  "recordedOn": "2026-11-16",
+  "reference": {
+    "file": "assets/models/radio-tower/source/reference.jpg",
+    "sha256": "1d0b07027a15bb6ebc3838638b11289427c4beaa2fa5afedb7c051d76b16450a",
+    "origin": "user-supplied",
+    "madeWith": "user-supplied image (uploaded in chat)",
+    "prompt": null
+  },
+  "mesh": {
+    "file": "assets/models/radio-tower/source/RadioTower.glb",
+    "sha256": "8747442e30503a7971380d45cc1ccfea9d14d4aba4f3602f9bfcbdb5693ff72b",
+    "generator": {
+      "space": "microsoft/TRELLIS.2",
+      "seed": 2,
+      "resolution": "1024",
+      "decimationTarget": 300000,
+      "textureSize": 2048,
+      "reference": "reference.jpg",
+      "generatedOn": "2026-11-16"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

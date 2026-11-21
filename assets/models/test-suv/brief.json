@@ -1,0 +1,21 @@
+{
+  "purpose": "Provider test: dark red luxury off-road SUV from the user's picture, Tripo simplified export",
+  "role": "decor",
+  "heightStuds": 6.0,
+  "route": "scan",
+  "kind": "prop",
+  "lengthStuds": 16.5,
+  "widthStuds": 6.5,
+  "where": "ProviderTest",
+  "copies": 1,
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "test package: size from a real SUV (about 5.4 m long) at 3 studs a metre; role decor until the user says what it is for",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "counts": {
+    "wheels": 4
+  }
+}

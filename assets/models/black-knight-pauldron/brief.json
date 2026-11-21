@@ -1,0 +1,22 @@
+{
+  "purpose": "Black Knight kit shoulder plate, worn rigidly on the R15 UpperArm in matches and mirrored for the other shoulder: layered dark plate with a raised rim, an orange glowing seam and a short spike",
+  "role": "held",
+  "heightStuds": 1.0,
+  "pivot": "center",
+  "kind": "prop",
+  "lengthStuds": 1.6,
+  "widthStuds": 1.6,
+  "where": "worn by players on every map",
+  "copies": 20,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "role held; spike chosen by Claude; local build only, no upload",
+  "meshes": "auto",
+  "route": "scan",
+  "scene": {},
+  "counts": {
+    "spikes": 1
+  }
+}

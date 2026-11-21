@@ -1,0 +1,58 @@
+{
+  "reviewDate": "2026-11-20",
+  "result": "failed_visual_movement_review",
+  "gameplayAccepted": false,
+  "deviceVerified": false,
+  "files": [
+    {
+      "path": "assets/kit-looks/Bouncer/skinned/Bouncer-AvatarSetup.fbx",
+      "bytes": 3362284,
+      "sha256": "54a9508636b8c5039e3bfa3abe41892d1a4c76b4bcd7b2ebc756ac0f35490587"
+    },
+    {
+      "path": "assets/kit-looks/Bouncer/skinned/BouncerRig.rbxm",
+      "bytes": 232686,
+      "sha256": "06d3db1f8867a1727da3913e90b2029991fa6de200ceaf0edd681762544c5c0f"
+    },
+    {
+      "path": "assets/kit-looks/Bouncer/skinned/studio-review/Bouncer-AvatarSetup-Trial.rbxl",
+      "bytes": 343449,
+      "sha256": "103cb09aa993071a6dae872765ba0bff5ecc67340195aee618e319ab3f2ba0d0"
+    },
+    {
+      "path": "assets/kit-looks/Bouncer/skinned/studio-review/idle-head-deformation.png",
+      "bytes": 64885,
+      "sha256": "11878cc56c079f2e8866d231ce2bd2311f71f52c02cd4a37861b3af92cb36375"
+    },
+    {
+      "path": "assets/kit-looks/Bouncer/skinned/studio-review/jump-front-three-quarter.png",
+      "bytes": 62922,
+      "sha256": "792d105b69981ba8937539c6b9ee442bb697fb97ede948ba8338f4fba72e89df"
+    },
+    {
+      "path": "assets/kit-looks/Bouncer/skinned/studio-review/rig-structure.json",
+      "bytes": 4621,
+      "sha256": "963aee09014488c6fc90f69b3aa5b0b8e77bb15c82bc66c299faaf73108ec44a"
+    },
+    {
+      "path": "assets/kit-looks/Bouncer/skinned/studio-review/studio-output.txt",
+      "bytes": 9872,
+      "sha256": "1f1a791311db5853711ff4e904f60a8ab73db92679fbfc4712f1689045b27b60"
+    },
+    {
+      "path": "assets/kit-looks/Bouncer/skinned/studio-review/walk-front-three-quarter.png",
+      "bytes": 63028,
+      "sha256": "f1e5a27f00786094f323f7a77b8c591f2dfb05c04ffa0cefc210ff82a705c421"
+    },
+    {
+      "path": "assets/kit-looks/Bouncer/skinned/studio-review/walk-front.png",
+      "bytes": 203027,
+      "sha256": "db0cb5b0278221670f174dca60273cbfe4fbdefb76ec10b0bcd84ad277835ed0"
+    },
+    {
+      "path": "assets/kit-looks/Bouncer/skinned/studio-review/walk-side.png",
+      "bytes": 199735,
+      "sha256": "9781487f1c1d2a92315ca1478c985e2c410168ce633665f96c6cd9d0240a1f76"
+    }
+  ]
+}

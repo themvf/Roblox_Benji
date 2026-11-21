@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-10-18T19:56:25.359788+00:00",
+  "ok": true,
+  "scope": "Local source, GLB, R15 specs and saved preview files; no Studio import or playtest",
+  "variants": {
+    "SciFiSentry": {
+      "sourceSha256": "d667838e7ac402cab9952cdd788819328f5c1645e5e58cf44fb2aa6a7dccbef2",
+      "pieceCount": 39,
+      "export": {
+        "meshes": 39,
+        "triangles": 2016,
+        "largestMeshTriangles": 224,
+        "sha256": "aa7903d8f11ed632bfc175aef739ee4e42355407a5a3a87e4698527f3a7b345b",
+        "bytes": 99620
+      },
+      "editableSceneSha256": "883a1d6f981e52c990356a67c76f8138c2e1fd2e088e67998c0aaad031d79710",
+      "previewsSha256": {
+        "front": "9abe308fc21059c9921e4383e876c2a21de0f78d70e16fec84c59fbf23aabb87",
+        "side": "44dd62c871fbe05ad0ea6f4051666df5c59d82723558e4092ba97b3a9342c3ca",
+        "rear": "0bde6143a39e35ff2cb6587f8585a615593e7d79e78707f21244392c8d497c47",
+        "quarter": "e118a3cec6623f92a843c8a9ca0404f2dd06f74f37458ec54d9e8827e541e6e0"
+      }
+    },
+    "TacticalOperator": {
+      "sourceSha256": "c54379a03a5bcabf6690bd99977e2aa47945076053e2a39e5d02983c4a5ec7c0",
+      "pieceCount": 33,
+      "export": {
+        "meshes": 33,
+        "triangles": 2336,
+        "largestMeshTriangles": 224,
+        "sha256": "a51bef0aa5fa16bfecad0f9b4bf2f307e19b22effb4d12c69280d5ea4f958058",
+        "bytes": 98952
+      },
+      "editableSceneSha256": "c7c37ae715e30e2320fe0423e59b882e4b6ede8d92b059a78c300abbcfd04f96",
+      "previewsSha256": {
+        "front": "56544a04fec8fc84ba0ce473ae793ab35670ff020430896856143b17b9a1124c",
+        "side": "95c9a692e20f42f3188cb439a1a1a2935061b7498b5ad1e0a6e1117722edecb1",
+        "rear": "47eaaa83331d41fac3eacec1fbb8c666e45e7e1268d734f5a328831639ba64af",
+        "quarter": "1b1dda5e1f6404e8d083b4ba89bd20c4309bb562169e779a4d540fa46a368125"
+      }
+    }
+  }
+}

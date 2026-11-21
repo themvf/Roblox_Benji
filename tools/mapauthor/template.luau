@@ -121,18 +121,38 @@ function T.objective(parent, id, pos, radius, halfHeight)
 end
 
 function T.spawn(parent, team, name, pos)
-    local pad = helper(
-        parent,
-        name,
-        Vector3.new(6, 0.5, 6),
-        CFrame.new(pos[1], pos[2] + 0.25, pos[3]),
-        TEAM[team],
-        0.3
-    )
+    local pad = helper(parent, name, Vector3.new(6, 0.5, 6), CFrame.new(pos[1], pos[2] + 0.25, pos[3]), TEAM[team], 0.3)
     pad:SetAttribute("Role", "Spawn")
     pad:SetAttribute("Team", team)
     label(pad, team:upper() .. " SPAWN", TEAM[team], 1.5)
     return pad
+end
+
+-- A prop marker: a labelled see-through box the size the prop should fill. Its bottom
+-- centre is where the prop stands and its front face (-Z) is the prop's front. The game
+-- draws the uploaded model `assetId` there without collision; `fit` is the length in
+-- studs of its longer side on the ground.
+local PROP = Color3.fromRGB(200, 90, 230)
+function T.prop(parent, name, assetId, pos, yaw, size, fit)
+    local box = helper(
+        parent,
+        name,
+        Vector3.new(size[1], size[2], size[3]),
+        CFrame.new(pos[1], pos[2] + size[2] / 2, pos[3]) * CFrame.Angles(0, math.rad(yaw or 0), 0),
+        PROP,
+        0.75
+    )
+    box:SetAttribute("Role", "Prop")
+    if type(assetId) == "string" then
+        box:SetAttribute("Asset", assetId) -- a key in src/shared/AssetRegistry.json
+    else
+        box:SetAttribute("AssetId", string.format("%.0f", assetId)) -- text: see MapAuthoring.readMarkers
+    end
+    if fit then
+        box:SetAttribute("Fit", fit)
+    end
+    label(box, "PROP " .. name, PROP, 1.5)
+    return box
 end
 
 -- Bounds is one box. Transparent and Locked so it does not swallow every click in the

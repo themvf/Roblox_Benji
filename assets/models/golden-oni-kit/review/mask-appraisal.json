@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-20",
+  "source": "hunyuan-mask-reference.glb",
+  "sourceSha256": "b5b0b902da364d51bc4a6ec7e6f8e7a0a4960062fca05c211f1073ac7930b4a5",
+  "measurements": {
+    "triangles": 40000,
+    "size": [
+      1.522,
+      0.981,
+      1.986
+    ],
+    "reliefRatio": 0.494,
+    "openEdges": 12722,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Hunyuan mask study is a visual reference for modeling a separate wearable mask; not approved or ready for Roblox."
+}

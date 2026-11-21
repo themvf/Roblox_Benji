@@ -1,0 +1,65 @@
+{
+  "checkedAtUtc": "20261017T212918961804Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "appraisal.json": "fce4e0322f12222d2e87e503564da557d06dd684e9afbbdea7e41ff60196d219",
+    "views.png": "31d8ffe909b8f300431eccc673bbcf0f56ce33847cc5e9ef4db76506460837d5",
+    "source/design-reference.png": "3a19ed3a41c3e5ba102586482ea193e5e48d5f5847574412f523ee505ad77b47",
+    "source/trellis-original.glb": "cb33c82718f215be6547d054f3fdacaa66bf30ddc46349721abbbc002f63308d",
+    "source/BlackOrangeCase.blend": "44fc5976b04c054b67d6cfc665924ecea22630a08fc01be99f6106e2753dff3e",
+    "exports/BlackOrangeCase.glb": "bf1afb9b9af329aea03904b3f4b6f0e20c7dc1f30842ca2fa4d2e243837c5044",
+    "textures/BlackOrange_Color.png": "f8fb926ffb37c53e891812d706ff91835a633da3592fe1501a10e27ae5aaef8b",
+    "textures/BlackOrange_Roughness.png": "00c833f77fb08d108eed1c31cd89e10f68f1b275ef27676c3175a967eabadccb",
+    "textures/BlackOrange_Metalness.png": "9c024808fed73b7293f10ed3f0bc53ab4368328789a3b81da90c1e1007a9ee69",
+    "trials/decimate-manifest.json": "1f000cefcf799ae8a5b463caad4b9d97c517b445e68fa4d695c49df4190f0e99",
+    "trials/decimated-9000.glb": "91643e7d2bf6a9b31f3532e7213addfe2a8a46ccd0071687f16ee0d059e52b9c",
+    "trials/decimated-9000-quarter.png": "b5caabeff417c72c8dc6c627eeb70db2be82cda44873f59dbc45380abc5881a1",
+    "SetupDecoration.luau": "14cc4f9c3909442b287c1dfd937b9be3db7f71160ad0a244cd1b170f55f6da7b",
+    "review/front-quarter.png": "e623c90bd20002cc1dac173016914f1257f274570ce03b56afdd3d056092397c",
+    "review/side.png": "df84675e91737fde482b6455ffec6fc94cc149e8d87aa15710b71fa00c28cf89",
+    "review/end.png": "afebe797e220afb2d3406f720da70123de9be3f24141d5de8c1a87cdfb8b03ab",
+    "review/rear.png": "24d189e97a5837229f4a01731e5557b9f5ad477237fee6bd89c43b041ba66c3b"
+  },
+  "measured": {
+    "triangles": 3036,
+    "meshes": 1,
+    "materials": 1,
+    "boundsMin": [
+      -3.7214999198913574,
+      0,
+      -2.1475000381469727
+    ],
+    "boundsMax": [
+      3.7214999198913574,
+      3.6439998149871826,
+      2.1475000381469727
+    ],
+    "embeddedTextures": [
+      [
+        "image/png",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "image/png",
+        [
+          1024,
+          1024
+        ]
+      ]
+    ],
+    "exportBytes": 1258972
+  },
+  "limitations": [
+    "Local file checks and Blender previews do not establish user visual approval.",
+    "Studio import, texture loading, physics and map integration are unverified.",
+    "Size and non-colliding decoration role are provisional.",
+    "Check-only hashes saved previews but does not regenerate them."
+  ]
+}

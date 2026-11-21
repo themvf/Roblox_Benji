@@ -1,4 +1,325 @@
 {
+  "armored-vehicle": {
+    "package": "assets/models/armored-vehicle",
+    "role": "interactive",
+    "route": "scan",
+    "export": "assets/models/armored-vehicle/exports/ArmoredVehicle.glb",
+    "exportSha256": "471e75fc8ebd9ae8ae11c3f6e821ee3a51a81c017c039d3a5a01166a2da349bb",
+    "triangles": 25303,
+    "kind": "vehicle",
+    "gameName": "ArmoredVehicle",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.8,
+        0.0
+      ],
+      "DriverSeat": [
+        -1.3,
+        2.6,
+        -0.5
+      ],
+      "DriverEye": [
+        -1.2,
+        5.9,
+        -3.7
+      ]
+    },
+    "share": "game",
+    "budgetWaiver": "Tripo's 23,907-triangle export used as delivered; our own reduction tears generated meshes (the patrol boat). A lighter version has to come from Tripo's Retopo at about 13,000. At most a few copies on a map.",
+    "assetId": 74029393130592,
+    "uploadedSha256": "471e75fc8ebd9ae8ae11c3f6e821ee3a51a81c017c039d3a5a01166a2da349bb",
+    "uploadedOn": "2026-11-17",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "black-knight-look": {
+    "package": "assets/kit-looks/BlackKnight",
+    "role": "interactive",
+    "route": "scan",
+    "kind": "prop",
+    "share": "game",
+    "export": "assets/kit-looks/BlackKnight/exports/BlackKnightLook.glb",
+    "exportSha256": "df4066429a5a39bfaf9c14c1f15fb91fb68ec0a0a95c5033ef5bc185e5e2c625",
+    "triangles": 19171,
+    "gameName": "BlackKnight",
+    "budgetWaiver": "A whole kit character, budgeted at 20,000 triangles for ten on a phone (kit_look.py CHARACTER_BUDGET), not as one interactive prop.",
+    "kitLook": {
+      "pieces": [
+        {
+          "mesh": "Head__helmet",
+          "part": "Head",
+          "offset": [
+            0.0,
+            0.32,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftFoot__boot",
+          "part": "LeftFoot",
+          "offset": [
+            -0.07,
+            0.2154,
+            -0.02
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftHand__fist",
+          "part": "LeftHand",
+          "offset": [
+            -0.0,
+            -0.15,
+            -0.05
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftLowerArm__gauntlet",
+          "part": "LeftLowerArm",
+          "offset": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftLowerLeg__greave",
+          "part": "LeftLowerLeg",
+          "offset": [
+            -0.06,
+            0.08,
+            -0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftUpperArm__pauldron",
+          "part": "LeftUpperArm",
+          "offset": [
+            -0.12,
+            0.26,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftUpperLeg__thigh",
+          "part": "LeftUpperLeg",
+          "offset": [
+            -0.06,
+            0.02,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LowerTorso__waist",
+          "part": "LowerTorso",
+          "offset": [
+            -0.0,
+            -0.4,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightFoot__boot",
+          "part": "RightFoot",
+          "offset": [
+            0.07,
+            0.2154,
+            -0.02
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightHand__fist",
+          "part": "RightHand",
+          "offset": [
+            -0.0,
+            -0.15,
+            -0.05
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightLowerArm__gauntlet",
+          "part": "RightLowerArm",
+          "offset": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightLowerLeg__greave",
+          "part": "RightLowerLeg",
+          "offset": [
+            0.06,
+            0.08,
+            -0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightUpperArm__pauldron",
+          "part": "RightUpperArm",
+          "offset": [
+            0.12,
+            0.26,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightUpperLeg__thigh",
+          "part": "RightUpperLeg",
+          "offset": [
+            0.06,
+            0.02,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "UpperTorso__back",
+          "part": "UpperTorso",
+          "offset": [
+            -0.0,
+            -0.9,
+            1.0185
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "UpperTorso__chest",
+          "part": "UpperTorso",
+          "offset": [
+            -0.0,
+            0.22,
+            0.0
+          ],
+          "covers": true
+        }
+      ],
+      "hides": [
+        "Head",
+        "LeftFoot",
+        "LeftHand",
+        "LeftLowerArm",
+        "LeftLowerLeg",
+        "LeftUpperArm",
+        "LeftUpperLeg",
+        "LowerTorso",
+        "RightFoot",
+        "RightHand",
+        "RightLowerArm",
+        "RightLowerLeg",
+        "RightUpperArm",
+        "RightUpperLeg",
+        "UpperTorso"
+      ],
+      "sleeves": [
+        {
+          "part": "UpperTorso",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            2.1,
+            1.6,
+            0.9
+          ]
+        },
+        {
+          "part": "LeftUpperArm",
+          "offset": [
+            0,
+            -0.15,
+            0
+          ],
+          "size": [
+            0.8,
+            0.9,
+            0.8
+          ]
+        },
+        {
+          "part": "RightUpperArm",
+          "offset": [
+            0,
+            -0.15,
+            0
+          ],
+          "size": [
+            0.8,
+            0.9,
+            0.8
+          ]
+        }
+      ],
+      "glows": [
+        {
+          "part": "Head",
+          "color": "#FF8A1E",
+          "offset": [
+            -0.4125,
+            -0.0075,
+            -1.15
+          ],
+          "size": [
+            0.26,
+            0.15,
+            0.08
+          ]
+        },
+        {
+          "part": "Head",
+          "color": "#FF8A1E",
+          "offset": [
+            0.255,
+            -0.0225,
+            -1.15
+          ],
+          "size": [
+            0.27,
+            0.15,
+            0.08
+          ]
+        }
+      ],
+      "bodyColor": "#1E2430",
+      "templateTorsoHeight": 1.6
+    },
+    "assetId": 130504742583014,
+    "uploadedSha256": "df4066429a5a39bfaf9c14c1f15fb91fb68ec0a0a95c5033ef5bc185e5e2c625",
+    "uploadedOn": "2026-11-19",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
   "military-wave-runner": {
     "package": "assets/models/military-wave-runner",
     "role": "interactive",
@@ -82,6 +403,371 @@
     "assetId": 70498391528292,
     "uploadedSha256": "1047670a070fb4839d427ee0ca58de36e4185f769c4b9c2b0e9e8be24f935019",
     "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "patrol-rhib-scan": {
+    "package": "assets/models/patrol-rhib-scan",
+    "role": "interactive",
+    "route": "scan",
+    "export": "assets/models/patrol-rhib-scan/exports/PatrolRhibScan.glb",
+    "exportSha256": "b73895a3e9acd963d8494a5fc2e609953e0209fa1638bf106fd4a63b351e5fb8",
+    "triangles": 27348,
+    "kind": "vehicle",
+    "gameName": "RHIB",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.95,
+        0.0
+      ],
+      "DriverSeat": [
+        -0.9,
+        6.6,
+        0.6
+      ]
+    },
+    "share": "public",
+    "assetId": 106441761252352,
+    "uploadedSha256": "b73895a3e9acd963d8494a5fc2e609953e0209fa1638bf106fd4a63b351e5fb8",
+    "uploadedOn": "2026-11-17",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    },
+    "budgetWaiver": "Kept at Tripo's own 25,154-triangle retopology. Cutting it to the 15,000 vehicle budget here made 3.33% of it see-through (build of 2026-11-17); a lighter version has to come from Tripo's Retopo, not from our reduction. At most 4 copies on the map."
+  },
+  "penthouse-aquarium": {
+    "package": "assets/models/penthouse-aquarium",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-aquarium/exports/PenthouseAquarium.glb",
+    "exportSha256": "aafb567f85878433794014a71c8515e530c1a300f35c3e9b0ad5b91bd6ee3447",
+    "triangles": 18442,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-cabinet-wall": {
+    "package": "assets/models/penthouse-cabinet-wall",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-cabinet-wall/exports/PenthouseCabinetWall.glb",
+    "exportSha256": "419c3c74275827a4b424ed1060f0d016c0ab53a56ff67d0199535ba11abe3838",
+    "triangles": 29615,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-daybed": {
+    "package": "assets/models/penthouse-daybed",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-daybed/exports/PenthouseDaybed.glb",
+    "exportSha256": "a60d97e4b942bde5869fdd3136724dc06b197814dc3625cf7813c48d217be9d3",
+    "triangles": 28966,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": 92760681066971,
+    "uploadedSha256": "a60d97e4b942bde5869fdd3136724dc06b197814dc3625cf7813c48d217be9d3",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-elevator": {
+    "package": "assets/models/penthouse-elevator",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-elevator/exports/PenthouseElevator.glb",
+    "exportSha256": "20876ee99191ddadf144b22998817a54833208306fe1d65cbfc5ff9a74d08b83",
+    "triangles": 17786,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-gallery-wall": {
+    "package": "assets/models/penthouse-gallery-wall",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-gallery-wall/exports/PenthouseGalleryWall.glb",
+    "exportSha256": "df432362cac1e318adf3187000fde8306924e152ed7cecc00f6818eaeb519e8f",
+    "triangles": 16186,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-hedge": {
+    "package": "assets/models/penthouse-hedge",
+    "role": "decor",
+    "route": "clean",
+    "export": "assets/models/penthouse-hedge/exports/PenthouseHedgeClean.glb",
+    "exportSha256": "4ff5370bc60906b5831f32619a0001f1aa6e1ec9b31d7c9a6d144603f631b3e4",
+    "triangles": 1900,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-kitchen-island": {
+    "package": "assets/models/penthouse-kitchen-island",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-kitchen-island/exports/PenthouseKitchenIsland.glb",
+    "exportSha256": "df3809a944c5c61d75c03a2d7c6b614dc376a3f94a54e058d02d294858b6eec6",
+    "triangles": 28520,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": 126360548080861,
+    "uploadedSha256": "df3809a944c5c61d75c03a2d7c6b614dc376a3f94a54e058d02d294858b6eec6",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-sculpture": {
+    "package": "assets/models/penthouse-sculpture",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-sculpture/exports/PenthouseSculpture.glb",
+    "exportSha256": "7ad892002d167da0b0a5a09442e8cb12cbc38f0d50bd1e9ed4ff7d9eb8679d95",
+    "triangles": 28307,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": 115249129895050,
+    "uploadedSha256": "7ad892002d167da0b0a5a09442e8cb12cbc38f0d50bd1e9ed4ff7d9eb8679d95",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-sofa": {
+    "package": "assets/models/penthouse-sofa",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-sofa/exports/PenthouseSofa.glb",
+    "exportSha256": "14fb300eb89e23cfc0b3dc454f6628e4404a89f523d1d42d4ebf2c0ab342c2ee",
+    "triangles": 27833,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": 93746109947365,
+    "uploadedSha256": "14fb300eb89e23cfc0b3dc454f6628e4404a89f523d1d42d4ebf2c0ab342c2ee",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "radio-tower": {
+    "package": "assets/models/radio-tower",
+    "role": "scenery",
+    "route": "scan",
+    "export": "assets/models/radio-tower/exports/RadioTower.glb",
+    "exportSha256": "cd338a35a0f14356e704039efc87c7418a605d5d10d7cc9454d11145d0fc126f",
+    "triangles": 59121,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "public",
+    "assetId": 132097701288704,
+    "uploadedSha256": "cd338a35a0f14356e704039efc87c7418a605d5d10d7cc9454d11145d0fc126f",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "red-suv": {
+    "package": "assets/models/red-suv",
+    "role": "interactive",
+    "route": "clean",
+    "export": "assets/models/red-suv/exports/RedSuvClean.glb",
+    "exportSha256": "21412b9765649f9257c56f4631825980132452d19aa78e72670dc66a5c8f5dbc",
+    "triangles": 4860,
+    "kind": "vehicle",
+    "gameName": "SUV",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.8,
+        0.0
+      ],
+      "DriverSeat": [
+        -1.1,
+        2.1,
+        1.1
+      ]
+    },
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "red-suv-scan": {
+    "package": "assets/models/red-suv-scan",
+    "role": "interactive",
+    "route": "scan",
+    "export": "assets/models/red-suv-scan/exports/RedSuvScan.glb",
+    "exportSha256": "01a52822fa4d6b150c2d91b22db6fedafad9f0a6e952f0d2f40c7827d51d3c79",
+    "triangles": 24522,
+    "kind": "vehicle",
+    "gameName": "SUV",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.8,
+        0.0
+      ],
+      "DriverSeat": [
+        -0.95,
+        2.3,
+        -0.8
+      ],
+      "DriverEye": [
+        -0.9,
+        5.15,
+        -3.9
+      ]
+    },
+    "share": "game",
+    "budgetWaiver": "Tripo's 23,426-triangle export used as delivered while a 13,000-triangle Tripo Retopo is awaited; our own reduction tears generated meshes (the patrol boat). At most a few copies on a map.",
+    "assetId": 98420351725413,
+    "uploadedSha256": "01a52822fa4d6b150c2d91b22db6fedafad9f0a6e952f0d2f40c7827d51d3c79",
+    "uploadedOn": "2026-11-17",
     "studio": {
       "verifiedOn": null,
       "checks": {

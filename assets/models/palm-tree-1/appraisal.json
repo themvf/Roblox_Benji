@@ -1,0 +1,33 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-15",
+  "source": "Palm_Tree_1.glb",
+  "sourceSha256": "143fccbd8e33baa120a5d0c81b4559ac6f6f28fd2bb0034d869f76616a07423b",
+  "measurements": {
+    "triangles": 295281,
+    "size": [
+      0.502,
+      0.489,
+      1.0
+    ],
+    "reliefRatio": 0.489,
+    "openEdges": 281341,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "Too dense to survive as ONE mesh.",
+    "  Tiling instead: 8 meshes keeps 25% of the detail (73,820 triangles);",
+    "  Tiling instead: 15 meshes keeps 50% of the detail (147,640 triangles);",
+    "  the 10,000 cap is PER MESH, so `tile` beats `decimate` for anything",
+    "  broad that the player gets close to. Weigh the part count against",
+    "  your device budget.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Hero/background palm tree prop for Five Islands Hurricane (~19 studs tall), processed via scene_kit and gltf_post to meet Roblox's <=10k-tri mesh limit and <=1024 PNG texture format."
+}

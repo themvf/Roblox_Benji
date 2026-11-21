@@ -15,3 +15,4 @@ assets/environment/source/.history/
 # a claim marks which session is working on a package right now
 assets/models/*/trials/
 assets/models/*/.claim.json
+assets/kit-looks/trials/

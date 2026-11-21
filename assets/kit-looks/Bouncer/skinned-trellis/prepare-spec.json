@@ -1,0 +1,35 @@
+{
+ "source": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\trellis-tpose\\seed-101-1024.glb",
+ "out": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\skinned-trellis",
+ "turn": 0.0,
+ "marks": {
+  "neck": 0.687,
+  "waist": 0.403,
+  "hip": 0.344,
+  "knee": 0.236,
+  "ankle": 0.069,
+  "shoulder": [
+   0.172,
+   0.624
+  ],
+  "elbow": [
+   0.27,
+   0.624
+  ],
+  "wrist": [
+   0.368,
+   0.624
+  ],
+  "armRadius": 0.08,
+  "armInner": 0.165,
+  "legOuter": 0,
+  "handLength": 0.14,
+  "hairCut": 0.83
+ },
+ "swing": 0.0,
+ "voxel": 0.004,
+ "faces": 12000,
+ "texture": 1024,
+ "fbx": "Bouncer-AvatarSetup.fbx",
+ "cage": 6.0
+}

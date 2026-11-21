@@ -21,6 +21,10 @@ local DEFAULTS = {
     Camera_MinZoom = 10,
     Camera_MaxZoom = 20,
     Camera_HeightOffset = 1.5, -- raises the view over the shoulder line
+    -- Vehicles: the view from the seat (VehicleController toggles it; see SetVehicleInside).
+    Vehicle_InsideView = false, -- which view a player starts in the first time they board
+    Vehicle_InsideFov = 80, -- wider than the 70 used on foot, so the bow and both sides stay in view
+    Vehicle_InsideEyeHeight = 0, -- studs above the head; raise it if a dashboard blocks the view
 }
 
 local function tuning()
@@ -36,8 +40,66 @@ local function setting(key)
     return v
 end
 
+-- The view from the seat. Roblox's own first-person mode does the work: it puts the camera
+-- at the head, hides the player's own character, and already handles looking around by
+-- mouse, touch drag and gamepad stick, so there is one behaviour on every device.
+-- Arena framing forbids zooming in that far (Camera_MinZoom), so it is lifted while inside
+-- and put back by Apply on the way out, which also pushes the camera back out behind.
+-- `eyeOffset`, when given, puts the camera somewhere other than the head: a vehicle with no
+-- cabin to look out of asks for a point over its bonnet. It is in the character's own frame.
+function CameraController:SetVehicleInside(inside: boolean, eyeOffset: Vector3?)
+    local player = Players.LocalPlayer
+    local character = player.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    local cam = workspace.CurrentCamera
+    if inside then
+        self.VehicleInside = true
+        player.CameraMinZoomDistance = 0.5
+        player.CameraMode = Enum.CameraMode.LockFirstPerson
+        if eyeOffset ~= nil then
+            self.VehicleEyeOffset = eyeOffset
+        end
+        if humanoid then
+            local lift = Vector3.new(0, math.clamp(setting("Vehicle_InsideEyeHeight"), -2, 4), 0)
+            humanoid.CameraOffset = (self.VehicleEyeOffset or Vector3.zero) + lift
+        end
+        if cam then
+            cam.FieldOfView = math.clamp(setting("Vehicle_InsideFov"), 50, 100)
+        end
+        return
+    end
+    if not self.VehicleInside then
+        return
+    end
+    self.VehicleInside = false
+    self.VehicleEyeOffset = nil
+    player.CameraMode = Enum.CameraMode.Classic
+    if cam then
+        cam.FieldOfView = 70
+    end
+    if setting("Camera_ArenaFraming") == true then
+        if character then
+            self:Apply(character)
+        end
+    else
+        -- No arena framing to restore: undo what was changed and step the camera back out.
+        if humanoid then
+            humanoid.CameraOffset = Vector3.zero
+        end
+        player.CameraMinZoomDistance = 12.5
+        task.delay(0.2, function()
+            if not self.VehicleInside then
+                player.CameraMinZoomDistance = 0.5
+            end
+        end)
+    end
+end
+
 function CameraController:Apply(character: Model)
     local player = Players.LocalPlayer
+    if self.VehicleInside then
+        return -- the seat view owns the camera until the player leaves it
+    end
     if setting("Camera_ArenaFraming") ~= true then
         return
     end
@@ -77,6 +139,8 @@ function CameraController:KnitStart()
         t.AttributeChanged:Connect(function(key)
             if key:sub(1, 7) == "Camera_" and player.Character then
                 self:Apply(player.Character)
+            elseif key:sub(1, 14) == "Vehicle_Inside" and self.VehicleInside then
+                self:SetVehicleInside(true) -- live-tune the seat view's field of view and eye height
             end
         end)
     end

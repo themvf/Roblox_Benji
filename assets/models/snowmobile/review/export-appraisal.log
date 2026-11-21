@@ -1,0 +1,171 @@
+08:54:20 | INFO: Data are loaded, start creating Blender stuff
+08:54:20 | INFO: Blender create Mesh node Vehicle segment 01
+08:54:20 | INFO: Blender create Mesh node Vehicle segment 02
+08:54:20 | INFO: Blender create Mesh node Vehicle segment 03
+08:54:20 | INFO: Blender create Mesh node Vehicle segment 04
+08:54:20 | INFO: Blender create Mesh node Vehicle segment 05
+08:54:20 | INFO: Blender create Mesh node Vehicle segment 06
+08:54:20 | INFO: Blender create Mesh node Vehicle segment 07
+08:54:20 | INFO: Blender create Mesh node Vehicle segment 08
+08:54:20 | INFO: Blender create Mesh node Vehicle segment 09
+08:54:20 | INFO: glTF import finished in 0.10s
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+Fra:1 Mem:28.55M (Peak 28.55M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Snowmobile_Segment_01
+Fra:1 Mem:39.78M (Peak 50.19M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:39.78M (Peak 50.19M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Snowmobile_MetalRough
+Fra:1 Mem:39.78M (Peak 50.19M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Snowmobile_Color
+Fra:1 Mem:47.60M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:47.60M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:47.60M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:47.60M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:47.69M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:47.69M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:47.69M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:47.69M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:47.69M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:47.69M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:47.69M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:47.69M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:47.69M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:47.69M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:48.78M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:51.46M (Peak 55.80M) | Time:00:00.05 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:51.46M (Peak 55.80M) | Time:00:00.05 | Mem:10.69M, Peak:10.69M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:51.46M (Peak 55.80M) | Time:00:00.05 | Mem:10.69M, Peak:10.69M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:51.46M (Peak 55.80M) | Time:00:00.05 | Mem:12.87M, Peak:12.87M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:51.46M (Peak 55.80M) | Time:00:00.06 | Mem:15.48M, Peak:17.67M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:51.46M (Peak 55.80M) | Time:00:00.06 | Mem:15.48M, Peak:17.67M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:55.61M (Peak 55.80M) | Time:00:00.06 | Mem:15.48M, Peak:17.67M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:55.61M (Peak 55.80M) | Time:00:00.06 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:55.61M (Peak 55.80M) | Time:00:00.06 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:55.61M (Peak 55.80M) | Time:00:00.06 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:55.61M (Peak 55.80M) | Time:00:00.06 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:55.61M (Peak 55.80M) | Time:00:00.06 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:55.61M (Peak 55.80M) | Time:00:00.06 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:55.61M (Peak 55.80M) | Time:00:00.06 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:55.61M (Peak 55.80M) | Time:00:00.06 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:55.61M (Peak 55.80M) | Time:00:00.06 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:55.62M (Peak 55.80M) | Time:00:00.06 | Mem:19.63M, Peak:19.71M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:55.62M (Peak 55.80M) | Time:00:00.06 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:55.62M (Peak 55.80M) | Time:00:00.06 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:55.62M (Peak 55.80M) | Time:00:00.06 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:55.62M (Peak 55.80M) | Time:00:00.06 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Sample 0/12
+Fra:1 Mem:72.38M (Peak 72.38M) | Time:00:00.07 | Remaining:00:00.12 | Mem:36.43M, Peak:36.43M | Scene, ViewLayer | Sample 1/12
+Fra:1 Mem:79.41M (Peak 89.96M) | Time:00:01.09 | Mem:36.43M, Peak:36.43M | Scene, ViewLayer | Sample 12/12
+Fra:1 Mem:79.41M (Peak 89.96M) | Time:00:01.09 | Mem:36.43M, Peak:36.43M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\snowmobile\review\views.png.front.png'
+Time: 00:01.27 (Saving: 00:00.18)
+
+Fra:1 Mem:32.84M (Peak 32.84M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Snowmobile_Segment_01
+Fra:1 Mem:39.82M (Peak 50.22M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:39.81M (Peak 50.22M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Snowmobile_MetalRough
+Fra:1 Mem:39.81M (Peak 50.22M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Snowmobile_Color
+Fra:1 Mem:47.62M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:47.62M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:47.62M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:47.62M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:47.70M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:47.70M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:47.70M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:47.70M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:47.70M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:47.70M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:47.70M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:47.70M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:47.70M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:47.70M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:48.80M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:51.48M (Peak 55.83M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:51.48M (Peak 55.83M) | Time:00:00.04 | Mem:10.69M, Peak:10.69M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:51.48M (Peak 55.83M) | Time:00:00.04 | Mem:10.69M, Peak:10.69M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:51.48M (Peak 55.83M) | Time:00:00.04 | Mem:12.87M, Peak:12.87M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:51.48M (Peak 55.83M) | Time:00:00.05 | Mem:15.48M, Peak:17.67M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:51.48M (Peak 55.83M) | Time:00:00.05 | Mem:15.48M, Peak:17.67M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:15.48M, Peak:17.67M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.63M, Peak:19.71M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:55.63M (Peak 55.83M) | Time:00:00.05 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Sample 0/12
+Fra:1 Mem:72.40M (Peak 72.40M) | Time:00:00.06 | Remaining:00:00.18 | Mem:36.43M, Peak:36.43M | Scene, ViewLayer | Sample 1/12
+Fra:1 Mem:79.43M (Peak 89.98M) | Time:00:01.14 | Mem:36.43M, Peak:36.43M | Scene, ViewLayer | Sample 12/12
+Fra:1 Mem:79.43M (Peak 89.98M) | Time:00:01.14 | Mem:36.43M, Peak:36.43M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\snowmobile\review\views.png.side.png'
+Time: 00:01.17 (Saving: 00:00.02)
+
+Fra:1 Mem:32.88M (Peak 32.88M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Snowmobile_Segment_01
+Fra:1 Mem:39.85M (Peak 50.25M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:39.84M (Peak 50.25M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Snowmobile_MetalRough
+Fra:1 Mem:39.84M (Peak 50.25M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Snowmobile_Color
+Fra:1 Mem:47.64M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:47.64M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:47.64M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:47.64M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:47.72M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:47.72M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:47.72M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:47.72M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:47.72M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:47.72M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:47.72M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:47.72M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:47.72M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:47.72M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:48.82M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:51.50M (Peak 55.87M) | Time:00:00.04 | Mem:8.00M, Peak:8.00M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:51.50M (Peak 55.87M) | Time:00:00.04 | Mem:10.69M, Peak:10.69M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:51.50M (Peak 55.87M) | Time:00:00.04 | Mem:10.69M, Peak:10.69M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:51.50M (Peak 55.87M) | Time:00:00.04 | Mem:12.87M, Peak:12.87M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:51.50M (Peak 55.87M) | Time:00:00.04 | Mem:15.48M, Peak:17.67M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:51.50M (Peak 55.87M) | Time:00:00.04 | Mem:15.48M, Peak:17.67M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:15.48M, Peak:17.67M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.63M, Peak:19.63M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.71M, Peak:19.71M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.63M, Peak:19.71M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:55.65M (Peak 55.87M) | Time:00:00.05 | Mem:19.72M, Peak:19.72M | Scene, ViewLayer | Sample 0/12
+Fra:1 Mem:72.42M (Peak 72.42M) | Time:00:00.07 | Remaining:00:00.23 | Mem:36.43M, Peak:36.43M | Scene, ViewLayer | Sample 1/12
+Fra:1 Mem:79.45M (Peak 90.00M) | Time:00:01.19 | Mem:36.43M, Peak:36.43M | Scene, ViewLayer | Sample 12/12
+Fra:1 Mem:79.45M (Peak 90.00M) | Time:00:01.19 | Mem:36.43M, Peak:36.43M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\snowmobile\review\views.png.top.png'
+Time: 00:01.22 (Saving: 00:00.03)
+
+
+asset      Snowmobile.glb
+triangles  71,692  (Roblox caps a mesh at 10,000)
+           must lose 86.1% to fit one mesh
+size       5.49 x 13.80 x 5.50 (thinnest axis is x)
+relief     0.398  (thinnest / longest span)
+open edges 90,948  (not watertight; only matters if it is a height field)
+overhangs  42.5% of faces point downward
+uv layers  UVMap
+
+verdict
+  No blocking problems found. Check it against the intent anyway:
+    a horizon needs silhouette, a prop needs to read from every angle.
+  LOOK at views.png before building: generated meshes copy the reference's floor,
+    cables and loose props, and glass comes out as an opaque slab. Numbers miss both.
+
+recorded assets/models/snowmobile/review/export-appraisal.json
+  decision is empty -- state what this asset is for, or check_assets fails
+
+
+Blender quit

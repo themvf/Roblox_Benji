@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-10-22",
+  "source": "SnowUtilityVehicle.glb",
+  "sourceSha256": "128c1cea64af6a028cce5eb40fcd9f95ea8317d08778a42e83e9211395e0af78",
+  "measurements": {
+    "triangles": 70178,
+    "size": [
+      8.449,
+      14.144,
+      7.0
+    ],
+    "reliefRatio": 0.4949,
+    "openEdges": 93428,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Local saved export of the stationary snow utility vehicle visual prop: 70,178 triangles split into nine Roblox-size meshes with two embedded 1024 PNG maps."
+}

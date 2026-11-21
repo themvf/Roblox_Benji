@@ -1,0 +1,20 @@
+{
+  "tool": "tools/package_foundry_props.py",
+  "appraisedOn": "2026-11-14",
+  "source": "UndergroundFacilityProps/UndergroundFacilityProps_FreeSample/UndergroundFacilityProps_FreeSample/FBX/Pipe_Valve_Wheel.fbx",
+  "sourceSha256": "d4191884bc3dfdfb1a66b8a4380b2175749e5f26e0898eef1149a5e290448a07",
+  "measurements": {
+    "triangles": 4692,
+    "meshObjects": 2,
+    "hasUvLayers": true,
+    "boundsStuds": [
+      5.0,
+      1.85,
+      4.275
+    ],
+    "reliefRatio": 0.855
+  },
+  "verdict": "PASS - low/mid-poly game-ready prop within Roblox 10k tri limit with 1024px OpenGL PBR maps.",
+  "decision": "Wall/manifold industrial valve wheel prop for SciFiFoundry CryoBay & ReactorBay pipe runs (5.0 studs wide, bottom/back-centered).",
+  "views": "views.png"
+}

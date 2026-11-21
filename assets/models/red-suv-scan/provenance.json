@@ -1,0 +1,31 @@
+{
+  "asset": "red-suv-scan",
+  "recordedOn": "2026-11-17",
+  "reference": {
+    "file": "assets/models/red-suv-scan/source/reference.jpg",
+    "sha256": "385c5d1b5384febe27b6ff7994a951f81189e9baac25b6186730c5164fdc8589",
+    "origin": "unknown",
+    "madeWith": null,
+    "prompt": null
+  },
+  "mesh": {
+    "file": "assets/models/red-suv-scan/source/RedSuvScan.glb",
+    "sha256": "51a036c1ea22f30fc8eefd0f2a7eaaf1993c84e4515fd7f98a04308e20ac91aa",
+    "generator": {
+      "service": "tripo",
+      "space": null,
+      "seed": 201,
+      "resolution": "imported",
+      "file": "RedSuvTripo.glb",
+      "sha256": "51a036c1ea22f30fc8eefd0f2a7eaaf1993c84e4515fd7f98a04308e20ac91aa",
+      "settings": "Tripo image to 3D, simplified export (23,426 triangles). Roughness set to 0.85 and metal to 0 in its texture, and the model turned nose-forward, by tools here",
+      "decoded": null,
+      "reference": "reference.jpg",
+      "importedOn": "2026-11-17"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

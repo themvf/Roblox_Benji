@@ -1,0 +1,57 @@
+{
+  "checkedAtUtc": "2026-10-04T23:17:17.911055+00:00",
+  "referenceSha256": "9b3c03c6a6109b08291007cc5e63709f321c05105f11ed4bf799e532cc8c3d35",
+  "exportSha256": "ca99963012b6418b1e7833cc596729361ad1d142965411dd22b908425ff52677",
+  "exportBytes": 722004,
+  "meshNames": [
+    "Tube_WhiteHousing",
+    "Tube_GunmetalDetails",
+    "Tube_DarkRecesses",
+    "Tube_PalePanels",
+    "Tube_AmberLights"
+  ],
+  "trianglesPerMesh": [
+    2584,
+    7088,
+    592,
+    108,
+    120
+  ],
+  "boundsGlbYUp": {
+    "min": [
+      -2.055999994277954,
+      0,
+      -2.055999994277954
+    ],
+    "max": [
+      2.055999994277954,
+      12,
+      2.055999994277954
+    ]
+  },
+  "materialNames": [
+    "Warm white ceramic",
+    "Pale panel edges",
+    "Gunmetal trim",
+    "Graphite recesses",
+    "Amber indicator"
+  ],
+  "textureSha256": {
+    "WhiteHousing.png": "81e1ccf96e7c5f7780d65de996929b4b6c6f2549ce452f968787c454195f3b94",
+    "PalePanels.png": "1870731310eb845d2a73deb2ff4ca071cea2ddb755499d7ec442f387855d5832",
+    "DarkRecesses.png": "2dfa5ea320ecfe44353d747c77623c91eec86c1f052ecd7039d656f9c5654c1b",
+    "GunmetalDetails.png": "711a4d223eab193b1a562f7f25bb766413db74f74de5d07a89fb6d26eb4d0828",
+    "AmberLights.png": "d38beed906012d983e62498e93fca85363f2d4a2a104ada9a9e7d12cb6f0b12a"
+  },
+  "checks": {
+    "meshTriangleLimit": true,
+    "height12Studs": true,
+    "baseAtZero": true,
+    "uprightCylinder": true,
+    "fiveMaterialGroups": true,
+    "referenceColorsPresent": true,
+    "embeddedPngColorMaps": true
+  },
+  "studioImport": "unverified; user will upload",
+  "mapPlacement": "unverified"
+}

@@ -1,0 +1,125 @@
+{
+  "checkedOn": "2026-11-16 14:48",
+  "export": "assets/models/radio-tower/exports/RadioTower.glb",
+  "exportSha256": "cd338a35a0f14356e704039efc87c7418a605d5d10d7cc9454d11145d0fc126f",
+  "sourceSha256": "8747442e30503a7971380d45cc1ccfea9d14d4aba4f3602f9bfcbdb5693ff72b",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "auto",
+    "suggested": "scan",
+    "reasons": []
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.882,
+      "side": 0.894,
+      "top": 0.993
+    },
+    "surfaceError": {
+      "front": 0.094,
+      "back": 0.104,
+      "right": 0.121,
+      "left": 0.122,
+      "top": 0.059,
+      "bottom": 0.02
+    },
+    "worstSurfaceError": 0.122,
+    "sheet": "assets/models/radio-tower/review/detail.png",
+    "passed": true
+  },
+  "budget": {
+    "role": "scenery",
+    "budget": 60000,
+    "triangles": 59121,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      13.498,
+      59.937,
+      16.999
+    ],
+    "heightStuds": 60.0,
+    "kind": "prop",
+    "mounts": {},
+    "mountSheet": "assets/models/radio-tower/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        3,
+        15
+      ],
+      "decimate": 32000,
+      "worstMesh": 4899,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     RadioTower.glb (7.79 MB)",
+    "           geometry_0.001                     461 tris",
+    "           geometry_0.002                     394 tris",
+    "           geometry_0.011                   1,899 tris",
+    "           geometry_0.012                   1,483 tris",
+    "           geometry_0.013                   1,238 tris",
+    "           geometry_0.014                     549 tris",
+    "           geometry_0.015                     411 tris",
+    "           geometry_0.003                     805 tris",
+    "           geometry_0.004                   1,381 tris",
+    "           geometry_0.005                   1,665 tris",
+    "           geometry_0.006                   1,852 tris",
+    "           geometry_0.007                   1,558 tris",
+    "           geometry_0.008                   1,728 tris",
+    "           geometry_0.009                   1,440 tris",
+    "           geometry_0.010                   1,938 tris",
+    "           geometry_0.016                     384 tris",
+    "           geometry_0.017                      73 tris",
+    "           geometry_0.026                   1,343 tris",
+    "           geometry_0.027                   1,263 tris",
+    "           geometry_0.028                     889 tris",
+    "           geometry_0.029                     586 tris",
+    "           geometry_0.030                     155 tris",
+    "           geometry_0.018                     564 tris",
+    "           geometry_0.019                   1,454 tris",
+    "           geometry_0.020                   1,154 tris",
+    "           geometry_0.021                   1,608 tris",
+    "           geometry_0.022                   2,187 tris",
+    "           geometry_0.023                   4,899 tris",
+    "           geometry_0.024                   3,339 tris",
+    "           geometry_0.025                   1,697 tris",
+    "           geometry_0.031                     168 tris",
+    "           geometry_0.032                     349 tris",
+    "           geometry_0.041                   1,650 tris",
+    "           geometry_0.042                   1,434 tris",
+    "           geometry_0.043                   1,181 tris",
+    "           geometry_0.044                     439 tris",
+    "           geometry_0.045                     108 tris",
+    "           geometry_0.033                   1,029 tris",
+    "           geometry_0.034                   1,448 tris",
+    "           geometry_0.035                   1,892 tris",
+    "           geometry_0.036                   1,864 tris",
+    "           geometry_0.037                   1,713 tris",
+    "           geometry_0.038                   2,242 tris",
+    "           geometry_0.039                   1,524 tris",
+    "           geometry_0.040                   1,683 tris",
+    "           total                           59,121 tris (45 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "sheets": [
+      "assets/models/radio-tower/review/audit.png",
+      "assets/models/radio-tower/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 4.25,
+    "worstPatchPercent": 0.03
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

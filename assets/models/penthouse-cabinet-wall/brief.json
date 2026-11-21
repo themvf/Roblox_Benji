@@ -1,0 +1,41 @@
+{
+  "purpose": "Kitchen cabinet wall with ovens and fridge, repeated along kitchen cover blocks in the Penthouse",
+  "role": "decor",
+  "heightStuds": 10.0,
+  "kind": "prop",
+  "where": "Penthouse",
+  "copies": 10,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "copies=10, share=game, no moving parts, nearest=0, not thin, stop at local build; target block 8 long x 4 deep x 10 tall studs",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {
+    "cull": [
+      {
+        "name": "interior",
+        "x": [
+          -0.44,
+          0.415
+        ],
+        "y": [
+          -0.105,
+          0.135
+        ],
+        "z": [
+          -0.42,
+          0.46
+        ]
+      }
+    ],
+    "decimate": 24500,
+    "tile": [
+      3,
+      2
+    ]
+  },
+  "detailWaiver": "The detail score is a sampling artefact on this asset: the TRELLIS source has 6.8 times its bounding-box area in hidden interior faces, so outline_check's 600,000 samples leave outer pixels empty. With 8,000,000 samples the same check scored 0.029 worst view on the default 96,215-triangle build (limit 0.08). Judge this build by the hole map."
+}

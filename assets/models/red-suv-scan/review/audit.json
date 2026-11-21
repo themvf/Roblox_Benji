@@ -1,0 +1,134 @@
+{
+  "tool": "tools/asset_generate.py audit",
+  "auditedOn": "2026-11-17 08:32",
+  "source": "assets/models/red-suv-scan/exports/RedSuvScan.glb",
+  "sourceSha256": "01a52822fa4d6b150c2d91b22db6fedafad9f0a6e952f0d2f40c7827d51d3c79",
+  "brightenGamma": 1.0,
+  "flagPercent": 0.15,
+  "holesWarnPercent": 1.0,
+  "holesFailPercent": 1.5,
+  "worstBackFacePercent": 0.0,
+  "worstPatchPercent": 0.0,
+  "flagged": [],
+  "views": [
+    {
+      "name": "front",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "left",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "right",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "top",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "bottom",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "front-left",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "front-right",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back-left",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back-right",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-1a",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-1b",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-2a",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-2b",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-3a",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-3b",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    }
+  ],
+  "sheets": [
+    "assets/models/red-suv-scan/review/audit.png",
+    "assets/models/red-suv-scan/review/audit_closeups.png"
+  ],
+  "panels": "assets/models/red-suv-scan/review/audit",
+  "limitations": "Blender renders, not Roblox. Lighting, materials and transparency in Studio are not checked.",
+  "passed": true
+}

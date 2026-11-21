@@ -1,0 +1,17 @@
+{
+  "purpose": "Walnut slat screen with artwork, repeated along the reception cover block in the Penthouse",
+  "role": "decor",
+  "heightStuds": 10.0,
+  "kind": "prop",
+  "where": "Penthouse",
+  "copies": 4,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "copies=4, share=game, no moving parts, nearest=0, thin=no because slats sit on a solid backing, stop at local build; target block 11 long x 4 deep x 10 tall studs",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {}
+}

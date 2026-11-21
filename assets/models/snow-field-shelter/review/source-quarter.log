@@ -1,0 +1,73 @@
+Extensions: writing cache failed ([Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\extensions\\.cache\\compat.dat').
+Traceback (most recent call last):
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 1027, in register
+    Tracker.initialize(
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 295, in initialize
+    self.set_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 466, in set_tracker_json
+    self.save_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 479, in save_tracker_json
+    outf = open(jpath, 'w')
+           ^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\scripts\\addons\\MCprep_addon\\mcprep_addon_tracker.json'
+
+Failed to register scene update handler
+Reloading external rigs...
+Reloading external metarigs...
+🔄 blenderkit: Verbose is enabled
+🔄 blenderkit: Read in JSON settings from file
+ℹ️  blenderkit: Unregistering BlenderKit add-on [07:56:49.140, __init__.py:2558]
+07:56:49 | INFO: Data are loaded, start creating Blender stuff
+07:56:49 | INFO: Blender create Mesh node geometry_0
+07:56:49 | INFO: glTF import finished in 0.39s
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+Fra:1 Mem:40.51M (Peak 40.51M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | geometry_0
+Fra:1 Mem:40.52M (Peak 40.52M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane
+Fra:1 Mem:69.67M (Peak 104.55M) | Time:00:00.06 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:69.66M (Peak 104.55M) | Time:00:00.06 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Image_1
+Fra:1 Mem:69.66M (Peak 104.55M) | Time:00:00.06 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Image_0
+Fra:1 Mem:101.40M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:101.40M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:101.40M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:101.40M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:101.48M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:101.48M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:101.48M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:101.48M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:101.48M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:101.48M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:101.48M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:101.48M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:101.48M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:101.48M (Peak 133.68M) | Time:00:00.18 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:105.74M (Peak 133.68M) | Time:00:00.19 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:114.33M (Peak 133.68M) | Time:00:00.19 | Mem:32.00M, Peak:32.00M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:114.33M (Peak 133.68M) | Time:00:00.19 | Mem:40.59M, Peak:40.59M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:114.33M (Peak 133.68M) | Time:00:00.19 | Mem:40.59M, Peak:40.59M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:114.33M (Peak 133.68M) | Time:00:00.19 | Mem:49.11M, Peak:49.11M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:114.33M (Peak 133.68M) | Time:00:00.21 | Mem:59.27M, Peak:67.79M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:114.33M (Peak 133.68M) | Time:00:00.21 | Mem:59.27M, Peak:67.79M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:59.27M, Peak:67.79M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.45M, Peak:70.45M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.45M, Peak:70.45M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.45M, Peak:70.45M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.45M, Peak:70.45M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.45M, Peak:70.45M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.53M, Peak:70.53M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.53M, Peak:70.53M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.53M, Peak:70.53M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.53M, Peak:70.53M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.45M, Peak:70.53M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.53M, Peak:70.53M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.53M, Peak:70.53M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.53M, Peak:70.53M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:125.51M (Peak 133.68M) | Time:00:00.21 | Mem:70.53M, Peak:70.53M | Scene, ViewLayer | Sample 0/16
+Fra:1 Mem:180.66M (Peak 180.66M) | Time:00:00.39 | Remaining:00:02.69 | Mem:125.63M, Peak:125.63M | Scene, ViewLayer | Sample 1/16
+Fra:1 Mem:203.86M (Peak 238.65M) | Time:00:06.29 | Mem:125.63M, Peak:125.63M | Scene, ViewLayer | Sample 16/16
+Fra:1 Mem:203.86M (Peak 238.65M) | Time:00:06.29 | Mem:125.63M, Peak:125.63M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\snow-field-shelter\review\source-quarter.png'
+Time: 00:06.54 (Saving: 00:00.24)
+
+wrote C:\Docs\_AI Python Projects\Roblox_Benji\assets/models/snow-field-shelter/review/source-quarter.png
+
+Blender quit

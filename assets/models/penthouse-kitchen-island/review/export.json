@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-16",
+  "source": "PenthouseKitchenIsland.glb",
+  "sourceSha256": "df3809a944c5c61d75c03a2d7c6b614dc376a3f94a54e058d02d294858b6eec6",
+  "measurements": {
+    "triangles": 28520,
+    "size": [
+      12.675,
+      5.286,
+      3.507
+    ],
+    "reliefRatio": 0.2767,
+    "openEdges": 40366,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": ""
+}

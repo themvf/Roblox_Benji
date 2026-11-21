@@ -219,6 +219,10 @@ function AbilityService:ApplyBrace(victimCharacter, attackerPosition, amount)
     return amount
 end
 
+function AbilityService:ShovePlayer(player, velocity)
+    self.Client.Knockback:Fire(player, velocity)
+end
+
 -- Charge hits: server sweeps in front of charging players every heartbeat
 function AbilityService:KnitStart()
     game:GetService("RunService").Heartbeat:Connect(function()

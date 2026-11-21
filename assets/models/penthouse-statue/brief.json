@@ -1,0 +1,17 @@
+{
+  "purpose": "Marble bust on a plinth, shell over gallery cover blocks in the Penthouse",
+  "role": "decor",
+  "heightStuds": 7.0,
+  "kind": "prop",
+  "where": "Penthouse",
+  "copies": 4,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "copies=4, share=game, no moving parts, nearest=0, thin=no, stop at local build; target block 4 x 4 x 7 tall studs",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {}
+}

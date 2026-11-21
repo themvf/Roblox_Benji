@@ -1,0 +1,167 @@
+{
+  "tool": "tools/asset_generate.py audit",
+  "auditedOn": "2026-11-16 17:53",
+  "source": "assets/models/radio-tower/exports/RadioTower.glb",
+  "sourceSha256": "cd338a35a0f14356e704039efc87c7418a605d5d10d7cc9454d11145d0fc126f",
+  "brightenGamma": 0.629,
+  "flagPercent": 0.15,
+  "holesWarnPercent": 1.0,
+  "holesFailPercent": 1.5,
+  "worstBackFacePercent": 8.66,
+  "worstPatchPercent": 0.07,
+  "flagged": [
+    "front",
+    "back",
+    "left",
+    "right",
+    "top",
+    "bottom",
+    "front-left",
+    "front-right",
+    "back-left",
+    "back-right",
+    "section-1a",
+    "section-1b",
+    "section-2a",
+    "section-2b",
+    "section-3a",
+    "section-3b",
+    "section-4a",
+    "section-4b"
+  ],
+  "views": [
+    {
+      "name": "front",
+      "kind": "overview",
+      "backFacePercent": 2.03,
+      "backFacePatchPercent": 0.0,
+      "flagged": true
+    },
+    {
+      "name": "back",
+      "kind": "overview",
+      "backFacePercent": 2.2,
+      "backFacePatchPercent": 0.0,
+      "flagged": true
+    },
+    {
+      "name": "left",
+      "kind": "overview",
+      "backFacePercent": 1.56,
+      "backFacePatchPercent": 0.0,
+      "flagged": true
+    },
+    {
+      "name": "right",
+      "kind": "overview",
+      "backFacePercent": 2.03,
+      "backFacePatchPercent": 0.0,
+      "flagged": true
+    },
+    {
+      "name": "top",
+      "kind": "overview",
+      "backFacePercent": 4.25,
+      "backFacePatchPercent": 0.02,
+      "flagged": true
+    },
+    {
+      "name": "bottom",
+      "kind": "overview",
+      "backFacePercent": 4.15,
+      "backFacePatchPercent": 0.03,
+      "flagged": true
+    },
+    {
+      "name": "front-left",
+      "kind": "overview",
+      "backFacePercent": 1.64,
+      "backFacePatchPercent": 0.0,
+      "flagged": true
+    },
+    {
+      "name": "front-right",
+      "kind": "overview",
+      "backFacePercent": 1.89,
+      "backFacePatchPercent": 0.0,
+      "flagged": true
+    },
+    {
+      "name": "back-left",
+      "kind": "overview",
+      "backFacePercent": 1.75,
+      "backFacePatchPercent": 0.0,
+      "flagged": true
+    },
+    {
+      "name": "back-right",
+      "kind": "overview",
+      "backFacePercent": 1.68,
+      "backFacePatchPercent": 0.0,
+      "flagged": true
+    },
+    {
+      "name": "section-1a",
+      "kind": "closeup",
+      "backFacePercent": 6.35,
+      "backFacePatchPercent": 0.07,
+      "flagged": true
+    },
+    {
+      "name": "section-1b",
+      "kind": "closeup",
+      "backFacePercent": 6.9,
+      "backFacePatchPercent": 0.05,
+      "flagged": true
+    },
+    {
+      "name": "section-2a",
+      "kind": "closeup",
+      "backFacePercent": 6.53,
+      "backFacePatchPercent": 0.02,
+      "flagged": true
+    },
+    {
+      "name": "section-2b",
+      "kind": "closeup",
+      "backFacePercent": 8.66,
+      "backFacePatchPercent": 0.03,
+      "flagged": true
+    },
+    {
+      "name": "section-3a",
+      "kind": "closeup",
+      "backFacePercent": 6.2,
+      "backFacePatchPercent": 0.03,
+      "flagged": true
+    },
+    {
+      "name": "section-3b",
+      "kind": "closeup",
+      "backFacePercent": 7.52,
+      "backFacePatchPercent": 0.04,
+      "flagged": true
+    },
+    {
+      "name": "section-4a",
+      "kind": "closeup",
+      "backFacePercent": 6.98,
+      "backFacePatchPercent": 0.06,
+      "flagged": true
+    },
+    {
+      "name": "section-4b",
+      "kind": "closeup",
+      "backFacePercent": 7.72,
+      "backFacePatchPercent": 0.04,
+      "flagged": true
+    }
+  ],
+  "sheets": [
+    "assets/models/radio-tower/review/audit.png",
+    "assets/models/radio-tower/review/audit_closeups.png"
+  ],
+  "panels": "assets/models/radio-tower/review/audit",
+  "limitations": "Blender renders, not Roblox. Lighting, materials and transparency in Studio are not checked.",
+  "passed": false
+}

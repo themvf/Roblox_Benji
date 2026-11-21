@@ -1,0 +1,75 @@
+{
+  "checkedAtUtc": "20261109T221715891351Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "appraisal.json": "87a7d2c38787c294afd925eae0856dfef0d7d04fcde784899300b17e6f258714",
+    "views.png": "58045f6670e419d727062eef08ede466e4a162868a2238b285ff56de6fde2915",
+    "source/trellis-original.glb": "5c2e7ad71a98215167fceb1758ac941ee0f980b86373fa6b98092d7f303eb6d9",
+    "source/reference-clear-blue-chamber.png": "7c4e8650a6380f3fe42e851c648c1e14eee44da3e3f35c2ee01e1ac57913a1c4",
+    "source/LobbyContainmentCanister.blend": "2abe4c7e6c92f050f8b850e3bc8ade6db6462af009b24ed0dfd4a50120349bec",
+    "exports/LobbyContainmentCanister.glb": "cbc6fc5fca93c0acc407d1869936e1a7a3e229f01311915334286d57c1534938",
+    "textures/LobbyContainmentCanister_Color.png": "608b7e7dddc3898e911d3cee9610f17dd93abd84c5a03b90eedb57c406d4a10d",
+    "textures/LobbyContainmentCanister_MetalRough.png": "f0e2c6ed9dc497d50200ae51c5bf847f43eda74fbab24051ac2d9c3c6e98a3bd",
+    "textures/LobbyContainmentCanister_Energy.png": "6bbb7542d8a9045753ec59d4c73320b6976960042d77fcb53903b9dc72240684",
+    "review/export-appraisal.json": "38322c14055a9eb0dc48d77cf8d453830fa17253ed9194056157cb8d2d5f507b",
+    "SetupDecoration.luau": "9ecfa23ee10397dd8951d5fd9485f339a6b2f372f747a4a55d89afe6089dfee9",
+    "SetupChamberMotion.luau": "733f773fb56fa9a4e57c96550998dd86cef40f3a3fb921a82f072e41bc343029",
+    "review/final-quarter.png": "310dae200f5906076bed0efcc36d9b8531f27b7f490ee1cd74d1348ccc979651",
+    "review/final-front.png": "a7fa81249f10afc92b849eaa98c38673a240c23ac653c3197ca140626c416ff6",
+    "review/final-side.png": "dacf4914c236786221b19683d958541a0364ba442063897b426651b8f52d7f50",
+    "review/final-rear.png": "2afa90898a661aed63984de0f3b4c12806e53113381f49b89d3d9bbc00ff43bf"
+  },
+  "measured": {
+    "meshTriangles": {
+      "Preserved cap geometry": 9000,
+      "Preserved cap geometry.001": 9000,
+      "Preserved cap geometry.002": 9000,
+      "Preserved cap geometry.003": 9000,
+      "Preserved cap geometry.004": 9000,
+      "Preserved cap geometry.005": 9000,
+      "Preserved cap geometry.006": 2911,
+      "Clear chamber shell": 2112,
+      "Dark far-side lining": 192,
+      "Torus": 3072,
+      "Torus.002": 3072,
+      "Energy_Bright_Wisps_00": 936,
+      "Energy_Cyan_Wisps_03": 936,
+      "Energy_Faint_Wisps_06": 936,
+      "Layered blue vapor": 2340,
+      "Energy volume plane": 6,
+      "Sphere": 1440,
+      "Glass_Reflection_1": 720
+    },
+    "totalTriangles": 72673,
+    "boundsGlbYUp": {
+      "min": [
+        -2.367347478866577,
+        0,
+        -2.3733785152435303
+      ],
+      "max": [
+        2.3802993297576904,
+        8,
+        2.3733785152435303
+      ]
+    },
+    "worldDimensionsBlenderXYZ": [
+      4.748,
+      4.747,
+      8.0
+    ],
+    "embeddedImages": 3,
+    "exportBytes": 8973580
+  },
+  "limitations": [
+    "This local delivery is a lobby decoration candidate; gameplay collision has not been specified.",
+    "72,673 triangles across 18 meshes is a high-detail prop; repeated placement needs a Studio performance check.",
+    "Visual approval, Studio texture and collision verification, and lobby placement are pending.",
+    "A GLB alpha and emissive material does not prove Studio will render transparent glass, layered energy or glow correctly.",
+    "The optional particle motion helper is syntax checked only; Studio texture reuse, containment and performance are unverified."
+  ]
+}

@@ -11,8 +11,12 @@ entry rather than a code change.
 One Blender unit is one stud (ROBLOX_BLENDER_ASSET_PIPELINE_SPEC.md section 3).
 Operations run in this order, because each depends on the last:
 
-    import -> exaggerate -> fit -> decimate -> tile -> pivot -> textures -> export
+    import -> cull -> exaggerate -> fit -> decimate -> tile -> pivot -> textures -> export
           -> optimize
+
+`cull` runs first, on the source as it arrived, so its numbers are in source units and
+stay valid however the asset is later scaled. It deletes junk that image-to-3D copies in
+from the reference photo (floor cables, a mat, loose props); see op_cull.
 
 `exaggerate` runs before `fit` so vertical stretch is expressed in source
 proportions while `fit` still lands the final width exactly. `pivot` runs after
@@ -107,6 +111,65 @@ def join(objs, name):
 
 
 # --- operations ----------------------------------------------------------
+
+
+def op_cull(ob, rules):
+    """Delete faces by position, before anything is scaled. Source units, Blender Z up.
+
+    Each rule is a dict of filters that must ALL match a face's centroid; the first rule
+    that matches takes the face. Filters, all optional:
+
+        below / above   z <  n  /  z >  n
+        x, y, z         [lo, hi] inclusive range on that axis
+        outside         {center: [cx, cy], radius: r}  further than r from the axis
+        inside          {center: [cx, cy], radius: r}  within r of the axis
+        name            only used in the report
+
+    Positions are read off orthographic renders of the one file, which is why this is
+    data in the manifest rather than a heuristic: no automatic measure told a cable
+    tangle from an intended rubble pile (a floor-clutter metric was tried and flagged both
+    walls and the helicopter while giving the junk-ridden tube 3%). Look at views.png,
+    write the rule, check the result."""
+    if not rules:
+        return
+    import bmesh
+    import math
+
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    bm.faces.ensure_lookup_table()
+
+    def hit(rule, c):
+        if "below" in rule and not c.z < rule["below"]:
+            return False
+        if "above" in rule and not c.z > rule["above"]:
+            return False
+        for axis in "xyz":
+            if axis in rule and not rule[axis][0] <= getattr(c, axis) <= rule[axis][1]:
+                return False
+        for key, want_outside in (("outside", True), ("inside", False)):
+            if key in rule:
+                cx, cy = rule[key]["center"]
+                far = math.hypot(c.x - cx, c.y - cy) > rule[key]["radius"]
+                if far != want_outside:
+                    return False
+        return True
+
+    removed, counts = [], {}
+    for f in bm.faces:
+        c = f.calc_center_median()
+        for i, rule in enumerate(rules):
+            if hit(rule, c):
+                removed.append(f)
+                label = rule.get("name", "rule %d" % i)
+                counts[label] = counts.get(label, 0) + 1
+                break
+    total = len(bm.faces)
+    bmesh.ops.delete(bm, geom=removed, context="FACES_ONLY")
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    bm.to_mesh(ob.data)
+    bm.free()
+    print("  cull     removed %s of %s faces: %s" % (format(len(removed), ","), format(total, ","), counts))
 
 
 def op_orient(ob, up):
@@ -292,6 +355,8 @@ def op_optimize(path, spec, tiled):
         command += ["--tint", ",".join(str(v) for v in spec["tint"])]
     if spec.get("lift"):
         command += ["--lift", str(spec["lift"])]
+    if spec.get("gamma"):
+        command += ["--gamma", str(spec["gamma"])]
     sys.stdout.flush()  # or Blender's buffered output lands after the child's
     if subprocess.call(command) != 0:
         raise SystemExit("gltf_post failed; the exported file is left as-is")
@@ -349,6 +414,7 @@ def build(name, spec, out_override=None):
     # axis-indexed operation below can assume it.
     op_orient(ob, up)
     up = 2
+    op_cull(ob, spec.get("cull"))
     op_exaggerate(ob, spec.get("exaggerate"), up)
     fit = spec.get("fit")
     if fit:

@@ -1,0 +1,65 @@
+21:19:16.838  DataModel Loading https://assetdelivery.roblox.com/v1/asset/?id=95206881&version=72  -  Studio
+  21:19:24.161  ContentId: rbxassetid://203785492 failed due to: Asset type does not match requested type  -  Studio
+  21:19:34.549  Loaded Simple Rope Bridges (Version 1.0.1.27) successfully!  -  Edit
+  21:21:30.056  ContentId: rbxassetid://91406383627216 failed due to: Asset content representation is being generated  -  Studio
+  21:21:30.056  ContentId: rbxassetid://76918576796249 failed due to: Asset content representation is being generated  -  Studio
+  21:22:08.413  > local m=workspace:FindFirstChild("Bouncer-AvatarSetup"); print("BOUNCER IMPORT",m and m:GetExtentsSize()); if m then for _,p in m:GetChildren() do print(p.Name,p.ClassName,p:IsA("BasePart") and p.Size or "") end; game:GetService("Selection"):Set({m}) end   -  Studio
+  21:22:08.426  BOUNCER IMPORT 598.7156982421875, 680.8135986328125, 278.7026672363281  -  Edit
+  21:22:08.426  Body MeshPart 598.733642578125, 604.9772338867188, 255.64157104492188  -  Edit
+  21:22:08.426  Hair MeshPart 252.77398681640625, 203.88214111328125, 241.4656982421875  -  Edit
+  21:22:08.427  Headgear MeshPart 198.56063842773438, 161.642333984375, 190.910888671875  -  Edit
+  21:22:43.683  > local m=workspace:FindFirstChild("Bouncer-AvatarSetup"); assert(m and not workspace:FindFirstChild("Bouncer")); m:ScaleTo(m:GetScale()*0.01); m:PivotTo(CFrame.new(0,0,0)*m:GetPivot().Rotation); local f=Instance.new("Folder"); f.Name="Bouncer"; f.Parent=workspace; for _,p in m:GetChildren() do if p:IsA("MeshPart") then local model=Instance.new("Model"); model.Name=p.Name; model.Parent=f; p.Anchored=true; p.Parent=model; print("PREPARED",p.Name,p.Size,p.CFrame) end end; m.Parent=game:GetService("ServerStorage"); game:GetService("Selection"):Set({f}); workspace.CurrentCamera.CFrame=CFrame.lookAt(Vector3.new(9,6,-14),Vector3.new(0,3,0))  -  Studio
+  21:22:54.575  PREPARED Body 5.987336158752441, 6.049772262573242, 2.556415557861328 -0.0120651247, 3.02492213, -0.113692284, 1, 0, 0, 0, 1, 0, 0, 0, 1  -  Edit
+  21:22:54.575  PREPARED Hair 2.5277397632598877, 2.0388214588165283, 2.4146568775177 -0.184591666, 5.78885746, 0.187918499, 1, 0, 0, 0, 1, 0, 0, 0, 1  -  Edit
+  21:22:54.575  PREPARED Headgear 1.98560631275177, 1.61642324924469, 1.9091088771820068 0.0864751786, 5.57100582, 0.261089802, 1, 0, 0, 0, 1, 0, 0, 0, 1  -  Edit
+  21:24:20.391  'Place1' auto-recovery file was created  -  Studio
+  06:53:51.102  > local f=workspace:FindFirstChild("Bouncer"); assert(f); for _,p in f:GetDescendants() do if p:IsA("BasePart") then p.CFrame=CFrame.Angles(0,math.pi,0)*p.CFrame end end; game:GetService("Selection"):Set({f}); print("BOUNCER trial facing rotated 180 degrees around Y")  -  Studio
+  06:53:51.128  BOUNCER trial facing rotated 180 degrees around Y  -  Edit
+  06:55:19.560  'Place1' auto-recovery file was created  -  Studio
+  06:58:30.404  Multiple StyleLinks under Children may result in undefined behavior  -  Studio
+  06:58:30.483  ContentId: rbxassetid://138136448685459 failed due to: Asset content representation is being generated  -  Studio
+  06:58:31.555   ▶ ContentId: rbxassetid://106084330701469 failed due to: Asset content representation is being generated (x2)  -  Studio
+
+  06:58:31.685  ContentId: rbxassetid://126114958992289 failed due to: Asset content representation is being generated  -  Studio
+  06:58:31.814  ContentId: rbxassetid://106084330701469 failed due to: Asset content representation is being generated  -  Studio
+  06:58:31.814   ▶ ContentId: rbxassetid://126114958992289 failed due to: Asset content representation is being generated (x2)  -  Studio
+
+  07:00:19.579  'Place1' auto-recovery file was created  -  Studio
+  12:09:07.407  ContentId: rbxassetid://140585877384153 failed due to: Asset content representation is being generated  -  Studio
+  12:10:49.104  'Place1' auto-recovery file was created  -  Studio
+  12:11:34.963  > for _,v in game:GetDescendants() do if v:IsA("ViewportFrame") and v.CurrentCamera then print("VIEWPORT",v:GetFullName(),v.AbsoluteSize,v.CurrentCamera.CFrame) end end  -  Studio
+  12:11:35.017  VIEWPORT CoreGui.ViewSelectorScreenGui.Panel.Viewport 128, 128 1.81925809, -0.478108495, 0.267791688, 0.145629033, 0.248953432, 0.957504272, -0, 0.967821956, -0.251636058, -0.989339232, 0.0366455168, 0.140942991  -  Edit
+  12:12:23.583  > local m=workspace:FindFirstChild("Body_autosetup"); print("RIG_BOUNDS",m:GetBoundingBox()); for _,a in m:GetDescendants() do if a:IsA("Animation") then print("RIG_ANIMATION",a:GetFullName(),a.AnimationId) end end  -  Studio
+  12:12:23.602  RIG_BOUNDS -5.97526264, 4.18959045, -0.0016733706, 1, 0, 0, 0, 1, 0, 0, 0, 1 5.987319469451904, 6.379180908203125, 2.7870874404907227  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.cheer.CheerAnim http://www.roblox.com/asset/?id=507770677  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.climb.ClimbAnim rbxassetid://16562307212  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.dance.Animation1 http://www.roblox.com/asset/?id=507771019  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.dance.Animation2 http://www.roblox.com/asset/?id=507771955  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.dance.Animation3 http://www.roblox.com/asset/?id=507772104  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.dance2.Animation1 http://www.roblox.com/asset/?id=507776043  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.dance2.Animation2 http://www.roblox.com/asset/?id=507776720  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.dance2.Animation3 http://www.roblox.com/asset/?id=507776879  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.dance3.Animation1 http://www.roblox.com/asset/?id=507777268  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.dance3.Animation2 http://www.roblox.com/asset/?id=507777451  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.dance3.Animation3 http://www.roblox.com/asset/?id=507777623  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.fall.FallAnim rbxassetid://16562311455  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.idle.Animation1 rbxassetid://16562317918  -  Edit
+  12:12:23.603  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.idle.Animation2 http://www.roblox.com/asset/?id=507766666  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.jump.JumpAnim rbxassetid://16562321958  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.laugh.LaughAnim http://www.roblox.com/asset/?id=507770818  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.point.PointAnim http://www.roblox.com/asset/?id=507770453  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.sit.SitAnim http://www.roblox.com/asset/?id=2506281703  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.toollunge.ToolLungeAnim http://www.roblox.com/asset/?id=522638767  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.toolnone.ToolNoneAnim http://www.roblox.com/asset/?id=507768375  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.toolslash.ToolSlashAnim http://www.roblox.com/asset/?id=522635514  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.wave.WaveAnim http://www.roblox.com/asset/?id=507770239  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.run.RunAnim rbxassetid://16562326358  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.swim.Swim rbxassetid://16562311455  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.swimidle.SwimIdle http://www.roblox.com/asset/?id=913389285  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.walk.WalkAnim rbxassetid://16562332340  -  Edit
+  12:12:23.604  RIG_ANIMATION Workspace.Body_autosetup.AnimateScript.mood.Animation1 http://www.roblox.com/asset/?id=14366558676  -  Edit
+  12:12:47.728  > local src=workspace:FindFirstChild("Body_autosetup"); local m=src:Clone(); m.Name="BouncerWalkReview"; m.Parent=workspace; m:PivotTo(CFrame.new(30,4,0)); local a=Instance.new("Animator"); a.Parent=m:FindFirstChildOfClass("Humanoid"); local t=a:LoadAnimation(m.AnimateScript.walk.WalkAnim); t:Play(0,1,0); task.wait(1); t.TimePosition=0.35; a:StepAnimations(0.01); local cf,size=m:GetBoundingBox(); workspace.CurrentCamera.FieldOfView=35; workspace.CurrentCamera.CFrame=CFrame.lookAt(cf.Position+Vector3.new(0,0,-15),cf.Position); workspace.CurrentCamera.Focus=CFrame.new(cf.Position); game:GetService("Selection"):Set({}); print("WALK_REVIEW",t.Length,t.TimePosition,cf,size)  -  Studio
+  12:12:55.772  WALK_REVIEW 0.625 0.3499999940395355 30, 7.18959045, -5.96046448e-08, 1, 0, 0, 0, 1, 0, 0, 0, 1 5.987320899963379, 6.37917947769165, 2.7870874404907227  -  Edit
+  12:13:22.562  > local m=workspace.BouncerWalkReview; local cf=m:GetBoundingBox(); local cam=workspace:FindFirstChildOfClass("Camera"); cam.CFrame=CFrame.lookAt(cf.Position+Vector3.new(15,0,0),cf.Position); cam.Focus=CFrame.new(cf.Position); print("WALK_SIDE",cf)  -  Studio
+  12:13:31.397  WALK_SIDE 30, 7.18959045, -5.96046448e-08, 1, 0, 0, 0, 1, 0, 0, 0, 1  -  Edit
+  12:14:13.763  Saved to 'C:/Docs/_AI Python Projects/Roblox_Benji/assets/kit-looks/Bouncer/skinned/studio-review/Bouncer-AvatarSetup-Trial.rbxl'  -  Studio

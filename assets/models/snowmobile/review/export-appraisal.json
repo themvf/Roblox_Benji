@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-10-22",
+  "source": "Snowmobile.glb",
+  "sourceSha256": "83735cbf0ccc7efe638ce452efb7aa0c93edf8aa89ede272f9b32d5ca0aadb13",
+  "measurements": {
+    "triangles": 71692,
+    "size": [
+      5.489,
+      13.795,
+      5.5
+    ],
+    "reliefRatio": 0.3979,
+    "openEdges": 90948,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Local saved export of the static snowmobile visual prop: 71,692 triangles split into nine Roblox-size meshes with two embedded 1024 PNG maps."
+}

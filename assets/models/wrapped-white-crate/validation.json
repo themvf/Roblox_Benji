@@ -1,0 +1,156 @@
+{
+  "checkedAtUtc": "20261111T181334182177Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "source/trellis-original.glb": "7f79db77ea652eb29f6493ca43d82418329918a3d573658f2e6c6add3ad0da9a",
+    "source/WrappedWhiteCrate.blend": "f840550f8bdf322b11dc8d13ad0624e10d31aa42edbfa728e8e03855355b8733",
+    "appraisal.json": "c13e5aadcb2e31c1f9bd689753c0cb1e6205b783026e4e7557506fa0bb8c2467",
+    "views.png": "ec45a8e0e6058f2cc45e53a2e6dbca9a45aed98d8eab24d5ac6f77e78a467a16",
+    "exports/WrappedWhiteCrate.glb": "06c33dbc5c0b39cd8275ee809b53bff366d5bbd0a0cb1ef370c420f5577f100e",
+    "textures/Wood_Color.png": "b607ee900e6450619bae1351836396ca84c59bd8318a4add3e2b6dda3963f928",
+    "textures/Wood_ORM.png": "6c88e9d1b8374c48d3b7200ca35f7367e7df95ceb7d6367c8050202516e27a4f",
+    "textures/Plastic_Color.png": "b8f9386fdeece17e28e8ca88136317130e85df304d3bafa955a1226f57b943bf",
+    "textures/Plastic_Roughness.png": "215b48d95ee3ef4b63059d0ed1a9296f6add8b5ee13372c1229fc3e74d421c62",
+    "review/source-quarter.png": "3bd7ddf9b1583b4de7db053fb5d5bdeb2086cc27a2aedc2ac3c15f1bcb5a9fa1",
+    "trials/decimate-9000.glb": "7a281a6e60bf29b3a32d6e844f1fa6becdb3bff0108fda20cb2967c613eab7f2",
+    "trials/decimate-9000-quarter.png": "d8d1f748371692e9fa8945729a8801253c9ce8c8ccdec606d2afaff0af7a02ad",
+    "source/PlainWoodenCrates.blend": "7a98cac2d9a1eceaed2fb2cfd988898c49ce8a2d1dc34f63937fe1eaab646b8a",
+    "exports/PlainWoodenCrates.glb": "81b37694da07a19d7d3cdd18cea7477f1e925cff77bb894dab696f303a5d108e",
+    "SetupDecoration.luau": "2878c49d17eba57afe8f516af661d5ffa1a7459ea57446ed66751854e4d9e1c1",
+    "SetupPlainDecoration.luau": "39a1d59c078f3c52580cefabaa039b99ea652aebc7fed19451840eaffef753b4",
+    "review/front-quarter.png": "a2bfbcf421fd456828830a546a832ff1bbc55768a764870c27dfdca4c516f650",
+    "review/rear-quarter.png": "24e52b8d451d273b32da52856aaea74fdf4364ebdbc3c2aa9c66a84df014dc0f",
+    "review/right-end.png": "c5a49aed2f0e655de782af1621427d0ec428235261971688599acf284cb27992",
+    "review/top.png": "01ac2b3f8b994abc7f416e10b689c4a0d1f60a26035fb880676e81df8f90c807",
+    "review/plain-front-quarter.png": "7476907e139ba99384ee03ed250639203ba3091b6b66a7d85dc4825f1aeb9073",
+    "review/plain-rear-quarter.png": "82796afe29ad0dd1c769ef2360829fdadd053b4894e94c4127b9cd32553aa7c6",
+    "review/plain-top.png": "8a83d772a988be264d9204b949fe4496413f7de61851f4df5d2dc4825a47f6ab"
+  },
+  "measured": {
+    "meshes": [
+      [
+        "CrateWood_Left",
+        8410
+      ],
+      [
+        "CrateWood_Right",
+        9610
+      ],
+      [
+        "WhiteWrap_Front",
+        3720
+      ],
+      [
+        "PlasticFoldDetails",
+        2160
+      ],
+      [
+        "WhiteWrap_Back",
+        3720
+      ],
+      [
+        "WhiteWrap_Top",
+        4504
+      ],
+      [
+        "WhiteWrap_LeftEnd",
+        1744
+      ],
+      [
+        "WhiteWrap_RightEnd",
+        1744
+      ]
+    ],
+    "totalTriangles": 35612,
+    "boundsMin": [
+      -4.144999980926514,
+      0,
+      -2.059999942779541
+    ],
+    "boundsMax": [
+      4.144999980926514,
+      3.937962532043457,
+      2.059999942779541
+    ],
+    "materials": 3,
+    "embeddedTextures": [
+      [
+        "image/png",
+        [
+          2048,
+          2048
+        ]
+      ],
+      [
+        "image/png",
+        [
+          2048,
+          2048
+        ]
+      ],
+      [
+        "image/png",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "image/png",
+        [
+          1024,
+          1024
+        ]
+      ]
+    ],
+    "exportBytes": 10589948,
+    "plain": {
+      "meshes": [
+        [
+          "CrateWood_Left",
+          8410
+        ],
+        [
+          "CrateWood_Right",
+          9610
+        ]
+      ],
+      "boundsMin": [
+        -3.979914426803589,
+        0,
+        -1.8734623193740845
+      ],
+      "boundsMax": [
+        3.971562623977661,
+        3.8397247791290283,
+        1.8924459218978882
+      ],
+      "embeddedTextures": [
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ],
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ]
+      ],
+      "exportBytes": 7340540
+    }
+  },
+  "limitations": [
+    "Local renders are not user visual approval or Studio import evidence.",
+    "Static decoration role and 8-stud length are provisional.",
+    "The plain variant has not been imported or placed in Studio."
+  ]
+}

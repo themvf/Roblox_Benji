@@ -1,0 +1,12 @@
+{
+  "triangles": 1900,
+  "blenderDimensions": [
+    8.0,
+    4.0,
+    7.938
+  ],
+  "lengthAxis": "x",
+  "materialCount": 1,
+  "surfaceDetail": "procedural leaf and limestone texture, 512 px; noise-displaced leaf mass",
+  "tileable": "ends flat at x = +-4; surface pattern repeats every 8 studs along x"
+}

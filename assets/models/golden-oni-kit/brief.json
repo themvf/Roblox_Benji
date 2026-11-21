@@ -1,0 +1,20 @@
+{
+  "purpose": "Playable golden oni character kit look",
+  "role": "interactive",
+  "heightStuds": 5.5,
+  "kind": "prop",
+  "where": "All game maps",
+  "copies": 12,
+  "moving": "All character limbs, R15 animation",
+  "share": "public",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "Estimated 3.5 studs wide and 1.5 studs deep; 12 simultaneous visible wearers; normal player height 5.5 studs; all maps; local review only",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {},
+  "counts": {},
+  "lengthStuds": 1.5,
+  "widthStuds": 3.5
+}

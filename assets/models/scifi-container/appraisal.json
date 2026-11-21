@@ -1,0 +1,20 @@
+{
+  "tool": "tools/package_foundry_props.py",
+  "appraisedOn": "2026-11-14",
+  "source": "UndergroundFacilityProps/ScifiProps/ScifiProps/ScifiContainer/ScifiContainer.fbx",
+  "sourceSha256": "f8d7108dfed62c5937688be2438941b7de76c1998c06e49a294b3e1189f7f1e8",
+  "measurements": {
+    "triangles": 1456,
+    "meshObjects": 1,
+    "hasUvLayers": true,
+    "boundsStuds": [
+      5.413,
+      5.6,
+      5.327
+    ],
+    "reliefRatio": 0.9512
+  },
+  "verdict": "PASS - low/mid-poly game-ready prop within Roblox 10k tri limit with 1024px OpenGL PBR maps.",
+  "decision": "Armored beveled cargo container replacing blocky cover boxes in SciFiFoundry flank lanes & bays (5.6 studs wide).",
+  "views": "views.png"
+}

@@ -175,11 +175,18 @@ function QueueService:KnitStart()
                     full = red >= need and blue >= need
                     viable = red >= minNeed and blue >= minNeed
                 end
-                local rules = Config.GetConvergence()
+                local waitSeconds = nil
+                if viable and not full then
+                    if pad.Kind == "Convergence" then
+                        waitSeconds = Config.GetConvergence().FillWaitSeconds
+                    elseif pad.Kind == "TDM" then
+                        waitSeconds = Config.GetTDM().FillWaitSeconds
+                    end
+                end
                 local waitLeft = nil
-                if viable and not full and pad.Kind == "Convergence" then
+                if waitSeconds then
                     fillSince[pad] = fillSince[pad] or os.clock()
-                    waitLeft = math.max(0, rules.FillWaitSeconds - (os.clock() - fillSince[pad]))
+                    waitLeft = math.max(0, waitSeconds - (os.clock() - fillSince[pad]))
                 else
                     fillSince[pad] = nil
                 end
@@ -244,11 +251,11 @@ function QueueService:KnitStart()
                     end
                     local kind, mode = pad.Kind, pad.Mode
                     MapVoteService:Begin(picked, n, kind, function(players, teamSize, mapName)
-                        if kind == "TDM" and teamSize ~= 5 and not solo then
+                        if (kind == "TDM" or kind == "Convergence") and teamSize < minNeed and not solo then
                             for _, player in players do
                                 clearMenuQueue(player)
                             end
-                            return -- a departure during voting cannot launch a short public match
+                            return -- a departure during voting dropped the match below MinTeamSize
                         end
                         for _, player in players do
                             menuQueue[player] = nil

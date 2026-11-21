@@ -1,0 +1,46 @@
+{
+  "asset": "test-boat",
+  "comparedOn": "2026-11-17 03:54",
+  "budget": 30000,
+  "brief": [
+    30.0,
+    10.2,
+    8.0
+  ],
+  "candidates": [
+    {
+      "seed": 201,
+      "madeBy": "tripo",
+      "triangles": 1976216,
+      "cutNeeded": 0.989,
+      "studs": [
+        20.7,
+        7.6
+      ],
+      "shapeProblems": [
+        "20.7 studs long at the brief's height, where the brief says 30",
+        "7.6 studs deep at the brief's height, where the brief says 10.2"
+      ],
+      "holesPercent": 0.0,
+      "openEdges": 138906,
+      "closeups": "assets/models/test-boat/trials/seed-201/audit_closeups.png"
+    },
+    {
+      "seed": 202,
+      "madeBy": "tripo retopo",
+      "triangles": 25154,
+      "cutNeeded": 0.0,
+      "studs": [
+        20.7,
+        7.6
+      ],
+      "shapeProblems": [
+        "20.7 studs long at the brief's height, where the brief says 30",
+        "7.6 studs deep at the brief's height, where the brief says 10.2"
+      ],
+      "holesPercent": 0.91,
+      "openEdges": 26370,
+      "closeups": "assets/models/test-boat/trials/seed-202/audit_closeups.png"
+    }
+  ]
+}

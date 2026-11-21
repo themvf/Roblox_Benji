@@ -1,17 +1,25 @@
--- Combat staging hub. Not a queue room with pads scattered across the floor.
+-- Faction Islands (approved 2026-11-20, docs/design/lobby-experience/hub-concept/factions.py).
 --
--- The central rectangular PLAY hall is the dominant destination. Its mode
--- zones are visible from arrival: Duel, Convergence, Team Deathmatch, Training.
---   ARMORY    left bay, weapon displays and the loadout station.
---   ALTER EGO right bay, deliberately stranger. Titan/Colossus is the differentiating
---             mechanic and previously had no physical presence in the lobby at all.
+-- The lobby is a Hold: a neutral spine of floating islands over the void, with one island per
+-- faction off it, each built in its own style and lit in its own colour.
+--   Arrival island  spawns, the departures board, the season canister; faces the pads (-z).
+--   Pad island      the mode pads, straight ahead over the first bridge.
+--   Gate island     Convergence under the PLAY gate, beyond the pads.
+--   ARMORY          Forge Union, front left, with the loadout kiosk.
+--   ALTER EGO       Coherence Institute, front right.
+--   SHOP            Kade Dynamics, back right; signposted only until the store exists.
+--   THE LEDGER      the Ferrymen, back left: the leaderboards.
 --
--- Colour rules, carried over from Snow Fortress: structure is dark and desaturated, saturation
--- is reserved for meaning. Amber = interact / CTA. Red and blue = team, nothing else. The old
--- lobby was near-white (235,232,225) which blew out and made every pad look fluorescent.
+-- The marker positions below match assets/environment/source/Lobby.rbxm, which
+-- tools/lobbyauthor/faction_islands.luau builds. Pieces is the old hall, used only if
+-- no editable or saved lobby model exists.
+--
+-- Colour rules: structure is dark and desaturated, saturation is reserved for meaning. Amber =
+-- interact / CTA. Red and blue = team, nothing else. Each faction's colour appears only on its
+-- own island and bridge.
 return {
     Origin = { 0, 400, 900 },
-    Size = { 150, 130 }, -- must cover the gate at z -56 and the back wall at z 64
+    Size = { 150, 130 }, -- the fallback hall only; the islands' Floor is an invisible marker footprint
 
     Palette = {
         Floor = Color3.fromRGB(46, 50, 60),
@@ -21,21 +29,30 @@ return {
         Pillar = Color3.fromRGB(64, 70, 84),
         Gate = Color3.fromRGB(72, 80, 96),
         Armory = Color3.fromRGB(58, 66, 80),
-        Ego = Color3.fromRGB(78, 54, 96), -- the one strange colour in the room
+        Ego = Color3.fromRGB(78, 54, 96),
+        -- the four sides; each colour is used on its own island only
+        Forge = Color3.fromRGB(255, 92, 31),
+        Institute = Color3.fromRGB(128, 224, 255),
+        Kade = Color3.fromRGB(255, 204, 97),
+        Ferry = Color3.fromRGB(158, 255, 64),
     },
 
     Spawns = {
-        { 0, 3, 10 },
-        { -7, 3, 12 },
-        { 7, 3, 12 },
-        { -14, 3, 14 },
-        { 14, 3, 14 },
+        { 0, 3, 30 },
+        { -7, 3, 32 },
+        { 7, 3, 32 },
+        { -14, 3, 34 },
+        { 14, 3, 34 },
     },
+
+    -- Anyone outside a match who ends up in this box (lobby coordinates) has fallen off an
+    -- island; MapService puts them back on an arrival spawn. The islands' tops are at y 0.
+    FallRecovery = { min = { -260, -260, -340 }, max = { 260, -40, 190 } },
 
     -- Cool ankle-height mist across the central arrival area. The emitters are
     -- placed by MapService for both the editable and baked lobby.
     ArrivalMist = {
-        Center = { 0, 0.28, 12 },
+        Center = { 0, 0.28, 32 },
         Columns = 5,
         Rows = 3,
         Spacing = { 7, 6 },
@@ -51,9 +68,9 @@ return {
             kind = "Convergence",
             mode = "CONVERGENCE",
             featured = true,
-            teamSize = 6,
-            minTeamSize = 4,
-            pos = { 0, 0, -32 },
+            teamSize = 5,
+            minTeamSize = 3,
+            pos = { 0, 0, -218 }, -- gate island, under the PLAY gate
             size = { 36, 1, 18 },
             color = Color3.fromRGB(255, 196, 70),
         },
@@ -62,7 +79,7 @@ return {
             kind = "Duel",
             mode = "DUEL 1v1",
             teamSize = 1,
-            pos = { -47, 0, -28 },
+            pos = { -22, 0, -92 }, -- pad island, front left
             size = { 25, 1, 9 },
             color = Color3.fromRGB(120, 200, 160),
         },
@@ -70,8 +87,9 @@ return {
             name = "Pad2v2",
             kind = "Duel",
             mode = "DUEL 2v2",
+            disabled = true, -- Duel is 1v1 only; keep marker definition so LobbyAuthoring stays valid
             teamSize = 2,
-            pos = { -47, 0, -43 },
+            pos = { -22, 0, -113 }, -- not drawn while disabled
             size = { 25, 1, 9 },
             color = Color3.fromRGB(120, 200, 160),
         },
@@ -80,8 +98,8 @@ return {
             kind = "TDM",
             mode = "TEAM DEATHMATCH",
             teamSize = 5,
-            minTeamSize = 5,
-            pos = { 44, 0, -34 },
+            minTeamSize = 2,
+            pos = { 22, 0, -92 }, -- pad island, front right
             size = { 34, 1, 22 },
             color = Color3.fromRGB(255, 196, 70),
         },
@@ -102,7 +120,7 @@ return {
             solo = true,
             teamSize = 1,
             minTeamSize = 1,
-            pos = { -10, 0, -51 },
+            pos = { -22, 0, -134 },
             size = { 16, 1, 9 },
             color = Color3.fromRGB(170, 140, 235),
         },
@@ -113,46 +131,34 @@ return {
             solo = true,
             teamSize = 1,
             minTeamSize = 1,
-            pos = { 10, 0, -51 },
+            pos = { 22, 0, -134 },
             size = { 16, 1, 9 },
             color = Color3.fromRGB(170, 140, 235),
         },
     },
 
-    Board = { pos = { 0, 0, 52 }, size = { 26, 9, 1 } },
+    -- Stations turn to face the arrival island (yaw in degrees; the sign is on the -Z face).
+    -- The leaderboard is the Ferrymen's Ledger, on their island's back wall.
+    Board = { pos = { -172.46, 2, 124.28 }, size = { 30, 12, 1 }, yaw = 298.66 },
 
+    -- The loadout kiosk stands at the Forge Union's counter.
     Kiosk = {
-        pos = { -52, 0, 6 },
+        pos = { -147, 0, -99.36 },
         size = { 12, 3.5, 5 },
+        yaw = 228.65,
         showcase = "AssaultRifle",
     },
 
-    -- The first view from every spawn points at PLAY. These labels name the
-    -- destinations before a player reaches the smaller mode pads or stations.
+    -- The islands name themselves in surface lettering facing the arrival island. The one
+    -- billboard marks the way into the pads, where the first view from every spawn points.
     Wayfinding = {
         {
             name = "Play",
-            pos = { 0, 27, -13 },
-            size = { 28, 5 },
+            pos = { 0, 18, -60 }, -- over the pad island end of the first bridge
+            size = { 40, 7 },
             title = "PLAY",
             detail = "DUELS  |  CONVERGENCE  |  TDM",
             color = "Accent",
-        },
-        {
-            name = "Armory",
-            pos = { -52, 15, 6 },
-            size = { 13, 3.5 },
-            title = "ARMORY",
-            detail = "LOADOUT",
-            color = "Accent",
-        },
-        {
-            name = "AlterEgo",
-            pos = { 52, 15, 6 },
-            size = { 15, 3.5 },
-            title = "ALTER EGO",
-            detail = "CHOOSE YOUR FORM",
-            color = "Ego",
         },
     },
 
@@ -202,13 +208,12 @@ return {
         { name = "WallR", pos = { 69, 7, 6 }, size = { 2, 14, 118 }, color = "Wall" },
     },
 
-    -- Controlled accent lighting instead of a blown-out white floor. One light per destination,
-    -- so the room reads as three beacons in a dark hall.
+    -- One light per destination, in that destination's colour.
     Lights = {
-        { name = "GateLight", pos = { 0, 22, -32 }, color = "Accent", range = 65, brightness = 2 },
-        { name = "ArmoryLight", pos = { -52, 15, 6 }, color = "Accent", range = 30, brightness = 1.4 },
-        { name = "TdmLight", pos = { 44, 13, -34 }, color = "Accent", range = 24, brightness = 1.2 },
-        { name = "EgoLight", pos = { 52, 12, 6 }, color = "Ego", range = 32, brightness = 2.2 },
-        { name = "BoardLight", pos = { 0, 12, 48 }, color = "Pillar", range = 26, brightness = 1 },
+        { name = "GateLight", pos = { 0, 40, -235 }, color = "Accent", range = 90, brightness = 2 },
+        { name = "ArmoryLight", pos = { -150, 26, -102 }, color = "Forge", range = 70, brightness = 2 },
+        { name = "TdmLight", pos = { 0, 22, -112 }, color = "Accent", range = 80, brightness = 1.2 },
+        { name = "EgoLight", pos = { 150, 26, -102 }, color = "Institute", range = 70, brightness = 2 },
+        { name = "BoardLight", pos = { -150, 26, 112 }, color = "Ferry", range = 70, brightness = 1.6 },
     },
 }

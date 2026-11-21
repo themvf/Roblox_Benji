@@ -1,0 +1,113 @@
+{
+  "checkedOn": "2026-11-17 04:37",
+  "export": "assets/models/test-suv/exports/TestSuv.glb",
+  "exportSha256": "f0c5856d7c8374aa29bca157288e730d109a8b64a5231e37da6ebd3ff5c0e2f2",
+  "sourceSha256": "397c38dcf887f565ef7ff6a1118f7b2f9c43c7a2f3c4bb088b1e68db12164d7c",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "scan",
+    "suggested": "scan",
+    "reasons": []
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.999,
+      "side": 1.0,
+      "top": 1.0
+    },
+    "surfaceError": {
+      "front": 0.001,
+      "back": 0.001,
+      "right": 0.0,
+      "left": 0.0,
+      "top": 0.0,
+      "bottom": 0.0
+    },
+    "worstSurfaceError": 0.001,
+    "noise": 0.001,
+    "sheet": "assets/models/test-suv/review/detail.png",
+    "limit": 0.08,
+    "passed": true
+  },
+  "ground": {
+    "bottomFill": 0.079,
+    "aboveFill": 0.768,
+    "ratio": 0.1,
+    "footprintStuds": [
+      16.32,
+      7.68
+    ],
+    "flagged": false
+  },
+  "textureBleed": {
+    "image": 1,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.565,
+    "backgroundBrightness": 0.186,
+    "surfaceBrightness": 0.168,
+    "bleedPercent": 0.18
+  },
+  "budget": {
+    "role": "decor",
+    "budget": 30000,
+    "triangles": 24522,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      16.319,
+      6.0,
+      7.681
+    ],
+    "heightStuds": 6.0,
+    "kind": "prop",
+    "mounts": {},
+    "mountSheet": "assets/models/test-suv/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [
+      "length is 7.68 studs, the brief says 16.5"
+    ],
+    "passed": false
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        2,
+        2
+      ],
+      "decimate": 25000,
+      "worstMesh": 6691,
+      "triangles": 24522,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     TestSuv.glb (1.10 MB)",
+    "           tripo_mesh_1c916023-b186-411a-b1ef-8cdafbd403ef.001     6,184 tris",
+    "           tripo_mesh_1c916023-b186-411a-b1ef-8cdafbd403ef.002     6,691 tris",
+    "           tripo_mesh_1c916023-b186-411a-b1ef-8cdafbd403ef.003     5,316 tris",
+    "           tripo_mesh_1c916023-b186-411a-b1ef-8cdafbd403ef.004     6,331 tris",
+    "           total                           24,522 tris (4 meshes)",
+    "           texture                      1024x1024  image/jpeg",
+    "           texture                      1024x1024  image/jpeg",
+    "           texture                      1024x1024  image/jpeg"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/test-suv/review/audit.png",
+      "assets/models/test-suv/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.0,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

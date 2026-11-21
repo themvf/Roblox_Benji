@@ -1,0 +1,17 @@
+{
+  "purpose": "Storage shelving stacked with boxes, repeated along service-hall cover blocks in the Penthouse",
+  "role": "decor",
+  "heightStuds": 9.0,
+  "kind": "prop",
+  "where": "Penthouse",
+  "copies": 10,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "copies=10, share=game, no moving parts, nearest=0, thin=no because the unit is packed solid with boxes over a solid back panel, stop at local build; target block 8 long x 4 deep x 9 tall studs",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {}
+}

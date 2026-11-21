@@ -1,0 +1,546 @@
+{
+  "pieces": [
+    {
+      "mesh": "Head__helmet",
+      "part": "Head",
+      "piece": "helmet",
+      "offset": [
+        0.0,
+        0.32,
+        0.0
+      ],
+      "size": [
+        2.204,
+        2.7448,
+        2.7
+      ],
+      "covers": true,
+      "triangles": 3745
+    },
+    {
+      "mesh": "LeftFoot__boot",
+      "part": "LeftFoot",
+      "piece": "boot",
+      "offset": [
+        -0.07,
+        0.2154,
+        -0.02
+      ],
+      "size": [
+        1.3,
+        0.7609,
+        0.5882
+      ],
+      "covers": true,
+      "triangles": 520
+    },
+    {
+      "mesh": "LeftHand__fist",
+      "part": "LeftHand",
+      "piece": "fist",
+      "offset": [
+        -0.0,
+        -0.15,
+        -0.05
+      ],
+      "size": [
+        1.0446,
+        1.235,
+        1.035
+      ],
+      "covers": true,
+      "triangles": 666
+    },
+    {
+      "mesh": "LeftLowerArm__gauntlet",
+      "part": "LeftLowerArm",
+      "piece": "gauntlet",
+      "offset": [
+        -0.0,
+        0.0,
+        -0.0
+      ],
+      "size": [
+        1.3867,
+        1.69,
+        1.2249
+      ],
+      "covers": true,
+      "triangles": 1056
+    },
+    {
+      "mesh": "LeftLowerLeg__greave",
+      "part": "LeftLowerLeg",
+      "piece": "greave",
+      "offset": [
+        -0.06,
+        0.08,
+        -0.0
+      ],
+      "size": [
+        1.0371,
+        1.495,
+        0.9734
+      ],
+      "covers": true,
+      "triangles": 808
+    },
+    {
+      "mesh": "LeftUpperArm__pauldron",
+      "part": "LeftUpperArm",
+      "piece": "pauldron",
+      "offset": [
+        -0.12,
+        0.26,
+        0.0
+      ],
+      "size": [
+        1.2161,
+        1.9,
+        1.9283
+      ],
+      "covers": true,
+      "triangles": 1437
+    },
+    {
+      "mesh": "LeftUpperLeg__thigh",
+      "part": "LeftUpperLeg",
+      "piece": "thigh",
+      "offset": [
+        -0.06,
+        0.02,
+        0.0
+      ],
+      "size": [
+        1.3203,
+        1.625,
+        1.215
+      ],
+      "covers": true,
+      "triangles": 814
+    },
+    {
+      "mesh": "LowerTorso__waist",
+      "part": "LowerTorso",
+      "piece": "waist",
+      "offset": [
+        -0.0,
+        -0.4,
+        0.0
+      ],
+      "size": [
+        1.7986,
+        1.6,
+        1.3575
+      ],
+      "covers": true,
+      "triangles": 938
+    },
+    {
+      "mesh": "RightFoot__boot",
+      "part": "RightFoot",
+      "piece": "boot",
+      "offset": [
+        0.07,
+        0.2154,
+        -0.02
+      ],
+      "size": [
+        1.3,
+        0.7609,
+        0.5882
+      ],
+      "covers": true,
+      "triangles": 520
+    },
+    {
+      "mesh": "RightHand__fist",
+      "part": "RightHand",
+      "piece": "fist",
+      "offset": [
+        -0.0,
+        -0.15,
+        -0.05
+      ],
+      "size": [
+        1.0446,
+        1.235,
+        1.035
+      ],
+      "covers": true,
+      "triangles": 666
+    },
+    {
+      "mesh": "RightLowerArm__gauntlet",
+      "part": "RightLowerArm",
+      "piece": "gauntlet",
+      "offset": [
+        -0.0,
+        0.0,
+        -0.0
+      ],
+      "size": [
+        1.3867,
+        1.69,
+        1.2249
+      ],
+      "covers": true,
+      "triangles": 1056
+    },
+    {
+      "mesh": "RightLowerLeg__greave",
+      "part": "RightLowerLeg",
+      "piece": "greave",
+      "offset": [
+        0.06,
+        0.08,
+        -0.0
+      ],
+      "size": [
+        1.0371,
+        1.495,
+        0.9734
+      ],
+      "covers": true,
+      "triangles": 808
+    },
+    {
+      "mesh": "RightUpperArm__pauldron",
+      "part": "RightUpperArm",
+      "piece": "pauldron",
+      "offset": [
+        0.12,
+        0.26,
+        0.0
+      ],
+      "size": [
+        1.2161,
+        1.9,
+        1.9283
+      ],
+      "covers": true,
+      "triangles": 1437
+    },
+    {
+      "mesh": "RightUpperLeg__thigh",
+      "part": "RightUpperLeg",
+      "piece": "thigh",
+      "offset": [
+        0.06,
+        0.02,
+        0.0
+      ],
+      "size": [
+        1.3203,
+        1.625,
+        1.215
+      ],
+      "covers": true,
+      "triangles": 814
+    },
+    {
+      "mesh": "UpperTorso__back",
+      "part": "UpperTorso",
+      "piece": "back",
+      "offset": [
+        -0.0,
+        -0.9,
+        1.0185
+      ],
+      "size": [
+        2.2026,
+        3.2,
+        0.4369
+      ],
+      "covers": true,
+      "triangles": 801
+    },
+    {
+      "mesh": "UpperTorso__chest",
+      "part": "UpperTorso",
+      "piece": "chest",
+      "offset": [
+        -0.0,
+        0.22,
+        0.0
+      ],
+      "size": [
+        2.5,
+        2.16,
+        1.4071
+      ],
+      "covers": true,
+      "triangles": 3085
+    }
+  ],
+  "hides": [
+    "Head",
+    "LeftFoot",
+    "LeftHand",
+    "LeftLowerArm",
+    "LeftLowerLeg",
+    "LeftUpperArm",
+    "LeftUpperLeg",
+    "LowerTorso",
+    "RightFoot",
+    "RightHand",
+    "RightLowerArm",
+    "RightLowerLeg",
+    "RightUpperArm",
+    "RightUpperLeg",
+    "UpperTorso"
+  ],
+  "sleeves": [
+    {
+      "part": "UpperTorso",
+      "offset": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        2.1,
+        1.6,
+        0.9
+      ]
+    },
+    {
+      "part": "LeftUpperArm",
+      "offset": [
+        0,
+        -0.15,
+        0
+      ],
+      "size": [
+        0.8,
+        0.9,
+        0.8
+      ]
+    },
+    {
+      "part": "RightUpperArm",
+      "offset": [
+        0,
+        -0.15,
+        0
+      ],
+      "size": [
+        0.8,
+        0.9,
+        0.8
+      ]
+    }
+  ],
+  "glows": [
+    {
+      "part": "Head",
+      "color": "#FF8A1E",
+      "offset": [
+        -0.4125,
+        -0.0075,
+        -1.15
+      ],
+      "size": [
+        0.26,
+        0.15,
+        0.08
+      ]
+    },
+    {
+      "part": "Head",
+      "color": "#FF8A1E",
+      "offset": [
+        0.255,
+        -0.0225,
+        -1.15
+      ],
+      "size": [
+        0.27,
+        0.15,
+        0.08
+      ]
+    }
+  ],
+  "template": {
+    "Head": {
+      "centre": [
+        0,
+        0,
+        5.3
+      ],
+      "size": [
+        1.2,
+        1.2,
+        1.2
+      ]
+    },
+    "UpperTorso": {
+      "centre": [
+        0,
+        0,
+        3.9
+      ],
+      "size": [
+        2,
+        1,
+        1.6
+      ]
+    },
+    "LowerTorso": {
+      "centre": [
+        0,
+        0,
+        2.9
+      ],
+      "size": [
+        2,
+        1,
+        0.4
+      ]
+    },
+    "RightUpperArm": {
+      "centre": [
+        -1.5,
+        0,
+        4.1
+      ],
+      "size": [
+        1,
+        1,
+        1.2
+      ]
+    },
+    "LeftUpperArm": {
+      "centre": [
+        1.5,
+        0,
+        4.1
+      ],
+      "size": [
+        1,
+        1,
+        1.2
+      ]
+    },
+    "RightLowerArm": {
+      "centre": [
+        -1.5,
+        0,
+        2.95
+      ],
+      "size": [
+        1,
+        1,
+        1.1
+      ]
+    },
+    "LeftLowerArm": {
+      "centre": [
+        1.5,
+        0,
+        2.95
+      ],
+      "size": [
+        1,
+        1,
+        1.1
+      ]
+    },
+    "RightHand": {
+      "centre": [
+        -1.5,
+        0,
+        2.15
+      ],
+      "size": [
+        1,
+        1,
+        0.5
+      ]
+    },
+    "LeftHand": {
+      "centre": [
+        1.5,
+        0,
+        2.15
+      ],
+      "size": [
+        1,
+        1,
+        0.5
+      ]
+    },
+    "RightUpperLeg": {
+      "centre": [
+        -0.5,
+        0,
+        2.1
+      ],
+      "size": [
+        1,
+        1,
+        1.2
+      ]
+    },
+    "LeftUpperLeg": {
+      "centre": [
+        0.5,
+        0,
+        2.1
+      ],
+      "size": [
+        1,
+        1,
+        1.2
+      ]
+    },
+    "RightLowerLeg": {
+      "centre": [
+        -0.5,
+        0,
+        0.9
+      ],
+      "size": [
+        1,
+        1,
+        1.2
+      ]
+    },
+    "LeftLowerLeg": {
+      "centre": [
+        0.5,
+        0,
+        0.9
+      ],
+      "size": [
+        1,
+        1,
+        1.2
+      ]
+    },
+    "RightFoot": {
+      "centre": [
+        -0.5,
+        -0.1,
+        0.15
+      ],
+      "size": [
+        1,
+        1.2,
+        0.3
+      ]
+    },
+    "LeftFoot": {
+      "centre": [
+        0.5,
+        -0.1,
+        0.15
+      ],
+      "size": [
+        1,
+        1.2,
+        0.3
+      ]
+    }
+  }
+}

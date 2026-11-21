@@ -1,0 +1,131 @@
+{
+  "tool": "tools/asset_generate.py audit",
+  "auditedOn": "2026-11-16 16:38",
+  "source": "assets/models/penthouse-daybed/exports/PenthouseDaybed.glb",
+  "sourceSha256": "a60d97e4b942bde5869fdd3136724dc06b197814dc3625cf7813c48d217be9d3",
+  "brightenGamma": 1.0,
+  "flagPercent": 0.15,
+  "worstBackFacePercent": 0.3,
+  "worstPatchPercent": 0.0,
+  "flagged": [],
+  "views": [
+    {
+      "name": "front",
+      "kind": "overview",
+      "backFacePercent": 0.26,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back",
+      "kind": "overview",
+      "backFacePercent": 0.25,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "left",
+      "kind": "overview",
+      "backFacePercent": 0.06,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "right",
+      "kind": "overview",
+      "backFacePercent": 0.12,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "top",
+      "kind": "overview",
+      "backFacePercent": 0.08,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "bottom",
+      "kind": "overview",
+      "backFacePercent": 0.09,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "front-left",
+      "kind": "overview",
+      "backFacePercent": 0.07,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "front-right",
+      "kind": "overview",
+      "backFacePercent": 0.06,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back-left",
+      "kind": "overview",
+      "backFacePercent": 0.04,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back-right",
+      "kind": "overview",
+      "backFacePercent": 0.07,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-1a",
+      "kind": "closeup",
+      "backFacePercent": 0.09,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-1b",
+      "kind": "closeup",
+      "backFacePercent": 0.11,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-2a",
+      "kind": "closeup",
+      "backFacePercent": 0.05,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-2b",
+      "kind": "closeup",
+      "backFacePercent": 0.07,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-3a",
+      "kind": "closeup",
+      "backFacePercent": 0.23,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-3b",
+      "kind": "closeup",
+      "backFacePercent": 0.3,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    }
+  ],
+  "sheets": [
+    "assets/models/penthouse-daybed/review/audit.png",
+    "assets/models/penthouse-daybed/review/audit_closeups.png"
+  ],
+  "panels": "assets/models/penthouse-daybed/review/audit",
+  "limitations": "Blender renders, not Roblox. Lighting, materials and transparency in Studio are not checked."
+}

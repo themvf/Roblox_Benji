@@ -1,6 +1,75 @@
 # Editable lobby model handoff
 
-Updated: 2026-11-10 · Stage: central arrival and floor mist saved, Studio Play tested, and published to ENGAGE as place version 308; live-client review pending.
+Updated: 2026-11-20 · Stage: Faction Islands built into the source and playable copy; offline gates pass; not yet played in Studio, not committed, not published.
+
+## 2026-11-20: Faction Islands
+
+The user approved the Faction Islands concept ("Build it"):
+`docs/design/lobby-experience/hub-concept/factions.py`, page with the art direction:
+https://claude.ai/artifact/RrBcZtUhdCH1daDBfL5DZu. It replaced the walk-in hub in this file.
+
+- Layout: a neutral spine of floating islands (arrival -> pads -> PLAY gate) over the void, and one
+  island per faction off it: Forge Union = ARMORY (loadout kiosk), Coherence Institute = ALTER EGO
+  (the concept said KITS; the game's name for that room is Alter Ego), Kade Dynamics = SHOP (sign
+  only), the Ferrymen = THE LEDGER (the leaderboard). Coloured bridges are the wayfinding.
+- Rebuild: `python docs/design/lobby-experience/hub-concept/export_factions.py`, then
+  `lune run tools/lobbyauthor/faction_islands.luau`, then `lune run tools/lobby.luau convert`.
+  Like the hub builder it replaces Geometry wholesale; after the first Studio edit, edit in
+  Studio instead. The walk-in hub source is backed up at
+  `.mapbuild/lobby-faction-islands/Lobby-before-factions.rbxm`.
+- The exporter adds the art direction's Roblox materials and sign fonts per part, invisible
+  barriers (15 studs) along every island rim and bridge, and the station positions.
+- Geometry `Floor` is now an invisible, non-colliding footprint over the spine: the marker reader
+  needs one part holding every spawn and pad. Nobody stands on it.
+- Stations turn: the Board and Kiosk markers may rotate about the vertical (LobbyAuthoring reads
+  `yaw`; MapService turns the leaderboard wall, the kiosk and its showcase). Pads still may not.
+- Falls: `Maps/Lobby.lua` `FallRecovery` is a box under the islands; `MapService:WatchLobbyFalls`
+  puts anyone outside a match who drops into it back on an arrival spawn. No penalty.
+- Wayfinding: the islands name themselves in surface lettering facing arrival; the only billboard
+  left is PLAY over the pad-island end of the first bridge. The Armory/AlterEgo/Shop markers were
+  removed.
+- Effects: five ParticleEmitters (weld sparks and chimney smoke on the Forge, two frost vents on
+  the Institute, rocket steam on Kade), built-in textures, low rates.
+- Size: about 2,150 geometry parts, 285 of them invisible (barriers, light anchors).
+- Evidence: `check_lobby_authoring` (now also checks station yaw and the fall box),
+  `lobby.luau status` (match), `check_live_map`, `check_maps`, `check_ui`, `check_movement`,
+  StyLua, Selene and `rojo build` pass. `hub-concept/built/factions/*.png` are Blender renders of
+  the playable copy (`dump_built.luau` + `render_built.py -- factions`): placement and
+  orientation only, not Roblox lighting or materials.
+- Open: play it in Studio (walk times, the fall recovery, whether the barriers are
+  enough, sign fonts and materials under Roblox lighting, lighting at y 400); there is no
+  dark-matter skybox yet, so the void is whatever sky the place has; the Shop is a sign only;
+  kit plinths are empty; pledge flags are blank.
+
+## 2026-11-18: walk-in hub
+
+The user approved the fifth hub concept ("Yes, build it"):
+`docs/design/lobby-experience/hub-concept/` (page: https://claude.ai/artifact/Wv5XzYwsPfkFjAmKZ9ijJr).
+It replaced the old 500 x 500 hall in this file.
+
+- Rebuild: `python docs/design/lobby-experience/hub-concept/export_parts.py`, then
+  `lune run tools/lobbyauthor/walk_in_hub.luau`, then `lune run tools/lobby.luau convert`.
+  The builder replaces Geometry wholesale, so it overwrites Studio edits; after the first
+  Studio edit, edit in Studio instead of rerunning it. The pre-hub source is backed up at
+  `.mapbuild/lobby-walk-in-hub/Lobby-before-hub.rbxm`.
+- Marker positions live in `src/shared/Maps/Lobby.lua` (spawns, pads, board, kiosk,
+  signs, lights); the builder moves the markers there. A new `Shop` sign marker was added.
+  The stone columns, purple columns and canister are the lobby's own models, moved.
+- `MapService` wayfinding signs now draw to 170 studs (was 110), since PLAY is about 125
+  studs from arrival.
+- Evidence: `check_lobby_authoring`, `lobby.luau status` (match), `check_live_map`,
+  `check_maps`, StyLua, Selene and `rojo build` pass. `hub-concept/built/*.jpg` are Blender
+  renders of the playable copy (`dump_built.luau` + `render_built.py`), showing placement
+  and orientation only.
+- Studio note: a `Workspace.Lobby` editing copy saved in the place file wins over the saved
+  copy on Play. Delete it and re-import this file, or Play shows the old hall.
+- Open: play it in Studio (walk times, PLAY sign distance, wall gaps, lighting at y 400);
+  the kiosk and leaderboard face north because markers cannot rotate; kit plinths are empty;
+  the shop is a sign only; pads keep gameplay sizes.
+
+## Earlier stage (2026-11-10)
+
+Central arrival and floor mist saved, Studio Play tested, and published to ENGAGE as place version 308; live-client review pending.
 
 ## Approved direction
 

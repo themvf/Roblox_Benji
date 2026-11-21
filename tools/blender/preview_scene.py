@@ -40,7 +40,7 @@ def to_blender(x, y, z):
     return mathutils.Vector((x, -z, y))
 
 
-def import_placed(path, x, y, z, yaw):
+def import_placed(path, x, y, z, yaw, fit_height=None):
     before = set(bpy.context.scene.objects)
     bpy.ops.import_scene.gltf(filepath=path)
     fresh = [o for o in bpy.context.scene.objects if o not in before]
@@ -59,6 +59,19 @@ def import_placed(path, x, y, z, yaw):
         bpy.ops.object.join()
     ob = bpy.context.view_layer.objects.active
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    if fit_height is not None:
+        if fit_height <= 0:
+            raise SystemExit("--fit-height must be positive")
+        points = [mathutils.Vector(p) for p in ob.bound_box]
+        low = mathutils.Vector([min(p[i] for p in points) for i in range(3)])
+        high = mathutils.Vector([max(p[i] for p in points) for i in range(3)])
+        height = high.z - low.z
+        if height <= 0:
+            raise SystemExit("asset has no height")
+        offset = mathutils.Vector(((low.x + high.x) / 2, (low.y + high.y) / 2, low.z))
+        for vertex in ob.data.vertices:
+            vertex.co = (vertex.co - offset) * (fit_height / height)
+        ob.data.update()
     # scene_kit exports correct Y-up files, so Blender's glTF importer lands them
     # Z-up here and no compensation is needed. If an asset renders on its side, the
     # file itself is wrong -- check its manifest `up` rather than patching it here.
@@ -83,6 +96,11 @@ def main():
     parser.add_argument("--lens", type=float, default=24.0)
     parser.add_argument("--out", required=True)
     parser.add_argument("--samples", type=int, default=16)
+    parser.add_argument("--materials", choices=("clay", "original"), default="clay",
+                        help="original preserves imported textures; clay is a shape-only preview")
+    parser.add_argument("--no-arena", action="store_true", help="omit the large map-scale marker for prop review")
+    parser.add_argument("--fit-height", type=float, help="preview-only uniform fit and bottom centering")
+    parser.add_argument("--resolution", default="960,500", help="output width,height")
     args = parser.parse_args(argv)
 
     if args.glb:
@@ -100,11 +118,12 @@ def main():
     snow.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.86, 0.90, 0.95, 1)
     snow.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.85
 
-    for place in args.place:
+    for place in args.place or ["0,0,0,0"]:
         x, y, z, yaw = triple(place, 4)
-        ob = import_placed(glb, x, y, z, yaw)
-        ob.data.materials.clear()
-        ob.data.materials.append(snow)
+        ob = import_placed(glb, x, y, z, yaw, args.fit_height)
+        if args.materials == "clay":
+            ob.data.materials.clear()
+            ob.data.materials.append(snow)
 
     if args.ground > 0:
         bpy.ops.mesh.primitive_plane_add(size=args.ground)
@@ -121,6 +140,7 @@ def main():
     marker.use_nodes = True
     marker.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.85, 0.35, 0.15, 1)
     arena.data.materials.append(marker)
+    arena.hide_render = args.no_arena
 
     sun_data = bpy.data.lights.new("Sun", "SUN")
     sun_data.energy = 3.0
@@ -132,8 +152,11 @@ def main():
     scene.cycles.device = "CPU"
     scene.cycles.samples = args.samples
     scene.cycles.use_denoising = True
-    scene.render.resolution_x = 960
-    scene.render.resolution_y = 500
+    width, height = triple(args.resolution, 2)
+    if min(width, height) <= 0:
+        raise SystemExit("resolution must be positive")
+    scene.render.resolution_x = int(width)
+    scene.render.resolution_y = int(height)
     world = bpy.data.worlds.new("W")
     scene.world = world
     world.use_nodes = True
@@ -157,4 +180,5 @@ def main():
     print("wrote " + out)
 
 
-main()
+if __name__ == "__main__":
+    main()

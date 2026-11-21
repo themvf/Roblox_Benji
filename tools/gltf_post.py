@@ -171,12 +171,17 @@ def base_color_image(doc):
     return None
 
 
-def tint_base_color(src, dst, tint, lift=0.0):
+def tint_base_color(src, dst, tint, lift=0.0, gamma=1.0):
     """Multiply the base-colour texture by `tint` and write a new .glb.
 
     A multiply rather than a replace, because every panel line, streak and soot
     mark already in the atlas is detail worth keeping -- the wreck should end up
     weathered, not repainted. `lift` keeps the darkest areas off flat black.
+
+    `gamma` below 1 brightens before the multiply and is for textures baked dark
+    because the generator assumed metal reflections Roblox does not render: a plain
+    multiplier big enough to fix the body clips the bright detail (gold hardware)
+    to white, where gamma lifts shadows and leaves highlights nearly alone.
 
     The new image is APPENDED to the binary chunk with a fresh bufferView
     pointing at it. Rewriting the image in place would change its length and
@@ -198,7 +203,7 @@ def tint_base_color(src, dst, tint, lift=0.0):
     picture = Image.open(io.BytesIO(original)).convert("RGB")
     bands = []
     for channel, factor in zip(picture.split(), tint):
-        bands.append(channel.point(lambda v, f=factor: max(0, min(255, int(v * f + lift * 255)))))
+        bands.append(channel.point(lambda v, f=factor: max(0, min(255, int(255 * (v / 255) ** gamma * f + lift * 255)))))
     buffer = io.BytesIO()
     Image.merge("RGB", bands).save(buffer, format="PNG", optimize=True)
     encoded = buffer.getvalue()
@@ -281,7 +286,7 @@ def cli(*args):
 
 
 def optimize(src, dst, tris=None, texture=None, error=None, lock_border=False,
-             tint=None, lift=0.0):
+             tint=None, lift=0.0, gamma=1.0):
     """weld -> simplify -> resize, then verify what actually landed.
 
     Welding first is not optional: the simplifier is limited by split vertices,
@@ -357,7 +362,7 @@ def optimize(src, dst, tris=None, texture=None, error=None, lock_border=False,
         # actually ships rather than one a later step would re-encode.
         if tint:
             out = os.path.join(work, "tinted.glb")
-            tint_base_color(current, out, tint, lift)
+            tint_base_color(current, out, tint, lift, gamma)
             # The tint appends its new image and orphans the old one, so the file
             # carries both until something drops the unreferenced bufferView.
             # Measured on the helicopter: 6.00 MB -> 3.61 MB.
@@ -399,6 +404,8 @@ def main():
                      help="multiply the base colour by R,G,B, e.g. 0.42,0.40,0.38")
     run.add_argument("--lift", type=float, default=0.0,
                      help="add this much back so the darkest areas do not crush to black")
+    run.add_argument("--gamma", type=float, default=1.0,
+                     help="below 1 brightens the base colour first; for textures baked too dark")
     args = parser.parse_args()
 
     if args.command == "inspect":
@@ -406,7 +413,7 @@ def main():
         raise SystemExit(1 if worst > MESH_TRI_LIMIT else 0)
     optimize(args.src, args.dst, tris=args.tris, texture=args.texture,
              error=args.error, lock_border=args.lock_border,
-             tint=args.tint, lift=args.lift)
+             tint=args.tint, lift=args.lift, gamma=args.gamma)
 
 
 if __name__ == "__main__":

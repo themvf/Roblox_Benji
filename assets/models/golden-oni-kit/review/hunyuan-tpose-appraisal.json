@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-20",
+  "source": "candidate.glb",
+  "sourceSha256": "6774ea927e95403b49719b6bf784f9f7aff74f01c7f22c4ace5de19537ec516c",
+  "measurements": {
+    "triangles": 40000,
+    "size": [
+      1.981,
+      0.54,
+      1.925
+    ],
+    "reliefRatio": 0.2726,
+    "openEdges": 11804,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": ""
+}

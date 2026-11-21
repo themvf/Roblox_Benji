@@ -1,0 +1,56 @@
+{
+  "checkedAtUtc": "20261022T123408189127Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "appraisal.json": "ef134900a2d48fb47b4459c188a5f4c336fa7cb00e3c5ac6da0b390c07b34883",
+    "source/reference.png": "047bbcfcd792f6042726bf002523fee9ca6d11bd439b245803d3b5d1276b445a",
+    "source/trellis-original.glb": "874ddf76691532457d42cb524d6710d080b626fad111f967dbc53ee48bb28d04",
+    "source/SnowFieldShelter_OpenDoor.blend": "ad6713286e1d7795370f6bf05e2067d6069117f62b962fbd18051528dc028576",
+    "exports/SnowFieldShelter_OpenDoor.glb": "c4586dde18080abadf410d38d582f42066dc2bc46bbebf258b86933c19f6f1c4",
+    "review/open-export-appraisal.json": "421de579462e9f4913e382d3f54f026845e410dd6c21dd577ae3ddab389205a3",
+    "SetupOpenDecoration.luau": "9042cdc8830eac7d136e1d3d36f15e5bcfa132f7a1dd42115637f165dd0e7a4f",
+    "textures/Black_reinforced_seam_Color.png": "2d3f03b79ef4c7fb8d03fa687c8dd8de097b426013421b12d2aa312caea87539",
+    "textures/Charcoal_insulated_fabric_Color.png": "266d348e79fccad7dd5ea57f9803246b8c8016eaaebc85bbdd699942c6b51e02",
+    "textures/Charcoal_insulated_fabric_Normal.png": "fb31f0397f74b82ff6488486d442afe3e265b3b395efbd2e653633defb80ff2e",
+    "textures/Dark_sealed_window_Color.png": "d42a0cedeaa2a9b82d819b133a0cb5f32ded30a53a7bf2a074406cefe25827e3",
+    "textures/Door_hardware_Color.png": "77216b01a0fd4212f63ed9cb968052384ebee39901e1f39391d7acc58751abf4",
+    "textures/Graphite_window_gasket_Color.png": "6febb95613d325466e0e4555cd2c628872e5cd4489601be91c292d0896dbac67",
+    "textures/Off-white_steel_door_Color.png": "922468f3475b9bbcb253db0e3b3973e74c02b81008b87ba9122f1c1b3850fae1",
+    "textures/White_painted_aluminum_Color.png": "b032232561b51bd9b99b5cff5343153d8f3a37738af6ae07941f54bd8b037b79",
+    "textures/Slate_interior_walkway_Color.png": "f2c1a7770a7999fe01ce9b1d8e7bfc3397e85a416338444bd97583abbf8dedb9",
+    "review/open-quarter.png": "318febd7d1741dde707ced1e86d6fedbb9ee521b2b0e1b41aed136ad83be5d2b",
+    "review/open-front.png": "02678d153e2e17187d8e44c841c675c004bd85c2595d0fcea7f7b26dad10f574",
+    "review/open-side.png": "ff8e98eff54c201fbaf054f8348b04809332d9f034d3cbe5196dbdda7d454a07",
+    "review/open-rear.png": "1f793de97539146b04b4be2e41ca929ad71e2aeac39ea2c5790bf3f90051ff07"
+  },
+  "measured": {
+    "meshTriangles": {
+      "Canvas side -1": 7464,
+      "Front outer white arch": 4744,
+      "Black canvas roof tension band": 3460,
+      "Cube": 220,
+      "Cube.001": 528,
+      "Cube.024": 44,
+      "Sphere": 276,
+      "Cube.031": 44
+    },
+    "totalTriangles": 16780,
+    "embeddedImages": 9,
+    "worldDimensionsBlenderXYZ": [
+      24.56,
+      35.617,
+      14.231
+    ],
+    "exportBytes": 2197696
+  },
+  "limitations": [
+    "Appearance is pending user approval and Studio texture verification.",
+    "Door is fixed open; no hinge animation or working door script is included.",
+    "The opening and short walkway are visible, but gameplay passage and collision have not been validated.",
+    "No Studio import or saved map placement is verified."
+  ]
+}

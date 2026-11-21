@@ -1,0 +1,681 @@
+<roblox version="4">
+  <Item class="Model" referent="0">
+    <Properties>
+      <string name="Name">DoubleLedgeTurret</string>
+      <Ref name="PrimaryPart">1</Ref>
+    </Properties>
+    <Item class="Part" referent="1">
+      <Properties>
+        <string name="Name">Root</string>
+        <bool name="Anchored">true</bool>
+        <CoordinateFrame name="CFrame">
+          <X>0</X>
+          <Y>0</Y>
+          <Z>0</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <Vector3 name="size">
+          <X>0.25</X>
+          <Y>0.25</Y>
+          <Z>0.25</Z>
+        </Vector3>
+        <float name="Transparency">1</float>
+      </Properties>
+    </Item>
+    <Item class="Model" referent="2">
+      <Properties>
+        <string name="Name">Base</string>
+      </Properties>
+      <Item class="Part" referent="3">
+        <Properties>
+          <string name="Name">CollisionPedestal</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>2.399994</Y>
+            <Z>0</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <Vector3 name="size">
+            <X>3.5</X>
+            <Y>4.600006</Y>
+            <Z>3.5</Z>
+          </Vector3>
+          <float name="Transparency">1</float>
+        </Properties>
+      </Item>
+      <Item class="MeshPart" referent="4">
+        <Properties>
+          <string name="Name">Base_01</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>0.85762024</X>
+            <Y>2.4466248</Y>
+            <Z>1.0682983</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+          <Content name="MeshContent">
+            <uri>rbxassetid://71640607137102</uri>
+          </Content>
+          <Vector3 name="size">
+            <X>8.628098</X>
+            <Y>4.8932343</Y>
+            <Z>7.306076</Z>
+          </Vector3>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="5">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <Color3 name="Color">
+              <R>0.47058824</R>
+              <G>0.50980395</G>
+              <B>0.54901963</B>
+            </Color3>
+            <Content name="ColorMapContent">
+              <uri>rbxassetid://136043954875472</uri>
+            </Content>
+            <Content name="MetalnessMapContent">
+              <uri>rbxassetid://95777718040562</uri>
+            </Content>
+            <Content name="RoughnessMapContent">
+              <uri>rbxassetid://91826965151080</uri>
+            </Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="6">
+        <Properties>
+          <string name="Name">Base_02</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>-1.0434113</X>
+            <Y>2.4502258</Y>
+            <Z>-1.1959381</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+          <Content name="MeshContent">
+            <uri>rbxassetid://87118956106272</uri>
+          </Content>
+          <Vector3 name="size">
+            <X>2.815445</X>
+            <Y>4.8459473</Y>
+            <Z>6.3973846</Z>
+          </Vector3>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="7">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <Color3 name="Color">
+              <R>0.47058824</R>
+              <G>0.50980395</G>
+              <B>0.54901963</B>
+            </Color3>
+            <Content name="ColorMapContent">
+              <uri>rbxassetid://136043954875472</uri>
+            </Content>
+            <Content name="MetalnessMapContent">
+              <uri>rbxassetid://95777718040562</uri>
+            </Content>
+            <Content name="RoughnessMapContent">
+              <uri>rbxassetid://91826965151080</uri>
+            </Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="8">
+        <Properties>
+          <string name="Name">Base_03</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>-2.3455048</X>
+            <Y>2.3504639</Y>
+            <Z>2.4857788</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+          <Content name="MeshContent">
+            <uri>rbxassetid://137840414019001</uri>
+          </Content>
+          <Vector3 name="size">
+            <X>2.1337433</X>
+            <Y>4.6481476</Y>
+            <Z>4.1376953</Z>
+          </Vector3>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="9">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <Color3 name="Color">
+              <R>0.47058824</R>
+              <G>0.50980395</G>
+              <B>0.54901963</B>
+            </Color3>
+            <Content name="ColorMapContent">
+              <uri>rbxassetid://136043954875472</uri>
+            </Content>
+            <Content name="MetalnessMapContent">
+              <uri>rbxassetid://95777718040562</uri>
+            </Content>
+            <Content name="RoughnessMapContent">
+              <uri>rbxassetid://91826965151080</uri>
+            </Content>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+    <Item class="Model" referent="10">
+      <Properties>
+        <string name="Name">Head</string>
+        <Ref name="PrimaryPart">11</Ref>
+      </Properties>
+      <Item class="Part" referent="11">
+        <Properties>
+          <string name="Name">HeadPivot</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>4.550003</Y>
+            <Z>0</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <Vector3 name="size">
+            <X>0.25</X>
+            <Y>0.25</Y>
+            <Z>0.25</Z>
+          </Vector3>
+          <float name="Transparency">1</float>
+        </Properties>
+      </Item>
+      <Item class="Part" referent="12">
+        <Properties>
+          <string name="Name">CollisionHousing</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>0</X>
+            <Y>5.699997</Y>
+            <Z>-0.69999695</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <Vector3 name="size">
+            <X>5</X>
+            <Y>3</Y>
+            <Z>4</Z>
+          </Vector3>
+          <float name="Transparency">1</float>
+        </Properties>
+      </Item>
+      <Item class="Part" referent="13">
+        <Properties>
+          <string name="Name">CollisionBarrel</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>-3.300003</X>
+            <Y>5.699997</Y>
+            <Z>2.300003</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">true</bool>
+          <bool name="CanQuery">true</bool>
+          <bool name="CanTouch">false</bool>
+          <Vector3 name="size">
+            <X>5</X>
+            <Y>1.3999939</Y>
+            <Z>2.199997</Z>
+          </Vector3>
+          <float name="Transparency">1</float>
+        </Properties>
+      </Item>
+      <Item class="MeshPart" referent="14">
+        <Properties>
+          <string name="Name">Head_01</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>1.640564</X>
+            <Y>5.902603</Y>
+            <Z>-1.4172363</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+          <Content name="MeshContent">
+            <uri>rbxassetid://87258871102283</uri>
+          </Content>
+          <Vector3 name="size">
+            <X>6.543396</X>
+            <Y>2.767456</Y>
+            <Z>6.608185</Z>
+          </Vector3>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="15">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <Color3 name="Color">
+              <R>0.47058824</R>
+              <G>0.50980395</G>
+              <B>0.54901963</B>
+            </Color3>
+            <Content name="ColorMapContent">
+              <uri>rbxassetid://136043954875472</uri>
+            </Content>
+            <Content name="MetalnessMapContent">
+              <uri>rbxassetid://95777718040562</uri>
+            </Content>
+            <Content name="RoughnessMapContent">
+              <uri>rbxassetid://91826965151080</uri>
+            </Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="16">
+        <Properties>
+          <string name="Name">Head_02</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>0.38356018</X>
+            <Y>5.882431</Y>
+            <Z>-1.14534</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+          <Content name="MeshContent">
+            <uri>rbxassetid://113475387448327</uri>
+          </Content>
+          <Vector3 name="size">
+            <X>3.8352966</X>
+            <Y>3.1138763</Y>
+            <Z>4.930023</Z>
+          </Vector3>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="17">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <Color3 name="Color">
+              <R>0.47058824</R>
+              <G>0.50980395</G>
+              <B>0.54901963</B>
+            </Color3>
+            <Content name="ColorMapContent">
+              <uri>rbxassetid://136043954875472</uri>
+            </Content>
+            <Content name="MetalnessMapContent">
+              <uri>rbxassetid://95777718040562</uri>
+            </Content>
+            <Content name="RoughnessMapContent">
+              <uri>rbxassetid://91826965151080</uri>
+            </Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="18">
+        <Properties>
+          <string name="Name">Head_03</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>0.6481323</X>
+            <Y>6.2239075</Y>
+            <Z>-1.1629181</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+          <Content name="MeshContent">
+            <uri>rbxassetid://106433240787440</uri>
+          </Content>
+          <Vector3 name="size">
+            <X>2.6807098</X>
+            <Y>3.5522003</Y>
+            <Z>4.9173584</Z>
+          </Vector3>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="19">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <Color3 name="Color">
+              <R>0.47058824</R>
+              <G>0.50980395</G>
+              <B>0.54901963</B>
+            </Color3>
+            <Content name="ColorMapContent">
+              <uri>rbxassetid://136043954875472</uri>
+            </Content>
+            <Content name="MetalnessMapContent">
+              <uri>rbxassetid://95777718040562</uri>
+            </Content>
+            <Content name="RoughnessMapContent">
+              <uri>rbxassetid://91826965151080</uri>
+            </Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="20">
+        <Properties>
+          <string name="Name">Head_04</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>-1.9589233</X>
+            <Y>6.176468</Y>
+            <Z>0.08111572</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+          <Content name="MeshContent">
+            <uri>rbxassetid://114038079411816</uri>
+          </Content>
+          <Vector3 name="size">
+            <X>5.294586</X>
+            <Y>3.5614624</Y>
+            <Z>7.399002</Z>
+          </Vector3>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="21">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <Color3 name="Color">
+              <R>0.47058824</R>
+              <G>0.50980395</G>
+              <B>0.54901963</B>
+            </Color3>
+            <Content name="ColorMapContent">
+              <uri>rbxassetid://136043954875472</uri>
+            </Content>
+            <Content name="MetalnessMapContent">
+              <uri>rbxassetid://95777718040562</uri>
+            </Content>
+            <Content name="RoughnessMapContent">
+              <uri>rbxassetid://91826965151080</uri>
+            </Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="22">
+        <Properties>
+          <string name="Name">Head_05</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>-2.69281</X>
+            <Y>5.5653534</Y>
+            <Z>1.9465942</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+          <Content name="MeshContent">
+            <uri>rbxassetid://102590460094971</uri>
+          </Content>
+          <Vector3 name="size">
+            <X>3.5317535</X>
+            <Y>2.5762634</Y>
+            <Z>3.5882568</Z>
+          </Vector3>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="23">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <Color3 name="Color">
+              <R>0.47058824</R>
+              <G>0.50980395</G>
+              <B>0.54901963</B>
+            </Color3>
+            <Content name="ColorMapContent">
+              <uri>rbxassetid://136043954875472</uri>
+            </Content>
+            <Content name="MetalnessMapContent">
+              <uri>rbxassetid://95777718040562</uri>
+            </Content>
+            <Content name="RoughnessMapContent">
+              <uri>rbxassetid://91826965151080</uri>
+            </Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="MeshPart" referent="24">
+        <Properties>
+          <string name="Name">Head_06</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>-3.905304</X>
+            <Y>5.7297974</Y>
+            <Z>3.1564178</Z>
+            <R00>1</R00>
+            <R01>0</R01>
+            <R02>0</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>0</R20>
+            <R21>0</R21>
+            <R22>1</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <Color3uint8 name="Color3uint8">16777215</Color3uint8>
+          <Content name="MeshContent">
+            <uri>rbxassetid://97896153455877</uri>
+          </Content>
+          <Vector3 name="size">
+            <X>2.5327454</X>
+            <Y>2.2035522</Y>
+            <Z>2.6807404</Z>
+          </Vector3>
+        </Properties>
+        <Item class="SurfaceAppearance" referent="25">
+          <Properties>
+            <string name="Name">SurfaceAppearance</string>
+            <Color3 name="Color">
+              <R>0.47058824</R>
+              <G>0.50980395</G>
+              <B>0.54901963</B>
+            </Color3>
+            <Content name="ColorMapContent">
+              <uri>rbxassetid://136043954875472</uri>
+            </Content>
+            <Content name="MetalnessMapContent">
+              <uri>rbxassetid://95777718040562</uri>
+            </Content>
+            <Content name="RoughnessMapContent">
+              <uri>rbxassetid://91826965151080</uri>
+            </Content>
+          </Properties>
+        </Item>
+      </Item>
+      <Item class="Part" referent="26">
+        <Properties>
+          <string name="Name">Muzzle</string>
+          <bool name="Anchored">true</bool>
+          <CoordinateFrame name="CFrame">
+            <X>-5</X>
+            <Y>5.850006</Y>
+            <Z>4.149994</Z>
+            <R00>0.6369324</R00>
+            <R01>0</R01>
+            <R02>0.7709198</R02>
+            <R10>0</R10>
+            <R11>1</R11>
+            <R12>0</R12>
+            <R20>-0.7709198</R20>
+            <R21>0</R21>
+            <R22>0.6369324</R22>
+          </CoordinateFrame>
+          <bool name="CanCollide">false</bool>
+          <bool name="CanQuery">false</bool>
+          <bool name="CanTouch">false</bool>
+          <Vector3 name="size">
+            <X>0.25</X>
+            <Y>0.25</Y>
+            <Z>0.25</Z>
+          </Vector3>
+          <float name="Transparency">1</float>
+        </Properties>
+      </Item>
+    </Item>
+    <Item class="Part" referent="27">
+      <Properties>
+        <string name="Name">UsePoint</string>
+        <bool name="Anchored">true</bool>
+        <CoordinateFrame name="CFrame">
+          <X>3.600006</X>
+          <Y>2.699997</Y>
+          <Z>-3</Z>
+          <R00>1</R00>
+          <R01>0</R01>
+          <R02>0</R02>
+          <R10>0</R10>
+          <R11>1</R11>
+          <R12>0</R12>
+          <R20>0</R20>
+          <R21>0</R21>
+          <R22>1</R22>
+        </CoordinateFrame>
+        <bool name="CanCollide">false</bool>
+        <bool name="CanQuery">false</bool>
+        <bool name="CanTouch">false</bool>
+        <Vector3 name="size">
+          <X>0.25</X>
+          <Y>0.25</Y>
+          <Z>0.25</Z>
+        </Vector3>
+        <float name="Transparency">1</float>
+      </Properties>
+    </Item>
+  </Item>
+</roblox>

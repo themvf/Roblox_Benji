@@ -1,0 +1,23 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "penthouse-sculpture": {
+      "description": "Abstract bronze sculpture, visual shell over a full-cover block at the south end of the Penthouse gallery (role: decor, about 12 studs tall)",
+      "source": "assets/models/penthouse-sculpture/source/PenthouseSculpture.glb",
+      "out": "assets/models/penthouse-sculpture/exports/PenthouseSculpture.glb",
+      "fit": {
+        "axis": "z",
+        "size": 12.0
+      },
+      "decimate": 25000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      },
+      "tile": [
+        2,
+        2
+      ]
+    }
+  }
+}

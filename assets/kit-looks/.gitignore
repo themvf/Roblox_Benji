@@ -1,0 +1,9 @@
+# Rebuilt by `kit_look.py review` every run.
+*/review/*.blend
+*/review/*.blend1
+# Tripo's raw downloads: pieces/ holds the filed (matte) copy of each, from intake.
+*/tripo/
+# Pieces replaced after review; kept on disk only.
+*/pieces/*set-aside*
+*/pieces/*-before-concept.glb
+*/exports/scene.json

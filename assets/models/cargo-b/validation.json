@@ -1,0 +1,63 @@
+{
+  "checkedAtUtc": "20261011T143337176235Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "filesSha256": {
+    "source/design-reference.png": "a50b1486673075be9cd015f686747efe00675e2c1da3a410ab0e3812ee34ec86",
+    "source/trellis-original.glb": "c768671f5c5e8d87837b0fed4ec02abb87b3ef64810c5d0096b090fa56d1ad54",
+    "source/CargoB_Wreck.blend": "febfdd2f5e0a5a624c29b957c13ff6a78b1f2392b86b97d8a86cf4c156d75347",
+    "exports/CargoUnit.glb": "6a79edf82f87fe275ec741a84adcb34316aac2be040eab00268257ea48e020a6",
+    "textures/CargoB_Wreck_Color.png": "89fa4bb4b7c82be17ec5302883180777a967eb640302358ee17342fe29fe6d46",
+    "textures/CargoB_Wreck_Roughness.png": "9a46d907cbca3fd0e01a5c4c5182a144bc64aecedc39022cdde60111eab6ee1f",
+    "textures/CargoB_Wreck_Metalness.png": "0843b2640e147d59ac77aa14a51969fe9f2cc790e433f3594675746c2ddc8904",
+    "appraisal.json": "bd7061ba8f9cc4ce55b363eb550ee84cbbaac163da99c270020a7bc7767d109d",
+    "SetupCargoUnit.luau": "ca493b6881cc2c92bcf882f6b685daae29df194191969164d625c16a9770c33c",
+    "trials/CargoUnit_intact_20260928.glb": "9bcf63d83e5d7e9a9ca731085780c0596d512dfe4dcbd3142e425e13c5c691b5",
+    "trials/intact-front-quarter.png": "2f0afe9323b3ee98535d2647acc899191be98bbd3f77f485063e71f7081e87db",
+    "review/wreck-front-quarter.png": "f075f5a124c8d3f27751f460abd81de3fff8d708c430e8eb0106e2b582f54b61",
+    "review/wreck-side.png": "42761520189121bf854cf03bdf54ce2a4531840d30911bc8d5e0701a8b20b6a8",
+    "review/wreck-end.png": "254d9df648160cc57451d305e80ea4b3e064f4d345dad01f7a216bd832f34029",
+    "review/wreck-rear.png": "bfb8f5ce2ca1a9d765893a44a22d0a58235a2fbbed780a01dc1134efda8837d9"
+  },
+  "measured": {
+    "triangles": 3508,
+    "meshes": 1,
+    "materials": 1,
+    "boundsMin": [
+      -4.6871337890625,
+      0,
+      -3.1138696670532227
+    ],
+    "boundsMax": [
+      4.6871337890625,
+      6,
+      3.1138696670532227
+    ],
+    "embeddedTextures": [
+      [
+        "image/png",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "image/png",
+        [
+          1024,
+          1024
+        ]
+      ]
+    ],
+    "exportBytes": 1408608
+  },
+  "limitations": [
+    "File checks and renders do not establish user visual approval.",
+    "New export has not been imported into Studio or placed in a map.",
+    "Six-stud height and decoration role remain provisional.",
+    "Check-only hashes existing previews; it does not regenerate them.",
+    "Repository-wide Lune gate could not start in this sandbox (cwd access denied)."
+  ]
+}

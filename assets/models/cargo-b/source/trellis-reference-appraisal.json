@@ -1,0 +1,30 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-09-28",
+  "source": "trellis-original.glb",
+  "sourceSha256": "c768671f5c5e8d87837b0fed4ec02abb87b3ef64810c5d0096b090fa56d1ad54",
+  "measurements": {
+    "triangles": 284422,
+    "size": [
+      0.596,
+      1.002,
+      0.733
+    ],
+    "reliefRatio": 0.5948,
+    "openEdges": 157568,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "verdict": [
+    "Too dense to survive as ONE mesh.",
+    "  Tiling instead: 8 meshes keeps 25% of the detail (71,105 triangles);",
+    "  Tiling instead: 15 meshes keeps 50% of the detail (142,211 triangles);",
+    "  the 10,000 cap is PER MESH, so `tile` beats `decimate` for anything",
+    "  broad that the player gets close to. Weigh the part count against",
+    "  your device budget."
+  ],
+  "decision": "Source for the optimized intact cargo unit, not delivered itself: 284,422 triangles and 2048 WebP textures exceed Roblox limits. Copied unchanged from Cargo/sample_2026-09-27T182032.482.glb. Matches source/design-reference.png (Cargo unit 807ce1a0 variant 1, the white container with dark corner caps, end doors and ribbed long sides); variants 0 and 3 are a different, longer container and a latched hard case. The silhouette is a plain rectangular box and survives reduction, so this is optimized rather than rebuilt, using the method proven on assets/models/cargo: voxel remesh into one shell, planar dissolve, collapse, then bake colour/normal/roughness/metalness from this dense source. Tiling is rejected: this is a single hand-scale prop, not broad ground. Long axis arrives on Blender Y here, unlike the destroyed unit, so tools/blender/build_cargo_b.py rotates it onto X."
+}

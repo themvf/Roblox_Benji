@@ -1,0 +1,12 @@
+{
+  "individuals": [
+    "FuelDrum_A",
+    "FuelDrum_B",
+    "FuelDrum_C"
+  ],
+  "group": "FuelDrum_ThreePack",
+  "drumHeightStuds": 3.52,
+  "drumDiameterStuds": 2.24,
+  "construction": "complete modeled cylinders with rolled ribs, recessed lid and two cap details",
+  "sourcePurpose": "3D and weathering reference; no source mesh triangles in exports"
+}

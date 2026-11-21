@@ -23,4 +23,24 @@ map.DisplayName = "Snow Fortress"
 map.BakedMap = source.Name
 map.Draft = nil
 map.Authored = nil -- generated-file drift checks belong to MyMap.lua, not this wrapper
+-- The active Snow Fortress arena. TDM copies this wrapper, so both modes use the
+-- same two creator-movable markers while keeping generated MyMap.lua untouched.
+map.Pickups = {
+    {
+        kind = "weapon",
+        weapon = "WhiteSniper",
+        marker = "BlueOutpost",
+        pos = { -90, 1.596, -145 },
+        respawnTuning = "WhiteSniperRespawnSeconds",
+        respawnOnDeath = true,
+    },
+    {
+        kind = "weapon",
+        weapon = "WhiteSniper",
+        marker = "RedOutpost",
+        pos = { 90, 1.596, -145 },
+        respawnTuning = "WhiteSniperRespawnSeconds",
+        respawnOnDeath = true,
+    },
+}
 return map

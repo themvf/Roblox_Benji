@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-10-22",
+  "source": "SnowFieldShelter.glb",
+  "sourceSha256": "3d7738f31950176d35a8103b20bf28feb05e975eb52190b8b31f0f64e89fda19",
+  "measurements": {
+    "triangles": 15528,
+    "size": [
+      24.56,
+      32.805,
+      14.231
+    ],
+    "reliefRatio": 0.4338,
+    "openEdges": 20124,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Saved clean export for a decorative closed shelter; 15,528 triangles divided among seven meshes, each below Roblox's 10,000-triangle per-mesh limit."
+}

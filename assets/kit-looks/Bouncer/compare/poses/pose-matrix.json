@@ -1,0 +1,286 @@
+{
+ "poses": [
+  "bind",
+  "idle",
+  "walk",
+  "run",
+  "crouch",
+  "aim",
+  "jump",
+  "headturn"
+ ],
+ "bodies": {
+  "skinned": {
+   "weights": "nearest bone (heat weighting found no solution)",
+   "unweightedByHeat": 6000,
+   "vertices": 6000,
+   "poses": {
+    "bind": {
+     "stretchedOver2x": 0.0,
+     "crushedUnder035": 0.0
+    },
+    "idle": {
+     "stretchedOver2x": 0.0146,
+     "crushedUnder035": 0.0012
+    },
+    "walk": {
+     "stretchedOver2x": 0.0294,
+     "crushedUnder035": 0.0035
+    },
+    "run": {
+     "stretchedOver2x": 0.0529,
+     "crushedUnder035": 0.009
+    },
+    "crouch": {
+     "stretchedOver2x": 0.0409,
+     "crushedUnder035": 0.0222
+    },
+    "aim": {
+     "stretchedOver2x": 0.036,
+     "crushedUnder035": 0.0038
+    },
+    "jump": {
+     "stretchedOver2x": 0.0731,
+     "crushedUnder035": 0.0133
+    },
+    "headturn": {
+     "stretchedOver2x": 0.0271,
+     "crushedUnder035": 0.0034
+    }
+   }
+  },
+  "skinned-trellis": {
+   "weights": "heat",
+   "unweightedByHeat": 6,
+   "vertices": 5978,
+   "poses": {
+    "bind": {
+     "stretchedOver2x": 0.0,
+     "crushedUnder035": 0.0
+    },
+    "idle": {
+     "stretchedOver2x": 0.0001,
+     "crushedUnder035": 0.007
+    },
+    "walk": {
+     "stretchedOver2x": 0.0005,
+     "crushedUnder035": 0.0109
+    },
+    "run": {
+     "stretchedOver2x": 0.0023,
+     "crushedUnder035": 0.0411
+    },
+    "crouch": {
+     "stretchedOver2x": 0.0014,
+     "crushedUnder035": 0.0175
+    },
+    "aim": {
+     "stretchedOver2x": 0.0001,
+     "crushedUnder035": 0.0153
+    },
+    "jump": {
+     "stretchedOver2x": 0.0014,
+     "crushedUnder035": 0.0059
+    },
+    "headturn": {
+     "stretchedOver2x": 0.0001,
+     "crushedUnder035": 0.0114
+    }
+   }
+  }
+ },
+ "tiles": [
+  [
+   "skinned",
+   "bind",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-bind-front.png"
+  ],
+  [
+   "skinned",
+   "bind",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-bind-side.png"
+  ],
+  [
+   "skinned-trellis",
+   "bind",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-bind-front.png"
+  ],
+  [
+   "skinned-trellis",
+   "bind",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-bind-side.png"
+  ],
+  [
+   "skinned",
+   "idle",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-idle-front.png"
+  ],
+  [
+   "skinned",
+   "idle",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-idle-side.png"
+  ],
+  [
+   "skinned-trellis",
+   "idle",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-idle-front.png"
+  ],
+  [
+   "skinned-trellis",
+   "idle",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-idle-side.png"
+  ],
+  [
+   "skinned",
+   "walk",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-walk-front.png"
+  ],
+  [
+   "skinned",
+   "walk",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-walk-side.png"
+  ],
+  [
+   "skinned-trellis",
+   "walk",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-walk-front.png"
+  ],
+  [
+   "skinned-trellis",
+   "walk",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-walk-side.png"
+  ],
+  [
+   "skinned",
+   "run",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-run-front.png"
+  ],
+  [
+   "skinned",
+   "run",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-run-side.png"
+  ],
+  [
+   "skinned-trellis",
+   "run",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-run-front.png"
+  ],
+  [
+   "skinned-trellis",
+   "run",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-run-side.png"
+  ],
+  [
+   "skinned",
+   "crouch",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-crouch-front.png"
+  ],
+  [
+   "skinned",
+   "crouch",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-crouch-side.png"
+  ],
+  [
+   "skinned-trellis",
+   "crouch",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-crouch-front.png"
+  ],
+  [
+   "skinned-trellis",
+   "crouch",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-crouch-side.png"
+  ],
+  [
+   "skinned",
+   "aim",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-aim-front.png"
+  ],
+  [
+   "skinned",
+   "aim",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-aim-side.png"
+  ],
+  [
+   "skinned-trellis",
+   "aim",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-aim-front.png"
+  ],
+  [
+   "skinned-trellis",
+   "aim",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-aim-side.png"
+  ],
+  [
+   "skinned",
+   "jump",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-jump-front.png"
+  ],
+  [
+   "skinned",
+   "jump",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-jump-side.png"
+  ],
+  [
+   "skinned-trellis",
+   "jump",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-jump-front.png"
+  ],
+  [
+   "skinned-trellis",
+   "jump",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-jump-side.png"
+  ],
+  [
+   "skinned",
+   "headturn",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-headturn-front.png"
+  ],
+  [
+   "skinned",
+   "headturn",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-headturn-side.png"
+  ],
+  [
+   "skinned-trellis",
+   "headturn",
+   "front",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-headturn-front.png"
+  ],
+  [
+   "skinned-trellis",
+   "headturn",
+   "side",
+   "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\compare\\poses\\skinned-trellis-headturn-side.png"
+  ]
+ ]
+}

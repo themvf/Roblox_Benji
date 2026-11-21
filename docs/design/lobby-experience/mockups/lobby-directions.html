@@ -1,0 +1,177 @@
+<title>Lobby Directions</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;700;900&family=Oswald:wght@500;700&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: a comparison sheet. One section per screen; in each, direction A then direction B,
+   each drawn as a desktop frame beside a phone frame. The frames are the content; the page
+   around them stays quiet. */
+:root{
+  --bg:#f3f4f7; --card:#ffffff; --fg:#161922; --muted:#5b6274; --line:#d9dce5; --accent:#8a5a00; --chip:#e9ebf1;
+  --text:"Inter",system-ui,sans-serif; --head:"Space Grotesk","Inter",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101218; --card:#181b24; --fg:#eef0f6; --muted:#a0a6b8; --line:#2b2f3c; --accent:#ffc846; --chip:#232733; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101218; --card:#181b24; --fg:#eef0f6; --muted:#a0a6b8; --line:#2b2f3c; --accent:#ffc846; --chip:#232733; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--text);font-size:15px;line-height:1.55;
+  padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--head);margin:0;text-wrap:balance;line-height:1.15}
+h1{font-size:clamp(26px,4vw,38px)} h2{font-size:24px} h3{font-size:15px;letter-spacing:.04em;text-transform:uppercase}
+p{margin:0;max-width:68ch} .muted{color:var(--muted)}
+.intro{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.pick{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.pick b{color:var(--accent)} .pick ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.jump{display:flex;flex-wrap:wrap;gap:8px}
+.jump a{background:var(--chip);color:var(--fg);text-decoration:none;padding:6px 12px;border-radius:999px;font-weight:600;font-size:13px}
+.jump a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section{display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:22px}
+.dir{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:820px){.dir{grid-template-columns:minmax(0,1fr)}}
+.dirhead{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+.dirhead span{color:var(--muted);font-size:13px}
+figure{margin:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+figcaption{font-size:12px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);border-left:3px solid var(--line);padding-left:12px}
+
+/* ===== the game frames. Everything inside is sized in em of one design unit, so a frame is
+   the same picture at any width. Colours inside a frame are the game's own and do not follow
+   the page theme: a game screen is dark whatever the viewer's setting. ===== */
+.frame{container-type:inline-size;width:100%;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#000}
+.frame.dk{aspect-ratio:16/9} .frame.ph{aspect-ratio:812/375}
+.scr{position:relative;width:100%;height:100%;overflow:hidden;color:var(--g-text);font-family:var(--g-font);font-weight:700;line-height:1.2}
+.dk .scr{font-size:calc(100cqw/80)} .ph .scr{font-size:calc(100cqw/57)}
+.dA{--g-bg:#0c0e13;--g-panel:#14161c;--g-raise:#1c1e26;--g-high:#2c2f3a;--g-sel:#3e4252;--g-text:#f5f5fa;--g-muted:#a0a5b4;
+  --g-acc:#ffc846;--g-ink:#14161c;--g-good:#5ae682;--g-fly:#5ac8ff;--g-energy:#ff7828;--g-danger:#ff5a32;--g-myth:#e650ff;
+  --g-font:"Montserrat",system-ui,sans-serif;--g-disp:"Montserrat",system-ui,sans-serif;--g-r:.55em;--g-skew:0deg}
+.dB{--g-bg:#0a0914;--g-panel:#12101f;--g-raise:#1a1730;--g-high:#272345;--g-sel:#3a3566;--g-text:#f4f3ff;--g-muted:#a9a5c9;
+  --g-acc:#5ac8ff;--g-ink:#07111a;--g-good:#5ae682;--g-fly:#ffc846;--g-energy:#ff7828;--g-danger:#ff5a32;--g-myth:#e650ff;
+  --g-font:"Montserrat",system-ui,sans-serif;--g-disp:"Oswald","Montserrat",system-ui,sans-serif;--g-r:.15em;--g-skew:-9deg}
+.dA .scr{background:radial-gradient(ellipse 34% 52% at 50% 46%,#3b2f12 0,#1a1710 42%,transparent 70%),linear-gradient(#11141b,#0c0e13 60%,#1b1d24 60%,#101217)}
+.dB .scr{background:radial-gradient(ellipse 46% 70% at 36% 58%,#3a1d6e 0,#1b1238 45%,transparent 72%),radial-gradient(ellipse 40% 40% at 85% 10%,#0e3350 0,transparent 70%),#0a0914}
+.scr *{box-sizing:border-box}
+.abs{position:absolute} .row{display:flex;gap:.6em;align-items:center} .col{display:flex;flex-direction:column;gap:.6em} .grow{flex:1;min-width:0;min-height:0}
+.d{font-family:var(--g-disp);font-weight:900;font-size:1.9em;letter-spacing:.01em;text-transform:uppercase}
+.t{font-family:var(--g-disp);font-weight:900;font-size:1.35em;text-transform:uppercase}
+.l{font-size:.875em;letter-spacing:.03em;text-transform:uppercase} .m{color:var(--g-muted);font-weight:500} .acc{color:var(--g-acc)}
+.ph .d{font-size:1.3em} .ph .t{font-size:1.08em} .ph .l{font-size:1em}
+.dB .d,.dB .t{font-weight:700;font-style:italic;letter-spacing:.02em}
+.pn{background:color-mix(in srgb,var(--g-panel) 90%,transparent);border-radius:var(--g-r);border:.07em solid var(--g-sel)}
+.dB .pn{background:color-mix(in srgb,var(--g-panel) 78%,transparent);border-color:color-mix(in srgb,var(--g-acc) 30%,var(--g-sel))}
+.bt{display:flex;align-items:center;justify-content:center;gap:.4em;min-height:2.75em;padding:0 1em;border-radius:var(--g-r);background:var(--g-high);white-space:nowrap;text-transform:uppercase;position:relative;transform:skewX(var(--g-skew))}
+.ph .bt{min-height:3.1em} .bt.pri{background:var(--g-acc);color:var(--g-ink);font-weight:900} .bt.on{background:var(--g-sel);box-shadow:inset 0 -.25em 0 var(--g-acc)}
+.bt.off{background:transparent;border:.07em solid var(--g-sel);color:var(--g-muted)} .bt.big{min-height:4.4em;font-size:1.5em;padding:0 2em}
+.dot{position:absolute;top:-.4em;right:-.4em;min-width:1.5em;height:1.5em;border-radius:1em;background:var(--g-danger);color:var(--g-ink);font-size:.8em;display:grid;place-items:center;transform:skewX(calc(var(--g-skew)*-1))}
+.bdg{display:inline-flex;align-items:center;height:1.6em;padding:0 .5em;border-radius:.3em;background:var(--g-bg);font-size:.8em;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
+.ph .bdg{font-size:.9em} .bdg.fill{background:var(--g-acc);color:var(--g-ink)}
+.bar{height:.35em;border-radius:1em;background:var(--g-high);overflow:hidden} .bar i{display:block;height:100%;background:var(--g-acc)}
+.ghost{border:.1em dashed color-mix(in srgb,var(--g-text) 35%,transparent);color:color-mix(in srgb,var(--g-text) 45%,transparent);display:grid;place-items:center;font-size:.7em;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.ph .ghost{font-size:.75em}
+.art{background:linear-gradient(135deg,color-mix(in srgb,var(--c,var(--g-acc)) 55%,var(--g-bg)),var(--g-raise));border-radius:var(--g-r);position:relative;overflow:hidden;min-height:0}
+.art svg{position:absolute;inset:8% 12% 0;width:76%;height:92%;fill:color-mix(in srgb,var(--g-bg) 70%,transparent)}
+.art small{position:absolute;left:.5em;bottom:.4em;font-size:.6em;font-weight:500;opacity:.7;text-transform:uppercase;letter-spacing:.06em}
+.card{background:var(--g-high);border-radius:var(--g-r);padding:.6em;display:flex;flex-direction:column;gap:.35em;min-width:0;border:.07em solid var(--g-sel)}
+.card.sel{border:.2em solid var(--g-acc)} .card.view{background:var(--g-sel)} .card .art{flex:1;min-height:3em}
+.cut{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grid{display:grid;gap:.6em;min-height:0} .scroll{overflow:hidden}
+.modal{inset:13% 4% 5%;padding:1em;display:flex;flex-direction:column;gap:.7em} .ph .modal{inset:20% 2.5% 3%;padding:.7em;gap:.5em}
+.page{inset:11% 2% 4% 15%;display:flex;flex-direction:column;gap:.7em} .ph .page{inset:17% 2% 21% 2%;gap:.45em}
+.scrim{inset:0;background:color-mix(in srgb,var(--g-bg) 55%,transparent)}
+.rail{left:1.5%;top:11%;bottom:4%;width:12%;display:flex;flex-direction:column;gap:.5em;padding:.6em}
+.ph .rail{left:2%;right:30%;top:auto;bottom:3%;width:auto;height:15%;flex-direction:row;padding:.3em;gap:.3em} .ph .rail .bt{flex:1;padding:0 .3em;min-height:0}
+.rail .bt{justify-content:flex-start} .ph .rail .bt{justify-content:center}
+</style>
+
+<div class="wrap">
+  <header class="col" style="display:flex;flex-direction:column;gap:12px">
+    <h1>Two directions for the lobby</h1>
+    <p>Five screens, each drawn two ways, at desktop and phone size. These are concept mockups made in a browser. They are not screenshots of the game, the character and item art are grey placeholders, and every price is an example.</p>
+    <div class="intro">
+      <div class="pick"><h3>Direction A · <b>Walk-in hub</b></h3>
+        <p>You spawn in the lobby and can walk. The menu is a thin layer over the world. This is what the lobby does today and what the new shell code builds.</p>
+        <ul><li>Nav sits clear of the thumbstick, jump button and hotbar.</li><li>Screens open as panels over the world.</li><li>Look: dark slate, gold accent, the current game font.</li></ul></div>
+      <div class="pick"><h3>Direction B · <b>Character stage</b></h3>
+        <p>You arrive at a menu with your character in the middle. Walking the lobby is a button, not the default.</p>
+        <ul><li>A large Play button in the corner and a fixed rail of destinations.</li><li>Screens are full pages beside the rail.</li><li>Look: deep violet, cyan accent, a condensed italic headline font.</li></ul></div>
+      <div class="pick"><h3>What to decide</h3>
+        <p>Two separate choices. You can mix them.</p>
+        <ul><li><b>Structure:</b> walk-in hub or character stage.</li><li><b>Look:</b> slate and gold, or violet and cyan.</li></ul>
+        <p class="muted">Dashed outlines mark what Roblox draws itself: the thumbstick, jump and fire buttons, and the hotbar.</p></div>
+    </div>
+    <nav class="jump" aria-label="Screens"><a href="#home">Home</a><a href="#play">Play</a><a href="#kits">Kits</a><a href="#shop">Shop</a><a href="#pass">Pass</a></nav>
+  </header>
+  <main id="app" class="wrap"></main>
+  <p class="note">Both fonts shown are ones Roblox ships, so either look can be built as drawn. Layout in the real game is set by the shared UI modules, so spacing will differ slightly from these drawings.</p>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="fig" viewBox="0 0 100 130" preserveAspectRatio="xMidYMax meet"><circle cx="50" cy="20" r="14"/><path d="M26 44h48l10 46-12 4-6-26v62H34V68l-6 26-12-4z"/><rect x="60" y="62" width="34" height="9" rx="2"/></symbol>
+  <symbol id="gun" viewBox="0 0 100 40" preserveAspectRatio="xMidYMid meet"><path d="M4 12h70v-5h8v5h14v8H60l-6 14H42l4-14H22l-4 12H8l2-12H4z"/></symbol>
+</defs></svg>
+
+<script>
+const KITS=[["NEUTRON","Defense","STARTER","#ff7828",1],["NEUTRINO","Infiltration","STARTER","#5ac8ff"],["GRAVITON","Control","FREE THIS ROTATION","#ffc846"],["ACCRETOR","Sustain","LOCKED","#5ae682"],["PULSAR","Skirmish","COMING SOON","#a0a5b4"],["MAGNETAR","Disruption","LOCKED","#e650ff"]];
+const MODES=[["CONVERGENCE","Hold the zones as they collapse","4 / 5","3 / 5"],["TEAM DEATHMATCH 5V5","First team to the kill limit","5 / 5","2 / 5"],["DUEL 1V1","One life per round","1 / 1","0 / 1"],["DUEL 2V2","Two lives per round","0 / 2","1 / 2"]];
+const SHOP=[["VOID LATTICE","Rifle skin","LEGENDARY","#ff9f3c","599"],["CRYO CIRCUIT","Pistol skin","RARE","#5096ff","299"],["EVENT HORIZON","Celebration","MYTHICAL","#e650ff","799"],["SLAG LINE","Melee skin","RARE","#5096ff","299"]];
+const REW=["Skin Ticket","500 Credits","Rare Skin","Celebration","Banner Trim","Skin Ticket","1,000 Credits","Legendary Skin"];
+const art=(c,sym="fig",tag="placeholder")=>`<div class="art" style="--c:${c}"><svg><use href="#${sym}"/></svg><small>${tag}</small></div>`;
+const bt=(t,cls="",dot="")=>`<div class="bt ${cls}">${t}${dot?`<span class="dot">${dot}</span>`:""}</div>`;
+const wallet=(ph)=>`<div class="pn row" style="padding:.45em .8em;gap:.9em"><span>${ph?"LV 12":"LEVEL 12"}</span><span class="acc">12,450 CREDITS</span>${ph?"":"<span>3 TICKETS</span>"}</div>`;
+const queue=()=>`<div class="pn row" style="padding:.3em .3em .3em .8em;border-color:var(--g-acc);border-width:.14em"><span class="cut">IN QUEUE · TEAM DEATHMATCH 5V5 · BLUE · 0:42</span>${bt("LEAVE")}</div>`;
+const zones=(ph)=>ph?`<div class="abs ghost" style="left:4%;bottom:6%;width:17%;aspect-ratio:1;border-radius:50%">thumbstick</div><div class="abs ghost" style="right:4%;bottom:6%;width:12%;aspect-ratio:1;border-radius:50%">jump</div><div class="abs ghost" style="right:17%;bottom:20%;width:9%;aspect-ratio:1;border-radius:50%">fire</div><div class="abs ghost" style="left:38%;bottom:3%;width:24%;height:12%">hotbar</div>`
+  :`<div class="abs ghost" style="left:38%;bottom:2.5%;width:24%;height:8%">hotbar</div>`;
+const gate=()=>`<div class="abs" style="left:39%;top:20%;width:22%;aspect-ratio:1;border-radius:50%;border:.6em solid #ffc846;box-shadow:0 0 3em #ffc84688,inset 0 0 3em #ffc84655;background:radial-gradient(#000 35%,#2a1d05)"></div><div class="abs l" style="left:39%;width:22%;top:14%;text-align:center;color:#ffc846">PLAY GATE</div>`;
+
+/* ---------- Direction A: walk-in hub ---------- */
+function shellA(ph){
+  const nav=ph?[bt("PLAY","pri"),bt("LOADOUT"),bt("SHOP","",2),bt("PASS","",1),bt("MORE","",9)]:[bt("LOADOUT"),bt("SHOP","",2),bt("PLAY","pri"),bt("PASS","",1),bt("CUSTOMIZE"),bt("PROFILE","","9+")];
+  return ph?`<div class="abs" style="left:2%;top:11%">${wallet(1)}</div><div class="abs row" style="right:2%;top:11%;gap:.4em">${nav.join("")}</div><div class="abs" style="right:2%;top:27%;max-width:70%">${queue()}</div>`
+    :`<div class="abs" style="right:1.2%;top:6%">${wallet()}</div><div class="abs" style="left:28%;right:28%;top:6%;display:flex;justify-content:center">${queue()}</div><div class="abs row" style="left:0;right:0;bottom:15%;justify-content:center">${nav.join("")}</div>`;
+}
+const homeA=ph=>gate()+zones(ph)+shellA(ph)+`<div class="abs ghost" style="left:${ph?44:46}%;bottom:${ph?22:26}%;width:${ph?12:8}%;height:${ph?30:26}%;border-radius:.4em">you</div>`;
+const modalA=(ph,title,body,tabs="")=>gate()+`<div class="abs scrim"></div><div class="abs" style="left:0;right:0;top:${ph?5:4}%;display:flex;justify-content:center">${queue()}</div>
+  <div class="abs pn modal"><div class="row"><span class="d acc grow cut">${title}</span>${tabs}${bt("X")}</div>${body}</div>`;
+
+/* ---------- Direction B: character stage ---------- */
+function shellB(ph,on){
+  const items=[["HOME"],["LOADOUT"],["KITS"],["SHOP",2],["PASS",1],["PROFILE","9+"]].filter((x,i)=>!ph||i<5);
+  return `<div class="abs row" style="left:2%;top:3.5%"><span class="d">ENGAGE</span></div><div class="abs row" style="right:2%;top:3.5%">${queue()}${wallet(ph)}</div>
+   <div class="abs pn rail">${items.map(([t,d])=>bt(t,t===on?"on":"off",d||"")).join("")}${ph?"":`<div class="grow"></div>${bt("WALK THE LOBBY","off")}`}</div>`;
+}
+const homeB=ph=>shellB(ph,"HOME")+`<div class="abs" style="left:${ph?26:24}%;top:${ph?16:12}%;width:${ph?24:26}%;bottom:${ph?20:6}%"><svg style="width:100%;height:100%;fill:#00000088;filter:drop-shadow(0 0 1.2em #5ac8ff66)"><use href="#fig"/></svg></div>
+  <div class="abs l m" style="left:${ph?26:24}%;width:${ph?24:26}%;top:${ph?17:13}%;text-align:center">your character · placeholder</div>
+  <div class="abs col" style="right:2%;${ph?"top:19%":"top:16%"};width:${ph?34:26}%"><div class="pn col" style="padding:.7em"><span class="l m">Equipped</span><div class="row"><span class="grow cut">NEUTRON</span><span class="bdg">STARTER</span></div><div class="row"><span class="grow cut">VECTOR RIFLE</span><span class="bdg">OWNED</span></div>${ph?"":`<div class="row"><span class="grow cut">SIDEARM</span><span class="bdg">OWNED</span></div>`}</div>
+   ${ph?"":`<div class="pn col" style="padding:.7em"><span class="l m">Season 1 · tier 4</span><div class="bar"><i style="width:40%"></i></div><span class="l acc">1 reward to claim</span></div>`}</div>
+  <div class="abs col" style="right:2%;bottom:${ph?3:5}%;align-items:flex-end"><div class="bt off">MODE: TEAM DEATHMATCH 5V5 ▾</div><div class="bt pri big">PLAY</div></div>`;
+const pageB=(ph,on,title,body,tabs="")=>shellB(ph,on)+`<div class="abs page"><div class="row"><span class="d grow cut">${title}</span>${tabs}</div>${body}</div>`;
+
+/* ---------- screen bodies, shared by both directions ---------- */
+const playBody=ph=>`<div class="grid grow" style="grid-template-columns:repeat(${ph?2:2},1fr);grid-auto-rows:1fr">${MODES.map(([n,p,r,b],i)=>`<div class="card ${i==1?"sel":""}"><div class="row"><span class="t grow cut">${n}</span>${i==1?`<span class="bdg fill">QUEUED</span>`:""}</div>${ph?"":`<span class="m">${p}</span><div class="grow"></div>`}
+  <div class="row">${bt(`RED ${r}`,i==1?"off":"")}${bt(`BLUE ${b}`,i==1?"pri":"")}</div></div>`).join("")}</div>
+  <div class="row"><span class="m grow cut">Your setup: NEUTRON · VECTOR RIFLE · SIDEARM</span>${bt("PRACTICE RANGE","off")}${bt("EDIT LOADOUT")}</div>`;
+const kitCard=([n,r,a,c,sel],i)=>`<div class="card ${sel?"sel":""} ${i==3?"view":""}">${art(c)}<span class="cut" style="color:${c}">${n}</span><div class="row" style="gap:.3em"><span class="bdg">${a}</span>${sel?`<span class="bdg fill">EQUIPPED</span>`:""}</div></div>`;
+const kitsBody=ph=>`<div class="grid grow" style="grid-template-columns:${ph?"1.1fr 1fr":"1.5fr 1fr"}"><div class="grid" style="grid-template-columns:repeat(${ph?2:3},1fr);grid-auto-rows:1fr">${KITS.slice(0,ph?4:6).map(kitCard).join("")}</div>
+  <div class="col" style="min-height:0">${ph?"":art("#5ae682","fig","kit preview · placeholder").replace('class="art"','class="art grow"')}<span class="t" style="color:#5ae682">ACCRETOR</span><span class="l m">Sustain · locked</span><span class="m" style="font-size:.95em">Grow stronger the longer you stay in the fight.</span>${ph?"":`<span class="l acc">Passive · Accretion</span><span class="m" style="font-size:.9em">Each elimination shortens your tactical cooldown.</span>`}<div class="grow"></div><span class="l m">Kits are sidegrades, not upgrades.</span>${bt("BUY · 4,500 CREDITS","pri")}</div></div>`;
+const shopBody=ph=>`<div class="grid grow" style="grid-template-columns:${ph?"1fr 1.6fr":"1fr 1.7fr"}"><div class="card sel">${art("#ff7828","fig","bundle art · placeholder")}<span class="l acc">Featured · ends in 2D 04H</span><span class="t">FORGE UNION BUNDLE</span>${ph?"":`<span class="m">Three weapon wraps, a celebration and a banner trim. Cosmetic only.</span>`}${bt("BUY · 799 ROBUX","pri")}</div>
+  <div class="col" style="min-height:0"><div class="row"><span class="l grow">Today's rotation</span><span class="l m">new items in 7H 12M</span></div><div class="grid grow" style="grid-template-columns:repeat(${ph?2:4},1fr);grid-auto-rows:1fr">${SHOP.slice(0,ph?2:4).map(([n,k,t,c,p])=>`<div class="card">${art(c,"gun")}<span class="cut">${n}</span><div class="row" style="gap:.3em"><span class="bdg" style="color:${c}">${t}</span></div><span class="l m cut">${k}</span><div class="bt">${p} ROBUX</div></div>`).join("")}</div>
+  ${ph?"":`<div class="row"><div class="card grow"><div class="row"><span class="grow">STARTER PACK · one time</span><div class="bt">79 ROBUX</div></div></div><div class="card grow"><div class="row"><span class="grow">VOID LATTICE</span><span class="bdg">OWNED</span></div></div></div>`}</div></div>`;
+const passBody=ph=>{const n=ph?5:8;return `<div class="row"><span class="l m grow">Free and premium tracks · ends in 23D 00H</span><span>TIER 4</span><div class="bar" style="width:30%"><i style="width:40%"></i></div></div>
+  <div class="grid grow" style="grid-template-columns:${ph?4.5:5}em repeat(${n},1fr);grid-template-rows:auto 1fr 1fr"><span></span>${REW.slice(0,n).map((_,i)=>`<span class="l" style="text-align:center;color:${i<4?"var(--g-acc)":"var(--g-muted)"};box-shadow:${i<4?"inset 0 -.2em 0 var(--g-acc)":"none"}">TIER ${i+1}</span>`).join("")}
+  <span class="l m" style="align-self:center">FREE</span>${REW.slice(0,n).map((r,i)=>i%3==2?`<div class="card" style="opacity:.35"></div>`:`<div class="card ${i==3?"sel":""}" style="justify-content:space-between"><span style="font-size:.85em">${r}</span><span class="bdg ${i==3?"fill":""}" style="color:${i<3?"var(--g-good)":""}">${i<3?"CLAIMED":i==3?"CLAIM":"LOCKED"}</span></div>`).join("")}
+  <span class="l m" style="align-self:center">PREMIUM</span>${REW.slice(0,n).map((r,i)=>`<div class="card" style="justify-content:space-between"><span style="font-size:.85em">${REW[(i+3)%8]}</span><span class="bdg" style="color:var(--g-myth)">PREMIUM</span></div>`).join("")}</div>
+  <div class="row"><span class="m grow cut">No weapon or kit is exclusive to the paid track.</span>${bt("CLAIM ALL (1)")}${bt("GET PREMIUM · 499 ROBUX","pri")}</div>`};
+const tabs=on=>`<div class="row" style="gap:.4em">${["KITS","PACKS","PASSES"].map(t=>bt(t,t===on?"on":"off")).join("")}</div>`;
+
+const SCREENS=[
+ ["home","Home","What a player sees on arrival, already queued, with unclaimed items.",homeA,homeB],
+ ["play","Play","Mode and team first. The player's current setup is a single line underneath.",ph=>modalA(ph,"PLAY",playBody(ph)),ph=>pageB(ph,"HOME","PLAY",playBody(ph))],
+ ["kits","Kits","Pressing a card only shows it. One primary action, and buying asks for confirmation.",ph=>modalA(ph,"KITS",kitsBody(ph),ph?"":tabs("KITS")),ph=>pageB(ph,"KITS","KITS",kitsBody(ph),ph?"":tabs("KITS"))],
+ ["shop","Shop","A featured bundle, a daily rotation with its timer, and owned state on the card.",ph=>modalA(ph,"SHOP",shopBody(ph)),ph=>pageB(ph,"SHOP","SHOP",shopBody(ph))],
+ ["pass","Pass","Free and premium rows, the current tier marked by more than colour.",ph=>modalA(ph,"SEASON 1: FIRST COLLAPSE",passBody(ph)),ph=>pageB(ph,"PASS","SEASON 1: FIRST COLLAPSE",passBody(ph))],
+];
+const frame=(dir,ph,html,cap)=>`<figure><div class="frame ${ph?"ph":"dk"} d${dir}"><div class="scr">${html}</div></div><figcaption>${cap}</figcaption></figure>`;
+document.getElementById("app").innerHTML=SCREENS.map(([id,name,why,a,b])=>`<section id="${id}"><h2>${name}</h2><p class="muted">${why}</p>
+  <div class="dir"><div class="dirhead"><h3>A · Walk-in hub</h3><span>slate and gold</span></div>${frame("A",0,a(0),"Desktop, 1920 × 1080")}${frame("A",1,a(1),"Phone in landscape, 812 × 375")}</div>
+  <div class="dir"><div class="dirhead"><h3>B · Character stage</h3><span>violet and cyan</span></div>${frame("B",0,b(0),"Desktop, 1920 × 1080")}${frame("B",1,b(1),"Phone in landscape, 812 × 375")}</div></section>`).join("");
+</script>

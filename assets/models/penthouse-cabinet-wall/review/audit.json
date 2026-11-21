@@ -1,0 +1,134 @@
+{
+  "tool": "tools/asset_generate.py audit",
+  "auditedOn": "2026-11-16 20:07",
+  "source": "assets/models/penthouse-cabinet-wall/exports/PenthouseCabinetWall.glb",
+  "sourceSha256": "419c3c74275827a4b424ed1060f0d016c0ab53a56ff67d0199535ba11abe3838",
+  "brightenGamma": 0.685,
+  "flagPercent": 0.15,
+  "holesWarnPercent": 1.0,
+  "holesFailPercent": 1.5,
+  "worstBackFacePercent": 0.32,
+  "worstPatchPercent": 0.01,
+  "flagged": [],
+  "views": [
+    {
+      "name": "front",
+      "kind": "overview",
+      "backFacePercent": 0.09,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back",
+      "kind": "overview",
+      "backFacePercent": 0.07,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "left",
+      "kind": "overview",
+      "backFacePercent": 0.13,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "right",
+      "kind": "overview",
+      "backFacePercent": 0.11,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "top",
+      "kind": "overview",
+      "backFacePercent": 0.26,
+      "backFacePatchPercent": 0.01,
+      "flagged": false
+    },
+    {
+      "name": "bottom",
+      "kind": "overview",
+      "backFacePercent": 0.32,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "front-left",
+      "kind": "overview",
+      "backFacePercent": 0.05,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "front-right",
+      "kind": "overview",
+      "backFacePercent": 0.09,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back-left",
+      "kind": "overview",
+      "backFacePercent": 0.06,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back-right",
+      "kind": "overview",
+      "backFacePercent": 0.06,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-1a",
+      "kind": "closeup",
+      "backFacePercent": 0.05,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-1b",
+      "kind": "closeup",
+      "backFacePercent": 0.04,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-2a",
+      "kind": "closeup",
+      "backFacePercent": 0.08,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-2b",
+      "kind": "closeup",
+      "backFacePercent": 0.06,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-3a",
+      "kind": "closeup",
+      "backFacePercent": 0.08,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-3b",
+      "kind": "closeup",
+      "backFacePercent": 0.05,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    }
+  ],
+  "sheets": [
+    "assets/models/penthouse-cabinet-wall/review/audit.png",
+    "assets/models/penthouse-cabinet-wall/review/audit_closeups.png"
+  ],
+  "panels": "assets/models/penthouse-cabinet-wall/review/audit",
+  "limitations": "Blender renders, not Roblox. Lighting, materials and transparency in Studio are not checked.",
+  "passed": true
+}

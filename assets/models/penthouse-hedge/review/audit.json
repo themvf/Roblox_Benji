@@ -1,0 +1,151 @@
+{
+  "tool": "tools/asset_generate.py audit",
+  "auditedOn": "2026-11-16 19:53",
+  "source": "assets/models/penthouse-hedge/exports/PenthouseHedge.glb",
+  "sourceSha256": "e4d890c3fcb2b628aa030c0d46e96f7486ac8c8d03e8038fff367e47fc18278a",
+  "brightenGamma": 0.757,
+  "flagPercent": 0.15,
+  "holesWarnPercent": 1.0,
+  "holesFailPercent": 1.5,
+  "worstBackFacePercent": 23.27,
+  "worstPatchPercent": 1.41,
+  "flagged": [
+    "front",
+    "back",
+    "left",
+    "right",
+    "top",
+    "bottom",
+    "front-left",
+    "front-right",
+    "back-left",
+    "back-right",
+    "section-1a",
+    "section-1b",
+    "section-2a",
+    "section-2b",
+    "section-3a",
+    "section-3b"
+  ],
+  "views": [
+    {
+      "name": "front",
+      "kind": "overview",
+      "backFacePercent": 17.92,
+      "backFacePatchPercent": 0.48,
+      "flagged": true
+    },
+    {
+      "name": "back",
+      "kind": "overview",
+      "backFacePercent": 17.88,
+      "backFacePatchPercent": 0.58,
+      "flagged": true
+    },
+    {
+      "name": "left",
+      "kind": "overview",
+      "backFacePercent": 19.23,
+      "backFacePatchPercent": 0.57,
+      "flagged": true
+    },
+    {
+      "name": "right",
+      "kind": "overview",
+      "backFacePercent": 18.3,
+      "backFacePatchPercent": 0.6,
+      "flagged": true
+    },
+    {
+      "name": "top",
+      "kind": "overview",
+      "backFacePercent": 23.27,
+      "backFacePatchPercent": 1.41,
+      "flagged": true
+    },
+    {
+      "name": "bottom",
+      "kind": "overview",
+      "backFacePercent": 7.68,
+      "backFacePatchPercent": 0.35,
+      "flagged": true
+    },
+    {
+      "name": "front-left",
+      "kind": "overview",
+      "backFacePercent": 17.58,
+      "backFacePatchPercent": 0.22,
+      "flagged": true
+    },
+    {
+      "name": "front-right",
+      "kind": "overview",
+      "backFacePercent": 16.84,
+      "backFacePatchPercent": 0.21,
+      "flagged": true
+    },
+    {
+      "name": "back-left",
+      "kind": "overview",
+      "backFacePercent": 16.42,
+      "backFacePatchPercent": 0.17,
+      "flagged": true
+    },
+    {
+      "name": "back-right",
+      "kind": "overview",
+      "backFacePercent": 16.54,
+      "backFacePatchPercent": 0.19,
+      "flagged": true
+    },
+    {
+      "name": "section-1a",
+      "kind": "closeup",
+      "backFacePercent": 17.57,
+      "backFacePatchPercent": 0.31,
+      "flagged": true
+    },
+    {
+      "name": "section-1b",
+      "kind": "closeup",
+      "backFacePercent": 16.99,
+      "backFacePatchPercent": 0.28,
+      "flagged": true
+    },
+    {
+      "name": "section-2a",
+      "kind": "closeup",
+      "backFacePercent": 17.72,
+      "backFacePatchPercent": 0.3,
+      "flagged": true
+    },
+    {
+      "name": "section-2b",
+      "kind": "closeup",
+      "backFacePercent": 17.15,
+      "backFacePatchPercent": 0.28,
+      "flagged": true
+    },
+    {
+      "name": "section-3a",
+      "kind": "closeup",
+      "backFacePercent": 17.54,
+      "backFacePatchPercent": 0.3,
+      "flagged": true
+    },
+    {
+      "name": "section-3b",
+      "kind": "closeup",
+      "backFacePercent": 16.96,
+      "backFacePatchPercent": 0.31,
+      "flagged": true
+    }
+  ],
+  "sheets": [
+    "assets/models/penthouse-hedge/review/audit.png",
+    "assets/models/penthouse-hedge/review/audit_closeups.png"
+  ],
+  "panels": "assets/models/penthouse-hedge/review/audit",
+  "limitations": "Blender renders, not Roblox. Lighting, materials and transparency in Studio are not checked.",
+  "passed": false
+}

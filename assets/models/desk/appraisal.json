@@ -1,0 +1,26 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-09-27",
+  "source": "Desk_Authored.glb",
+  "sourceSha256": "e0f77e2eeed447c780b3b2e9bcdeff47f1f43241e57b8f2138f754bd03a82f85",
+  "measurements": {
+    "triangles": 5828,
+    "size": [
+      14.0,
+      3.882,
+      2.999
+    ],
+    "reliefRatio": 0.2142,
+    "openEdges": 4176,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle."
+  ],
+  "decision": "User-approved look (2026-09-27): 14-stud-long, 3-stud-high futuristic office desk for in-map decoration, seen from any angle at close range. Clean procedural rebuild of the Midjourney reference with recreated surface detail; the 289k-triangle TRELLIS GLB failed single-mesh decimation review. One mesh, one shared 1024 PNG material set. Default Studio setup is anchored and non-colliding; solid-prop collision is an open choice. Studio import and gameplay appearance are unverified."
+}

@@ -19,7 +19,11 @@ What it measures and why each one decides something:
                    is a terrain scan rather than a modelled form.
   uv / texture     a top-down bake smears when the asset is seen from the side.
 
-The verdict is advice, not a gate. Read the numbers.
+  views            --record also writes views.png next to the record: front, side and
+                   top, textured. Numbers did not show the blue tube's cables, bottle and
+                   opaque "glass"; one look at these does. check_assets requires the file.
+
+The verdict is advice, not a gate. Read the numbers, then LOOK at views.png.
 """
 
 import argparse
@@ -50,6 +54,56 @@ def load(path):
     else:
         raise SystemExit("unsupported source format: " + ext)
     return [o for o in bpy.context.scene.objects if o.type == "MESH"]
+
+
+def render_views(path, size=480):
+    """Front, side and top orthographic renders of everything in the scene, side by side."""
+    import numpy as np
+
+    path = os.path.abspath(path)  # Blender resolves relative render paths against its own directory
+    sc = bpy.context.scene
+    objs = [o for o in sc.objects if o.type == "MESH"]
+    lo = mathutils.Vector((min((o.matrix_world @ mathutils.Vector(c))[i] for o in objs for c in o.bound_box) for i in range(3)))
+    hi = mathutils.Vector((max((o.matrix_world @ mathutils.Vector(c))[i] for o in objs for c in o.bound_box) for i in range(3)))
+    mid, ext = (lo + hi) / 2, max(hi - lo) * 1.15
+    sc.render.engine = "CYCLES"
+    sc.cycles.device = "CPU"
+    sc.cycles.samples = 12
+    sc.render.resolution_x = sc.render.resolution_y = size
+    world = bpy.data.worlds.new("views")
+    sc.world = world
+    world.use_nodes = True
+    world.node_tree.nodes["Background"].inputs[0].default_value = (0.72, 0.72, 0.76, 1)
+    sun = bpy.data.objects.new("sun", bpy.data.lights.new("sun", "SUN"))
+    sc.collection.objects.link(sun)
+    sun.rotation_euler = (0.8, 0.2, 0.6)
+    sun.data.energy = 3
+    panels = []
+    for name, off, rot in (
+        ("front", (0, -1, 0), (math.radians(90), 0, 0)),
+        ("side", (1, 0, 0), (math.radians(90), 0, math.radians(90))),
+        ("top", (0, 0, 1), (0, 0, 0)),
+    ):
+        cam = bpy.data.objects.new(name, bpy.data.cameras.new(name))
+        cam.data.type = "ORTHO"
+        cam.data.ortho_scale = ext
+        cam.data.clip_end = ext * 10
+        sc.collection.objects.link(cam)
+        cam.location = mid + mathutils.Vector(off) * ext * 3
+        cam.rotation_euler = rot
+        sc.camera = cam
+        tmp = path + "." + name + ".png"
+        sc.render.filepath = tmp
+        bpy.ops.render.render(write_still=True)
+        img = bpy.data.images.load(tmp)
+        panels.append(np.array(img.pixels[:], dtype=np.float32).reshape(size, size, 4))
+        bpy.data.images.remove(img)
+        os.remove(tmp)
+    sheet = bpy.data.images.new("views", size * 3, size, alpha=False)
+    sheet.pixels = np.concatenate(panels, axis=1).reshape(-1).tolist()
+    sheet.filepath_raw = path
+    sheet.file_format = "PNG"
+    sheet.save()
 
 
 def main():
@@ -126,7 +180,6 @@ def main():
     print("overhangs  %.1f%% of faces point downward%s"
           % (overhang_ratio * 100, "  <-- one-sided: a height field, i.e. a top-down scan" if one_sided else ""))
     print("uv layers  %s" % (", ".join(uvs) if uvs else "NONE -- cannot be textured"))
-
     print("")
     verdicts = []
     if one_sided and open_edges:
@@ -159,6 +212,9 @@ def main():
     if not verdicts:
         verdicts.append("No blocking problems found. Check it against the intent anyway:")
         verdicts.append("  a horizon needs silhouette, a prop needs to read from every angle.")
+    if args.record:
+        verdicts.append("LOOK at views.png before building: generated meshes copy the reference's floor,")
+        verdicts.append("  cables and loose props, and glass comes out as an opaque slab. Numbers miss both.")
     print("verdict")
     for line in verdicts:
         print("  " + line)
@@ -187,6 +243,7 @@ def main():
                 "oneSided": bool(one_sided),
                 "uvLayers": uvs,
             },
+            "views": "views.png",
             "verdict": verdicts,
             "decision": "",
         }
@@ -201,6 +258,7 @@ def main():
         if existing.get("decision"):
             record["decision"] = existing["decision"]
         os.makedirs(os.path.dirname(args.record) or ".", exist_ok=True)
+        render_views(os.path.join(os.path.dirname(args.record) or ".", "views.png"))
         with open(args.record, "w", encoding="utf-8") as handle:
             json.dump(record, handle, indent=2)
             handle.write(chr(10))

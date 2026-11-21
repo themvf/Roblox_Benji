@@ -126,7 +126,7 @@ function MapAuthoring.readMarkers(root, name)
         return nil, errors, warnings
     end
 
-    local objectives, spawns, bounds = {}, { Blue = {}, Red = {} }, {}
+    local objectives, spawns, bounds, props = {}, { Blue = {}, Red = {} }, {}, {}
     for _, inst in root:GetDescendants() do
         local role = inst:GetAttribute("Role")
         if role ~= nil then
@@ -161,8 +161,15 @@ function MapAuthoring.readMarkers(root, name)
                 end
             elseif role == "Bounds" then
                 table.insert(bounds, inst)
+            elseif role == "Prop" then
+                table.insert(props, inst)
             else
-                err(("%s has an unknown Role %q (expected Objective, Spawn or Bounds)."):format(at, tostring(role)))
+                err(
+                    ("%s has an unknown Role %q (expected Objective, Spawn, Bounds or Prop)."):format(
+                        at,
+                        tostring(role)
+                    )
+                )
             end
         end
     end
@@ -342,6 +349,66 @@ function MapAuthoring.readMarkers(root, name)
                 )
             )
         end
+    end
+
+    -- props: scenery drawn from an uploaded model. The marker's bottom centre is where
+    -- the prop stands and the marker's facing is the prop's. MapService places it with no
+    -- collision, so a prop never changes what the gates measured; cover is a part in
+    -- Geometry, which a prop may be drawn over.
+    table.sort(props, function(a, b)
+        if a.Name ~= b.Name then
+            return naturalLess(a.Name, b.Name)
+        end
+        local pa, pb = a.CFrame.Position, b.CFrame.Position
+        return pa.X < pb.X or (pa.X == pb.X and pa.Z < pb.Z)
+    end)
+    if #props > 0 then
+        authored.Props = {}
+    end
+    for _, inst in props do
+        local what = ("Prop %q (%s)"):format(inst.Name, pathOf(inst, root))
+        if not inst:IsA("BasePart") then
+            err(what .. " is not a part. Prop markers are the labelled boxes under Authoring > Props.")
+            continue
+        end
+        -- Text, not a number: asset ids are past 2^32, and a number attribute written
+        -- from Lune came back as 2029459968 for 84316532447768.
+        local rawId = inst:GetAttribute("AssetId")
+        local assetId = type(rawId) == "string" and rawId:match("^%d+$") and tonumber(rawId) or nil
+        -- Or Asset: the key of a model in src/shared/AssetRegistry.json, for anything this
+        -- project uploaded itself.
+        local assetKey = inst:GetAttribute("Asset")
+        if type(assetKey) ~= "string" or assetKey == "" then
+            assetKey = nil
+        end
+        if not assetKey and (not assetId or assetId <= 0) then
+            err(
+                what
+                    .. " needs an Asset attribute (a name from AssetRegistry.json) or an AssetId attribute "
+                    .. "(the uploaded model's id, typed as text)."
+            )
+            continue
+        end
+        local fit = inst:GetAttribute("Fit")
+        if fit ~= nil and (type(fit) ~= "number" or fit <= 0) then
+            err(what .. " has a Fit attribute that is not a positive number of studs. Delete it or fix it.")
+            continue
+        end
+        local cf = inst.CFrame
+        if math.abs(cf.UpVector.Y) < 0.999 then
+            err(what .. " is tilted. Props stand upright: set Orientation to 0, <any>, 0.")
+            continue
+        end
+        local c, look = cf.Position, cf.LookVector
+        table.insert(authored.Props, {
+            Name = inst.Name,
+            Where = what,
+            assetId = not assetKey and assetId or nil,
+            asset = assetKey,
+            pos = { c.X, c.Y - inst.Size.Y / 2, c.Z },
+            yaw = math.deg(math.atan2(-look.X, -look.Z)),
+            fit = fit,
+        })
     end
 
     -- bounds
@@ -616,6 +683,25 @@ function MapAuthoring.generate(name, authored, presentation, revision, solids)
         end
     end
 
+    -- Prop markers become the Decor list MapService already knows how to place. A map
+    -- with no prop markers gets the same empty list it always had.
+    local decor = {}
+    for _, p in authored.Props or {} do
+        local piece = {
+            kind = "prop",
+            name = p.Name,
+            assetId = p.assetId,
+            asset = p.asset,
+            pos = r3(p.pos),
+            rot = { 0, tonumber(num(p.yaw)), 0 },
+            sit = true,
+        }
+        if p.fit then
+            piece.fit = tonumber(num(p.fit))
+        end
+        table.insert(decor, piece)
+    end
+
     local vista = presentation.Vista
         or {
             pos = r3({ b.min[1] + 20, floorY + 80, b.min[3] - 5 }),
@@ -652,7 +738,7 @@ function MapAuthoring.generate(name, authored, presentation, revision, solids)
         Environment = presentation.Environment,
         Center = {},
         Mirrored = {},
-        Decor = {},
+        Decor = decor,
     },
         warnings
 end

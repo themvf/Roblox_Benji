@@ -1,0 +1,46 @@
+{
+  "purpose": "Unfinished clean authoring base, not a playable or Marketplace deliverable",
+  "source": "roblox-blocky-reference.fbx",
+  "bodyRegions": [
+    "Head_Geo",
+    "LeftFoot_Geo",
+    "LeftHand_Geo",
+    "LeftLowerArm_Geo",
+    "LeftLowerLeg_Geo",
+    "LeftUpperArm_Geo",
+    "LeftUpperLeg_Geo",
+    "LowerTorso_Geo",
+    "RightFoot_Geo",
+    "RightHand_Geo",
+    "RightLowerArm_Geo",
+    "RightLowerLeg_Geo",
+    "RightUpperArm_Geo",
+    "RightUpperLeg_Geo",
+    "UpperTorso_Geo"
+  ],
+  "armatures": {
+    "Armature": 51
+  },
+  "bodyCages": [
+    "Head_OuterCage",
+    "LeftFoot_OuterCage",
+    "LeftHand_OuterCage",
+    "LeftLowerArm_OuterCage",
+    "LeftLowerLeg_OuterCage",
+    "LeftUpperArm_OuterCage",
+    "LeftUpperLeg_OuterCage",
+    "LowerTorso_OuterCage",
+    "RightFoot_OuterCage",
+    "RightHand_OuterCage",
+    "RightLowerArm_OuterCage",
+    "RightLowerLeg_OuterCage",
+    "RightUpperArm_OuterCage",
+    "RightUpperLeg_OuterCage",
+    "UpperTorso_OuterCage"
+  ],
+  "limitations": [
+    "Mask, horns, robe and textures not authored",
+    "Skinning and facial animation not tested",
+    "Cage fit and Marketplace readiness not validated"
+  ]
+}

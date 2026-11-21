@@ -5,6 +5,11 @@
     "  source      path to the authored art, relative to the repo root (.obj/.fbx/.glb)",
     "  out         where the game-ready .glb lands",
     "  textures    directory of downscaled maps to repoint images at before export",
+    "  cull        list of face-deleting rules, applied first in source units (Blender Z up).",
+    "              Each rule: below/above (z), x/y/z [lo,hi], outside/inside {center:[x,y],",
+    "              radius}, name. All filters in a rule must match; first rule wins. For junk an",
+    "              image-to-3D model copied from its reference: floor cables, a mat, loose props.",
+    "              Read positions off views.png; see op_cull in scene_kit.py.",
     "  exaggerate  vertical multiplier applied in source proportions, before fit.",
     "              A terrain scan flatter than 0.2 relief-to-width needs this to read",
     "              as relief from a distance.",
@@ -17,7 +22,9 @@
     "              Blender Z to glTF Y and Roblox reads glTF as Y-up.",
     "  optimize    post-export meshoptimizer pass through tools/gltf_post.py, which",
     "              shells out to the glTF-Transform CLI and so needs npx on PATH.",
-    "              {tris, texture, error, lockBorder}, all optional:",
+    "              {tris, texture, error, lockBorder, tint, lift, gamma}, all optional:",
+    "                gamma      below 1 brightens the base colour before tint; for textures",
+    "                           the generator baked near-black (metal assumed). Keeps highlights.",
     "                tris       per-mesh triangle target; the run fails if the written",
     "                           file still breaches the 10k cap afterwards",
     "                texture    clamp embedded textures to this many pixels (1024)",
@@ -71,6 +78,184 @@
         "size": 8.0
       },
       "pivot": "bottom"
+    },
+    "server-rack": {
+      "description": "Eight-stud mesh-front server cabinet, non-colliding background decoration",
+      "source": "assets/models/server-rack/source/ServerRack_Authored.glb",
+      "out": "assets/models/server-rack/exports/ServerRack.glb",
+      "fit": {
+        "axis": "z",
+        "size": 8
+      },
+      "pivot": "bottom"
+    },
+    "desk": {
+      "description": "Fourteen-stud futuristic office desk, clean rebuild of the Midjourney reference",
+      "source": "assets/models/desk/source/Desk_Authored.glb",
+      "out": "assets/models/desk/exports/Desk.glb",
+      "fit": {
+        "axis": "x",
+        "size": 14
+      },
+      "pivot": "bottom"
+    },
+    "cargo": {
+      "description": "Destroyed dark cargo unit, TRELLIS shape decimated with maps baked from the dense source; six studs tall (provisional)",
+      "source": "assets/models/cargo/source/Cargo_Authored.glb",
+      "out": "assets/models/cargo/exports/CargoDestroyed.glb",
+      "fit": {
+        "axis": "z",
+        "size": 6
+      },
+      "pivot": "bottom"
+    },
+    "cargo-b": {
+      "description": "Intact white cargo unit, TRELLIS shape remeshed with maps baked from the dense source; six studs tall to match the destroyed unit (provisional)",
+      "source": "assets/models/cargo-b/source/CargoB_Authored.glb",
+      "out": "assets/models/cargo-b/exports/CargoUnit.glb",
+      "fit": {
+        "axis": "z",
+        "size": 6
+      },
+      "pivot": "bottom"
+    },
+    "cargo-c": {
+      "description": "Legacy cargo-c voxel trial, split into four meshes; current delivery is built by tools/build_cargo_c_clean.py",
+      "source": "assets/models/cargo-c/source/CargoC_Authored.glb",
+      "out": "assets/models/cargo-c/trials/CargoWrecked_voxel_scene_kit.glb",
+      "fit": {
+        "axis": "z",
+        "size": 6
+      },
+      "tile": [
+        2,
+        2
+      ],
+      "pivot": "bottom"
+    },
+    "brokenwall": {
+      "description": "TRELLIS broken concrete wall (left-ended), Snow Fortress ruin prop",
+      "source": "Walls/BrokenWall_L.glb",
+      "out": "assets/models/brokenwall/BrokenWall.glb",
+      "fit": {
+        "axis": "y",
+        "size": 20
+      },
+      "decimate": 9000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024,
+        "tint": [
+          0.6,
+          0.58,
+          0.56
+        ],
+        "lift": 0.03
+      }
+    },
+    "brokenwallhole": {
+      "description": "TRELLIS broken concrete wall with a breach, Snow Fortress ruin prop",
+      "source": "Walls/BrokenWall_Hole.glb",
+      "out": "assets/models/brokenwallhole/BrokenWallHole.glb",
+      "fit": {
+        "axis": "y",
+        "size": 20
+      },
+      "decimate": 9000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024,
+        "tint": [
+          0.6,
+          0.58,
+          0.56
+        ],
+        "lift": 0.03
+      }
+    },
+    "container": {
+      "description": "TRELLIS shipping container, Snow Fortress cover prop",
+      "source": "Crates/Container.glb",
+      "out": "assets/models/container/Container.glb",
+      "fit": {
+        "axis": "y",
+        "size": 22
+      },
+      "decimate": 9000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024,
+        "tint": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "gamma": 0.5
+      }
+    },
+    "orangebox": {
+      "description": "TRELLIS small orange cargo box, Snow Fortress cover prop",
+      "source": "Cargo/smallorangebox.glb",
+      "out": "assets/models/orangebox/OrangeBox.glb",
+      "fit": {
+        "axis": "y",
+        "size": 6
+      },
+      "decimate": 9000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      }
+    },
+    "bluetube": {
+      "description": "TRELLIS blue tube, cleaned of floor clutter/wires/bottle and with blue smoke in the chamber (tools/blender/prepare_bluetube.py makes the source)",
+      "source": "SciFiTubes/bluetube_clean.glb",
+      "out": "assets/models/bluetube/BlueTube.glb",
+      "fit": {
+        "axis": "z",
+        "size": 12
+      },
+      "decimate": 9000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      }
+    },
+    "palm-tree-1": {
+      "description": "User-supplied tropical palm tree prop for Five Islands Hurricane beaches and outposts (~19 studs tall)",
+      "source": "assets/models/palm-tree-1/source/Palm_Tree_1.glb",
+      "out": "assets/models/palm-tree-1/exports/PalmTree1.glb",
+      "fit": {
+        "axis": "z",
+        "size": 19
+      },
+      "decimate": 25000,
+      "tile": [
+        2,
+        2
+      ],
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      }
+    },
+    "wooden-watchtower": {
+      "description": "Two-tier weathered wooden watchtower visual shell for Five Islands Hurricane sniper overlooks and shoreline scenic towers (~28 studs tall)",
+      "source": "assets/models/wooden-watchtower/source/WoodenWatchtower.glb",
+      "out": "assets/models/wooden-watchtower/exports/WoodenWatchtower.glb",
+      "fit": {
+        "axis": "z",
+        "size": 28
+      },
+      "decimate": 25000,
+      "tile": [
+        2,
+        2
+      ],
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      }
     }
   }
 }

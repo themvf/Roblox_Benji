@@ -1,0 +1,37 @@
+{
+  "purpose": "Realistic black rigid inflatable patrol boat made by Tripo from the patrol boat picture; replaces the shape-built RHIB at the Five Islands Hurricane docks",
+  "role": "interactive",
+  "heightStuds": 11.57,
+  "route": "scan",
+  "kind": "vehicle",
+  "lengthStuds": 30.0,
+  "widthStuds": 10.9,
+  "gameName": "RHIB",
+  "where": "Five Islands Hurricane",
+  "copies": 4,
+  "moving": "",
+  "share": "public",
+  "nearestStuds": 0.0,
+  "thin": "yes",
+  "assumed": "length 30 studs to match the boat it replaces, so height and width follow the picture's proportions; one working seat (the helm); no self-moving parts",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "counts": {
+    "seats": 6,
+    "engines": 2
+  },
+  "mounts": {
+    "HullCentre": [
+      0.0,
+      1.95,
+      0.0
+    ],
+    "DriverSeat": [
+      -0.9,
+      6.6,
+      0.6
+    ]
+  },
+  "budgetWaiver": "Kept at Tripo's own 25,154-triangle retopology. Cutting it to the 15,000 vehicle budget here made 3.33% of it see-through (build of 2026-11-17); a lighter version has to come from Tripo's Retopo, not from our reduction. At most 4 copies on the map."
+}

@@ -1,0 +1,135 @@
+{
+  "status": "pass",
+  "checks": [
+    {
+      "module": "SF_Portal_20",
+      "format": "glb",
+      "triangles": 3252,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 20
+    },
+    {
+      "module": "SF_Portal_20",
+      "format": "fbx",
+      "triangles": 3252,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 20
+    },
+    {
+      "module": "SF_WallBay_10",
+      "format": "glb",
+      "triangles": 1404,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 10
+    },
+    {
+      "module": "SF_WallBay_10",
+      "format": "fbx",
+      "triangles": 1404,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 10
+    },
+    {
+      "module": "SF_Pier_21",
+      "format": "glb",
+      "triangles": 828,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 0
+    },
+    {
+      "module": "SF_Pier_21",
+      "format": "fbx",
+      "triangles": 828,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 0
+    },
+    {
+      "module": "SF_Parapet_10",
+      "format": "glb",
+      "triangles": 624,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 0
+    },
+    {
+      "module": "SF_Parapet_10",
+      "format": "fbx",
+      "triangles": 624,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 0
+    },
+    {
+      "module": "SF_InteriorBay_20",
+      "format": "glb",
+      "triangles": 1188,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 2
+    },
+    {
+      "module": "SF_InteriorBay_20",
+      "format": "fbx",
+      "triangles": 1188,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 2
+    },
+    {
+      "module": "SF_Floor_10",
+      "format": "glb",
+      "triangles": 540,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 0
+    },
+    {
+      "module": "SF_Floor_10",
+      "format": "fbx",
+      "triangles": 540,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 0
+    },
+    {
+      "module": "SF_Cover_8",
+      "format": "glb",
+      "triangles": 756,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 0
+    },
+    {
+      "module": "SF_Cover_8",
+      "format": "fbx",
+      "triangles": 756,
+      "boundsRoundTrip": true,
+      "uvRange": true,
+      "openEdges": 0,
+      "weldedContactEdges": 0
+    }
+  ],
+  "portalOpeningStuds": [
+    20,
+    13
+  ]
+}

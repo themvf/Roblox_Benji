@@ -1,4 +1,4 @@
--- Public five-versus-five Team Deathmatch on approved TDM maps. The queue owns
+-- Public Team Deathmatch (2v2 through 5v5) on approved TDM maps. The queue owns
 -- admission; this service owns scoring, respawns, the clock, and cleanup.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -237,12 +237,15 @@ function TDMService:Run(match, mapName)
     self:Finish(match, overtimeWinner, false)
 end
 
--- Public: ten players, the first five Red. `solo` is training: one player on Red, and
--- bots fill both teams to Config.Training.TeamSize once the round starts.
+-- Public: symmetric teams from MinTeamSize..TeamSize (2v2..5v5), the first half Red.
+-- `solo` is training: one player on Red, and bots fill both teams to Config.Training.TeamSize
+-- once the round starts.
 function TDMService:StartMatch(players, mapName, solo)
     local rounds = Knit.GetService("RoundService")
-    local count = solo and 1 or 10
-    if self.Busy or rounds.Busy or #players ~= count or not table.find(Config.TDMMaps, mapName) then
+    local rules = Config.GetTDM()
+    local validCount = (solo and #players == 1)
+        or (not solo and #players >= rules.MinTeamSize * 2 and #players <= rules.TeamSize * 2 and #players % 2 == 0)
+    if self.Busy or rounds.Busy or not validCount or not table.find(Config.TDMMaps, mapName) then
         return false
     end
     local seen = {}
@@ -257,7 +260,7 @@ function TDMService:StartMatch(players, mapName, solo)
     local match = {
         Players = players,
         Score = { Red = 0, Blue = 0 },
-        Rules = Config.GetTDM(),
+        Rules = rules,
         Connections = {},
         Running = false,
         Finished = false,
@@ -265,9 +268,10 @@ function TDMService:StartMatch(players, mapName, solo)
         Solo = solo == true,
     }
     self.Match = match
+    local teamSize = solo and 1 or math.floor(#players / 2)
     for index, player in players do
         player:SetAttribute("InMatch", true)
-        player:SetAttribute("Team", index <= 5 and "Red" or "Blue")
+        player:SetAttribute("Team", index <= teamSize and "Red" or "Blue")
         player:SetAttribute("MatchKills", 0)
         table.insert(
             match.Connections,

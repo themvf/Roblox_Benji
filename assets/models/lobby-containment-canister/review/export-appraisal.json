@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-09",
+  "source": "LobbyContainmentCanister.glb",
+  "sourceSha256": "cbc6fc5fca93c0acc407d1869936e1a7a3e229f01311915334286d57c1534938",
+  "measurements": {
+    "triangles": 72673,
+    "size": [
+      4.748,
+      4.747,
+      8.0
+    ],
+    "reliefRatio": 0.5933,
+    "openEdges": 80815,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Revised reference-led canister candidate with preserved dark source caps, separate translucent chamber, dark inner liner and blue plasma plume. Verify exact saved mesh/material/image counts in validation.json and inspect four exported views. The GLB's transparency and emissive data are local export evidence only; Studio appearance and lobby placement remain unverified."
+}

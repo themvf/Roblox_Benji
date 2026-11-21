@@ -1,0 +1,20 @@
+{
+  "tool": "tools/package_foundry_props.py",
+  "appraisedOn": "2026-11-14",
+  "source": "UndergroundFacilityProps/ScifiProps/ScifiProps/Control_Panel/Control_Panel.fbx",
+  "sourceSha256": "9aad5bf889c46b8b9dcff71a8f00af444631b0d396303b7cbbd68a74c255e9f7",
+  "measurements": {
+    "triangles": 528,
+    "meshObjects": 1,
+    "hasUvLayers": true,
+    "boundsStuds": [
+      2.331,
+      1.581,
+      5.2
+    ],
+    "reliefRatio": 2.2312
+  },
+  "verdict": "PASS - low/mid-poly game-ready prop within Roblox 10k tri limit with 1024px OpenGL PBR maps.",
+  "decision": "Compact operator terminal pedestal for SciFiFoundry Spawn Bay & portal control stations (5.2 studs tall).",
+  "views": "views.png"
+}

@@ -1,0 +1,129 @@
+{
+  "checkedOn": "2026-11-17 08:55",
+  "export": "assets/models/armored-vehicle/exports/ArmoredVehicle.glb",
+  "exportSha256": "471e75fc8ebd9ae8ae11c3f6e821ee3a51a81c017c039d3a5a01166a2da349bb",
+  "sourceSha256": "36d894ac3a62726088ed9d534ea56402d640a7b9c7df5bb285829e54ffb9a956",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "scan",
+    "suggested": "clean",
+    "reasons": [
+      "the role is interactive, so players are right next to it and its parts may need to move"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.999,
+      "side": 0.999,
+      "top": 1.0
+    },
+    "surfaceError": {
+      "front": 0.001,
+      "back": 0.002,
+      "right": 0.001,
+      "left": 0.001,
+      "top": 0.001,
+      "bottom": 0.001
+    },
+    "worstSurfaceError": 0.002,
+    "noise": 0.003,
+    "sheet": "assets/models/armored-vehicle/review/detail.png",
+    "limit": 0.08,
+    "passed": true
+  },
+  "ground": {
+    "bottomFill": 0.129,
+    "aboveFill": 0.774,
+    "ratio": 0.17,
+    "footprintStuds": [
+      10.34,
+      18.03
+    ],
+    "flagged": false
+  },
+  "textureBleed": {
+    "image": 1,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.496,
+    "backgroundBrightness": 0.189,
+    "surfaceBrightness": 0.186,
+    "bleedPercent": 0.94
+  },
+  "budget": {
+    "role": "interactive",
+    "budget": 15000,
+    "triangles": 25303,
+    "waiver": "Tripo's 23,907-triangle export used as delivered; our own reduction tears generated meshes (the patrol boat). A lighter version has to come from Tripo's Retopo at about 13,000. At most a few copies on a map.",
+    "passed": true,
+    "within": false
+  },
+  "contract": {
+    "sizeStuds": [
+      10.362,
+      8.5,
+      18.036
+    ],
+    "heightStuds": 8.5,
+    "kind": "vehicle",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.8,
+        0.0
+      ],
+      "DriverSeat": [
+        -1.3,
+        2.6,
+        -0.5
+      ],
+      "DriverEye": [
+        -1.2,
+        5.9,
+        -3.7
+      ]
+    },
+    "mountSheet": "assets/models/armored-vehicle/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        2,
+        2
+      ],
+      "decimate": 25000,
+      "worstMesh": 7309,
+      "triangles": 25303,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     ArmoredVehicle.glb (1.07 MB)",
+    "           tripo_mesh_bc68f2cc-bc26-45a2-bfb4-f49d685e9e5e.001     5,494 tris",
+    "           tripo_mesh_bc68f2cc-bc26-45a2-bfb4-f49d685e9e5e.002     7,309 tris",
+    "           tripo_mesh_bc68f2cc-bc26-45a2-bfb4-f49d685e9e5e.003     5,564 tris",
+    "           tripo_mesh_bc68f2cc-bc26-45a2-bfb4-f49d685e9e5e.004     6,936 tris",
+    "           total                           25,303 tris (4 meshes)",
+    "           texture                      1024x1024  image/jpeg",
+    "           texture                      1024x1024  image/jpeg",
+    "           texture                      1024x1024  image/jpeg"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/armored-vehicle/review/audit.png",
+      "assets/models/armored-vehicle/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.03,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

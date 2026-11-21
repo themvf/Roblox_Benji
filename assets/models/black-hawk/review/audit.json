@@ -1,0 +1,131 @@
+{
+  "tool": "tools/asset_generate.py audit",
+  "auditedOn": "2026-11-16 10:31",
+  "source": "assets/models/black-hawk/exports/BlackHawk.glb",
+  "sourceSha256": "7f931787f6f2ea8009590d6eef21d59afb93986c5073a1276d117cd2ced4905c",
+  "brightenGamma": 0.487,
+  "flagPercent": 0.15,
+  "worstBackFacePercent": 0.79,
+  "worstPatchPercent": 0.0,
+  "flagged": [],
+  "views": [
+    {
+      "name": "front",
+      "kind": "overview",
+      "backFacePercent": 0.11,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back",
+      "kind": "overview",
+      "backFacePercent": 0.14,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "left",
+      "kind": "overview",
+      "backFacePercent": 0.3,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "right",
+      "kind": "overview",
+      "backFacePercent": 0.34,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "top",
+      "kind": "overview",
+      "backFacePercent": 0.07,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "bottom",
+      "kind": "overview",
+      "backFacePercent": 0.11,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "front-left",
+      "kind": "overview",
+      "backFacePercent": 0.05,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "front-right",
+      "kind": "overview",
+      "backFacePercent": 0.07,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back-left",
+      "kind": "overview",
+      "backFacePercent": 0.1,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back-right",
+      "kind": "overview",
+      "backFacePercent": 0.07,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-1a",
+      "kind": "closeup",
+      "backFacePercent": 0.64,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-1b",
+      "kind": "closeup",
+      "backFacePercent": 0.61,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-2a",
+      "kind": "closeup",
+      "backFacePercent": 0.54,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-2b",
+      "kind": "closeup",
+      "backFacePercent": 0.43,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-3a",
+      "kind": "closeup",
+      "backFacePercent": 0.78,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-3b",
+      "kind": "closeup",
+      "backFacePercent": 0.79,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    }
+  ],
+  "sheets": [
+    "assets/models/black-hawk/review/audit.png",
+    "assets/models/black-hawk/review/audit_closeups.png"
+  ],
+  "panels": "assets/models/black-hawk/review/audit",
+  "limitations": "Blender renders, not Roblox. Lighting, materials and transparency in Studio are not checked."
+}

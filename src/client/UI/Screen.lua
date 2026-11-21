@@ -36,6 +36,7 @@ Screen.Layers = {
     Recap = 18,
     Celebration = 20,
     Modal = 30, -- loadout, kiosks: full-screen, blocks everything
+    Persistent = 32, -- queue status and toasts: stay readable above a modal (UI/LobbyShell)
 }
 
 -- Smallest comfortable touch target in points (Apple HIG 44pt, Material 48dp). Anything the

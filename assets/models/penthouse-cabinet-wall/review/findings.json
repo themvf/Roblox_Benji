@@ -1,0 +1,15 @@
+{
+  "exportSha256": "419c3c74275827a4b424ed1060f0d016c0ab53a56ff67d0199535ba11abe3838",
+  "reviewedBy": "session-b78bc9eb",
+  "measured": [
+    "shape: the surface has drifted from the source (error 0.388); expect bent bars or crumpled panels"
+  ],
+  "seen": [
+    "fridge: two bar handles on a side-by-side fridge door, where handleless was asked for",
+    "top: uneven baked-in ridges and patches on the top face, visible from above",
+    "base: small stub feet poke out under the back and front edges",
+    "back: left quarter of the back panel has a different, finer texture than the rest",
+    "proportions: 9.16 long x 3.35 deep x 10.07 tall against a target of 8 x 4 x 10; scaled to length 8 it is 2.9 deep and 8.8 tall"
+  ],
+  "recordedOn": "2026-11-16 20:08"
+}

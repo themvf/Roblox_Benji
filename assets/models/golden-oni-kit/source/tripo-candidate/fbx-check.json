@@ -1,0 +1,18 @@
+{
+ "file": "GoldenOniTripo-AvatarSetup.fbx",
+ "parts": [
+  "Body"
+ ],
+ "heightStuds": 6.768,
+ "expectedStuds": 6.768,
+ "frontInFile": "+Z",
+ "flatShare": {
+  "Body": 0.012
+ },
+ "textures": {
+  "Body": [
+   "BodyColor.png"
+  ]
+ },
+ "problems": []
+}

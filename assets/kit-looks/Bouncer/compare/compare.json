@@ -1,0 +1,38 @@
+{
+  "tripo": {
+    "file": "C:/Docs/_AI Python Projects/Roblox_Benji/assets/kit-looks/Bouncer/pieces/whole/model.lit.glb",
+    "fileMB": 4.1,
+    "rawTriangles": 16875,
+    "renderedTriangles": 16875,
+    "boundaryEdgesUnwelded": 19224,
+    "openEdgesAfterWeld": 278,
+    "shellsAfterWeld": 25,
+    "largestShellShare": 0.239,
+    "widthToHeight": 0.684,
+    "depthToHeight": 0.413
+  },
+  "trellis": {
+    "file": "C:/Docs/_AI Python Projects/Roblox_Benji/assets/kit-looks/Bouncer/compare/trellis/seed-101-1024.glb",
+    "fileMB": 12.4,
+    "rawTriangles": 278883,
+    "renderedTriangles": 277384,
+    "boundaryEdgesUnwelded": 166786,
+    "openEdgesAfterWeld": 1845,
+    "shellsAfterWeld": 226,
+    "largestShellShare": 0.904,
+    "widthToHeight": 0.689,
+    "depthToHeight": 0.352
+  },
+  "trellisGame": {
+    "file": "C:/Docs/_AI Python Projects/Roblox_Benji/assets/kit-looks/Bouncer/compare/trellis/reduced-16875.glb",
+    "fileMB": 4.4,
+    "rawTriangles": 16870,
+    "renderedTriangles": 16870,
+    "boundaryEdgesUnwelded": 50482,
+    "openEdgesAfterWeld": 12,
+    "shellsAfterWeld": 5,
+    "largestShellShare": 1.0,
+    "widthToHeight": 0.695,
+    "depthToHeight": 0.352
+  }
+}

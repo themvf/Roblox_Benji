@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-09",
+  "source": "LobbyStoneColumn.glb",
+  "sourceSha256": "a9453ca4fe0894dd7c45df8bdf01c819624cdcf7614b2dce9db20f782afcdb5d",
+  "measurements": {
+    "triangles": 42900,
+    "size": [
+      2.383,
+      2.4,
+      12.0
+    ],
+    "reliefRatio": 0.1986,
+    "openEdges": 51212,
+    "nonManifoldEdges": 1,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Saved high-quality lobby column candidate. The reimported GLB contains 42,900 triangles, a 12-stud height, UVs, and the source blue-gray finish. Verify embedded PNG maps, six per-limit meshes, saved views and pivot in validation.json. Visual approval, Studio import and map integration remain pending."
+}

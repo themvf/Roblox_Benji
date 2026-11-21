@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-16",
+  "source": "PenthouseAquarium.glb",
+  "sourceSha256": "aafb567f85878433794014a71c8515e530c1a300f35c3e9b0ad5b91bd6ee3447",
+  "measurements": {
+    "triangles": 18442,
+    "size": [
+      12.733,
+      2.107,
+      10.027
+    ],
+    "reliefRatio": 0.1655,
+    "openEdges": 26236,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": ""
+}

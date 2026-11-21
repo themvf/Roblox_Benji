@@ -1,0 +1,26 @@
+{
+  "asset": "golden-oni-kit",
+  "comparedOn": "2026-11-20 20:23",
+  "budget": 15000,
+  "brief": [
+    3.5,
+    1.5,
+    5.5
+  ],
+  "candidates": [
+    {
+      "seed": 201,
+      "madeBy": "hunyuan-2.1",
+      "triangles": 40000,
+      "cutNeeded": 0.719,
+      "studs": [
+        4.0,
+        1.8
+      ],
+      "shapeProblems": [],
+      "holesPercent": 0.0,
+      "openEdges": 11804,
+      "closeups": "assets/models/golden-oni-kit/trials/seed-201/audit_closeups.png"
+    }
+  ]
+}

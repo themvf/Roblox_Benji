@@ -1,0 +1,19 @@
+{
+ "debrisFacesDropped": 92,
+ "smallShellFacesKept": 0,
+ "paint0Colour": [
+  0.01,
+  0.01,
+  0.02
+ ],
+ "paint0SkinShare": 0.0,
+ "paint0Faces": 0,
+ "shells": 19,
+ "accessoryShells": 4,
+ "HairTriangles": 0,
+ "HeadgearTriangles": 0,
+ "remeshTriangles": 232644,
+ "bodyTriangles": 8994,
+ "bodyOpenEdges": 0,
+ "height": 6.77
+}

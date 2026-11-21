@@ -170,10 +170,36 @@ function HudController:KnitStart()
 
     local RoundService = Knit.GetService("RoundService")
     local deadline = nil
+    local hasQueuedOnce = false
+    local roundState = "Lobby"
+
+    local function updateLobbyPrompt()
+        if roundState ~= "Lobby" then
+            return
+        end
+        local queueState = Players.LocalPlayer:GetAttribute("QueueState")
+        if queueState == "Queued" or queueState == "Committed" then
+            hasQueuedOnce = true
+        end
+        -- First-use guidance dismisses after the first queue/match so returning
+        -- players get an unobstructed sightline to the Junction gate (B-04).
+        state.Visible = not hasQueuedOnce
+        if state.Visible then
+            state.Text = ("%s  ·  Press PLAY or step onto a mode pad"):format(Lore.Hub:upper())
+        end
+    end
+
+    Players.LocalPlayer:GetAttributeChangedSignal("QueueState"):Connect(updateLobbyPrompt)
+    updateLobbyPrompt()
+
     RoundService.StateChanged:Connect(function(s, data)
+        roundState = s
         local text = s
         if s == "Lobby" then
-            text = "Choose PLAY or enter the arena gate"
+            updateLobbyPrompt()
+            deadline = nil
+            timer.Visible = false
+            return
         elseif data.Mode then
             text = data.Mode .. "  " .. s
         end

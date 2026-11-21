@@ -1,0 +1,19 @@
+{
+ "rendered": "2026-11-20T08:44:25",
+ "build": {
+  "Body.glb": "0403024c17bbe9c3",
+  "Bouncer-AvatarSetup.fbx": "c78d3e19f94de2f6",
+  "Hair.glb": "5da25f2a9acac250"
+ },
+ "sheets": [
+  "sheet-views.png",
+  "sheet-close-front.png",
+  "sheet-close-back.png",
+  "sheet-alone.png"
+ ],
+ "findings": {
+  "recorded": "2026-11-20T08:44:43",
+  "defects": "1 worn trim baked as wide blurry light stripes down the jacket front and sleeves. 2 visor glow lost: dark maroon, not the concept's magenta. 3 box invented on the upper back. 4 headset coil fused round the neck as a thick ring, with a speckled light band inside the collar at the back. 5 a tab dangles at the hip, seen from the sides. 6 hands are mitts, fingers merged. 7 hair spikes chunkier than the source after the closed rebuild.",
+  "passed": "Every view, both sides, back and three-quarters; close-ups front and back of head, chest, hips, boots, both hands; hair alone front, side and top. Fixed this build: 752 faces of sliver debris dropped, no Headgear part; hair rebuilt closed at 4,000 triangles with its spikes; no pink zip. Body closed (0 open edges)."
+ }
+}

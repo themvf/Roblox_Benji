@@ -1,0 +1,78 @@
+{
+  "checkedAtUtc": "20261017T221209382381Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "source/trellis-original.glb": "588cacb7a220d74a93a05a1f599ced4836eded2c5ab31e5b09c17af4c5961a01",
+    "source/design-reference.png": "8a75f4cc256f85f825d6aea92c9a347386753277d8ae5c4392d1e2cd8acc5d67",
+    "source/trellis-color.png": "785dc34311c6b976fb2672fede80d58b62ac5022fa36947d9cf6fb938d814f7f",
+    "source/trellis-metallic-roughness.png": "57954ee77ce04a70775fe20eb19a5f3de150fa73576b27f231e0a4cd526d5efc",
+    "source/OfficeChair.blend": "8adde27a8a89db80293ff23aa7e62fe0800704f5db583ca886e2e4c5e37a308d",
+    "source/stain-metrics.json": "c05f494808b32ce270630d3e3d119e4c04865efaf4cc3c81009af0d0e55d0039",
+    "appraisal.json": "5897006e54a190cce328a30b2bc4937bb14e0ebe48a27d6124aaa32b57d1e011",
+    "views.png": "eab2e8f84bb838b3f06e311f9b49377861b28dab407931b5b260032807e7c4e1",
+    "textures/OfficeChair_Clean_Color.png": "785dc34311c6b976fb2672fede80d58b62ac5022fa36947d9cf6fb938d814f7f",
+    "textures/OfficeChair_YellowStained_Color.png": "60a612f61489a613cf997b57cde2165b5e784c9b91f53c03b020b5374ac1780a",
+    "textures/OfficeChair_MetallicRoughness.png": "57954ee77ce04a70775fe20eb19a5f3de150fa73576b27f231e0a4cd526d5efc",
+    "exports/OfficeChair_Clean.glb": "a798723fe6f72424cc63a1e8bd272b037195fe7b7807aad52719e2606dfd1d1d",
+    "exports/OfficeChair_YellowStained.glb": "80e29a81ebb4a744148d6c25557274296b9dd9a5dd2742857f26f49f2150cbdb",
+    "review/clean-front.png": "84179d6f1703e9a7c7ef587c9c123a9ee92a5f68d851aeebfa0c7f1b515d70fb",
+    "review/clean-side.png": "89070bdb682c7eaced0639b0c9ef86e9a1fdfc44d9e7f48687bb5f01ab5c6567",
+    "review/clean-rear.png": "e6b4169296f8b50552671e5198332089511e636e891ad6fa736bb74af5279b91",
+    "review/clean-quarter.png": "147d41eb74feff3426316623fc3747f1614e3f1486e5816f5e8169ce4df80f15",
+    "review/stained-front.png": "512c583ef142882f43b7b576996a5b43f1c08b0d29b43a95350ac1f15d7eda84",
+    "review/stained-side.png": "e7801e4affc46b8e2cb99c355533df662c2bffffc13d8f6745e8742b5dd001e8",
+    "review/stained-rear.png": "7c185e50d1f79409ae7ef150fd8199fd957e0f8c6b2550f393c142e2f03f0d8c",
+    "review/stained-quarter.png": "167da9ac3abd567c0efe7b7c18fe3d019db23d9b199a6d58371e56b2710c8dbe"
+  },
+  "measured": {
+    "clean": {
+      "trianglesPerMesh": [
+        8386,
+        8385,
+        8386
+      ],
+      "boundsGlbYUp": {
+        "min": [
+          -1.7371560335159302,
+          0,
+          -1.7388601303100586
+        ],
+        "max": [
+          1.7386316061019897,
+          5,
+          1.7388601303100586
+        ]
+      },
+      "exportBytes": 8951184
+    },
+    "stained": {
+      "trianglesPerMesh": [
+        8386,
+        8385,
+        8386
+      ],
+      "boundsGlbYUp": {
+        "min": [
+          -1.7371560335159302,
+          0,
+          -1.7388601303100586
+        ],
+        "max": [
+          1.7386316061019897,
+          5,
+          1.7388601303100586
+        ]
+      },
+      "exportBytes": 9033860
+    }
+  },
+  "limitations": [
+    "Local checks do not establish user visual approval, Studio import, or map integration.",
+    "Five-stud size and decoration role remain provisional until user review.",
+    "Trellis source has residual generated-surface irregularities."
+  ]
+}

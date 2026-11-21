@@ -1,0 +1,26 @@
+{
+  "asset": "black-knight-helmet",
+  "comparedOn": "2026-11-17 18:03",
+  "budget": 4000,
+  "brief": [
+    2.1,
+    1.9,
+    2.2
+  ],
+  "candidates": [
+    {
+      "seed": 201,
+      "madeBy": "tripo",
+      "triangles": 23934,
+      "cutNeeded": 0.875,
+      "studs": [
+        1.9,
+        1.8
+      ],
+      "shapeProblems": [],
+      "holesPercent": 0.0,
+      "openEdges": 4940,
+      "closeups": "assets/models/black-knight-helmet/trials/seed-201/audit_closeups.png"
+    }
+  ]
+}
