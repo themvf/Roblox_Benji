@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-22",
+  "source": "Frostbite.glb",
+  "sourceSha256": "c791555cdeb5e87cd5259a59dcc802f9c9289e1f56570999387f895bb2e87bb3",
+  "measurements": {
+    "triangles": 9997,
+    "size": [
+      1.902,
+      0.328,
+      0.632
+    ],
+    "reliefRatio": 0.1727,
+    "openEdges": 19867,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Frostbite, a white-and-navy frost cannon with an ice-core window; a held weapon for every map (role: held, about 1.3 studs tall)"
+}

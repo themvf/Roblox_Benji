@@ -320,6 +320,42 @@
       }
     }
   },
+  "frostbite": {
+    "package": "assets/models/frostbite",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/frostbite/exports/Frostbite.glb",
+    "exportSha256": "a451eff9d0b69ed93fbe22f80018ff69f1eca699d9cf376f830b9896c7edf5ae",
+    "triangles": 3870,
+    "kind": "weapon",
+    "gameName": "Frostbite",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.4,
+        0.8
+      ],
+      "Muzzle": [
+        0.0,
+        0.1,
+        -2.0
+      ]
+    },
+    "share": "game",
+    "assetId": 87814599495580,
+    "uploadedSha256": "a451eff9d0b69ed93fbe22f80018ff69f1eca699d9cf376f830b9896c7edf5ae",
+    "uploadedOn": "2026-11-22",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": true,
+        "facing": false,
+        "scale": true,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
   "military-wave-runner": {
     "package": "assets/models/military-wave-runner",
     "role": "interactive",

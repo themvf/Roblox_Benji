@@ -1,0 +1,31 @@
+{
+  "asset": "frostbite",
+  "recordedOn": "2026-11-22",
+  "reference": {
+    "file": "assets/models/frostbite/source/reference.png",
+    "sha256": "0e5f537c2ab94652d7bad96c2043a055fbd79ba17c5e98e56f04c117f0941d2f",
+    "origin": "unknown",
+    "madeWith": null,
+    "prompt": null
+  },
+  "mesh": {
+    "file": "assets/models/frostbite/source/Frostbite.glb",
+    "sha256": "c791555cdeb5e87cd5259a59dcc802f9c9289e1f56570999387f895bb2e87bb3",
+    "generator": {
+      "service": "meshy",
+      "space": null,
+      "seed": 201,
+      "resolution": "imported",
+      "file": "model.glb",
+      "sha256": "c791555cdeb5e87cd5259a59dcc802f9c9289e1f56570999387f895bb2e87bb3",
+      "settings": "image to 3D, latest model, 10k triangles remeshed, textured, no PBR",
+      "decoded": null,
+      "reference": "reference.png",
+      "importedOn": "2026-11-22"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-22",
+  "source": "Frostbite.glb",
+  "sourceSha256": "a451eff9d0b69ed93fbe22f80018ff69f1eca699d9cf376f830b9896c7edf5ae",
+  "measurements": {
+    "triangles": 3870,
+    "size": [
+      0.642,
+      3.913,
+      1.289
+    ],
+    "reliefRatio": 0.1641,
+    "openEdges": 6268,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": ""
+}

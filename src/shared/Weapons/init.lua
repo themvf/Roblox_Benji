@@ -58,6 +58,24 @@ Weapons.Shotgun = {
     Auto = false,
 }
 
+-- Frost cannon art (assets/models/frostbite) on the Shotgun's numbers.
+Weapons.Frostbite = {
+    Slot = "Primary",
+    Damage = { 8, 2.5 },
+    Crit = { 12, 3.7 },
+    DropoffStart = 10,
+    DropoffEnd = 50,
+    Cooldown = 0.70,
+    Spread = 6.5,
+    Pellets = 10,
+    Ammo = { 7, 35 },
+    Reload = 0.55, -- segmented: one shell at a time
+    SegmentedReload = true,
+    EquipTime = 0.75,
+    MoveSpeed = 0,
+    Auto = false,
+}
+
 Weapons.Sniper = {
     Slot = "Primary",
     Damage = { 50, 50 },

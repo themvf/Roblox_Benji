@@ -1,0 +1,13 @@
+{
+  "id": "01a20668-b1cd-7657-ab38-4a8947396bc3",
+  "settings": {
+    "ai_model": "latest",
+    "should_texture": true,
+    "enable_pbr": false,
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 10000,
+    "symmetry_mode": "auto",
+    "texture_prompt": "white and navy sci-fi frost cannon, glowing cyan ice window, orange cell, frost fur trim"
+  }
+}

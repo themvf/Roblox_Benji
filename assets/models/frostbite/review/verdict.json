@@ -1,0 +1,15 @@
+{
+  "looks": "good",
+  "said": "Looks good",
+  "findingsShown": [
+    "ice window (section-1a/1b): the frosted-ice texture is softened to diagonal streaks after the 70% cut; still reads as glowing cyan ice",
+    "top shroud by the rear sight (section-2a/2b): a small flipped sliver shows magenta on the rail edge, 0.2% worst view; a few dark texture slivers on the white shroud",
+    "white panels on the body: visible triangle faceting and soft bevels from the reduction; panel lines are painted, not modelled",
+    "fur trim: jagged spikes read as frost from game distance but look rough up close in first person"
+  ],
+  "note": null,
+  "exportSha256": "a451eff9d0b69ed93fbe22f80018ff69f1eca699d9cf376f830b9896c7edf5ae",
+  "worstSurfaceError": 0.059,
+  "worstBackFacePercent": 0.2,
+  "recordedOn": "2026-11-22"
+}

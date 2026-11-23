@@ -25,6 +25,7 @@ local BASE = {
     Uzi = "SubmachineGun",
     Minigun = "SubmachineGun",
     Shotgun = "Shotgun",
+    Frostbite = "Shotgun",
     Shorty = "Shotgun",
     Sniper = "SniperRifle",
     WhiteSniper = "SniperRifle",
@@ -147,6 +148,72 @@ local function attachWhiteSniperArt(tool)
         local joint = Instance.new("WeldConstraint")
         joint.Name = "ArtWeld"
         joint.Part0 = rifle
+        joint.Part1 = mesh
+        joint.Parent = mesh
+    end
+end
+
+-- Guns uploaded through tools/asset_generate.py: weapon name -> registry entry.
+-- The registry holds the Grip and Muzzle mounts (studs from the pivot, -Z forward);
+-- assets/models/<package>/studio_import.json holds the uploaded mesh and texture ids.
+local REGISTRY_ART = {
+    Frostbite = "frostbite",
+}
+
+local function v3(t)
+    return Vector3.new(t[1], t[2], t[3])
+end
+
+local function attachRegistryArt(tool, name)
+    local entry = serde.decode("json", fs.readFile("src/shared/AssetRegistry.json"))[REGISTRY_ART[name]]
+    assert(entry and entry.kind == "weapon" and entry.assetId, name .. ": no uploaded weapon in AssetRegistry.json")
+    local manifest = serde.decode("json", fs.readFile(entry.package .. "/studio_import.json"))
+    assert(manifest.assetId == entry.assetId, name .. ": studio_import.json is for another upload")
+
+    local model = tool:FindFirstChildWhichIsA("Model")
+    local body = model and model.PrimaryPart
+    local handle = body and body:FindFirstChild("HandleAttachment")
+    local tip = body and body:FindFirstChild("TipAttachment")
+    assert(handle and tip, name .. ": kit model needs HandleAttachment and TipAttachment")
+
+    -- Kit barrels point along +Z, registry art along -Z: turn half a turn, then put
+    -- the art's Grip where the kit's hand goes.
+    local turn = CFrame.Angles(0, math.pi, 0)
+    local grip = turn * v3(entry.mounts.Grip)
+    local offset = handle.CFrame.Position - grip
+    local alignment = body.CFrame * CFrame.new(offset) * turn
+
+    -- Shots and flashes leave from the art's muzzle, not the hidden kit barrel.
+    local muzzle = turn * v3(entry.mounts.Muzzle) + offset
+    for _, attachment in body:GetChildren() do
+        if attachment:IsA("Attachment") and attachment ~= handle then
+            local p = attachment.CFrame.Position
+            local x = attachment == tip and muzzle.X or p.X
+            attachment.CFrame = CFrame.new(x, muzzle.Y, muzzle.Z) * attachment.CFrame.Rotation
+        end
+    end
+
+    for _, descendant in model:GetDescendants() do
+        if descendant:IsA("BasePart") then
+            descendant.Transparency = 1
+        end
+    end
+    for _, record in manifest.parts do
+        local mesh = Instance.new("MeshPart")
+        mesh.Name = record.name
+        mesh.MeshId = record.meshId
+        mesh.TextureID = record.textureId
+        mesh.Size = v3(record.size)
+        mesh.CFrame = alignment
+        mesh.Anchored = false
+        mesh.CanCollide = false
+        mesh.CanTouch = false
+        mesh.CanQuery = false
+        mesh.Massless = true
+        mesh.Parent = model
+        local joint = Instance.new("WeldConstraint")
+        joint.Name = "ArtWeld"
+        joint.Part0 = body
         joint.Part1 = mesh
         joint.Parent = mesh
     end
@@ -335,6 +402,8 @@ for name, base in BASE do
     applyStats(tool, name, stats)
     if name == "WhiteSniper" then
         attachWhiteSniperArt(tool)
+    elseif REGISTRY_ART[name] then
+        attachRegistryArt(tool, name)
     end
     fs.writeFile("assets/weapons/tools/" .. name .. ".rbxm", roblox.serializeModel({ tool }))
     count += 1
