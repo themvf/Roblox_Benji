@@ -1,0 +1,13 @@
+{
+  "exportSha256": "5fb6124106011befa12175bdd4928ca5790b08ec01dae5820610b52789ac7f0c",
+  "reviewedBy": "session-0f7f1538",
+  "measured": [],
+  "counted": {},
+  "seen": [
+    "muzzle window: violet is painted into the base colour, so it does not emit light in Roblox; a real glow needs a Neon plate or PointLight at the Muzzle mount in the weld code",
+    "receiver and stock (sections 2-3): grey blotches on the white panels",
+    "trigger guard: small pale spikes stick out that are not in the user's picture",
+    "top rail and receiver: soft, faceted edges after the cut to 3,879 triangles, visible in close-ups only"
+  ],
+  "recordedOn": "2026-11-22 23:49"
+}

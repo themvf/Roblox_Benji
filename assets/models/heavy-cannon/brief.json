@@ -1,0 +1,42 @@
+{
+  "purpose": "Heavy Cannon: a heavy yellow-and-gunmetal sci-fi machine cannon with a black core orb in a ring housing that players hold, in every map",
+  "role": "held",
+  "heightStuds": 1.505,
+  "pivot": "center",
+  "kind": "weapon",
+  "lengthStuds": 4.5,
+  "widthStuds": 0.8,
+  "gameName": "HeavyCannon",
+  "where": "held in every map",
+  "copies": 12,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "Behaves like Minigun (user choice). Inferred from the picture: realistic style, no thin parts (sights are short and part of the solid body), no moving parts (core orb glow is texture). Stop at the local build; nothing uploaded.",
+  "meshes": "auto",
+  "route": "scan",
+  "scene": {
+    "yaw": 90,
+    "decimate": 9000
+  },
+  "counts": {},
+  "mounts": {
+    "Grip": [
+      0.0,
+      -0.43,
+      1.01
+    ],
+    "Muzzle": [
+      0.0,
+      0.19,
+      -2.25
+    ],
+    "Core": [
+      0.0,
+      0.15,
+      0.33
+    ]
+  },
+  "budgetWaiver": "user asked for smoother, more detailed rings and edges after the 4,000-triangle build looked faceted; one mesh stays under the 10,000 per-mesh cap"
+}

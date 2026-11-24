@@ -32,6 +32,9 @@ os.makedirs(out_dir, exist_ok=True)
 
 R15 = {"ankle": 0.3, "knee": 1.5, "hip": 2.7, "waist": 3.1, "neck": 4.7}
 SHOULDER = 4.55
+# studs (the body is scaled to the match body first): coarser than the gaps between clothing layers, finer
+# than the gap between the thighs. 0 turns the stand-in off and weights the body directly.
+PROXY_VOXEL = float(os.environ.get("POSE_PROXY_VOXEL", "0.06"))
 
 # Each pose: (bone, world axis, degrees) applied in order, about the bone's head, on top of what
 # its parent already did. The front is +Y, so +X rotation swings a hanging limb forward. Every pose
@@ -147,6 +150,8 @@ def build(folder, offset_x):
         o.select_set(o in (body, rig))
     bpy.context.view_layer.objects.active = rig
     bpy.ops.object.parent_set(type="ARMATURE_AUTO")
+    if PROXY_VOXEL:
+        proxy_weights(body, rig)
     unweighted = sum(1 for v in body.data.vertices if not v.groups)
     lost = [v.co for v in body.data.vertices if not v.groups]
     if lost:  # where heat weighting gave up, to say why in the report
@@ -176,6 +181,121 @@ def build(folder, offset_x):
     rig.location.x = offset_x
     return {"name": os.path.basename(folder.rstrip("/\\")), "rig": rig, "body": body, "parts": parts,
             "swing": swing, "unweighted": unweighted, "method": method, "frontSign": front_sign, "dir": spec}
+
+
+def proxy_weights(body, rig):
+    """Weight a solid stand-in and copy its weights onto the body, so layers lying on each other move as one.
+    Heat weighting reaches a jacket but not the shirt and tie under it, so the layers took different weights
+    and slid through each other in every pose: the tie and the dark inner walls showed as black patches on
+    the grey suit and over the black coat's eyes (2026-11-22). The stand-in is the body voxel-remeshed
+    coarser than the gaps between layers; each body vertex takes the weights of the nearest point on it."""
+    proxy = body.copy()
+    proxy.data = body.data.copy()
+    proxy.name = "WeightProxy"
+    bpy.context.scene.collection.objects.link(proxy)
+    for g in list(proxy.vertex_groups):
+        proxy.vertex_groups.remove(g)
+    proxy.modifiers.clear()
+    proxy.parent = None
+    fuse = proxy.modifiers.new("fuse", "REMESH")
+    fuse.mode, fuse.voxel_size, fuse.adaptivity = "VOXEL", PROXY_VOXEL, 0
+    smooth = proxy.modifiers.new("smooth", "SMOOTH")
+    smooth.factor, smooth.iterations = 0.5, 4
+    bpy.context.view_layer.objects.active = proxy
+    for o in bpy.data.objects:
+        o.select_set(o is proxy)
+    bpy.ops.object.modifier_apply(modifier="fuse")
+    bpy.ops.object.modifier_apply(modifier="smooth")
+    for o in bpy.data.objects:
+        o.select_set(o in (proxy, rig))
+    bpy.context.view_layer.objects.active = rig
+    bpy.ops.object.parent_set(type="ARMATURE_AUTO")
+    if sum(1 for v in proxy.data.vertices if not v.groups) > 0.05 * len(proxy.data.vertices):
+        bpy.data.objects.remove(proxy)  # heat failed on the stand-in too: keep the body's own weights
+        return
+    for g in list(body.vertex_groups):
+        body.vertex_groups.remove(g)
+    for g in proxy.vertex_groups:
+        body.vertex_groups.new(name=g.name)
+    move = body.modifiers.new("weights", "DATA_TRANSFER")
+    move.object = proxy
+    move.use_vert_data = True
+    move.data_types_verts = {"VGROUP_WEIGHTS"}
+    move.vert_mapping = "POLYINTERP_NEAREST"
+    move.layers_vgroup_select_src = "ALL"
+    move.layers_vgroup_select_dst = "NAME"
+    bpy.context.view_layer.objects.active = body
+    for o in bpy.data.objects:
+        o.select_set(o is body)
+    # the armature modifier from parenting sits first; the transfer must run before it
+    bpy.ops.object.modifier_move_to_index(modifier="weights", index=0)
+    bpy.ops.object.modifier_apply(modifier="weights")
+    bpy.data.objects.remove(proxy)
+    fill_unweighted(body)
+    # The stand-in's coarse voxels hand weights over in steps, which tore the black suit's jacket hem into
+    # teeth over the raised thigh in the run pose (2026-11-23). Off by default: 4 passes barely helped, 12 smoothed
+    # the hem but tore the sleeve and opened the knee, and stretch rose from 3.5% to 9.4%. POSE_WEIGHT_SMOOTH=n tries it.
+    # (Done here: bpy.ops.object.vertex_group_smooth refuses to run outside weight-paint mode in a script.)
+    me = body.data
+    links = [[] for _ in me.vertices]
+    for e in me.edges:
+        a, b = e.vertices
+        links[a].append(b)
+        links[b].append(a)
+    w = [{g.group: g.weight for g in v.groups if g.weight > 1e-4} for v in me.vertices]
+    for _ in range(int(os.environ.get("POSE_WEIGHT_SMOOTH", "0"))):
+        nxt = []
+        for i, own in enumerate(w):
+            if not links[i]:
+                nxt.append(own)
+                continue
+            mean = {}
+            for j in links[i]:
+                for g, x in w[j].items():
+                    mean[g] = mean.get(g, 0.0) + x / len(links[i])
+            mixed = {g: 0.5 * own.get(g, 0.0) + 0.5 * mean.get(g, 0.0) for g in set(own) | set(mean)}
+            total = sum(mixed.values()) or 1.0
+            nxt.append({g: x / total for g, x in mixed.items() if x / total > 1e-3})
+        w = nxt
+    for g in body.vertex_groups:
+        g.remove(list(range(len(me.vertices))))
+    for i, ws in enumerate(w):
+        for g, x in ws.items():
+            body.vertex_groups[g].add([i], x, "REPLACE")
+
+
+def fill_unweighted(body):
+    """A vertex whose nearest stand-in point carried no weight stays where the T-pose put it while the arm
+    around it moves, and draws out a thin wire: the black coat's left shoulder in idle, run and crouch
+    (2026-11-23). Each such vertex takes the mean of its weighted neighbours, spreading inward ring by ring."""
+    me = body.data
+    groups = {v.index: {g.group: g.weight for g in v.groups if g.weight > 1e-4} for v in me.vertices}
+    links = {i: set() for i in groups}
+    for e in me.edges:
+        a, b = e.vertices
+        links[a].add(b)
+        links[b].add(a)
+    empty = {i for i, w in groups.items() if sum(w.values()) < 0.05}
+    filled = 0
+    while empty:
+        done = {}
+        for i in empty:
+            ws = [groups[j] for j in links[i] if j not in empty]
+            if ws:
+                mean = {}
+                for w in ws:
+                    for g, x in w.items():
+                        mean[g] = mean.get(g, 0.0) + x / len(ws)
+                done[i] = mean
+        if not done:
+            break
+        for i, w in done.items():
+            groups[i] = w
+            for g, x in w.items():
+                body.vertex_groups[g].add([i], x, "REPLACE")
+        empty -= set(done)
+        filled += len(done)
+    print(f"proxy weights: {filled} unweighted vertices filled from their neighbours, {len(empty)} left")
 
 
 def nearest_bone_weights(body, rig):

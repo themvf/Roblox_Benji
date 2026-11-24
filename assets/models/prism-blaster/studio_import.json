@@ -1,0 +1,27 @@
+{
+  "source": "InsertService:LoadAsset(91260616915145), the model publish uploaded on 2026-11-23; offsets are from the model pivot (the export's centre), Roblox axes, -Z forward. Glow is made Neon and Crystal Glass by tools/build_weapons.luau, so Glow's uploaded colour map is not used",
+  "assetId": 91260616915145,
+  "parts": [
+    {
+      "name": "Body",
+      "meshId": "rbxassetid://137448470872523",
+      "textureId": "rbxassetid://105387372445898",
+      "size": [0.72, 1.705, 4.02],
+      "offset": [0.0, 0.0, 0.0]
+    },
+    {
+      "name": "Crystal",
+      "meshId": "rbxassetid://105002005618418",
+      "textureId": "rbxassetid://105387372445898",
+      "size": [0.8, 0.6, 1.24],
+      "offset": [0.0, 0.1425, -0.37]
+    },
+    {
+      "name": "Glow",
+      "meshId": "rbxassetid://104166851461532",
+      "textureId": "",
+      "size": [0.496, 0.58, 1.2],
+      "offset": [0.0, 0.1475, -0.37]
+    }
+  ]
+}

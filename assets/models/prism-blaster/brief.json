@@ -1,0 +1,32 @@
+{
+ "purpose": "Prism Blaster: a white-and-plum sci-fi energy rifle with a glowing violet crystal core that players hold, in every map",
+ "role": "held",
+ "heightStuds": 1.7,
+ "pivot": "center",
+ "kind": "weapon",
+ "lengthStuds": 4.02,
+ "widthStuds": 0.8,
+ "gameName": "PrismBlaster",
+ "where": "held in every map",
+ "copies": 12,
+ "moving": "",
+ "share": "game",
+ "nearestStuds": 0.0,
+ "thin": "no",
+ "assumed": "user said use defaults: name PrismBlaster; behaves like EnergyRifle; 3.5 x 1.6 x 0.5 studs; no moving parts; 12 on screen; game only; stop at the local build. Route clean (2026-11-23): the Meshy scan stayed soft and the user chose a hand-built model; Body, Crystal (Glass) and Glow (Neon) meshes",
+ "meshes": "auto",
+ "route": "clean",
+ "counts": {},
+ "mounts": {
+  "Grip": [
+   0.0,
+   -0.262,
+   0.91
+  ],
+  "Muzzle": [
+   0.0,
+   0.367,
+   -2.01
+  ]
+ }
+}

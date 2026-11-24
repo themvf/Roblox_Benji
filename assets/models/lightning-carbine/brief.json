@@ -1,0 +1,54 @@
+{
+  "purpose": "Lightning Carbine: a yellow-and-gunmetal sci-fi carbine with twin copper coil rails and a lightning arc between them, held by players in every map",
+  "role": "held",
+  "heightStuds": 1.49,
+  "pivot": "center",
+  "kind": "weapon",
+  "lengthStuds": 4.52,
+  "widthStuds": 0.56,
+  "gameName": "LightningCarbine",
+  "where": "held in every map",
+  "copies": 12,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "user said use defaults: name LightningCarbine, Primary, every map; behaves like EnergyRifle; 4.52 studs long, height and width from the Meshy mesh's proportions (1.49 x 0.56); copper rails solid (thin=no); the lightning arc is a separate Arc mesh (Neon in Studio) added by tools/blender/fix_lightning_carbine.py, which also cleans the Meshy texture; no moving parts; 12 on screen; game only; stop at the local build. User asked for the Meshy API, so route scan (as hand-cannon) instead of the clean shape build",
+  "meshes": "auto",
+  "route": "scan",
+  "scene": {
+    "decimate": 3880,
+    "yaw": 90,
+    "split": {
+      "name": "Arc",
+      "colour": {
+        "hue": [
+          195,
+          208
+        ],
+        "sat": [
+          0.35,
+          0.55
+        ],
+        "val": [
+          0.95,
+          1.0
+        ]
+      },
+      "minFaces": 50
+    }
+  },
+  "counts": {},
+  "mounts": {
+    "Grip": [
+      0.0,
+      -0.53,
+      1.06
+    ],
+    "Muzzle": [
+      0.0,
+      -0.08,
+      -2.26
+    ]
+  }
+}

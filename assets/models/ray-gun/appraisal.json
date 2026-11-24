@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-22",
+  "source": "RayGun.glb",
+  "sourceSha256": "929ccde7ec4f8d2c9a073c00ccdc33b8e88765261cb6071363810688e734bdf9",
+  "measurements": {
+    "triangles": 7157,
+    "size": [
+      1.902,
+      0.47,
+      1.002
+    ],
+    "reliefRatio": 0.2469,
+    "openEdges": 12523,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Ray Gun: a red-and-chrome retro raygun pistol with cream coil rings and an amber emitter tip, held by players in every map (role: held, about 1.42 studs tall)"
+}

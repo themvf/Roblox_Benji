@@ -1,0 +1,31 @@
+{
+  "asset": "heavy-cannon",
+  "recordedOn": "2026-11-22",
+  "reference": {
+    "file": null,
+    "sha256": null,
+    "origin": "unknown",
+    "madeWith": null,
+    "prompt": null
+  },
+  "mesh": {
+    "file": "assets/models/heavy-cannon/source/HeavyCannon.glb",
+    "sha256": "73bfd1f1c1eada8ac5f88cfc51d460eebd343b6d51e90d862830271c42a610ba",
+    "generator": {
+      "service": "meshy",
+      "space": null,
+      "seed": 202,
+      "resolution": "imported",
+      "file": "model.glb",
+      "sha256": "73bfd1f1c1eada8ac5f88cfc51d460eebd343b6d51e90d862830271c42a610ba",
+      "settings": null,
+      "decoded": null,
+      "reference": null,
+      "importedOn": "2026-11-22"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

@@ -1322,10 +1322,23 @@ def recommend_route(brief, measured, spec):
     if brief.get("thin") == "yes":
         reasons.append("it has thin bars or open framework, which a generated mesh tears and a reduction tears further")
     source_tris = measured.get("triangles", 0)
-    kept = spec.get("decimate")
+    kept = decimate_tris(spec)
     if source_tris and kept and 1 - kept / source_tris > CLEAN_REDUCTION:
         reasons.append(f"it needs a {1 - kept / source_tris:.0%} triangle cut, past the {CLEAN_REDUCTION:.0%} where shape is lost")
     return ("clean" if reasons else "scan"), reasons
+
+
+def decimate_tris(spec):
+    """The triangle target of a scene spec's `decimate`: a number, or {"tris": n, "weld": false}
+    (scene_kit keeps UV seams when weld is false; the Prism Blaster's blotches, 2026-11-22)."""
+    value = spec.get("decimate")
+    return value.get("tris") if isinstance(value, dict) else value
+
+
+def with_decimate_tris(spec, tris):
+    """`decimate` with a new triangle target, keeping its other settings."""
+    value = spec.get("decimate")
+    return dict(value, tris=tris) if isinstance(value, dict) else tris
 
 
 def planned_route(brief):
@@ -1338,13 +1351,33 @@ def clean_builder(name):
     return os.path.join(ROOT, "tools", "blender", "build_" + name.replace("-", "_") + ".py")
 
 
-def detail_check(source, export, sheet_path):
-    """Outline overlap and surface error of an export against its source, plus a sheet."""
+def turned_source(source, yaw, pkg):
+    """The source turned the way the build turns it (scene.yaw), so the detail check compares like with
+    like. A turn about Blender Z is the same angle about glTF Y. Without it a correctly turned gun scored
+    a surface error of 1.0 (hand-cannon, 2026-11-22)."""
+    if not yaw:
+        return source
+    import math
+
+    import trimesh
+
+    scene = trimesh.load(source, force="scene")
+    scene.apply_transform(trimesh.transformations.rotation_matrix(math.radians(yaw), [0, 1, 0]))
+    turned = os.path.join(pkg, "trials", "source-turned.glb")
+    os.makedirs(os.path.dirname(turned), exist_ok=True)
+    scene.export(turned)
+    return turned
+
+
+def detail_check(source, export, sheet_path, skip=()):
+    """Outline overlap and surface error of an export against its source, plus a sheet. skip names the
+    hand-modelled meshes scene.extraParts adds (scene.extraMeshes); the source never had them, so they
+    are left out and the scan body alone is scored."""
     sys.path.insert(0, os.path.join(ROOT, "tools"))
     import outline_check
 
-    scores, a, b = outline_check.compare(source, export)
-    measure = outline_check.surface_measure(source, export)
+    scores, a, b = outline_check.compare(source, export, skip)
+    measure = outline_check.surface_measure(source, export, skip)
     errors = {name: found["error"] for name, found in measure.items()}
     os.makedirs(os.path.dirname(sheet_path), exist_ok=True)
     outline_check.sheet(sheet_path, a, b)
@@ -1567,9 +1600,9 @@ def retry_spec(spec, attempts, measured):
         grid[axis] += grid[axis] % 2
     if grid[0] * grid[1] <= RETRY_MAX_TILES:
         return {"tile": grid}
-    lowered = int(spec["decimate"] / factor)
+    lowered = int(decimate_tris(spec) / factor)
     if lowered >= int(measured.get("triangles", 0) * RETRY_MIN_KEEP):
-        return {"decimate": lowered}
+        return {"decimate": with_decimate_tris(spec, lowered)}
     return None
 
 
@@ -1670,13 +1703,13 @@ def cmd_build(args):
         allowed = rules.ROLE_BUDGETS[brief["role"]]
         if passed and total > allowed and not (brief.get("budgetWaiver") or "").strip() and not args.no_retry and budget_tries < BUDGET_ATTEMPTS and spec.get("decimate"):
             budget_tries += 1
-            lowered = int(spec["decimate"] * allowed / total * BUDGET_AIM)
+            lowered = int(decimate_tris(spec) * allowed / total * BUDGET_AIM)
             floor = int(measured.get("triangles", 0) * RETRY_MIN_KEEP)
-            print(f"budget: {total:,} triangles is over the {allowed:,} for role {brief['role']}; rebuilding to keep {lowered:,} before tiling (was {spec['decimate']:,}).", flush=True)
+            print(f"budget: {total:,} triangles is over the {allowed:,} for role {brief['role']}; rebuilding to keep {lowered:,} before tiling (was {decimate_tris(spec):,}).", flush=True)
             if lowered < floor:
                 print(f"budget: that is under {RETRY_MIN_KEEP:.0%} of the source ({floor:,}). Shape may be lost; the detail and hole checks below decide.")
-            spec["decimate"] = lowered
-            changed["decimate"] = lowered
+            spec["decimate"] = with_decimate_tris(spec, lowered)
+            changed["decimate"] = spec["decimate"]
             continue
         if passed or args.no_retry or len(attempts) >= BUILD_ATTEMPTS or worst <= TRI_CAP:
             break
@@ -1704,7 +1737,9 @@ def cmd_build(args):
     os.makedirs(review, exist_ok=True)
 
     # Did the reduction keep the shape? Cheap, so it runs before the slow renders.
-    detail = detail_check(source, out, os.path.join(review, "detail.png"))
+    detail = detail_check(
+        turned_source(source, spec.get("yaw"), pkg), out, os.path.join(review, "detail.png"), tuple(spec.get("extraMeshes") or ())
+    )
     worst_error = detail["worstSurfaceError"]
     limit = detail_limit(brief)
     detail["limit"] = limit

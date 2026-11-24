@@ -29,7 +29,7 @@ REGISTRY = os.path.join(ROOT, "src", "shared", "AssetRegistry.json")
 # draw several copies of a close-up asset at once; they are judgment, not measurement.
 # Change them here and in tools/check_asset_registry.luau together.
 ROLE_BUDGETS = {
-    "held": 4000,  # in a hand or on a character
+    "held": 8000,  # in a hand or on a character; 4,000 until 2026-11-23 (user decision, pending beta device tests)
     "interactive": 15000,  # ridden, driven, opened: players are right beside it
     "cover": 10000,  # visual shell around a map block
     "decor": 30000,  # a prop walked past

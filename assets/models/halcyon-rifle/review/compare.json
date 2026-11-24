@@ -1,0 +1,40 @@
+{
+  "asset": "halcyon-rifle",
+  "comparedOn": "2026-11-23 06:57",
+  "budget": 4000,
+  "brief": [
+    5.0,
+    0.45,
+    0.97
+  ],
+  "candidates": [
+    {
+      "seed": 201,
+      "madeBy": "meshy",
+      "triangles": 3749,
+      "cutNeeded": 0.0,
+      "studs": [
+        5.0,
+        0.6
+      ],
+      "shapeProblems": [],
+      "holesPercent": 1.21,
+      "openEdges": 8141,
+      "closeups": "assets/models/halcyon-rifle/trials/seed-201/audit_closeups.png"
+    },
+    {
+      "seed": 202,
+      "madeBy": "meshy",
+      "triangles": 3820,
+      "cutNeeded": 0.0,
+      "studs": [
+        5.1,
+        0.5
+      ],
+      "shapeProblems": [],
+      "holesPercent": 0.11,
+      "openEdges": 7810,
+      "closeups": "assets/models/halcyon-rifle/trials/seed-202/audit_closeups.png"
+    }
+  ]
+}

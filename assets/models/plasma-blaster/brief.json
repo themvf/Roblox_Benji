@@ -1,0 +1,75 @@
+{
+  "purpose": "Plasma Blaster: a heavy rust-red and gunmetal sci-fi blaster with a glowing molten plasma core window that players hold, in every map",
+  "role": "held",
+  "heightStuds": 1.29,
+  "pivot": "center",
+  "kind": "weapon",
+  "lengthStuds": 4.0,
+  "widthStuds": 0.63,
+  "gameName": "PlasmaBlaster",
+  "where": "held in every map",
+  "copies": 12,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "user said use defaults: name PlasmaBlaster; behaves like EnergyRifle; 4 x 1.6 x 0.7 studs; no moving parts (core glow is texture); 12 on screen; game only; stop at the local build. Sight rails are short and part of the solid body, so thin=no",
+  "meshes": "auto",
+  "route": "scan",
+  "scene": {
+    "decimate": {
+      "tris": 7600,
+      "weld": true
+    },
+    "yaw": 90,
+    "split": {
+      "name": "Plasma",
+      "colour": {
+        "hue": [
+          0,
+          60
+        ],
+        "sat": [
+          0.45,
+          1
+        ],
+        "val": [
+          0.5,
+          1
+        ]
+      },
+      "box": [
+        [
+          -0.25,
+          -0.85,
+          0.1
+        ],
+        [
+          0.25,
+          0.4,
+          0.5
+        ]
+      ],
+      "minFaces": 30
+    },
+    "extraParts": "tools/blender/parts_plasma_blaster.py",
+    "bakeNormals": {
+      "size": 1024,
+      "extrusion": 0.025,
+      "distance": 0.06
+    }
+  },
+  "counts": {},
+  "mounts": {
+    "Grip": [
+      0.0,
+      -0.28,
+      1.2
+    ],
+    "Muzzle": [
+      0.0,
+      0.345,
+      -2.08
+    ]
+  }
+}

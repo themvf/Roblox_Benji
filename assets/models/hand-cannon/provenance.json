@@ -1,0 +1,31 @@
+{
+  "asset": "hand-cannon",
+  "recordedOn": "2026-11-22",
+  "reference": {
+    "file": "assets/models/hand-cannon/source/reference.png",
+    "sha256": "0bdfe39806a74ea96508993fc592bf1a803c4c5bf5a5ad2dacab5c6fa2862d34",
+    "origin": "unknown",
+    "madeWith": null,
+    "prompt": null
+  },
+  "mesh": {
+    "file": "assets/models/hand-cannon/source/HandCannon.glb",
+    "sha256": "739739d8559d09a40da8e97b29c4113feaab120f65435d6a352c4c811e8d0f10",
+    "generator": {
+      "service": "meshy",
+      "space": null,
+      "seed": 201,
+      "resolution": "imported",
+      "file": "meshy-1.glb",
+      "sha256": "739739d8559d09a40da8e97b29c4113feaab120f65435d6a352c4c811e8d0f10",
+      "settings": "image to 3D (latest), 20k triangles, 2k geometry, base colour texture, lighting removed, from a Meshy nano-banana-2 chunky restyle of the user's picture",
+      "decoded": null,
+      "reference": "reference.png",
+      "importedOn": "2026-11-22"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "checkedOn": "2026-11-22 20:23",
+  "export": "assets/models/hand-cannon/exports/HandCannon.glb",
+  "exportSha256": "727f4694e7e9dc1359b03dc54e8a74eb0f566dfbf5759cbd585ac7f93ed2fdb3",
+  "sourceSha256": "739739d8559d09a40da8e97b29c4113feaab120f65435d6a352c4c811e8d0f10",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "scan",
+    "suggested": "clean",
+    "reasons": [
+      "the role is held, so players are right next to it and its parts may need to move"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.98,
+      "side": 0.987,
+      "top": 0.983
+    },
+    "surfaceError": {
+      "front": 0.019,
+      "back": 0.039,
+      "right": 0.007,
+      "left": 0.008,
+      "top": 0.014,
+      "bottom": 0.016
+    },
+    "worstSurfaceError": 0.039,
+    "noise": 0.001,
+    "sheet": "assets/models/hand-cannon/review/detail.png",
+    "limit": 0.08,
+    "passed": true
+  },
+  "ground": {
+    "bottomFill": 0.018,
+    "aboveFill": 0.132,
+    "ratio": 0.14,
+    "footprintStuds": [
+      0.61,
+      2.95
+    ],
+    "flagged": false
+  },
+  "textureBleed": {
+    "image": 0,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.463,
+    "backgroundBrightness": 0.327,
+    "surfaceBrightness": 0.327,
+    "bleedPercent": 2.66
+  },
+  "budget": {
+    "role": "held",
+    "budget": 4000,
+    "triangles": 3880,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      0.615,
+      1.297,
+      2.953
+    ],
+    "heightStuds": 1.3,
+    "kind": "weapon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.35,
+        0.7
+      ],
+      "Muzzle": [
+        0.0,
+        0.2,
+        -1.47
+      ]
+    },
+    "mountSheet": "assets/models/hand-cannon/review/mounts.png",
+    "pivot": "center",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": null,
+      "decimate": 3880,
+      "worstMesh": 3278,
+      "triangles": 3880,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     HandCannon.glb (0.40 MB)",
+    "           Mesh_0                           3,278 tris",
+    "           Cylinder                           602 tris",
+    "           total                            3,880 tris (2 meshes)",
+    "           texture                      1024x1024  image/jpeg"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/hand-cannon/review/audit.png",
+      "assets/models/hand-cannon/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.04,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

@@ -229,7 +229,159 @@ On Tripo, a wider cage baked the hidden face (inside the collar, under the hair 
 jagged brown. Cutting the hair left a gap line at the hairline. Worked example:
 `trials/DarkArmourTripo`.
 
-Prep rules that now apply to both generators:
+**`--generator tripo-argon` (or `kit_look.py character-argon <Name>`)** runs the duplicated **Tripo Argon pipeline** (`tools/blender/measure_joints_argon.py`, `prepare_avatar_setup_argon.py`, `pose_matrix_argon.py`) for side-by-side testing without touching the baseline Tripo path:
+- Pass `--reuse-from <TrialFolder>` to reuse an existing trial's `tripo/model.glb` at **0 credits**.
+- Measures `armInner` via horizontal BVH raycasts (fixing blocky torso walls collapsing `armInner` to the centre lapel seam on `GoldenOniTripo`).
+- Guards the head, mask and neck from `arm_weight` displacement, despills asymmetric side rim-lighting (`BouncerTripo`), boosts emissive accent contrast (`StormStoneTripo`), splits fused long-coat/skirt webbing below the crotch, protects head/hand/joint density during decimation, scales Head & UpperTorso UV islands (`1.65x` / `1.3x`), and bakes `BodyNormal.png` + `BodyRoughness.png` alongside `BodyColor.png`.
+- Rotates the rifle proxy with `Hand.R` in non-aim poses, isolates cross-leg heat weights below the hip, and adds `sheet-team-silhouette.png` (Red vs Blue team bands and 50-stud distant dark/bright map renders).
+
+**`--generator meshy`** is the same route on Meshy multi-image to 3D (the user's monthly plan, key in
+`MESHY_API`). The front T-pose and the back view go in as data URIs. Settings:
+- `latest` = Meshy 7.1, which takes the first image as the front.
+- 30 credits per run.
+- 2K texture: Roblox caps textures at 1024, so 4K/8K buy nothing.
+- `remove_lighting` on, which strips the picture's lighting.
+- No forced pose by default (`--meshy-pose none`; forcing `t-pose` remade the hands), remeshed to
+  30,000 triangles.
+
+Without `--confirm` it prints the cost and the plan balance and stops. The task id is saved to
+`meshy/task.json` before polling, so an interrupted run picks the same task back up instead of paying
+again. A failed task is refunded and its id cleared. Prep starts on Tripo's settings (cage 1, no hair
+cut). Worked example: `trials/DarkArmourMeshy`, built from DarkArmourAuto's T-pose and back view.
+
+Variant test (2026-11-21, `trials/DarkArmourMeshy/meshy-variants.jpg`, about 150 credits), each step adding one change:
+
+| Variant | Change | Result |
+| --- | --- | --- |
+| A | `--meshy-pose none` | Pointing hands gone. Forcing `t-pose` on a picture that is already a T-pose remade the hands. |
+| B | A + `--meshy-geometry 2k --faces 19000` | Smoothest face, truest colours. The defaults are now `none` and `2k`; pass `--faces 19000` yourself. |
+| C | B + `--meshy-texture-ref` | Worse: the chest core turned into a black hollow and the eyes went blue. D also used the reference and kept the core, so this may be one run's luck; unproven either way. |
+| D | C + `--meshy-sides` | Side views from Meshy image-to-image (nano-banana-2, 6 credits each) gave the most back and side detail, but added a smile and smaller shoulder pads. Check `meshy/sides.png` first. |
+
+Nano-banana draws a true T-pose profile with the arm end-on, which Kontext never managed.
+
+**D is the standard Meshy route (user's choice, 2026-11-21: "if people are going to buy these I need to
+provide a high quality product").** Its defaults:
+- `--meshy-sides` and `--meshy-texture-ref` are on; turn them off with `--no-meshy-sides` or
+  `--no-meshy-texture-ref`.
+- `--faces` is 19,000 for meshy.
+- A build costs about 47 credits.
+- The side-view prompt now asks for the front picture's exact expression and shoulder-pad size, after
+  D's side views widened the picture's slight smirk into a grin and shrank the pads. Check a mouth
+  against `source/picture.*` before calling it wrong: the DarkArmour picture smirks.
+- `trials/DarkArmourMeshyStd` is the worked example: the standard route plus gloves, about 53 credits
+  including one side-view retry.
+
+**Hair on Meshy builds is split off as its own part (`hairSplit: "colour"`, set by `kit_look.py` for
+meshy).** Meshy sculpts strand grooves, but it fuses the hair onto the head. Kept in the body, the hair
+shared the body's triangles and its 1024 texture, and the voxel fuse smoothed the grooves away.
+
+How the split works:
+- A flood from the crown takes faces that are neither skin nor bright glow.
+- Below the measured hairline (`hairLine`) it takes only faces as dark as the crown's own hair, so it
+  stops at the collar by colour.
+- The hair keeps Meshy's sculpt: thinned to 5,000 triangles if needed, never voxel-remeshed.
+- It gets a fresh 1024 texture of its own.
+- The body drops to 15,000 triangles, so the character stays inside 20,000.
+
+A fixed height floor cut the back of the hair in a sawtooth, which is why the stop is by colour.
+Before and after: `trials/DarkArmourMeshyStd/hair-before-after.jpg`.
+
+**When the top of the head isn't hair, build with `--headgear`.** On a horned, helmeted or hooded
+character, the split's "crown colour" is the horns. On HornedFeatherMeshy it pulled parts of the horns into
+the Hair part and left holes. `--headgear` skips the split, so the horns and hair stay on the body.
+
+**Blond and light hair** are told apart from the character's own skin, measured on its face. A fixed
+warm-colour skin test matches blond hair, and this left SoldierMeshy's hair unsplit and painted navy.
+Light hair also gets no painted sheen.
+
+**Hair sheen is painted back (`hairSheen`).** The picture's glossy highlight across the hair is
+lighting, so Meshy's `remove_lighting` strips it.
+- **Colour:** `kit_look.hair_sheen` reads it from the top of the T-pose picture. It takes the brighter
+  half of the coloured hair pixels and pushes their saturation up 1.7×, because their mean reads greyer
+  than the gloss looks. If the highlights are neutral it uses the brightest tenth; for light hair or a
+  helmet it returns none.
+- **Painting:** `paint_sheen` screens that colour into the hair's own texture as a band where the hair
+  faces up and forward. The light direction is (0, -0.75, 1), and the ramp runs 0.6 → 0.74.
+- **Clean edges:** the band is placed from a smoothed copy of the shape, so it sweeps cleanly.
+- **Strength:** 0.7.
+
+What failed on the way (`hair-sheen-before-after.jpg` shows the result):
+- A wide band came out as a dull wash over the whole crown.
+- Flat normals gave it blotchy edges.
+- Unboosted, the colour came out lilac.
+
+Under bright flat light it reads strong. Judge it under Studio lighting before tuning the strength.
+
+**Hands (`--hands glove`, the default for meshy only).** On a Tripo build (a copy of BouncerTripo) the
+glove came out undersized and off-centre inside the open, puffy sleeves, with a hole at the sleeve end.
+It is sized from the wrist, and those sleeves are wider and open. Meshy's gauntlets close at the wrist.
+Until the glove sizes itself to the sleeve opening, tripo and trellis keep their own hands. No generator made sellable hands: TRELLIS
+mitts, Meshy fused fingers, a pointing finger or thumbs-up mitts, Tripo claws. The prep (step 2b) now
+cuts each hand off at the measured wrist and plugs in a chunky closed-fist glove built from rounded
+blocks (superellipsoids):
+- one fist block,
+- four finger ends with grooves between them,
+- a thumb lying across the front.
+
+The glove is sized from the arm's radius at the wrist and tinted with the darker half of the paint of
+the hand it replaces. The voxel fuse welds it into the cuff.
+
+Two earlier designs failed:
+- A flat open hand from boxes came out of the fuse as a thin paddle.
+- Box finger segments came out as a hook with its thumb lost.
+
+Keep every part a few voxels thick. The fist reads from every side and closes round the rifle grip in
+every pose (`trials/DarkArmourMeshyD/skinned/hand-views.png`). `--hands keep` keeps the generator's
+hands.
+
+## Layered clothing: what goes wrong and why (2026-11-22/23)
+
+Learned on four clothed Meshy builds: GreySuit, BlackSuit, BlackCoat and LabCoat (`trials/four-final.jpg`).
+Meshy models a dressed character like a real one: skin, shirt, jacket and lining are separate shells
+stacked inside each other, and it paints every surface no light reaches near-black. Roblox needs one
+closed body, so the prep fuses the layers and cuts the hands off. **Every defect below was an inside
+surface that our own cutting or bending exposed.** Read a new defect that way first.
+
+| What showed | Cause | Fix, now in the prep |
+|---|---|---|
+| Black splotches on the suit when posed | 21-33% of faces are hidden inner walls and creases, 84% of them painted near-black | `recolour_hidden` (prepare): faces seen from no direction, and dark faces seen from fewer than 6 of 64, are repainted from the cloth that covers them. It ships in the model. |
+| Shirt and tie sliding through the jacket in poses | heat weighting reached the jacket but not the layers under it | preview only: `proxy_weights` (pose_matrix) weights a voxel stand-in at 0.06 and copies it on, so the layers move as one |
+| Skin and black shards round every glove | the cut at the wrist left the old hand's stubs, the shirt cuff and the lining as ragged slivers | `tidy_wrist`: drop anything near the cut that has cloth further out along its radius; drop loose scraps; pull stragglers back onto the cut plane |
+| Black spikes between the lab coat's cuff and glove | the cuff's own end face, a dark ring facing down the arm, uncovered and not hand-coloured | `tidy_wrist` also drops dark faces facing down the arm at the cut. It needs the "dark" test: without it, the rule also removed the teal cuff band |
+| A chip hanging in the air beside the shoulder | a 30-vertex island left by the voxel fuse; it took the torso's weights | islands under 1% of the body are dropped (the old floor was 50 faces) |
+| Straps flying out sideways in the jump | thin straps hanging free below the hem get dragged by the nearest limb | `"remove"` boxes in the trial's `joints.json` marks trim them before the fuse (`trials/LabCoatMeshy`) |
+
+**How to fix the next one (what made this take several rounds):**
+- **Measure before you change a rule.** Three guesses at the lab coat's spikes changed nothing. A layer map
+  settled it in one run: `"debugWrist": true` in a prepare spec prints each wrist's faces by distance along
+  the arm (t) and from its axis (d), in units of the wrist radius, with brightness and whether the tidy cut
+  them. A flat-grey render is the same move for paint: clean geometry in grey means the fault is paint.
+- **Fixed radii fail on the next costume.** A cuff can be tight (suits) or flared (lab coat), so test what
+  covers a face, not how far out it sits.
+- **A rule that removes faces needs a colour or cover test, and a look at what it took.** The bare end-face
+  rule fixed the spikes and silently ate the teal cuff.
+- **Tell preview-rig faults from model faults.** Studio rigs the FBX itself, which has no skeleton. Shoulder
+  points with the arms down, and a jacket hem tearing into teeth over a raised thigh, come from our approximate
+  preview weights. Stray paint, shards, loose chips and dangling straps are in the model. Say which kind a
+  defect is in the findings, and settle preview-rig faults with a Studio test, not more preview tuning.
+  Weight smoothing was tried for the hem: 4 passes barely helped; 12 smoothed the hem but tore the sleeve
+  and opened the knee, and stretch rose from 3.5% to 9.4%. It stays off (`POSE_WEIGHT_SMOOTH=n` to try).
+- **Blender hides failures unless `--python-exit-code 1` comes before `--python`.** With it after, a crashed
+  pose step exited 0 and the audit copied the previous night's renders. `kit_look.py` now orders it right
+  everywhere it runs prepare, audit and the pose test. Check render timestamps if a fix "did nothing".
+- **Design out what the prep cannot fix.** Capes over the shoulders webbed the black coat's arms to its body,
+  and a picture with sloped arms gave a sloped T-pose that Meshy's own t-pose mode kept. Redraw the picture
+  (level arms, no capes) rather than fighting it in Blender. Accessories at the wrist (a watch, a bracelet)
+  are cut with the hand; leave them out of the picture or expect a ring at the cuff.
+
+**`kit_look.py aragon-meshy <Name>` (or `character <Name> --generator aragon-meshy`)** runs the **Aragon Meshy Full Pipeline**:
+- **`--mode direct` (default, 35 credits, 0 HF GPU quota):** Sends the original full-resolution concept image directly to Meshy 7.1 `/image-to-3d` with `pose_mode: t-pose`, `geometry_resolution: 2k`, and `remove_lighting: true` (preserving fine accessories like wrist watches and badges that FLUX Kontext drops, while T-posing once in 3D).
+- **`--mode multiview` (Variant B settings, 35 credits):** Runs the Kontext T-pose + back view into Meshy 7.1 `/multi-image-to-3d` with `pose_mode` omitted (`none`, keeping open hands), `geometry_resolution: 2k`, `remove_lighting: true`, and `textureRefs` off.
+- **`--reuse-from <TrialFolder>` (0 credits):** Reuses an existing trial's `meshy/model.glb` (or `tripo/model.glb`) for side-by-side comparison.
+- Runs the full Argon prep & 8-sheet audit at `18,500` triangles (`measure_joints_argon.py` -> `prepare_avatar_setup_argon.py` -> `write_fbx.py` -> `audit_skinned.py` + `pose_matrix_argon.py`).
+
+Prep rules that now apply to every generator:
 - A small loose piece above the neck is kept as part of the body if its area is at least 30e-4 of the
   height squared. Tripo's purple hair lock measured 66; TRELLIS slivers measured at most 15.
 - The `paint` box repaints only skin-coloured faces, and only when skin covers 35% or more of the box.

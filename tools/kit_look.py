@@ -858,8 +858,8 @@ def cmd_skinned(a):
             "fbx": f"{a.kit}-AvatarSetup.fbx", "cage": a.cage}
     out.mkdir(exist_ok=True)
     (out / "prepare-spec.json").write_text(json.dumps(spec, indent=1), encoding="utf-8")
-    done = subprocess.run([BLENDER, "-b", "-noaudio", "--python", str(ROOT / "tools/blender/prepare_avatar_setup.py"),
-                           "--python-exit-code", "1", "--", str(out / "prepare-spec.json")],
+    done = subprocess.run([BLENDER, "-b", "-noaudio", "--python-exit-code", "1", "--python",
+                           str(ROOT / "tools/blender/prepare_avatar_setup.py"), "--", str(out / "prepare-spec.json")],
                           capture_output=True, text=True, encoding="utf-8", errors="replace")
     if done.returncode != 0:
         sys.stdout.write(done.stdout[-3000:] + done.stderr[-3000:])
@@ -900,8 +900,13 @@ def cmd_audit(a):
     folder = Path(a.folder).resolve()
     if not (folder / "Body.glb").exists():
         raise SystemExit(f"no Body.glb in {folder}")
-    done = subprocess.run([BLENDER, "-b", "-noaudio", "--python", str(ROOT / "tools/blender/audit_skinned.py"),
-                           "--python-exit-code", "1", "--", str(folder)],
+    spec_file = folder / "prepare-spec.json"
+    is_argon = getattr(a, "argon", False) or (
+        spec_file.exists() and json.loads(spec_file.read_text(encoding="utf-8")).get("pipeline") == "tripo-argon"
+    )
+    audit_script = "audit_skinned_argon.py" if is_argon else "audit_skinned.py"
+    done = subprocess.run([BLENDER, "-b", "-noaudio", "--python-exit-code", "1", "--python", str(ROOT / "tools/blender" / audit_script),
+                           "--", str(folder)],
                           capture_output=True, text=True, encoding="utf-8", errors="replace")
     if done.returncode != 0:
         sys.stdout.write(done.stdout[-3000:] + done.stderr[-3000:])
@@ -909,10 +914,11 @@ def cmd_audit(a):
     audit = folder / "audit"
     if (folder / "joints-front.png").exists():  # where the joints were measured, drawn on the model
         shutil.copyfile(folder / "joints-front.png", audit / "joints-front.png")
+    pose_script = "pose_matrix_argon.py" if is_argon else "pose_matrix.py"
     # movement belongs to the audit too: poses with the rifle held, and the shoulder camera
     poses = audit / "poses"
-    done = subprocess.run([BLENDER, "-b", "-noaudio", "--python", str(ROOT / "tools/blender/pose_matrix.py"),
-                           "--python-exit-code", "1", "--", str(folder), "--out", str(poses)],
+    done = subprocess.run([BLENDER, "-b", "-noaudio", "--python-exit-code", "1", "--python", str(ROOT / "tools/blender" / pose_script),
+                           "--", str(folder), "--out", str(poses)],
                           capture_output=True, text=True, encoding="utf-8", errors="replace")
     if done.returncode != 0:
         sys.stdout.write(done.stdout[-3000:] + done.stderr[-3000:])
@@ -924,12 +930,21 @@ def cmd_audit(a):
             tile = poses / f"{folder.name}-{pose}-{view}.png"
             if tile.exists():
                 shutil.copyfile(tile, audit / f"pose-{pose}-{view}.png")
+    team_tiles = []
+    if is_argon:
+        for extra in ("team-red", "team-blue", "50stud-dark", "50stud-bright"):
+            tile = poses / f"{folder.name}-{extra}.png"
+            if tile.exists():
+                shutil.copyfile(tile, audit / f"extra-{extra}.png")
+                team_tiles.append(f"extra-{extra}")
     sheets = dict(AUDIT_SHEETS)
     sheets["alone"] = sorted(p.stem for p in audit.glob("alone-*.png"))
     sheets["joints"] = ["joints-front"] if (audit / "joints-front.png").exists() else []
     sheets["poses-front"] = [f"pose-{p}-front" for p in matrix["poses"]]
     sheets["poses-side"] = [f"pose-{p}-side" for p in matrix["poses"]]
     sheets["camera"] = sorted(p.stem for p in audit.glob("pose-*-camera.png"))
+    if team_tiles:
+        sheets["team-silhouette"] = team_tiles
     made = []
     for name, tiles in sheets.items():
         if not tiles:
@@ -1106,8 +1121,10 @@ def tpose_score(path):
 
 
 def run_blender(script, *args):
-    done = subprocess.run([BLENDER, "-b", "-noaudio", "--python", str(ROOT / "tools/blender" / script),
-                           "--python-exit-code", "1", "--", *map(str, args)],
+    # --python-exit-code only applies to a --python that comes after it: written after, a crashed script
+    # exited 0 and the caller read a file it never wrote (BlackCoatMeshy's joints, 2026-11-22).
+    done = subprocess.run([BLENDER, "-b", "-noaudio", "--python-exit-code", "1", "--python",
+                           str(ROOT / "tools/blender" / script), "--", *map(str, args)],
                           capture_output=True, text=True, encoding="utf-8", errors="replace")
     if done.returncode != 0:
         sys.stdout.write(done.stdout[-3000:] + done.stderr[-3000:])
@@ -1139,6 +1156,10 @@ def cmd_character(a):
     audit (views, close-ups, accessories, joints, poses with a rifle, shoulder camera) -> STUDIO.md.
     Each stage keeps its output, so a rerun after a GPU-quota stop starts at the first missing one.
     The only steps left to people: approving the picture, and the Studio run itself."""
+    if getattr(a, "generator", None) in ("aragon-meshy", "argon-meshy"):
+        return cmd_aragon_meshy(a)
+    if getattr(a, "generator", None) == "tripo-argon":
+        return cmd_character_argon(a)
     from gradio_client import Client, handle_file
     from PIL import Image
 
@@ -1173,7 +1194,7 @@ def cmd_character(a):
         # a different edit: everything made from the old one is set aside (kept, not deleted)
         aside = out / "superseded" / datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         aside.mkdir(parents=True)
-        for sub in ("tpose", "trellis", "tripo", "skinned"):
+        for sub in ("tpose", "trellis", "tripo", "meshy", "skinned"):
             if (out / sub).exists():
                 shutil.move(str(out / sub), str(aside / sub))
                 (out / sub).mkdir()
@@ -1226,8 +1247,13 @@ def cmd_character(a):
         pick_file.write_text(json.dumps(pick, indent=1), encoding="utf-8")
     back_pic = out / "tpose" / f"back-{pick['back']}.png" if pick["back"] else None
 
+    if a.generator == "tripo-argon":
+        a.reuse_from = getattr(a, "reuse_from", None)
+        return cmd_character_argon(a)
     if a.generator == "tripo":
         source, turn, prep = tripo_character(a, out, front_pic, back_pic)
+    elif a.generator == "meshy":
+        source, turn, prep = meshy_character(a, out, front_pic, back_pic)
     else:
         source, turn, prep = trellis_character(out, token, front_pic, back_pic, picked)
 
@@ -1240,11 +1266,28 @@ def cmd_character(a):
           f"arm line {measured['marks']['shoulder'][1]} (drawn on joints-front.png)")
     marks = dict(measured["marks"])
     if not prep["hairCut"]:
-        marks.pop("hairCut", None)
+        marks["hairLine"] = marks.pop("hairCut", None)  # no height cut, but the hair split uses the hairline
 
+    # Meshy fuses the hair onto the head, so it is split off by colour into its own part: Meshy's own
+    # strand sculpt on a 1024 texture of its own, 5,000 triangles, with the body at 15,000 so the whole
+    # character stays inside CHARACTER_BUDGET (DarkArmourMeshyStd hair test, 2026-11-21).
+    split_hair = a.generator == "meshy" and not a.headgear
+    if a.faces is None:  # Meshy's 2K geometry carries the detail (variant B/D test)
+        a.faces = (CHARACTER_BUDGET - 5000 if split_hair else 19000) if a.generator == "meshy" else 12000
     spec = {"source": str(source), "out": str(folder), "turn": turn, "swing": 0, "voxel": 0.004, "faces": a.faces,
             "texture": 1024, "fbx": f"{a.name}-AvatarSetup.fbx", "cage": prep["cage"],
-            "headgearIsHair": not a.headgear, "marks": marks}
+            "headgearIsHair": not a.headgear, "marks": marks,
+            "hands": a.hands or ("glove" if a.generator == "meshy" else "keep")}
+    if a.generator == "meshy":
+        # The paint box repaints skin TRELLIS put over the back of the head. Meshy paints its own hair, and
+        # anything warm passes the box's skin test: it painted SoldierMeshy's blond hair and HazmatMeshy's yellow
+        # hood navy (2026-11-22).
+        marks.pop("paint", None)
+    if split_hair:
+        spec.update({"hairSplit": "colour", "hairFaces": 5000, "hairTexture": 1024})
+        sheen = hair_sheen(front_pic)
+        if sheen:
+            spec["hairSheen"] = sheen
     (folder / "prepare-spec.json").write_text(json.dumps(spec, indent=1), encoding="utf-8")
     if not (folder / "Body.glb").exists() or a.rebuild:
         for part in ("Body", "Hair", "Headgear"):  # a rebuild with no hair must not ship the old Hair.glb
@@ -1324,6 +1367,619 @@ def tripo_character(a, out, front_pic, back_pic):
               f"{tripo_run(env, ['balance', '--json']).get('balance')}")
     print(f"3 Tripo model: {rel(model)}")
     return model, -90, {"cage": 1, "hairCut": False}
+
+
+TPOSE_PROMPT_ARGON = (
+    "Turn the character to face the camera straight on, standing upright in a T-pose: both arms "
+    "straight out to the sides at shoulder height, fully inside the picture with both hands visible, "
+    "legs straight with the feet a little apart, clear empty background between the arms and the "
+    "body and a clean vertical separation between the left and right legs up to the hip (any coat "
+    "or tunic hem split cleanly over each leg, not bridging across the gap between the legs). "
+    "Light it flat and even from the front with neutral white studio light: remove any coloured side "
+    "rim light, coloured edge reflections or strong shadows, while keeping the character's own "
+    "glowing visors, eyes or energy lines crisp and saturated. Plain light grey background."
+)
+
+
+def tpose_prompt_argon(remove):
+    if not remove:
+        return TPOSE_PROMPT_ARGON
+    things = "; ".join(remove)
+    return (TPOSE_PROMPT_ARGON + f" Remove {things} completely; where it was, continue the surrounding "
+            "material and colour seamlessly, with nothing new added in its place.")
+
+
+def cmd_character_argon(a):
+    """The duplicated Tripo Argon character pipeline (tools/blender/*_argon.py):
+    - Can run fresh from `--image` (Kontext T-pose + back view -> Tripo P2 multi-view) or reuse an
+      existing trial's `tripo/model.glb` (or `--reuse-from <TrialFolder>`) at zero credit cost so
+      baseline Tripo and Tripo Argon can be compared side by side.
+    - Uses `measure_joints_argon.py` (BVH horizontal torso-width raycasting, fixing GoldenOniTripo's
+      narrow `armInner` collapse).
+    - Uses `prepare_avatar_setup_argon.py` (head/neck guard on `arm_weight`, asymmetric side
+      rim-light despill, emissive accent lift, inter-leg skirt cleft split, head/hand/joint-protected
+      decimation, priority-weighted UVs, and baked Normal + Roughness maps).
+    - Uses `pose_matrix_argon.py` via `cmd_audit` (hand-rotated rifle proxy, cross-leg heat-weight
+      isolation, Red/Blue team readability and 50-stud distant silhouette sheets)."""
+    from gradio_client import Client, handle_file
+    from PIL import Image
+
+    out = Path(a.out).resolve() if a.out else ROOT / "assets" / "kit-looks" / "trials" / a.name
+    for sub in ("source", "tpose", "tripo", "skinned"):
+        (out / sub).mkdir(parents=True, exist_ok=True)
+
+    reuse = getattr(a, "reuse_from", None)
+    if reuse:
+        src_dir = Path(reuse).resolve()
+        if not src_dir.exists():
+            src_dir = ROOT / "assets" / "kit-looks" / "trials" / reuse
+        if not src_dir.exists():
+            raise SystemExit(f"--reuse-from folder not found: {reuse}")
+        src_glb = src_dir / "tripo" / "model.glb"
+        reused_turn = -90
+        if not src_glb.exists() and (src_dir / "meshy" / "model.glb").exists():
+            src_glb = src_dir / "meshy" / "model.glb"
+            reused_turn = 0
+        if not src_glb.exists():
+            # check if prepare-spec.json points to an external tripo-multiview.glb (e.g. GoldenOniTripo)
+            ps = src_dir / "skinned" / "prepare-spec.json"
+            if ps.exists():
+                ps_data = json.loads(ps.read_text(encoding="utf-8"))
+                cand = Path(ps_data.get("source", ""))
+                if cand.exists():
+                    src_glb = cand
+                    reused_turn = ps_data.get("turn", -90)
+        if not src_glb.exists():
+            raise SystemExit(f"no tripo or meshy model found in {src_dir}")
+        dst_glb = out / "tripo" / "model.glb"
+        if not dst_glb.exists():
+            shutil.copyfile(src_glb, dst_glb)
+        print(f"1-3 Argon: reused source {rel(src_glb)} (turn {reused_turn}) -> {rel(dst_glb)} (0 credits)")
+        source, turn, prep = dst_glb, reused_turn, {"cage": 1, "hairCut": False}
+    elif (out / "tripo" / "model.glb").exists():
+        source, turn, prep = out / "tripo" / "model.glb", -90, {"cage": 1, "hairCut": False}
+        print(f"1-3 Tripo Argon: using existing {rel(source)}")
+    else:
+        token = os.environ.get("HF_TOKEN")
+        wide = out / "source" / "picture-wide.png"
+        if not wide.exists():
+            if not a.image:
+                raise SystemExit("--image (or --reuse-from <TrialFolder>) is needed the first time")
+            shutil.copyfile(a.image, out / "source" / ("picture" + Path(a.image).suffix.lower()))
+            im = Image.open(a.image).convert("RGB")
+            w, h = im.size
+            bg = tuple(sum(c) // 4 for c in zip(im.getpixel((5, 5)), im.getpixel((w - 6, 5)),
+                                               im.getpixel((5, h // 2)), im.getpixel((w - 6, h // 2))))
+            side = int(max(w, h) * 1.3)
+            canvas = Image.new("RGB", (side, side), bg)
+            canvas.paste(im, ((side - w) // 2, (side - h) // 2))
+            canvas.save(wide)
+            print("1 [Argon] canvas widened")
+
+        pick_file = out / "tpose" / "pick.json"
+        if a.remove is None and pick_file.exists():
+            a.remove = json.loads(pick_file.read_text(encoding="utf-8")).get("remove") or None
+        prompt = tpose_prompt_argon(a.remove)
+        if not pick_file.exists():
+            client = Client("black-forest-labs/FLUX.1-Kontext-Dev", token=token, verbose=False)
+            scored = []
+            for seed in range(1, a.seeds + 1):
+                target = out / "tpose" / f"seed-{seed}.png"
+                if not target.exists():
+                    result = client.predict(input_image=handle_file(str(wide)), prompt=prompt, seed=seed,
+                                            randomize_seed=False, guidance_scale=2.5, steps=28, api_name="/infer")
+                    image = result[0] if isinstance(result, (list, tuple)) else result
+                    shutil.copyfile(image.get("path") if isinstance(image, dict) else image, target)
+                usable, score, notes = tpose_score(target)
+                scored.append({"seed": seed, "usable": usable, "score": round(score, 3), "notes": notes})
+                print(f"2 [Argon] T-pose seed {seed}: {notes}{'' if usable else ' (not usable)'}")
+            good = [x for x in scored if x["usable"]]
+            if not good:
+                raise SystemExit("no T-pose edit was usable; rerun with --seeds higher, or check the picture")
+            best = max(good, key=lambda x: x["score"])
+            pick_file.write_text(json.dumps({"prompt": prompt, "remove": a.remove or [], "seeds": scored,
+                                             "picked": best["seed"], "pipeline": "tripo-argon"}, indent=1),
+                                 encoding="utf-8")
+        picked = json.loads(pick_file.read_text(encoding="utf-8"))["picked"]
+        front_pic = out / "tpose" / f"seed-{picked}.png"
+        pick = json.loads(pick_file.read_text(encoding="utf-8"))
+        if "back" not in pick:
+            client = Client("black-forest-labs/FLUX.1-Kontext-Dev", token=token, verbose=False)
+            tried = []
+            for seed in range(1, a.seeds + 1):
+                target = out / "tpose" / f"back-{seed}.png"
+                if not target.exists():
+                    result = client.predict(input_image=handle_file(str(front_pic)), prompt=BACK_PROMPT, seed=seed,
+                                            randomize_seed=False, guidance_scale=2.5, steps=28, api_name="/infer")
+                    image = result[0] if isinstance(result, (list, tuple)) else result
+                    shutil.copyfile(image.get("path") if isinstance(image, dict) else image, target)
+                usable, score, notes = back_score(front_pic, target)
+                tried.append({"seed": seed, "usable": usable, "score": round(score, 3), "notes": notes})
+                print(f"3a [Argon] back view seed {seed}: {notes}{'' if usable else ' (not usable)'}")
+                if usable:
+                    break
+            good = [x for x in tried if x["usable"]]
+            pick["back"] = max(good, key=lambda x: x["score"])["seed"] if good else None
+            pick["backTried"] = tried
+            pick_file.write_text(json.dumps(pick, indent=1), encoding="utf-8")
+        back_pic = out / "tpose" / f"back-{pick['back']}.png" if pick["back"] else None
+        source, turn, prep = tripo_character(a, out, front_pic, back_pic)
+
+    folder = out / "skinned"
+    joints = folder / "joints.json"
+    if not joints.exists() or a.rebuild:
+        run_blender("measure_joints_argon.py", source, turn, joints)
+    measured = json.loads(joints.read_text(encoding="utf-8"))
+    print(f"4 [Argon] joints measured: neck {measured['marks']['neck']}, hip {measured['marks']['hip']}, "
+          f"armInner {measured['marks']['armInner']}, shoulder {measured['marks']['shoulder']} (drawn on joints-front.png)")
+    marks = dict(measured["marks"])
+    if not prep["hairCut"]:
+        marks.pop("hairCut", None)
+
+    spec = {"pipeline": "tripo-argon", "source": str(source), "out": str(folder), "turn": turn, "swing": 0,
+            "voxel": 0.0032, "thicknessVoxels": 1.5, "faces": a.faces, "texture": 1024,
+            "fbx": f"{a.name}-AvatarSetup.fbx", "cage": prep["cage"],
+            "headgearIsHair": not a.headgear, "splitSkirtCleft": True, "despillRimLight": True,
+            "marks": marks}
+    (folder / "prepare-spec.json").write_text(json.dumps(spec, indent=1), encoding="utf-8")
+    if not (folder / "Body.glb").exists() or a.rebuild:
+        for part in ("Body", "Hair", "Headgear"):
+            for suffix in (".glb", "Color.png", "Normal.png", "Roughness.png"):
+                (folder / f"{part}{suffix}").unlink(missing_ok=True)
+        run_blender("prepare_avatar_setup_argon.py", folder / "prepare-spec.json")
+    if not (folder / "fbx-check.json").exists() or a.rebuild:
+        write_fbx(folder, spec["fbx"])
+    report = json.loads((folder / "prepare.json").read_text(encoding="utf-8"))
+    print(f"5 [Argon] prepared: body {report['bodyTriangles']:,} triangles, {report['bodyOpenEdges']} open edges, "
+          f"hair {report.get('HairTriangles', 0):,}, debris dropped {report.get('debrisFacesDropped', 0):,}, "
+          f"skirt cleft split {report.get('skirtCleftFacesSplit', 0)}, "
+          f"rim despill {report.get('rimLightDespilled', 'none')}")
+
+    (folder / "STUDIO.md").write_text(STUDIO_TEMPLATE.format(name=a.name, fbx=spec["fbx"]), encoding="utf-8")
+    a.folder = str(folder)
+    a.argon = True
+    cmd_audit(a)
+
+
+def hair_sheen(front_pic):
+    """The hair's highlight colour, read from the top of the T-pose picture: the mean of the brighter,
+    coloured hair pixels (DarkArmour's violet sheen and streak), or of the brightest tenth when the
+    highlights are neutral. None when the top of the head is not hair (a helmet, a bald head).
+    Meshy strips the picture's lighting, sheen included; prepare_avatar_setup paints it back."""
+    import numpy as np
+    from PIL import Image
+
+    im = np.asarray(Image.open(front_pic).convert("RGB")).astype(np.float32) / 255
+    corner = np.concatenate([im[:8, :8].reshape(-1, 3), im[:8, -8:].reshape(-1, 3)]).mean(0)
+    fg = np.abs(im - corner).max(2) > 0.08
+    rows = np.where(fg.any(1))[0]
+    if not len(rows):
+        return None
+    top = rows.min()
+    band = im[top: top + int(0.09 * (rows.max() - top))]
+    inside = fg[top: top + band.shape[0]]
+    r, g, b = band[..., 0], band[..., 1], band[..., 2]
+    skin = (r > 0.35) & (r > g) & (g > b) & (r - b > 0.12)
+    # Blond hair passes that skin test: when it covers most of the top of the head, the hair is light
+    # (SoldierMeshy 0.56, DarkArmour 0.15) and keeps Meshy's own highlights.
+    if (skin & inside).sum() > 0.4 * inside.sum():
+        return None
+    px = band[inside & ~skin]
+    if len(px) < 500:
+        return None
+    lum, chroma = px.mean(1), px.max(1) - px.min(1)
+    if np.median(lum) > 0.45:  # light grey or white hair, or a helmet: leave its paint alone
+        return None
+    coloured = px[(chroma > 0.12) & (lum > np.median(lum))]
+    if len(coloured) >= 200:  # the brighter half: the mean of all of them came out dull (DarkArmourMeshyStd)
+        cl = coloured.mean(1)
+        pick = coloured[cl >= np.median(cl)]
+    else:
+        pick = px[lum >= np.percentile(lum, 90)]
+    colour = pick.mean(0)
+    # Only a clearly coloured highlight is painted back (DarkArmour's violet: 0.29 max-min before the boost).
+    # A grey or faintly tinted one came out as a blue patch on TuxAgentMMeshy's black hair and a grey wash
+    # on TuxAgentFMeshy's brown hair (2026-11-22); Meshy's own texture keeps such hair's highlights.
+    if len(coloured) < 200 or float(colour.max() - colour.min()) < 0.15:
+        return None
+    # The picture's sheen is a glossy highlight; its pixel mean comes out greyer than it reads (a lilac
+    # for DarkArmour's vivid violet), so a coloured sheen gets its saturation pushed back up.
+    grey = colour.mean()
+    colour = np.clip(grey + (colour - grey) * 1.7, 0, 1)
+    return {"colour": [round(float(c), 3) for c in colour], "strength": 0.7}
+
+
+# Meshy multi-image to 3D (docs.meshy.ai/en/api/multi-image-to-3d, read 2026-11-21). latest = Meshy 7.1,
+# which takes the first image as the front. 30 credits textured at 2K (Roblox caps textures at 1024, so
+# 4K/8K buy nothing). remove_lighting strips the picture's lighting from the texture -- the fault behind
+# the Bouncer's magenta cast on Tripo. Remeshed to 30,000 triangles; prepare_avatar_setup re-voxels anyway.
+MESHY_API = "https://api.meshy.ai/openapi/v1"
+MESHY_MODEL = "latest"
+MESHY_CREDITS = 30
+MESHY_TURN = 0  # glTF +Z front imports to Blender -y; confirmed on DarkArmourMeshy (toe check, 2026-11-21)
+
+
+def meshy_key():
+    """The user keeps the key in MESHY_API (also read from the Windows user variables if this shell
+    predates it). The key is never printed."""
+    key = os.environ.get("MESHY_API") or os.environ.get("MESHY_API_KEY")
+    if not key and os.name == "nt":
+        import winreg
+
+        for name in ("MESHY_API", "MESHY_API_KEY"):
+            try:
+                with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as reg:
+                    key = winreg.QueryValueEx(reg, name)[0]
+                    break
+            except OSError:
+                pass
+    if not key:
+        raise SystemExit("no Meshy key: set the MESHY_API user variable")
+    return key.strip()
+
+
+def meshy_call(key, path, body=None):
+    import urllib.error
+    import urllib.request
+
+    req = urllib.request.Request(MESHY_API + path, method="POST" if body is not None else "GET",
+                                 data=json.dumps(body).encode() if body is not None else None,
+                                 headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r:
+            return json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        raise SystemExit(f"Meshy {path}: HTTP {e.code} {e.read()[:300].decode(errors='replace')}")
+
+
+def data_uri(path):
+    import base64
+
+    kind = "png" if Path(path).suffix.lower() == ".png" else "jpeg"
+    return f"data:image/{kind};base64," + base64.b64encode(Path(path).read_bytes()).decode()
+
+
+MESHY_SIDE_MODEL, MESHY_SIDE_CREDITS = "nano-banana-2", 6
+SIDE_PROMPT = ("Show this exact character from its {side} side, a true 90-degree profile, standing in the same "
+               "T-pose: both arms held straight out sideways at shoulder height, so from the side the near arm "
+               "points straight at the camera and is seen end-on, foreshortened; the arms do not reach forward. "
+               "Legs straight, full body in frame with the feet visible. Same character, armour, colours, face, "
+               "hair, proportions and style as the reference pictures (front and back): the same facial expression "
+               "and mouth as the front picture, exactly, neither more nor less of a smile, and shoulder pads the same "
+               "size and shape as in the front picture. Flat even neutral white "
+               "studio light, plain light grey background.")
+
+
+def meshy_task(key, kind, body, label):
+    """Create a Meshy task and wait for it. Returns the finished task."""
+    import time
+
+    tid = meshy_call(key, f"/{kind}", body)["result"]
+    started = time.time()
+    while True:
+        state = meshy_call(key, f"/{kind}/{tid}")
+        if state.get("status") == "SUCCEEDED":
+            return state
+        if state.get("status") in ("FAILED", "CANCELED"):
+            raise SystemExit(f"Meshy {label} {state.get('status')}: {str(state.get('task_error'))[:300]}")
+        if time.time() - started > 900:
+            raise SystemExit(f"Meshy {label} still running after 15 min")
+        time.sleep(5)
+
+
+def meshy_side_views(key, folder, front_pic, back_pic):
+    """Left and right T-pose profiles from Meshy image-to-image (Kontext drew the arms reaching forward
+    in 8 of 8 tries). Made once and kept in meshy/; look at sides.png before trusting the model."""
+    import urllib.request
+
+    made = []
+    for side in ("left", "right"):
+        target = folder / f"side-{side}.png"
+        if not target.exists():
+            state = meshy_task(key, "image-to-image", {"ai_model": MESHY_SIDE_MODEL, "prompt": SIDE_PROMPT.format(side=side),
+                                                       "reference_image_urls": [data_uri(front_pic), data_uri(back_pic)],
+                                                       "aspect_ratio": "1:1"}, f"{side} view")
+            urllib.request.urlretrieve(state["image_urls"][0], target)
+            print(f"3a Meshy {side} view: {state.get('consumed_credits')} credits")
+        made.append(target)
+    return made
+
+
+def meshy_character(a, out, front_pic, back_pic):
+    """Meshy multi-image to 3D from the T-pose and the back view (paid: 30 credits on the user's plan).
+    Without --confirm it prints the cost and balance and stops. The task id is saved before polling, so
+    an interrupted run resumes the same task instead of paying again.
+    Prep settings start as Tripo's (cage 1, no hair cut): both bake a clean texture onto a tidy mesh."""
+    if not back_pic:
+        raise SystemExit("no usable back view: Meshy multi-image needs one; rerun with --seeds higher")
+    folder = out / "meshy"
+    folder.mkdir(exist_ok=True)
+    model, task_file = folder / "model.glb", folder / "task.json"
+    if not model.exists():
+        key = meshy_key()
+        task = json.loads(task_file.read_text(encoding="utf-8")) if task_file.exists() else {}
+        if not task.get("id"):
+            balance = meshy_call(key, "/balance").get("balance")
+            cost = MESHY_CREDITS + (5 if a.meshy_geometry == "2k" else 0) + (2 * MESHY_SIDE_CREDITS if a.meshy_sides else 0)
+            print(f"3 Meshy multi-image ({MESHY_MODEL}, pose {a.meshy_pose}, geometry {a.meshy_geometry}, "
+                  f"texture ref {'on' if a.meshy_texture_ref else 'off'}, sides {'on' if a.meshy_sides else 'off'}): "
+                  f"about {cost} credits; balance {balance}")
+            if not a.confirm:
+                raise SystemExit("dry run: nothing spent. Add --confirm to make it.")
+            views = [front_pic, back_pic]  # Meshy 7.1 reads the first image as the front
+            if a.meshy_sides:
+                views += meshy_side_views(key, folder, front_pic, back_pic)
+            body = {"image_urls": [data_uri(v) for v in views], "ai_model": MESHY_MODEL,
+                    "should_texture": True, "enable_pbr": False, "texture_resolution": "2k",
+                    "remove_lighting": True, "should_remesh": True, "geometry_resolution": a.meshy_geometry,
+                    "topology": "triangle", "target_polycount": 30000, "target_formats": ["glb"]}
+            if a.meshy_pose != "none":
+                body["pose_mode"] = a.meshy_pose
+            refs = []
+            if a.meshy_texture_ref:
+                picture = next((p for p in (out / "source" / "picture.jpg", out / "source" / "picture.png",
+                                             out / "source" / "picture-wide.png") if p.exists()), None)
+                refs = [front_pic, back_pic] + ([picture] if picture else [])
+                body["texture_image_urls"] = [data_uri(r) for r in refs]
+            task = {"id": meshy_call(key, "/multi-image-to-3d", body)["result"], "settings":
+                    {k: v for k, v in body.items() if k not in ("image_urls", "texture_image_urls")},
+                    "images": [v.name for v in views], "textureRefs": [r.name for r in refs]}
+            task_file.write_text(json.dumps(task, indent=1), encoding="utf-8")
+        import time
+        import urllib.request
+
+        started, last = time.time(), -1
+        while True:
+            state = meshy_call(key, f"/multi-image-to-3d/{task['id']}")
+            if state.get("progress") != last:
+                last = state.get("progress")
+                print(f"3 Meshy {state.get('status')} {last}%", flush=True)
+            if state.get("status") == "SUCCEEDED":
+                break
+            if state.get("status") in ("FAILED", "CANCELED"):
+                task_file.unlink()  # a failed task is refunded; the next run starts a new one
+                raise SystemExit(f"Meshy {state.get('status')}: {str(state.get('task_error'))[:300]}")
+            if time.time() - started > 1800:
+                raise SystemExit("Meshy still running after 30 min; rerun later to pick the same task up")
+            time.sleep(10)
+        urllib.request.urlretrieve(state["model_urls"]["glb"], model)
+        task["credits"] = state.get("consumed_credits")
+        task_file.write_text(json.dumps(task, indent=1), encoding="utf-8")
+        print(f"3 Meshy: {task['credits']} credits; balance now {meshy_call(key, '/balance').get('balance')}")
+    print(f"3 Meshy model: {rel(model)}")
+    return model, MESHY_TURN, {"cage": 1, "hairCut": False}
+
+
+def meshy_direct_character(a, out, picture_path):
+    """Aragon Meshy Path A (Direct from original concept picture, 35 credits, 0 HF GPU quota):
+    Sends the unedited full-resolution concept picture directly to Meshy 7.1 `/image-to-3d` with
+    `pose_mode: t-pose`, `geometry_resolution: 2k`, and `remove_lighting: true`.
+    Why: bypassing FLUX Kontext keeps fine accessories (like RangerMeshy's watch face and badge),
+    preserves original resolution, avoids HF GPU quota stalls, and applies T-pose once in 3D instead
+    of double-posing an already T-posed edit."""
+    folder = out / "meshy"
+    folder.mkdir(exist_ok=True)
+    model, task_file = folder / "model.glb", folder / "task.json"
+    if not model.exists():
+        key = meshy_key()
+        task = json.loads(task_file.read_text(encoding="utf-8")) if task_file.exists() else {}
+        if not task.get("id"):
+            balance = meshy_call(key, "/balance").get("balance")
+            geom = getattr(a, "meshy_geometry", None) or "2k"
+            cost = MESHY_CREDITS + (5 if geom == "2k" else 0)
+            print(f"3 [Aragon Meshy Direct] image-to-3d ({MESHY_MODEL}, pose_mode t-pose, geometry {geom}, "
+                  f"remove_lighting on): {cost} credits; balance {balance}")
+            if not a.confirm:
+                raise SystemExit("dry run: nothing spent. Add --confirm to make it.")
+            body = {"image_url": data_uri(picture_path), "ai_model": MESHY_MODEL,
+                    "should_texture": True, "enable_pbr": False, "texture_resolution": "2k",
+                    "remove_lighting": True, "pose_mode": "t-pose", "should_remesh": True,
+                    "geometry_resolution": geom, "topology": "triangle",
+                    "target_polycount": 30000, "target_formats": ["glb"]}
+            task = {"id": meshy_call(key, "/image-to-3d", body)["result"], "endpoint": "image-to-3d",
+                    "settings": {k: v for k, v in body.items() if k != "image_url"},
+                    "source": Path(picture_path).name}
+            task_file.write_text(json.dumps(task, indent=1), encoding="utf-8")
+        import time
+        import urllib.request
+
+        started, last = time.time(), -1
+        while True:
+            state = meshy_call(key, f"/image-to-3d/{task['id']}")
+            if state.get("progress") != last:
+                last = state.get("progress")
+                print(f"3 [Aragon Meshy Direct] {state.get('status')} {last}%", flush=True)
+            if state.get("status") == "SUCCEEDED":
+                break
+            if state.get("status") in ("FAILED", "CANCELED"):
+                task_file.unlink()
+                raise SystemExit(f"Meshy {state.get('status')}: {str(state.get('task_error'))[:300]}")
+            if time.time() - started > 1800:
+                raise SystemExit("Meshy still running after 30 min; rerun later to pick the same task up")
+            time.sleep(10)
+        urllib.request.urlretrieve(state["model_urls"]["glb"], model)
+        task["credits"] = state.get("consumed_credits")
+        task_file.write_text(json.dumps(task, indent=1), encoding="utf-8")
+        print(f"3 [Aragon Meshy Direct]: {task['credits']} credits; balance now {meshy_call(key, '/balance').get('balance')}")
+    print(f"3 [Aragon Meshy] model: {rel(model)}")
+    return model, MESHY_TURN, {"cage": 1, "hairCut": False}
+
+
+def cmd_aragon_meshy(a):
+    """The Aragon Meshy Full Pipeline:
+    1. Generation (or 0-credit `--reuse-from <TrialFolder>`):
+       - `--mode direct` (default, 35 credits, 0 HF GPU quota): original concept picture -> Meshy 7.1
+         `/image-to-3d` with `pose_mode: t-pose`, `geometry_resolution: 2k`, `remove_lighting: true`.
+       - `--mode multiview` (Variant B settings, 35 credits): Kontext T-pose + back view -> Meshy 7.1
+         `/multi-image-to-3d` with `pose_mode: none` (keeps open hands), `geometry_resolution: 2k`,
+         `remove_lighting: true`, and `textureRefs` off (preserves glowing chest cores and eye colour).
+    2. Joint Measurement (`measure_joints_argon.py`): BVH horizontal torso-width raycasting + overlay.
+    3. Avatar Setup Prep (`prepare_avatar_setup_argon.py`): 18,500 triangle budget (under Roblox's
+       20,000 Avatar Setup cap), head/neck `arm_weight` guard, asymmetric side rim-light despill,
+       emissive accent contrast boost, pre-remesh skirt cleft split, head/hand/joint-protected
+       decimation (`argon_preserve`), 1.65x Head / 1.3x UpperTorso UV scaling, and baked
+       `BodyColor.png` + `BodyNormal.png` + `BodyRoughness.png`.
+    4. Verified FBX Export (`write_fbx.py`): 0.01 stud scale, +Z front, smooth normals, distinct
+       texture names, verified by round-trip readback (`fbx-check.json`).
+    5. 8-Sheet Audit (`audit_skinned.py` + `pose_matrix_argon.py`): views, front/back close-ups,
+       joints, front/side poses with hand-rotated AssaultRifle proxy and cross-leg weight isolation,
+       shoulder camera crosshair check, and Red/Blue team + 50-stud distant silhouette sheets."""
+    from gradio_client import Client, handle_file
+    from PIL import Image
+
+    out = Path(a.out).resolve() if a.out else ROOT / "assets" / "kit-looks" / "trials" / a.name
+    for sub in ("source", "tpose", "meshy", "skinned"):
+        (out / sub).mkdir(parents=True, exist_ok=True)
+
+    mode = getattr(a, "mode", None) or "direct"
+    reuse = getattr(a, "reuse_from", None)
+    if reuse:
+        src_dir = Path(reuse).resolve()
+        if not src_dir.exists():
+            src_dir = ROOT / "assets" / "kit-looks" / "trials" / reuse
+        if not src_dir.exists():
+            raise SystemExit(f"--reuse-from folder not found: {reuse}")
+        src_glb = src_dir / "meshy" / "model.glb"
+        reused_turn = MESHY_TURN
+        if not src_glb.exists() and (src_dir / "tripo" / "model.glb").exists():
+            src_glb = src_dir / "tripo" / "model.glb"
+            reused_turn = -90
+        if not src_glb.exists():
+            ps = src_dir / "skinned" / "prepare-spec.json"
+            if ps.exists():
+                ps_data = json.loads(ps.read_text(encoding="utf-8"))
+                cand = Path(ps_data.get("source", ""))
+                if cand.exists():
+                    src_glb = cand
+                    reused_turn = ps_data.get("turn", MESHY_TURN)
+        if not src_glb.exists():
+            raise SystemExit(f"no meshy or tripo model.glb found in {src_dir}")
+        dst_glb = out / "meshy" / "model.glb"
+        if not dst_glb.exists():
+            shutil.copyfile(src_glb, dst_glb)
+        print(f"1-3 [Aragon Meshy] reused {rel(src_glb)} (turn {reused_turn}) -> {rel(dst_glb)} (0 credits)")
+        source, turn, prep = dst_glb, reused_turn, {"cage": 1, "hairCut": False}
+    elif (out / "meshy" / "model.glb").exists():
+        source, turn, prep = out / "meshy" / "model.glb", MESHY_TURN, {"cage": 1, "hairCut": False}
+        print(f"1-3 [Aragon Meshy] using existing {rel(source)}")
+    elif mode == "direct":
+        existing_pic = next((p for p in (out / "source").glob("picture.*") if p.name != "picture-wide.png"), None)
+        if not existing_pic:
+            if not a.image:
+                raise SystemExit("--image (or --reuse-from <TrialFolder>) is needed the first time")
+            existing_pic = out / "source" / ("picture" + Path(a.image).suffix.lower())
+            shutil.copyfile(a.image, existing_pic)
+            print(f"1 [Aragon Meshy Direct] saved original concept {rel(existing_pic)}")
+        source, turn, prep = meshy_direct_character(a, out, existing_pic)
+    else:
+        # Path B: multiview (Kontext T-pose + back view -> Variant B Meshy settings)
+        token = os.environ.get("HF_TOKEN")
+        wide = out / "source" / "picture-wide.png"
+        if not wide.exists():
+            if not a.image:
+                raise SystemExit("--image (or --reuse-from <TrialFolder>) is needed the first time")
+            shutil.copyfile(a.image, out / "source" / ("picture" + Path(a.image).suffix.lower()))
+            im = Image.open(a.image).convert("RGB")
+            w, h = im.size
+            bg = tuple(sum(c) // 4 for c in zip(im.getpixel((5, 5)), im.getpixel((w - 6, 5)),
+                                               im.getpixel((5, h // 2)), im.getpixel((w - 6, h // 2))))
+            side = int(max(w, h) * 1.3)
+            canvas = Image.new("RGB", (side, side), bg)
+            canvas.paste(im, ((side - w) // 2, (side - h) // 2))
+            canvas.save(wide)
+            print("1 [Aragon Meshy Multiview] canvas widened")
+
+        pick_file = out / "tpose" / "pick.json"
+        if a.remove is None and pick_file.exists():
+            a.remove = json.loads(pick_file.read_text(encoding="utf-8")).get("remove") or None
+        prompt = tpose_prompt_argon(a.remove)
+        if not pick_file.exists():
+            client = Client("black-forest-labs/FLUX.1-Kontext-Dev", token=token, verbose=False)
+            scored = []
+            for seed in range(1, a.seeds + 1):
+                target = out / "tpose" / f"seed-{seed}.png"
+                if not target.exists():
+                    result = client.predict(input_image=handle_file(str(wide)), prompt=prompt, seed=seed,
+                                            randomize_seed=False, guidance_scale=2.5, steps=28, api_name="/infer")
+                    image = result[0] if isinstance(result, (list, tuple)) else result
+                    shutil.copyfile(image.get("path") if isinstance(image, dict) else image, target)
+                usable, score, notes = tpose_score(target)
+                scored.append({"seed": seed, "usable": usable, "score": round(score, 3), "notes": notes})
+                print(f"2 [Aragon Meshy Multiview] T-pose seed {seed}: {notes}{'' if usable else ' (not usable)'}")
+            good = [x for x in scored if x["usable"]]
+            if not good:
+                raise SystemExit("no T-pose edit was usable; rerun with --seeds higher, or use --mode direct")
+            best = max(good, key=lambda x: x["score"])
+            pick_file.write_text(json.dumps({"prompt": prompt, "remove": a.remove or [], "seeds": scored,
+                                             "picked": best["seed"], "pipeline": "aragon-meshy"}, indent=1),
+                                 encoding="utf-8")
+        picked = json.loads(pick_file.read_text(encoding="utf-8"))["picked"]
+        front_pic = out / "tpose" / f"seed-{picked}.png"
+        pick = json.loads(pick_file.read_text(encoding="utf-8"))
+        if "back" not in pick:
+            client = Client("black-forest-labs/FLUX.1-Kontext-Dev", token=token, verbose=False)
+            tried = []
+            for seed in range(1, a.seeds + 1):
+                target = out / "tpose" / f"back-{seed}.png"
+                if not target.exists():
+                    result = client.predict(input_image=handle_file(str(front_pic)), prompt=BACK_PROMPT, seed=seed,
+                                            randomize_seed=False, guidance_scale=2.5, steps=28, api_name="/infer")
+                    image = result[0] if isinstance(result, (list, tuple)) else result
+                    shutil.copyfile(image.get("path") if isinstance(image, dict) else image, target)
+                usable, score, notes = back_score(front_pic, target)
+                tried.append({"seed": seed, "usable": usable, "score": round(score, 3), "notes": notes})
+                print(f"3a [Aragon Meshy Multiview] back view seed {seed}: {notes}{'' if usable else ' (not usable)'}")
+                if usable:
+                    break
+            good = [x for x in tried if x["usable"]]
+            pick["back"] = max(good, key=lambda x: x["score"])["seed"] if good else None
+            pick["backTried"] = tried
+            pick_file.write_text(json.dumps(pick, indent=1), encoding="utf-8")
+        back_pic = out / "tpose" / f"back-{pick['back']}.png" if pick["back"] else None
+        # Variant B winning settings: pose_mode="none", geometry="2k", texture_ref=False, sides=False by default
+        a.meshy_pose = getattr(a, "meshy_pose", None) or "none"
+        a.meshy_geometry = getattr(a, "meshy_geometry", None) or "2k"
+        a.meshy_texture_ref = bool(getattr(a, "meshy_texture_ref", False))
+        a.meshy_sides = bool(getattr(a, "meshy_sides", False))
+        source, turn, prep = meshy_character(a, out, front_pic, back_pic)
+
+    folder = out / "skinned"
+    joints = folder / "joints.json"
+    if not joints.exists() or a.rebuild:
+        run_blender("measure_joints_argon.py", source, turn, joints)
+    measured = json.loads(joints.read_text(encoding="utf-8"))
+    print(f"4 [Aragon Meshy] joints measured: neck {measured['marks']['neck']}, hip {measured['marks']['hip']}, "
+          f"armInner {measured['marks']['armInner']}, shoulder {measured['marks']['shoulder']} (drawn on joints-front.png)")
+    marks = dict(measured["marks"])
+    if not prep["hairCut"]:
+        marks.pop("hairCut", None)
+
+    target_faces = a.faces if getattr(a, "faces", None) else 18500
+    hands_mode = getattr(a, "hands", None) or "keep"
+    spec = {"pipeline": "tripo-argon", "generator": "aragon-meshy", "mode": mode,
+            "source": str(source), "out": str(folder), "turn": turn, "swing": 0,
+            "voxel": 0.0032, "thicknessVoxels": 1.5, "faces": target_faces, "texture": 1024,
+            "fbx": f"{a.name}-AvatarSetup.fbx", "cage": prep["cage"],
+            "headgearIsHair": not a.headgear, "splitSkirtCleft": True, "despillRimLight": True,
+            "hands": hands_mode, "marks": marks}
+    (folder / "prepare-spec.json").write_text(json.dumps(spec, indent=1), encoding="utf-8")
+    if not (folder / "Body.glb").exists() or a.rebuild:
+        for part in ("Body", "Hair", "Headgear"):
+            for suffix in (".glb", "Color.png", "Normal.png", "Roughness.png"):
+                (folder / f"{part}{suffix}").unlink(missing_ok=True)
+        run_blender("prepare_avatar_setup_argon.py", folder / "prepare-spec.json")
+    if not (folder / "fbx-check.json").exists() or a.rebuild:
+        write_fbx(folder, spec["fbx"])
+    report = json.loads((folder / "prepare.json").read_text(encoding="utf-8"))
+    print(f"5 [Aragon Meshy] prepared: body {report['bodyTriangles']:,} triangles, {report['bodyOpenEdges']} open edges, "
+          f"hair {report.get('HairTriangles', 0):,}, debris dropped {report.get('debrisFacesDropped', 0):,}, "
+          f"hands {hands_mode}, skirt cleft split {report.get('skirtCleftFacesSplit', 0)}, "
+          f"rim despill {report.get('rimLightDespilled', 'none')}")
+
+    (folder / "STUDIO.md").write_text(STUDIO_TEMPLATE.format(name=a.name, fbx=spec["fbx"]), encoding="utf-8")
+    a.folder = str(folder)
+    a.argon = True
+    cmd_audit(a)
 
 
 STUDIO_TEMPLATE = """# {name}: Avatar Setup in Studio
@@ -1722,6 +2378,11 @@ def cmd_status(a):
 
 
 def main():
+    # Blender add-ons print emoji (BlenderKit), which a Windows console cannot encode: replace them rather
+    # than crash while printing a Blender error (it hid write_fbx's real message on HornedFeatherMeshy).
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(errors="replace")
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("plan")
@@ -1816,15 +2477,62 @@ def main():
     p.add_argument("--image", help="the user's picture of the character (any pose)")
     p.add_argument("--out", help="output folder")
     p.add_argument("--seeds", type=int, default=3, help="T-pose edits to try (free, GPU quota)")
-    p.add_argument("--faces", type=int, default=12000, help="body triangles")
+    p.add_argument("--faces", type=int, help="body triangles (12,000; 19,000 for meshy)")
     p.add_argument("--headgear", action="store_true", help="keep above-neck pieces as headgear, not hair")
     p.add_argument("--rebuild", action="store_true", help="re-run the prep even if Body.glb exists")
-    p.add_argument("--generator", choices=("trellis", "tripo"), default="trellis",
-                   help="trellis: free (HF GPU quota); tripo: multi-view from the T-pose and back view, paid")
-    p.add_argument("--confirm", action="store_true", help="spend the Tripo credits the dry run printed")
+    p.add_argument("--generator", choices=("trellis", "tripo", "tripo-argon", "meshy", "aragon-meshy", "argon-meshy"),
+                   default="trellis",
+                   help="trellis: free (HF GPU quota); tripo / tripo-argon / meshy / aragon-meshy: paid")
+    p.add_argument("--mode", choices=("direct", "multiview"), default="direct",
+                   help="aragon-meshy: direct (35 cr, image-to-3d from original picture, 0 HF quota) or multiview (Variant B)")
+    p.add_argument("--reuse-from", help="for tripo-argon / aragon-meshy: reuse an existing trial's model.glb at 0 credits")
+    p.add_argument("--meshy-pose", choices=("t-pose", "none"), default="none",
+                   help="meshy: force a T-pose (t-pose) or keep the picture's own pose and hands (none)")
+    p.add_argument("--meshy-geometry", choices=("standard", "2k"), default="2k", help="meshy: 2k is +5 credits")
+    p.add_argument("--meshy-texture-ref", action=argparse.BooleanOptionalAction, default=True,
+                   help="meshy: send the user's picture and the T-pose as texture references (variant D, the standard)")
+    p.add_argument("--meshy-sides", action=argparse.BooleanOptionalAction, default=True,
+                   help="meshy: make left and right T-pose side views with Meshy image-to-image, 6 credits each (variant D)")
+    p.add_argument("--hands", choices=("glove", "keep"),
+                   help="glove: swap the generated hands for the stylised glove built from shapes; keep: the "
+                        "generator's. Default glove for meshy only: on Tripo's open, puffy sleeves the glove came "
+                        "out undersized with a hole at the sleeve end (GloveTestTripo, 2026-11-21)")
+    p.add_argument("--confirm", action="store_true", help="spend the Tripo or Meshy credits the dry run printed")
     p.add_argument("--remove", action="append",
                    help="a detail in the picture the look should not have, e.g. 'the magenta zip down the "
                         "front of the jacket' (repeatable); a changed list redoes the edit onward")
+    p = sub.add_parser("character-argon", help="run the duplicated Tripo Argon pipeline with all quality fixes")
+    p.add_argument("name", help="folder name; assets/kit-looks/trials/<name> unless --out")
+    p.add_argument("--image", help="the user's picture of the character (any pose)")
+    p.add_argument("--out", help="output folder")
+    p.add_argument("--seeds", type=int, default=3, help="T-pose edits to try (free, GPU quota)")
+    p.add_argument("--faces", type=int, default=12000, help="body triangles")
+    p.add_argument("--headgear", action="store_true", help="keep above-neck pieces as headgear, not hair")
+    p.add_argument("--rebuild", action="store_true", help="re-run the prep even if Body.glb exists")
+    p.add_argument("--reuse-from", help="reuse an existing trial's tripo/model.glb at 0 credits for side-by-side testing")
+    p.add_argument("--hands", choices=("glove", "keep"), default="keep",
+                   help="keep: the generator's hands; glove: swap for the stylised glove built from shapes")
+    p.add_argument("--confirm", action="store_true", help="spend the Tripo credits the dry run printed")
+    p.add_argument("--remove", action="append",
+                   help="a detail in the picture the look should not have (repeatable)")
+    for cmd_name in ("aragon-meshy", "argon-meshy", "character-aragon-meshy"):
+        p = sub.add_parser(cmd_name, help="run the Aragon Meshy Full Pipeline (direct 2K or multiview Variant B -> Argon prep & 8-sheet audit)")
+        p.add_argument("name", help="folder name; assets/kit-looks/trials/<name> unless --out")
+        p.add_argument("--image", help="the user's picture of the character (any pose)")
+        p.add_argument("--out", help="output folder")
+        p.add_argument("--mode", choices=("direct", "multiview"), default="direct",
+                       help="direct (default, 35 cr, 0 HF quota, original image -> Meshy 2K T-pose) or multiview (35 cr, Variant B front+back)")
+        p.add_argument("--seeds", type=int, default=3, help="T-pose edits to try in multiview mode")
+        p.add_argument("--faces", type=int, default=18500, help="body triangles (default 18,500, under Roblox's 20k Avatar Setup cap)")
+        p.add_argument("--headgear", action="store_true", help="keep above-neck pieces as headgear, not hair")
+        p.add_argument("--rebuild", action="store_true", help="re-run the prep even if Body.glb exists")
+        p.add_argument("--reuse-from", help="reuse an existing trial's meshy/model.glb (or tripo/model.glb) at 0 credits")
+        p.add_argument("--meshy-geometry", choices=("standard", "2k"), default="2k", help="meshy geometry resolution (default 2k)")
+        p.add_argument("--meshy-sides", action="store_true", help="in multiview mode: also generate Meshy side views (+12 cr)")
+        p.add_argument("--hands", choices=("keep", "glove"), default="keep",
+                       help="keep (default): keep Meshy's open hands; glove: replace with procedural closed-fist gloves")
+        p.add_argument("--confirm", action="store_true", help="spend the Meshy credits the dry run printed")
+        p.add_argument("--remove", action="append", help="in multiview mode: a detail to remove during the T-pose edit")
     p = sub.add_parser("review")
     p.add_argument("kit")
     p = sub.add_parser("verdict")
@@ -1844,7 +2552,9 @@ def main():
      "draw": cmd_draw, "reference": cmd_reference, "reset": cmd_reset, "retint": cmd_retint, "finish": cmd_finish, "make": cmd_make, "verdict": cmd_verdict,
      "export": cmd_export, "publish": cmd_publish,
      "intake": cmd_intake, "review": cmd_review, "whole": cmd_whole, "skinned": cmd_skinned, "status": cmd_status,
-     "audit": cmd_audit, "findings": cmd_findings, "ready": cmd_ready, "character": cmd_character, "fbx": cmd_fbx}[a.cmd](a)
+     "audit": cmd_audit, "findings": cmd_findings, "ready": cmd_ready, "character": cmd_character,
+     "character-argon": cmd_character_argon, "aragon-meshy": cmd_aragon_meshy, "argon-meshy": cmd_aragon_meshy,
+     "character-aragon-meshy": cmd_aragon_meshy, "fbx": cmd_fbx}[a.cmd](a)
 
 
 if __name__ == "__main__":

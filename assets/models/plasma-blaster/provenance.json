@@ -1,0 +1,31 @@
+{
+  "asset": "plasma-blaster",
+  "recordedOn": "2026-11-23",
+  "reference": {
+    "file": null,
+    "sha256": null,
+    "origin": "unknown",
+    "madeWith": null,
+    "prompt": null
+  },
+  "mesh": {
+    "file": "assets/models/plasma-blaster/source/PlasmaBlaster.glb",
+    "sha256": "dea642d6e98a2175afc4d303521dd15791359dae549ea81f37d2b629e041c22e",
+    "generator": {
+      "service": "meshy",
+      "space": null,
+      "seed": 202,
+      "resolution": "imported",
+      "file": "model.glb",
+      "sha256": "dea642d6e98a2175afc4d303521dd15791359dae549ea81f37d2b629e041c22e",
+      "settings": "Meshy image-to-3D, ai_model latest, textured, remove_lighting, remeshed to 30,000 triangles, cut down locally",
+      "decoded": null,
+      "reference": null,
+      "importedOn": "2026-11-22"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

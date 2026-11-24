@@ -24,7 +24,7 @@ local REGISTRY = "src/shared/AssetRegistry.json"
 local MESH_CAP = 10000
 -- Keep in step with ROLE_BUDGETS in tools/asset_rules.py.
 local ROLE_BUDGETS: { [string]: number } = {
-    held = 4000,
+    held = 8000,
     interactive = 15000,
     cover = 10000,
     decor = 30000,

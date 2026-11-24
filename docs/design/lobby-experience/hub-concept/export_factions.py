@@ -39,6 +39,8 @@ MATERIALS = {
         "WeldBench": "Metal",
         "Pegboard": "Wood",
         "Rivet": "Metal",
+        "ProvingPitGlass": "Glass",
+        "EchoTarget": "Metal",
     },
     "Institute": {
         "Island": "SmoothPlastic",
@@ -49,6 +51,8 @@ MATERIALS = {
         "FrostPlume": "Ice",
         "Theodolite": "Metal",
         "TripodLeg": "Metal",
+        "KitPodGlass": "Glass",
+        "KitsPromptPad": "Metal",
     },
     "Kade": {
         "Island": "Slate",
@@ -62,6 +66,8 @@ MATERIALS = {
         "Stanchion": "Metal",
         "Rope": "Fabric",
         "ShopCounter": "Marble",
+        "PacksPedestal": "Metal",
+        "PassesTerminal": "Metal",
     },
     "Ferrymen": {
         "Island": "WoodPlanks",
@@ -75,6 +81,8 @@ MATERIALS = {
         "Contraband": "WoodPlanks",
         "StolenBanner": "Fabric",
         "StolenDome": "SmoothPlastic",
+        "MarshBase": "Metal",
+        "MarshHolo": "Glass",
     },
     "Hold": {
         "Island": "Concrete",
@@ -109,11 +117,26 @@ FONTS = [
     ("DepartureRow", "Michroma"),
 ]
 
-# The game's own name for the Institute's room: the abilities it hands out are Alter Egos.
-TEXT = {"InstituteSign": "ALTER EGO"}
+# Signage & prompt text mappings.
+TEXT = {"InstituteSign": "KITS"}
 
 # Scenery a player walks through rather than into.
-GHOSTS = ("Spark", "Glyph", "Drone", "Bulb", "Steam", "FrostPlume", "Beacon", "WeldArc", "HoloCore", "TheodoliteBeam")
+GHOSTS = (
+    "Spark",
+    "Glyph",
+    "Drone",
+    "Bulb",
+    "Steam",
+    "FrostPlume",
+    "Beacon",
+    "WeldArc",
+    "HoloCore",
+    "TheodoliteBeam",
+    "BridgeRing",
+    "Vista",
+    "MarshHolo",
+    "ProvingPitFloor",
+)
 
 
 def side_of(part):
@@ -219,7 +242,7 @@ def stations():
     return {
         "Kiosk": {"pos": [kiosk[0], 0, kiosk[1]], "yaw": round((turn + 180) % 360, 2)},
         "Board": {"pos": [board[0], 2, board[1]], "yaw": round((board_turn + 180) % 360, 2)},
-        "Play": {"pos": [0, 18, -60]},
+        "Play": {"pos": [0, 18, -48]},
     }
 
 

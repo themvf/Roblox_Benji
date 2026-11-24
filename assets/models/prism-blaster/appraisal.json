@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-22",
+  "source": "PrismBlaster.glb",
+  "sourceSha256": "e4e9dda7bea1998cbee6bca39f8ddfdfa08ef73bdeefc0e3224ba24f2145d2e4",
+  "measurements": {
+    "triangles": 19099,
+    "size": [
+      1.902,
+      0.386,
+      0.789
+    ],
+    "reliefRatio": 0.2031,
+    "openEdges": 22837,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Prism Blaster: a white-and-plum sci-fi energy rifle with a glowing violet crystal core that players hold, in every map (role: held, about 1.66 studs tall)"
+}

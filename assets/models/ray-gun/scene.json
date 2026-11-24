@@ -1,0 +1,20 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "ray-gun": {
+      "description": "Ray Gun: a red-and-chrome retro raygun pistol with cream coil rings and an amber emitter tip, held by players in every map (role: held, about 1.42 studs tall)",
+      "source": "assets/models/ray-gun/source/RayGun.glb",
+      "out": "assets/models/ray-gun/exports/RayGun.glb",
+      "fit": {
+        "axis": "z",
+        "size": 1.42
+      },
+      "decimate": 7000,
+      "pivot": "center",
+      "optimize": {
+        "texture": 1024
+      },
+      "yaw": 90
+    }
+  }
+}

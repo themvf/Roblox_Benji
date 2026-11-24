@@ -1,0 +1,89 @@
+{
+  "source": "InsertService:LoadAsset(83235832636031), the model publish uploaded on 2026-11-23; offsets are from the model pivot (the export's centre), Roblox axes, -Z forward",
+  "assetId": 83235832636031,
+  "parts": [
+    {
+      "name": "Mesh_0",
+      "meshId": "rbxassetid://110778066693893",
+      "textureId": "",
+      "size": [
+        0.591096,
+        1.287672,
+        4.149921
+      ],
+      "offset": [
+        0.0,
+        0,
+        0
+      ],
+      "colorMap": "rbxassetid://70459674174196",
+      "metalnessMap": "rbxassetid://99693588276363",
+      "roughnessMap": "rbxassetid://120776651422600",
+      "normalMap": "rbxassetid://78490153649000"
+    },
+    {
+      "name": "Plasma",
+      "meshId": "rbxassetid://126539902374938",
+      "textureId": "",
+      "size": [
+        0.375005,
+        0.463667,
+        1.135061
+      ],
+      "offset": [
+        -0.0003,
+        0.3234,
+        -0.2463
+      ],
+      "colorMap": "rbxassetid://70459674174196",
+      "metalnessMap": "rbxassetid://99693588276363",
+      "roughnessMap": "rbxassetid://120776651422600",
+      "normalMap": "rbxassetid://78490153649000"
+    },
+    {
+      "name": "Core",
+      "meshId": "rbxassetid://121851553652277",
+      "textureId": "rbxassetid://96377290897599",
+      "size": [
+        0.17119,
+        0.29,
+        1
+      ],
+      "offset": [
+        0.0,
+        0.325,
+        -0.2
+      ]
+    },
+    {
+      "name": "BoreTop",
+      "meshId": "rbxassetid://77649142614499",
+      "textureId": "rbxassetid://96377290897599",
+      "size": [
+        0.126874,
+        0.126874,
+        0.128
+      ],
+      "offset": [
+        -0.0,
+        0.345,
+        -2.007
+      ]
+    },
+    {
+      "name": "BoreLow",
+      "meshId": "rbxassetid://102643149951195",
+      "textureId": "rbxassetid://96377290897599",
+      "size": [
+        0.037281,
+        0.0392,
+        0.058
+      ],
+      "offset": [
+        -0.0,
+        0.09,
+        -1.964
+      ]
+    }
+  ]
+}

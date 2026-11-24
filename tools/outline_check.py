@@ -81,8 +81,9 @@ def node_matrix(node):
     return matrix
 
 
-def triangles(path):
-    """Every triangle in the file, in world space, as an (n, 3, 3) array."""
+def triangles(path, skip=()):
+    """Every triangle in the file, in world space, as an (n, 3, 3) array. Meshes whose node or mesh
+    name is in skip are left out (hand-modelled extra parts on a scan, which the source never had)."""
     doc, blob = read_glb(path)
     nodes = doc.get("nodes", [])
     scene = doc.get("scenes", [{}])[doc.get("scene", 0)]
@@ -91,7 +92,7 @@ def triangles(path):
     def walk(index, parent):
         node = nodes[index]
         world = parent @ node_matrix(node)
-        if "mesh" in node:
+        if "mesh" in node and node.get("name") not in skip and doc["meshes"][node["mesh"]].get("name") not in skip:
             for prim in doc["meshes"][node["mesh"]]["primitives"]:
                 if prim.get("mode", 4) != 4:
                     continue
@@ -130,9 +131,9 @@ def silhouettes(tris):
     return masks
 
 
-def compare(source, export):
+def compare(source, export, skip=()):
     """{view: overlap score} for two GLB paths, plus the masks for a sheet."""
-    a, b = silhouettes(triangles(source)), silhouettes(triangles(export))
+    a, b = silhouettes(triangles(source)), silhouettes(triangles(export, skip))
     scores = {}
     for name in VIEWS:
         union = np.logical_or(a[name], b[name]).sum()
@@ -189,7 +190,7 @@ def depth_maps(tris, seed=7):
     return maps
 
 
-def surface_measure(source, export):
+def surface_measure(source, export, skip=()):
     """{view: {"error", "noise"}} for an export against its source.
 
     error: share of the source's visible surface the export gets wrong (missing, or nearer
@@ -201,7 +202,7 @@ def surface_measure(source, export):
     error cannot be trusted; raise SAMPLES.
     """
     source_tris = triangles(source)
-    a, again, b = depth_maps(source_tris), depth_maps(source_tris, NOISE_SEED), depth_maps(triangles(export))
+    a, again, b = depth_maps(source_tris), depth_maps(source_tris, NOISE_SEED), depth_maps(triangles(export, skip))
     out = {}
     for name in DEPTH_VIEWS:
         seen = np.isfinite(a[name])

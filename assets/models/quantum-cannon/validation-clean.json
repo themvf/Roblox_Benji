@@ -1,0 +1,64 @@
+{
+  "checkedOn": "2026-11-22 22:07",
+  "route": "clean",
+  "builder": "tools/blender/build_quantum_cannon.py",
+  "export": "assets/models/quantum-cannon/exports/QuantumCannonClean.glb",
+  "exportSha256": "17ee1322f3eaacc63fdd2d5260a215bb625a09bf033a37a133f6cac70ee777b9",
+  "triangleCapPassed": true,
+  "inspect": [
+    "file     QuantumCannonClean.glb (0.17 MB)",
+    "           Body                             2,388 tris",
+    "           Glow                               224 tris",
+    "           total                            2,612 tris (2 meshes)",
+    "           texture                          64x32  image/png"
+  ],
+  "detail": {
+    "outlineOverlap": null,
+    "passed": null
+  },
+  "budget": {
+    "role": "held",
+    "budget": 4000,
+    "triangles": 2612,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      1.16,
+      1.76,
+      4.56
+    ],
+    "heightStuds": 1.76,
+    "kind": "weapon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.37,
+        1.32
+      ],
+      "Muzzle": [
+        0.0,
+        0.06,
+        -2.28
+      ]
+    },
+    "mountSheet": "assets/models/quantum-cannon/review/mounts.png",
+    "pivot": "center",
+    "problems": [],
+    "passed": true
+  },
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/quantum-cannon/review/audit.png",
+      "assets/models/quantum-cannon/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.0,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Shape fidelity is judged by eye on the builder's renders."
+}

@@ -1,0 +1,40 @@
+{
+  "asset": "heavy-cannon",
+  "comparedOn": "2026-11-22 23:12",
+  "budget": 4000,
+  "brief": [
+    4.5,
+    0.8,
+    1.47
+  ],
+  "candidates": [
+    {
+      "seed": 201,
+      "madeBy": "meshy",
+      "triangles": 4000,
+      "cutNeeded": 0.0,
+      "studs": [
+        4.5,
+        0.7
+      ],
+      "shapeProblems": [],
+      "holesPercent": 0.61,
+      "openEdges": 8864,
+      "closeups": "assets/models/heavy-cannon/trials/seed-201/audit_closeups.png"
+    },
+    {
+      "seed": 202,
+      "madeBy": "meshy",
+      "triangles": 8980,
+      "cutNeeded": 0.666,
+      "studs": [
+        4.4,
+        0.7
+      ],
+      "shapeProblems": [],
+      "holesPercent": 0.08,
+      "openEdges": 17004,
+      "closeups": "assets/models/heavy-cannon/trials/seed-202/audit_closeups.png"
+    }
+  ]
+}

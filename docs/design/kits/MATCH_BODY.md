@@ -20,6 +20,24 @@ player's own avatar is kept for the lobby.**
 Standardising the body removes arbitrary player proportions from the problem. It does **not**
 fix skinning or joint deformation; those remain acceptance checks for each kit.
 
+## Shared animation policy — 2026-11-21
+
+User decision: do not spend Meshy credits on animation generation or library retargeting
+by default. Create/edit clips in Blender or Studio and retarget locally. Paid Meshy animation
+work requires an explicit user request for that route. Mesh generation and initial rigging
+are separate decisions; this does not prohibit those services.
+
+Author one gameplay movement set on the standard match R15 skeleton and reuse it across kits.
+Each character must be skinned to the same bone/joint hierarchy, rest transforms, joint axes,
+proportions and attachment contract. Matching names alone is insufficient. Different source
+skeletons need a verified bone mapping and rest-pose correction/retargeting, or re-rigging to
+the standard skeleton. Retarget once per source skeleton rather than buying clips per kit.
+
+The Ranger's Meshy 24-joint rig and imported clips are preserved as trial sources. They are
+not yet the standard R15 animation set. Studio trials showed that a clip on a differently
+imported copy can fold the character; matching import units and transforms must be checked.
+Every new skin still needs movement, accessory, foot-contact and weapon-clipping review.
+
 ## Acceptance: "looks good while playing"
 
 A look passes in stages, each with its own evidence and never folded into one "done":

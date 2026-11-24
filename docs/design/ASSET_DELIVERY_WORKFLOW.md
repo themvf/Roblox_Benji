@@ -33,7 +33,7 @@ gates are `tools/check_asset_registry.luau` and `tools/check_large_files.luau`, 
 | 7. Studio | `verify --check loads --check facing ...` | what only Studio shows; the gate lists what is still open |
 
 **Roles and budgets** (total triangles over all meshes; Roblox's 10,000 is per mesh):
-`held` 4,000, `cover` 10,000, `interactive` 15,000, `decor` 30,000, `scenery` 60,000.
+`held` 8,000 (raised from 4,000 on 2026-11-23 by user decision; beta testers are checking it on devices), `cover` 10,000, `interactive` 15,000, `decor` 30,000, `scenery` 60,000.
 These are starting values, not measurements; the device test in
 [performance/DEVICE_TEST.md](performance/DEVICE_TEST.md) is how they get replaced with measured ones. An asset that has to exceed its budget
 records why: `brief <name> --budget-waiver "<reason>"`.

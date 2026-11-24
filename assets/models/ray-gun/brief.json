@@ -1,0 +1,37 @@
+{
+ "purpose": "Ray Gun: a red-and-chrome retro raygun pistol with cream coil rings and an amber emitter tip, held by players in every map",
+ "role": "held",
+ "heightStuds": 1.42,
+ "pivot": "center",
+ "route": "scan",
+ "kind": "weapon",
+ "lengthStuds": 2.7,
+ "widthStuds": 0.55,
+ "gameName": "RayGun",
+ "where": "held in every map",
+ "copies": 12,
+ "moving": "",
+ "share": "game",
+ "nearestStuds": 0.0,
+ "thin": "no",
+ "assumed": "plays like the Handgun (Pistol kit base); pistol size 2.7 x 1.42 (rear fins included) x 0.55 studs; copies 12; the side wire guard is treated as surface detail (thin=no, scan route) because it hugs the body; no moving parts",
+ "meshes": "auto",
+ "scene": {
+  "decimate": 7000,
+  "yaw": 90
+ },
+ "counts": {},
+ "mounts": {
+  "Grip": [
+   0.0,
+   -0.34,
+   0.78
+  ],
+  "Muzzle": [
+   0.0,
+   0.27,
+   -1.33
+  ]
+ },
+ "budgetWaiver": "held in first person at arm's length; the user asked for smoother coil rings and emitter, so ~7,000 triangles in one mesh (under the 10,000 per-mesh cap), one gun per player on screen"
+}

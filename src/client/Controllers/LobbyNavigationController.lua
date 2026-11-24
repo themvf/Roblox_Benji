@@ -2,6 +2,7 @@
 -- Armory, Kits/Shop bays, and team pads remain discovery and practice spaces.
 local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
+local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
@@ -735,6 +736,19 @@ function LobbyNavigationController:KnitStart()
             end
         end)
     end
+    local SHOP_PROMPTS = {
+        KitsPrompt = "Kits",
+        PacksPrompt = "Packs",
+        PassesPrompt = "Passes",
+        MarshPrompt = "Passes",
+    }
+    ProximityPromptService.PromptTriggered:Connect(function(prompt)
+        local shopTab = SHOP_PROMPTS[prompt.Name]
+        if shopTab and self.Nav.Visible then
+            self:OpenDrawer("Shop", shopTab)
+        end
+    end)
+
     UserInputService.InputBegan:Connect(function(input, processed)
         if processed or not self.Drawer.Visible then
             return

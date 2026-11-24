@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-22",
+  "source": "GildedDerringer.glb",
+  "sourceSha256": "02bbd1225b63a5a2600536d2db48f70670db064d35917662d0a3d63877e10595",
+  "measurements": {
+    "triangles": 3761,
+    "size": [
+      1.903,
+      0.37,
+      1.277
+    ],
+    "reliefRatio": 0.1947,
+    "openEdges": 6361,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Gilded Derringer: a glossy black-and-gold sidearm with an octagonal cylinder plate and oxblood grip that players hold, in every map (role: held, about 0.9 studs tall)"
+}

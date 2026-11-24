@@ -1,0 +1,16 @@
+{
+  "looks": "good",
+  "said": "Upload it and wire it into the game",
+  "findingsShown": [
+    "weight: 6,999 triangles against a budget of 4,000",
+    "barrel stem behind the amber tip: lumpy, uneven chrome rather than clean turned rings",
+    "rear cap (back view): irregular, faceted chrome boss",
+    "front-left ring edge: one small back-face sliver (0.12%, well under the 1% warning)",
+    "grip: ribs crisp from the side, but the underside of the handle is slightly wavy"
+  ],
+  "note": "said after the v2 PBR review sheets and the four listed defects",
+  "exportSha256": "ee18a975f1d0c131d8454ae35c269e88b676027b74abcfb20c7edbff0a7b2b03",
+  "worstSurfaceError": 0.002,
+  "worstBackFacePercent": 0.12,
+  "recordedOn": "2026-11-23"
+}

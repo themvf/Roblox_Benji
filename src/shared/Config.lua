@@ -91,6 +91,15 @@ Config.Movement = {
 
 local overrides = nil
 
+-- Glowing weapon parts (a Neon core with a light in it, e.g. the Plasma Blaster). Exposed as
+-- Tuning attributes WeaponGlow_<Key>, read live by WeaponGlowController on every shot.
+Config.WeaponGlow = {
+    LightRange = 4, -- studs of orange spill on hands and nearby walls
+    LightBrightness = 1.5, -- resting
+    FlareBrightness = 4, -- for a moment after each shot
+    FlareSeconds = 0.15, -- time back down to resting
+}
+
 -- Walk-up mounted turret. Server reads live Tuning attributes through GetTurret().
 Config.Turret = {
     Damage = 8,

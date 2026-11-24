@@ -41,21 +41,21 @@ local backup = backupDir .. "/Lobby-before-factions.rbxm"
 -- round and separate, so it is an invisible footprint over the neutral spine: nobody stands
 -- on it, it only bounds the markers. Narrow enough that check_lobby_authoring's 200-stud pad
 -- move still lands off it.
-local FOOTPRINT = { centre = { 0, -95 }, size = { 120, 290 } }
+local FOOTPRINT = { centre = { 0, -70 }, size = { 100, 230 } }
 
 -- Columns and canister the lobby already has: where each goes, in lobby coordinates.
-local STONE_SPOTS = { { -36.4, -280 }, { 36.4, -280 } } -- behind the gate, as in the concept
+local STONE_SPOTS = { { -32, -210 }, { 32, -210 } } -- behind the gate
 local PURPLE_SPOTS = {
-    { 22, 55 }, -- arrival, behind the spawns
-    { -24, -66 }, -- pad island: gateposts at the end of the arrival bridge
-    { 24, -66 },
-    { -48, -250 }, -- gate island, an arc either side of the gate
-    { 48, -250 },
-    { -41.6, -231 },
-    { 41.6, -231 },
-    { 0, -302 }, -- behind the gate
+    { 20, 44 }, -- arrival, behind the spawns
+    { -24, -56 }, -- pad island: gateposts at the end of the arrival bridge
+    { 24, -56 },
+    { -40, -184 }, -- gate island, an arc either side of the gate
+    { 40, -184 },
+    { -34.6, -168 },
+    { 34.6, -168 },
+    { 0, -226 }, -- behind the gate
 }
-local CANISTER_SPOT = { -22, 52 } -- arrival, behind the spawns: the season display
+local CANISTER_SPOT = { 0, -192 } -- centered inside the PLAY gate sightline
 
 local bytes = fs.readFile(source)
 local root = roblox.deserializeModel(bytes)[1]
@@ -179,11 +179,13 @@ local function folderFor(spec)
         key = "Barriers"
     elseif spec.name:match("^Bridge") then
         key = "Bridges"
+    elseif spec.name:match("^Vista") then
+        key = "RealityVista"
     elseif spec.side ~= "Hold" then
         key = FOLDERS[spec.side]
-    elseif spec.pos[3] < -180 then
+    elseif spec.pos[3] < -145 then
         key = "GateIsland"
-    elseif spec.pos[3] < -40 then
+    elseif spec.pos[3] < -30 then
         key = "PadIsland"
     else
         key = "Hold"
@@ -338,10 +340,21 @@ for _, spec in data.parts do
     end
 end
 
--- Translucent effects stand-ins: steam and frost plumes are haze, not solids.
+-- Translucent effects stand-ins: steam, frost plumes, glass pods, and Marsh hologram.
 for _, name in { "Steam", "FrostPlume" } do
     for _, p in named[name] or {} do
         p.Transparency = 0.45
+    end
+end
+for partName, parts in named do
+    if partName:match("^KitPodGlass") or partName == "ProvingPitGlass" or partName == "MarshHolo" then
+        for _, p in parts do
+            p.Transparency = 0.62
+            p.CastShadow = false
+            if partName ~= "ProvingPitGlass" then
+                p.CanCollide = false
+            end
+        end
     end
 end
 
@@ -373,6 +386,28 @@ local function first(name, pick)
     end
     return list[1]
 end
+
+-- Walk-up ProximityPrompts connecting the faction islands to LobbyNavigationController's Shop drawer.
+local function addStationPrompt(partName, promptName, actionText, objectText)
+    local host = first(partName)
+    if not host then
+        return
+    end
+    local prompt = Instance.new("ProximityPrompt")
+    prompt.Name = promptName
+    prompt.ActionText = actionText
+    prompt.ObjectText = objectText
+    prompt.KeyboardKeyCode = Enum.KeyCode.E
+    prompt.HoldDuration = 0
+    prompt.MaxActivationDistance = 14
+    prompt.RequiresLineOfSight = false
+    prompt.Parent = host
+end
+
+addStationPrompt("KitsPromptPad", "KitsPrompt", "Browse Kits", "Coherence Institute")
+addStationPrompt("PacksPedestal", "PacksPrompt", "Browse Packs", "Kade Dynamics")
+addStationPrompt("PassesTerminal", "PassesPrompt", "View Passes", "Kade Dynamics")
+addStationPrompt("MarshBase", "MarshPrompt", "Talk to Marsh", "Season & Lore")
 -- Forge Union: weld sparks at the bench, smoke from the tall chimney
 local arc = first("WeldArc")
 if arc then
@@ -446,9 +481,9 @@ end
 
 -- ===== fill lights the markers do not cover =====
 local fills = {
-    { "HoldFill", { 0, 18, 30 }, Color3.new(1, 0.72, 0.4), 55, 0.7 }, -- amber emergency light
-    { "KadeFill", { 150, 26, 112 }, Color3.new(1, 0.85, 0.55), 70, 1.6 },
-    { "AnomalyGlow", { 0, 40, -270 }, Color3.new(0.6, 0.4, 1), 60, 2 },
+    { "HoldFill", { 0, 18, 26 }, Color3.new(1, 0.72, 0.4), 55, 0.7 }, -- amber emergency light
+    { "KadeFill", { 118, 26, 92 }, Color3.new(1, 0.85, 0.55), 70, 1.6 },
+    { "AnomalyGlow", { 0, 40, -198 }, Color3.new(0.6, 0.4, 1), 60, 2 },
 }
 for _, fill in fills do
     local anchor = part(

@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-23",
+  "source": "HalcyonRifle.glb",
+  "sourceSha256": "5ef15680807c77f0b9db88828b6ec988f3c563a87d62db4ea15c9f1d4ae569ac",
+  "measurements": {
+    "triangles": 3820,
+    "size": [
+      1.903,
+      0.173,
+      0.364
+    ],
+    "reliefRatio": 0.0909,
+    "openEdges": 7810,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Halcyon: a cream-white sci-fi precision rifle with a dark skeleton stock and a cyan-to-magenta glowing barrel strip that players hold, in every map (role: held, about 1.18 studs tall)"
+}

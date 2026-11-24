@@ -1,0 +1,19 @@
+{
+ "id": "01a20676-afe5-767f-a63d-49cccd5a023b",
+ "endpoint": "image-to-3d",
+ "settings": {
+  "ai_model": "latest",
+  "should_texture": true,
+  "enable_pbr": false,
+  "texture_resolution": "2k",
+  "remove_lighting": true,
+  "should_remesh": true,
+  "topology": "triangle",
+  "target_polycount": 4000,
+  "target_formats": [
+   "glb"
+  ]
+ },
+ "source": "user-picture.png",
+ "credits": 30
+}

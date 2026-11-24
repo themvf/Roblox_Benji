@@ -31,6 +31,11 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
   system-wide, which otherwise makes `stylua --check src` fail on every file locally while CI passes.
 
 ## Generated assets: one flow, enforced
+- **Animation credit policy (user decision, 2026-11-21):** Do not spend Meshy credits on
+  animation generation or library retargeting unless the user explicitly requests that paid
+  route. Author and retarget animations locally in Blender or Studio, and reuse the shared
+  match-body animation set across kits. Mesh generation and initial rigging are separate
+  decisions. See `docs/design/kits/MATCH_BODY.md` for skeleton compatibility requirements.
 - **Ask before you build.** For any new asset, run `python tools/asset_generate.py questions` and put
   those questions to the user in one message, skipping what the request already answers. Record the
   answers in the brief. That is the only check-in; after it, run hands-off and report once.
@@ -149,6 +154,11 @@ welds an uploaded look onto a character; Tuning `Debug_KitLook = "<KitId>"` dres
 The visual audit runs before any look is reported or handed over, whatever the route: `kit_look.py audit
 <folder>` (every view, the back, close-ups, each accessory alone), then `findings`. `kit_look.py ready
 <folder>` must pass before an FBX or GLB goes to the user.
+Clothed whole-body builds (Meshy) come in stacked layers whose hidden insides are painted black: every
+splotch, wrist shard and spike so far was an inside surface our cutting or bending exposed. Before changing
+a prep rule, measure (flat-grey render, `"debugWrist"` layer map) and check render timestamps; in findings,
+say whether a defect is in the model or only in the preview rig (Studio rigs it itself). Table and
+lessons: "Layered clothing" in the kit-look skill.
 
 A shop, browser, picker, unlock or pass screen goes through the `ui-from-prompt` skill (.claude/skills):
 `CatalogItem` records from the server -> a `CatalogScreen` template (`Browser`, `LockIn`, `Track`) built from

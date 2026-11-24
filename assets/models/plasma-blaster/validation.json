@@ -1,0 +1,126 @@
+{
+  "checkedOn": "2026-11-23 07:57",
+  "export": "assets/models/plasma-blaster/exports/PlasmaBlaster.glb",
+  "exportSha256": "2dd46c3d995e9b06ed3fec1ac3ae718ff5a69de2827fde3e4890e9dcf9bb487b",
+  "sourceSha256": "dea642d6e98a2175afc4d303521dd15791359dae549ea81f37d2b629e041c22e",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "scan",
+    "suggested": "clean",
+    "reasons": [
+      "the role is held, so players are right next to it and its parts may need to move"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.981,
+      "side": 0.984,
+      "top": 0.992
+    },
+    "surfaceError": {
+      "front": 0.049,
+      "back": 0.004,
+      "right": 0.004,
+      "left": 0.004,
+      "top": 0.003,
+      "bottom": 0.009
+    },
+    "worstSurfaceError": 0.049,
+    "noise": 0.002,
+    "sheet": "assets/models/plasma-blaster/review/detail.png",
+    "limit": 0.08,
+    "passed": true
+  },
+  "ground": {
+    "bottomFill": 0.017,
+    "aboveFill": 0.072,
+    "ratio": 0.24,
+    "footprintStuds": [
+      0.59,
+      4.15
+    ],
+    "flagged": false
+  },
+  "textureBleed": {
+    "image": 1,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.484,
+    "backgroundBrightness": 0.174,
+    "surfaceBrightness": 0.175,
+    "bleedPercent": 0.79
+  },
+  "budget": {
+    "role": "held",
+    "budget": 8000,
+    "triangles": 7953,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      0.591,
+      1.288,
+      4.15
+    ],
+    "heightStuds": 1.29,
+    "kind": "weapon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.28,
+        1.2
+      ],
+      "Muzzle": [
+        0.0,
+        0.345,
+        -2.08
+      ]
+    },
+    "mountSheet": "assets/models/plasma-blaster/review/mounts.png",
+    "pivot": "center",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": null,
+      "decimate": {
+        "tris": 7600,
+        "weld": true
+      },
+      "worstMesh": 7384,
+      "triangles": 7953,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     PlasmaBlaster.glb (4.94 MB)",
+    "           Mesh_0                           7,384 tris",
+    "           Plasma                             379 tris",
+    "           Core                               116 tris",
+    "           BoreTop                             46 tris",
+    "           BoreLow                             28 tris",
+    "           total                            7,953 tris (5 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png",
+    "           texture                           32x8  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/plasma-blaster/review/audit.png",
+      "assets/models/plasma-blaster/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.03,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

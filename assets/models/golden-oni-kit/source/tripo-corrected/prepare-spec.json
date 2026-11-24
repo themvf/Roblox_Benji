@@ -1,0 +1,54 @@
+{
+  "source": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\models\\golden-oni-kit\\source\\tripo-multiview.glb",
+  "out": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\trials\\GoldenOniTripo\\corrected-remesh",
+  "turn": -90,
+  "swing": 0,
+  "voxel": 0.004,
+  "faces": 9000,
+  "texture": 1024,
+  "fbx": "GoldenOniCorrected-AvatarSetup.fbx",
+  "cage": 1,
+  "headgearIsHair": false,
+  "marks": {
+    "neck": 0.6887,
+    "waist": 0.4819,
+    "hip": 0.4173,
+    "knee": 0.2434,
+    "ankle": 0.0696,
+    "shoulder": [
+      0.0392,
+      0.5894
+    ],
+    "elbow": [
+      0.1999,
+      0.5894
+    ],
+    "wrist": [
+      0.3606,
+      0.5894
+    ],
+    "armRadius": 0.0994,
+    "armInner": 0.0193,
+    "legOuter": 0,
+    "handLength": 0.1391,
+    "paint": [
+      {
+        "x": [
+          -0.0193,
+          0.0193
+        ],
+        "y": [
+          0.0,
+          0.2484
+        ],
+        "z": [
+          0.7136,
+          0.8778
+        ],
+        "color": "hair"
+      }
+    ]
+  },
+  "preserveSurfaceTrial": false,
+  "keepShellArea": 0
+}

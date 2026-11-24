@@ -1,0 +1,125 @@
+{
+  "checkedOn": "2026-11-22 23:42",
+  "export": "assets/models/prism-blaster/exports/PrismBlaster.glb",
+  "exportSha256": "d5962a9553f29d1b5c61a7bea3eacd5532a8a251bca3d4db36787a0bf8366f57",
+  "sourceSha256": "e4e9dda7bea1998cbee6bca39f8ddfdfa08ef73bdeefc0e3224ba24f2145d2e4",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "scan",
+    "suggested": "clean",
+    "reasons": [
+      "the role is held, so players are right next to it and its parts may need to move"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.968,
+      "side": 0.994,
+      "top": 0.928
+    },
+    "surfaceError": {
+      "front": 0.063,
+      "back": 0.031,
+      "right": 0.06,
+      "left": 0.058,
+      "top": 0.004,
+      "bottom": 0.1
+    },
+    "worstSurfaceError": 0.1,
+    "noise": 0.001,
+    "sheet": "assets/models/prism-blaster/review/detail.png",
+    "limit": 0.08,
+    "passed": false
+  },
+  "ground": {
+    "bottomFill": 0.029,
+    "aboveFill": 0.101,
+    "ratio": 0.29,
+    "footprintStuds": [
+      0.81,
+      4.0
+    ],
+    "flagged": false
+  },
+  "textureBleed": {
+    "image": 0,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.571,
+    "backgroundBrightness": 0.355,
+    "surfaceBrightness": 0.362,
+    "bleedPercent": 1.36
+  },
+  "budget": {
+    "role": "held",
+    "budget": 4000,
+    "triangles": 13718,
+    "waiver": "user chose full detail (2026-11-22), then asked for it lighter: a seam-safe cut to about 12,000 over two meshes, plus the Neon Crystal and a faceted CrystalGlass shell; a cut to 3,879 smeared the texture ('This looks terrible')",
+    "passed": true,
+    "within": false
+  },
+  "contract": {
+    "sizeStuds": [
+      0.813,
+      1.663,
+      4.003
+    ],
+    "heightStuds": 1.66,
+    "kind": "weapon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.32,
+        0.78
+      ],
+      "Muzzle": [
+        0.0,
+        0.3,
+        -1.97
+      ]
+    },
+    "mountSheet": "assets/models/prism-blaster/review/mounts.png",
+    "pivot": "center",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        2,
+        1
+      ],
+      "decimate": {
+        "tris": 12000,
+        "weld": false
+      },
+      "worstMesh": 6670,
+      "triangles": 13718,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     PrismBlaster.glb (3.05 MB)",
+    "           Mesh_0.001                       6,670 tris",
+    "           Mesh_0.002                       6,516 tris",
+    "           Crystal                            408 tris",
+    "           CrystalGlass                       124 tris",
+    "           total                           13,718 tris (4 meshes)",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/prism-blaster/review/audit.png",
+      "assets/models/prism-blaster/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.07,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

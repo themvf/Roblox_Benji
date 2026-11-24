@@ -24,6 +24,12 @@ local BASE = {
     Wildcat = "SubmachineGun",
     Uzi = "SubmachineGun",
     Minigun = "SubmachineGun",
+    HeavyCannon = "SubmachineGun",
+    PlasmaBlaster = "AutoRifle",
+    Halcyon = "AutoRifle",
+    PrismBlaster = "AutoRifle",
+    LightningCarbine = "AutoRifle",
+    PulseRifle = "SniperRifle",
     Shotgun = "Shotgun",
     Frostbite = "Shotgun",
     Shorty = "Shotgun",
@@ -32,6 +38,7 @@ local BASE = {
     Handgun = "Pistol",
     Revolver = "Pistol",
     Spray = "Pistol",
+    RayGun = "Pistol",
 }
 
 local function firstTool(file)
@@ -101,7 +108,7 @@ local function applyStats(tool, name, stats)
     else
         setValue(config, "FireMode", "StringValue", stats.Auto and "Automatic" or "Semiautomatic")
     end
-    setValue(config, "HasScope", "BoolValue", name == "Sniper" or name == "WhiteSniper")
+    setValue(config, "HasScope", "BoolValue", name == "Sniper" or name == "WhiteSniper" or name == "PulseRifle")
     if stats.DamageFractionOfMaxHealth then
         setValue(config, "DamageFractionOfMaxHealth", "NumberValue", stats.DamageFractionOfMaxHealth)
     end
@@ -158,7 +165,79 @@ end
 -- assets/models/<package>/studio_import.json holds the uploaded mesh and texture ids.
 local REGISTRY_ART = {
     Frostbite = "frostbite",
+    HeavyCannon = "heavy-cannon",
+    PlasmaBlaster = "plasma-blaster",
+    Halcyon = "halcyon-rifle",
+    PrismBlaster = "prism-blaster",
+    PulseRifle = "pulse-rifle",
+    RayGun = "ray-gun",
 }
+
+-- Guns whose muzzle is a glowing window: a texture cannot emit light, so a thin Neon plate
+-- sits inside the window (studs from the art's pivot, -Z forward) with a GlowLight, and the
+-- tool is tagged GlowPart so WeaponGlowController flares it on every shot.
+local MUZZLE_GLOW = {
+    PulseRifle = {
+        -- Window face at z -2.12, frame ring forward to about -2.23; the opening is
+        -- 0.22 x 0.27 studs, so the plate's edges tuck under the ring.
+        centre = Vector3.new(0, 0.165, -2.15),
+        size = Vector3.new(0.24, 0.28, 0.02),
+        color = Color3.fromRGB(176, 96, 255),
+    },
+}
+
+-- Uploaded parts that glow: weapon name -> part name -> Neon colour. The part is made Neon
+-- (its palette texture dropped, since Neon draws one flat colour), gets a GlowLight, and the
+-- tool is tagged GlowPart so WeaponGlowController flares it on every shot.
+local GLOW_PARTS = {
+    PlasmaBlaster = { Core = Color3.fromRGB(255, 120, 24) },
+    -- The barrel strip and front lens (cyan), and the strip's rear end (magenta).
+    Halcyon = { GlowCyan = Color3.fromRGB(90, 225, 255), GlowMagenta = Color3.fromRGB(240, 70, 220) },
+    -- The crystal's core and the light behind it in the window.
+    PrismBlaster = { Glow = Color3.fromRGB(176, 128, 255) },
+    -- The lightning bolt between the copper coil rails.
+    LightningCarbine = { Arc = Color3.fromRGB(140, 215, 255) },
+}
+
+-- Uploaded parts drawn as Glass over a glow: weapon name -> part name -> Transparency. The
+-- part keeps its palette texture (facets painted light, mid and dark) so the cut still reads.
+local GLASS_PARTS = {
+    PrismBlaster = { Crystal = 0.3 },
+}
+local GLOW_LIGHT_RANGE = 4 -- resting values; Tuning WeaponGlow_* overrides them in play
+local GLOW_LIGHT_BRIGHTNESS = 1.5
+
+-- A registry gun with a Core mount gets a glowing core: one textured mesh cannot glow
+-- in part, so a Neon disc runs across the body there and shows on both faces.
+local CORE_DIAMETER = 0.34
+local CORE_COLOR = Color3.fromRGB(255, 200, 40)
+
+local function addCoreGlow(model, mesh, alignment, core)
+    local disc = Instance.new("Part")
+    disc.Name = "CoreGlow"
+    disc.Shape = Enum.PartType.Cylinder -- cylinder axis is X, across the gun
+    disc.Size = Vector3.new(mesh.Size.X + 0.04, CORE_DIAMETER, CORE_DIAMETER)
+    disc.Material = Enum.Material.Neon
+    disc.Color = CORE_COLOR
+    disc.CFrame = alignment * CFrame.new(core)
+    disc.Anchored = false
+    disc.CanCollide = false
+    disc.CanTouch = false
+    disc.CanQuery = false
+    disc.Massless = true
+    disc.CastShadow = false
+    disc.Parent = model
+    local light = Instance.new("PointLight")
+    light.Color = CORE_COLOR
+    light.Range = 4
+    light.Brightness = 1.5
+    light.Parent = disc
+    local joint = Instance.new("WeldConstraint")
+    joint.Name = "ArtWeld"
+    joint.Part0 = mesh
+    joint.Part1 = disc
+    joint.Parent = disc
+end
 
 local function v3(t)
     return Vector3.new(t[1], t[2], t[3])
@@ -198,13 +277,45 @@ local function attachRegistryArt(tool, name)
             descendant.Transparency = 1
         end
     end
+    local glow = GLOW_PARTS[name] or {}
     for _, record in manifest.parts do
         local mesh = Instance.new("MeshPart")
         mesh.Name = record.name
         mesh.MeshId = record.meshId
-        mesh.TextureID = record.textureId
         mesh.Size = v3(record.size)
-        mesh.CFrame = alignment
+        -- A multi-part upload records each part's offset from the model pivot (the export's
+        -- centre, the frame the mounts are in); a single-part upload sits on the pivot.
+        mesh.CFrame = alignment * CFrame.new(record.offset and v3(record.offset) or Vector3.new(0, 0, 0))
+        if record.colorMap then
+            -- PBR upload (normal, metal and roughness maps): the importer made a SurfaceAppearance.
+            mesh.Color = Color3.new(1, 1, 1)
+            local surface = Instance.new("SurfaceAppearance")
+            surface.ColorMap = record.colorMap
+            surface.MetalnessMap = record.metalnessMap or ""
+            surface.RoughnessMap = record.roughnessMap or ""
+            surface.NormalMap = record.normalMap or ""
+            surface.Parent = mesh
+        elseif glow[record.name] then
+            mesh.Material = Enum.Material.Neon
+            mesh.Color = glow[record.name]
+            mesh.CastShadow = false
+            local light = Instance.new("PointLight")
+            light.Name = "GlowLight"
+            light.Color = glow[record.name]
+            light.Range = GLOW_LIGHT_RANGE
+            light.Brightness = GLOW_LIGHT_BRIGHTNESS
+            light.Shadows = false
+            light.Parent = mesh
+            tool:SetAttribute("GlowPart", record.name)
+        else
+            mesh.TextureID = record.textureId
+            local glass = GLASS_PARTS[name] and GLASS_PARTS[name][record.name]
+            if glass then
+                mesh.Material = Enum.Material.Glass
+                mesh.Transparency = glass
+                mesh.CastShadow = false
+            end
+        end
         mesh.Anchored = false
         mesh.CanCollide = false
         mesh.CanTouch = false
@@ -216,6 +327,40 @@ local function attachRegistryArt(tool, name)
         joint.Part0 = body
         joint.Part1 = mesh
         joint.Parent = mesh
+        if entry.mounts.Core then
+            addCoreGlow(model, mesh, alignment, v3(entry.mounts.Core))
+        end
+    end
+
+    local muzzleGlow = MUZZLE_GLOW[name]
+    if muzzleGlow then
+        local art = model:FindFirstChild(manifest.parts[1].name)
+        local plate = Instance.new("Part")
+        plate.Name = "MuzzleGlow"
+        plate.Size = muzzleGlow.size
+        plate.Material = Enum.Material.Neon
+        plate.Color = muzzleGlow.color
+        plate.CFrame = alignment * CFrame.new(muzzleGlow.centre)
+        plate.Anchored = false
+        plate.CanCollide = false
+        plate.CanTouch = false
+        plate.CanQuery = false
+        plate.Massless = true
+        plate.CastShadow = false
+        plate.Parent = model
+        local light = Instance.new("PointLight")
+        light.Name = "GlowLight"
+        light.Color = muzzleGlow.color
+        light.Range = GLOW_LIGHT_RANGE
+        light.Brightness = GLOW_LIGHT_BRIGHTNESS
+        light.Shadows = false
+        light.Parent = plate
+        local joint = Instance.new("WeldConstraint")
+        joint.Name = "ArtWeld"
+        joint.Part0 = art
+        joint.Part1 = plate
+        joint.Parent = plate
+        tool:SetAttribute("GlowPart", plate.Name)
     end
 end
 

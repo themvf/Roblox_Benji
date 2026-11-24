@@ -1,0 +1,26 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "quantum-cannon": {
+      "description": "Quantum Cannon: a heavy white-and-black two-handed energy launcher with a glowing muzzle ring that players hold, in every map (role: held, about 1.4 studs tall)",
+      "source": "assets/models/quantum-cannon/source/QuantumCannon.glb",
+      "out": "assets/models/quantum-cannon/exports/QuantumCannon.glb",
+      "fit": {
+        "axis": "z",
+        "size": 1.4
+      },
+      "decimate": 9000,
+      "pivot": "center",
+      "optimize": {
+        "texture": 1024
+      },
+      "yaw": 90,
+      "extraParts": "tools/blender/parts_quantum_cannon.py",
+      "extraMeshes": [
+        "MuzzleRim",
+        "MuzzleBore",
+        "Glow"
+      ]
+    }
+  }
+}

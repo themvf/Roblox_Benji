@@ -39,7 +39,24 @@ def toes_y(objs):
     base = min(p.z for p in pts)
     toes = [p.y for p in pts if p.z < base + 0.04 * h]
     shins = [p.y for p in pts if base + 0.1 * h < p.z < base + 0.2 * h]
-    return sum(toes) / len(toes) - sum(shins) / len(shins), h
+    shin = sum(shins) / len(shins)
+    lean = sum(toes) / len(toes) - shin
+    # Block boots with hardly any toe overhang (HornedFeatherMeshy's taloned boots, 2026-11-22) put the mean of
+    # the toes level with the shins, or a hair behind them. The foot still reaches further forward than back:
+    # judge by that reach when the mean is within 1% of the height.
+    # A long coat hem or wide boot tops bulging forward in the shin band pull the shins' mean ahead of the
+    # toes (TrenchFedoraMeshy, lean -2% of the height). What the foot always does is stick out past the leg
+    # at the front, not the back: judge by that overhang when it is clear. Signed either way, since this also
+    # reads the turned-round FBX, where the front is -y.
+    overhang = (max(toes) - max(shins)) - (min(shins) - min(toes))
+    if abs(overhang) > 0.02 * h:
+        return overhang, h
+    if abs(lean) < 0.01 * h:
+        mid =(max(shins) + min(shins)) / 2  # a lopsided boot trim pulls the mean forward; the midpoint holds
+        reach = (max(toes) - mid) - (mid - min(toes))
+        if abs(reach) > 0.005 * h:
+            return reach, h
+    return lean, h
 
 
 clear()

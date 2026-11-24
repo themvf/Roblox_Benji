@@ -1,0 +1,82 @@
+{
+ "rendered": "2026-11-21T10:55:36",
+ "build": {
+  "Body.glb": "699fed09c54e1181",
+  "GoldenOniTripo-AvatarSetup.fbx": "5e4e3d1a6d70b1fb"
+ },
+ "sheets": [
+  "sheet-views.png",
+  "sheet-close-front.png",
+  "sheet-close-back.png",
+  "sheet-joints.png",
+  "sheet-poses-front.png",
+  "sheet-poses-side.png",
+  "sheet-camera.png"
+ ],
+ "weights": "heat",
+ "poses": {
+  "bind": {
+   "stretchedOver2x": 0.0,
+   "crushedUnder035": 0.0
+  },
+  "idle": {
+   "stretchedOver2x": 0.0051,
+   "crushedUnder035": 0.0027,
+   "rifleThroughBody": {
+    "front": 0,
+    "stock": 19
+   },
+   "crosshairCovered": 0.0
+  },
+  "walk": {
+   "stretchedOver2x": 0.0057,
+   "crushedUnder035": 0.004,
+   "rifleThroughBody": {
+    "front": 0,
+    "stock": 2
+   }
+  },
+  "run": {
+   "stretchedOver2x": 0.0084,
+   "crushedUnder035": 0.0131,
+   "rifleThroughBody": {
+    "front": 0,
+    "stock": 7
+   }
+  },
+  "crouch": {
+   "stretchedOver2x": 0.007,
+   "crushedUnder035": 0.0296,
+   "rifleThroughBody": {
+    "front": 11,
+    "stock": 38
+   }
+  },
+  "aim": {
+   "stretchedOver2x": 0.0078,
+   "crushedUnder035": 0.0129,
+   "rifleThroughBody": {
+    "front": 0,
+    "stock": 8
+   },
+   "crosshairCovered": 0.0
+  },
+  "jump": {
+   "stretchedOver2x": 0.0052,
+   "crushedUnder035": 0.0131,
+   "rifleThroughBody": {
+    "front": 0,
+    "stock": 0
+   }
+  },
+  "headturn": {
+   "stretchedOver2x": 0.0043,
+   "crushedUnder035": 0.007
+  }
+ },
+ "findings": {
+  "recorded": "2026-11-21T10:56:01",
+  "defects": "Gold eye spikes and rough nape seam no longer visible in these renders. Rifle still intersects body in synthetic crouch test (11 front faces; 38 stock faces); mask and horns remain fused with no verified dynamic head or separate Marketplace accessory; gold has baked highlights; no Studio or gameplay validation; commercial rights unverified.",
+  "passed": "Inspected all seven audit sheets: front, rear, close-ups, joints, front and side poses, camera. Eye openings and nape appear clean; body 8,998 triangles and zero open edges; FBX readback 6.768 studs and +Z; heat-weight simulation worst stretch 0.84 percent and crosshair coverage 0 percent."
+ }
+}

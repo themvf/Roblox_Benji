@@ -38,21 +38,21 @@ return {
     },
 
     Spawns = {
-        { 0, 3, 30 },
-        { -7, 3, 32 },
-        { 7, 3, 32 },
-        { -14, 3, 34 },
-        { 14, 3, 34 },
+        { 0, 3, 26 },
+        { -7, 3, 28 },
+        { 7, 3, 28 },
+        { -14, 3, 30 },
+        { 14, 3, 30 },
     },
 
     -- Anyone outside a match who ends up in this box (lobby coordinates) has fallen off an
     -- island; MapService puts them back on an arrival spawn. The islands' tops are at y 0.
-    FallRecovery = { min = { -260, -260, -340 }, max = { 260, -40, 190 } },
+    FallRecovery = { min = { -220, -220, -280 }, max = { 220, -18, 180 } },
 
     -- Cool ankle-height mist across the central arrival area. The emitters are
     -- placed by MapService for both the editable and baked lobby.
     ArrivalMist = {
-        Center = { 0, 0.28, 32 },
+        Center = { 0, 0.28, 28 },
         Columns = 5,
         Rows = 3,
         Spacing = { 7, 6 },
@@ -60,8 +60,7 @@ return {
         Texture = "rbxasset://textures/particles/smoke_main.dds",
     },
 
-    -- Distinct mode zones inside one rectangular PLAY hall. The TDM halves each
-    -- fit five standing players without crossing into Convergence or the exit.
+    -- Distinct mode zones on the tightened Pad Island and Gate Island.
     Pads = {
         {
             name = "PadConvergence",
@@ -70,7 +69,7 @@ return {
             featured = true,
             teamSize = 5,
             minTeamSize = 3,
-            pos = { 0, 0, -218 }, -- gate island, under the PLAY gate
+            pos = { 0, 0, -162 }, -- gate island, under the PLAY gate
             size = { 36, 1, 18 },
             color = Color3.fromRGB(255, 196, 70),
         },
@@ -79,7 +78,7 @@ return {
             kind = "Duel",
             mode = "DUEL 1v1",
             teamSize = 1,
-            pos = { -22, 0, -92 }, -- pad island, front left
+            pos = { -20, 0, -72 }, -- pad island, front left
             size = { 25, 1, 9 },
             color = Color3.fromRGB(120, 200, 160),
         },
@@ -89,7 +88,7 @@ return {
             mode = "DUEL 2v2",
             disabled = true, -- Duel is 1v1 only; keep marker definition so LobbyAuthoring stays valid
             teamSize = 2,
-            pos = { -22, 0, -113 }, -- not drawn while disabled
+            pos = { -20, 0, -90 }, -- not drawn while disabled
             size = { 25, 1, 9 },
             color = Color3.fromRGB(120, 200, 160),
         },
@@ -99,20 +98,10 @@ return {
             mode = "TEAM DEATHMATCH",
             teamSize = 5,
             minTeamSize = 2,
-            pos = { 22, 0, -92 }, -- pad island, front right
+            pos = { 21, 0, -72 }, -- pad island, front right
             size = { 34, 1, 22 },
             color = Color3.fromRGB(255, 196, 70),
         },
-        -- Its own corner of the room, opposite the kiosk, because it is not a way to
-        -- play the game -- it is the way to go look at a map you are building.
-        --
-        -- Every other pad needs both sides populated before it can start, so one person
-        -- alone can never leave the lobby: Red or Blue is always zero. `solo` starts on
-        -- a single occupant and skips the fill wait entirely. The map vote still opens,
-        -- with one voter, which is how you choose where you are going.
-        --
-        -- Training: one player, bots on both sides, filled to Config.Training.TeamSize
-        -- per team, so the player's side has one bot fewer. One pad per mode.
         {
             name = "PadTrainingObjective",
             kind = "Convergence",
@@ -120,7 +109,7 @@ return {
             solo = true,
             teamSize = 1,
             minTeamSize = 1,
-            pos = { -22, 0, -134 },
+            pos = { -18, 0, -108 },
             size = { 16, 1, 9 },
             color = Color3.fromRGB(170, 140, 235),
         },
@@ -131,7 +120,7 @@ return {
             solo = true,
             teamSize = 1,
             minTeamSize = 1,
-            pos = { 22, 0, -134 },
+            pos = { 18, 0, -108 },
             size = { 16, 1, 9 },
             color = Color3.fromRGB(170, 140, 235),
         },
@@ -139,13 +128,13 @@ return {
 
     -- Stations turn to face the arrival island (yaw in degrees; the sign is on the -Z face).
     -- The leaderboard is the Ferrymen's Ledger, on their island's back wall.
-    Board = { pos = { -172.46, 2, 124.28 }, size = { 30, 12, 1 }, yaw = 298.66 },
+    Board = { pos = { -140.34, 2, 104.5 }, size = { 30, 12, 1 }, yaw = 299.22 },
 
     -- The loadout kiosk stands at the Forge Union's counter.
     Kiosk = {
-        pos = { -147, 0, -99.36 },
+        pos = { -115, 0, -75.36 },
         size = { 12, 3.5, 5 },
-        yaw = 228.65,
+        yaw = 228.61,
         showcase = "AssaultRifle",
     },
 
@@ -154,7 +143,7 @@ return {
     Wayfinding = {
         {
             name = "Play",
-            pos = { 0, 18, -60 }, -- over the pad island end of the first bridge
+            pos = { 0, 18, -48 }, -- over the pad island end of the first bridge
             size = { 40, 7 },
             title = "PLAY",
             detail = "DUELS  |  CONVERGENCE  |  TDM",
@@ -210,10 +199,10 @@ return {
 
     -- One light per destination, in that destination's colour.
     Lights = {
-        { name = "GateLight", pos = { 0, 40, -235 }, color = "Accent", range = 90, brightness = 2 },
-        { name = "ArmoryLight", pos = { -150, 26, -102 }, color = "Forge", range = 70, brightness = 2 },
-        { name = "TdmLight", pos = { 0, 22, -112 }, color = "Accent", range = 80, brightness = 1.2 },
-        { name = "EgoLight", pos = { 150, 26, -102 }, color = "Institute", range = 70, brightness = 2 },
-        { name = "BoardLight", pos = { -150, 26, 112 }, color = "Ferry", range = 70, brightness = 1.6 },
+        { name = "GateLight", pos = { 0, 40, -172 }, color = "Accent", range = 90, brightness = 2 },
+        { name = "ArmoryLight", pos = { -118, 26, -78 }, color = "Forge", range = 70, brightness = 2 },
+        { name = "TdmLight", pos = { 0, 22, -88 }, color = "Accent", range = 80, brightness = 1.2 },
+        { name = "EgoLight", pos = { 118, 26, -78 }, color = "Institute", range = 70, brightness = 2 },
+        { name = "BoardLight", pos = { -118, 26, 92 }, color = "Ferry", range = 70, brightness = 1.6 },
     },
 }

@@ -1,0 +1,74 @@
+{
+  "purpose": "Halcyon: a cream-white sci-fi precision rifle with a dark skeleton stock and a cyan-to-magenta glowing barrel strip that players hold, in every map",
+  "role": "held",
+  "heightStuds": 0.97,
+  "pivot": "center",
+  "kind": "weapon",
+  "lengthStuds": 5.0,
+  "widthStuds": 0.45,
+  "gameName": "Halcyon",
+  "where": "held in every map",
+  "copies": 12,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "user chose: name Halcyon, behaves like EnergyRifle, 5 studs long, stop at local build. I chose: height 1.15 and width 0.4 from the picture's proportions; 12 on screen; no moving parts; game only; the skeleton stock is a thick frame, so thin=no",
+  "meshes": "auto",
+  "route": "scan",
+  "scene": {
+    "yaw": 90,
+    "repairNormals": true,
+    "split": [
+      {
+        "name": "GlowCyan",
+        "colour": {
+          "hue": [
+            180,
+            200
+          ],
+          "sat": [
+            0.45,
+            1
+          ],
+          "val": [
+            0.8,
+            1
+          ]
+        },
+        "minFaces": 1
+      },
+      {
+        "name": "GlowMagenta",
+        "colour": {
+          "hue": [
+            295,
+            320
+          ],
+          "sat": [
+            0.5,
+            1
+          ],
+          "val": [
+            0.75,
+            1
+          ]
+        },
+        "minFaces": 1
+      }
+    ]
+  },
+  "counts": {},
+  "mounts": {
+    "Grip": [
+      0.0,
+      -0.309,
+      1.516
+    ],
+    "Muzzle": [
+      0.0,
+      0.2,
+      -2.4
+    ]
+  }
+}

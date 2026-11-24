@@ -1,0 +1,31 @@
+{
+  "asset": "prism-blaster",
+  "recordedOn": "2026-11-22",
+  "reference": {
+    "file": "assets/models/prism-blaster/source/reference.png",
+    "sha256": "bbe41c41aba9e87686eb1c1efeaec106edfaeca5abe5fcf226a28877baecdb4a",
+    "origin": "unknown",
+    "madeWith": null,
+    "prompt": null
+  },
+  "mesh": {
+    "file": "assets/models/prism-blaster/source/PrismBlaster.glb",
+    "sha256": "e4e9dda7bea1998cbee6bca39f8ddfdfa08ef73bdeefc0e3224ba24f2145d2e4",
+    "generator": {
+      "service": "meshy",
+      "space": null,
+      "seed": 201,
+      "resolution": "imported",
+      "file": "meshy-1.glb",
+      "sha256": "e4e9dda7bea1998cbee6bca39f8ddfdfa08ef73bdeefc0e3224ba24f2145d2e4",
+      "settings": "image to 3D (latest), 20k triangles, 2k geometry, base colour texture, lighting removed, straight from the user's concept picture",
+      "decoded": null,
+      "reference": "reference.png",
+      "importedOn": "2026-11-22"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

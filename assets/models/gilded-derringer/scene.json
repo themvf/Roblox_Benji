@@ -1,0 +1,20 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "gilded-derringer": {
+      "description": "Gilded Derringer: a glossy black-and-gold sidearm with an octagonal cylinder plate and oxblood grip that players hold, in every map (role: held, about 0.9 studs tall)",
+      "source": "assets/models/gilded-derringer/source/GildedDerringer.glb",
+      "out": "assets/models/gilded-derringer/exports/GildedDerringer.glb",
+      "fit": {
+        "axis": "z",
+        "size": 0.9
+      },
+      "decimate": 9000,
+      "pivot": "center",
+      "optimize": {
+        "texture": 1024
+      },
+      "yaw": 90
+    }
+  }
+}

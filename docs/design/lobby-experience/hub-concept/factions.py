@@ -34,10 +34,10 @@ FERRY = (0.62, 1.0, 0.25)
 NEUTRAL = (0.85, 0.88, 0.95)
 MAGENTA = (1.0, 0.3, 0.72)
 
-ARRIVAL, PADS, GATE = (0.0, 30.0), (0.0, -112.0), (0.0, -255.0)
-FORGE_C, INST_C = (-150.0, -102.0), (150.0, -102.0)
-FERRY_C, KADE_C = (-150.0, 112.0), (150.0, 112.0)
-RADII = {ARRIVAL: 45, PADS: 60, GATE: 58, FORGE_C: 50, INST_C: 50, FERRY_C: 48, KADE_C: 48}
+ARRIVAL, PADS, GATE = (0.0, 26.0), (0.0, -88.0), (0.0, -188.0)
+FORGE_C, INST_C = (-118.0, -78.0), (118.0, -78.0)
+FERRY_C, KADE_C = (-118.0, 92.0), (118.0, 92.0)
+RADII = {ARRIVAL: 40, PADS: 52, GATE: 46, FORGE_C: 46, INST_C: 46, FERRY_C: 44, KADE_C: 44}
 COLOUR = {FORGE_C: FORGE, INST_C: INSTITUTE, FERRY_C: FERRY, KADE_C: KADE}
 LINKS = [
     (ARRIVAL, PADS),
@@ -163,8 +163,8 @@ def institute():
 def kade():
     accent, place = KADE, facing(KADE_C)
     chrome = (0.62, 0.64, 0.68)
-    hub.labels.append(("SHOP\nKade Dynamics", KADE_C[0], KADE_C[1], "place"))
-    signage(place, "Kade", "SHOP", "KADE DYNAMICS  -  REALITY IS A MARKET", accent, (0.32, 0.33, 0.36), width=60)
+    hub.labels.append(("PACKS & PASSES\nKade Dynamics", KADE_C[0], KADE_C[1], "place"))
+    signage(place, "Kade", "PACKS & PASSES", "KADE DYNAMICS  -  REALITY IS A MARKET", accent, (0.32, 0.33, 0.36), width=60)
     alt.shop(place, 54)
     # the private rocket on its tower
     rx, rz = -30, -6
@@ -257,10 +257,26 @@ def forge_detail():
     place("box", "Pegboard", (34, 6, 2), (0.4, 8, 12), (0.42, 0.34, 0.24), rot=0, plan=False)
     for index, h in enumerate((5, 3.5, 6, 4)):
         place("box", "ToolOutline", (33.7, 6, -3 + index * 2.8), (0.1, h, 0.5), CANVAS, glow=1, plan=False)
+    # glass-railed Proving Pit firing zone on the outer deck
+    place("box", "ProvingPitFloor", (-24, 0.12, 18), (18, 0.16, 12), (0.12, 0.16, 0.2), plan=False)
+    place("box", "ProvingPitGlass", (-24, 2.2, 12.2), (18, 4.0, 0.4), (0.45, 0.85, 1.0), plan=False)
+    place("text", "ProvingPitSign", (-24, 4.8, 12.0), (1.1, 0, 0), FORGE, glow=6, text="PROVING PIT")
+    for idx, dx in enumerate((-30, -24, -18)):
+        place("box", "EchoTargetBase%d" % idx, (dx, 0.6, 22), (2.4, 1.2, 2.4), STEEL, plan=False)
+        place("cyl", "EchoTargetBody%d" % idx, (dx, 3.4, 22), (2.2, 4.4, 2.2), FORGE, glow=3, plan=False)
+        place("sphere", "EchoTargetHead%d" % idx, (dx, 6.2, 22), (1.4, 1.4, 1.4), (1.0, 0.88, 0.65), glow=5, plan=False)
 
 
 def institute_detail():
     place = facing(INST_C)
+    # cylindrical glass containment pods over the kit plinths
+    for slot in range(4):
+        x, z = -24 + slot * 16, -13
+        colour = KIT_COLOURS[slot]
+        place("cyl", "KitPodGlass%d" % slot, (x, 8.6, z), (9.6, 13.0, 9.6), colour, plan=False)
+        place("ring", "KitPodCap%d" % slot, (x, 15.2, z), (9.8, 0.6, 9.8), STEEL, tube=0.45, flat=True, plan=False)
+    place("box", "KitsPromptPad", (0, 1.6, 10), (14, 3.2, 4.5), STEEL)
+    place("box", "KitsPromptGlow", (0, 3.3, 10), (13, 0.16, 4.0), INSTITUTE, glow=4, plan=False)
     # the List: a tall holo-board of names, the Institute's whole claim to order
     place("box", "ListBoard", (-36, 13, 4), (0.4, 22, 12), (0.12, 0.22, 0.32), glow=0.6, plan=False)
     place("text", "ListTitle", (-35.6, 22, 4), (1.4, 0, 0), INSTITUTE, glow=8, text="THE LIST", rot=90)
@@ -313,6 +329,14 @@ def kade_detail():
     # price ticker across the shop wall
     place("box", "Ticker", (0, 14.6, -25.7), (52, 1.6, 0.3), (0.08, 0.07, 0.05), plan=False)
     place("text", "TickerText", (0, 14.6, -25.4), (1.1, 0, 0), KADE, glow=8, text="SEAT 12A  9,999,999  -  SEAT 12B  SOLD  -  SEAT 12C  SOLD")
+    # interactive Packs & Passes kiosks on the marble apron
+    chrome = (0.62, 0.64, 0.68)
+    place("box", "PacksPedestal", (-10, 1.8, 16), (6, 3.6, 4.5), chrome)
+    place("box", "PacksGlow", (-10, 3.7, 16), (5.6, 0.2, 4.1), KADE, glow=5, plan=False)
+    place("text", "PacksSign", (-10, 5.2, 16), (1.2, 0, 0), KADE, glow=8, text="PACKS")
+    place("box", "PassesTerminal", (14, 1.8, 16), (6, 3.6, 4.5), chrome)
+    place("box", "PassesGlow", (14, 3.7, 16), (5.6, 0.2, 4.1), INSTITUTE, glow=5, plan=False)
+    place("text", "PassesSign", (14, 5.2, 16), (1.2, 0, 0), INSTITUTE, glow=8, text="PASSES")
 
 
 def ferrymen_detail():
@@ -342,13 +366,18 @@ def ferrymen_detail():
     place("ring", "FloorCoinInner", (0, 0.12, 22), (7, 0.2, 7), GOLD, glow=3, tube=0.3, flat=True, plan=False)
     for x, z, s in ((-34, 12, 4), (-36, 17, 3), (-31, 16, 3.4)):
         place("box", "Contraband", (x, s / 2, z), (s, s, s), (0.36, 0.28, 0.18), plan=False)
+    # Professor Marsh hologram & Daily Stabilizer on the Ferrymen's deck
+    place("cyl", "MarshBase", (22, 0.8, 16), (8, 1.6, 8), STEEL)
+    place("ring", "MarshRing", (22, 1.7, 16), (7.6, 0.3, 7.6), INSTITUTE, glow=6, tube=0.3, flat=True, plan=False)
+    place("cyl", "MarshHolo", (22, 5.5, 16), (3.4, 7.2, 3.4), INSTITUTE, glow=3, plan=False)
+    place("text", "MarshSign", (22, 10.6, 16), (1.1, 0, 0), INSTITUTE, glow=8, text="MARSH")
 
 
 def hold_detail():
     """The neutral arrival island is a Hold: bare concrete, emergency lighting, a departures board."""
     amber = (1.0, 0.62, 0.2)
-    # beside the bridge to the pads, angled at the spawns, clear of the gate in the first view
-    board = group((-17, -2), 20)
+    # tucked onto the left arrival rail so the central bridge & PLAY sightline stay clear
+    board = group((-26, 2), 34)
     y = 10
     board("box", "Departures", (0, y, 0), (20, 10, 0.6), (0.05, 0.05, 0.06))
     board("box", "DeparturesFrame", (0, y, -0.2), (20.8, 10.8, 0.3), STEEL, plan=False)
@@ -359,11 +388,11 @@ def hold_detail():
     for row, text in enumerate(("CROSSING 1   OPEN", "CROSSING 2   BOARDING", "CROSSING 3   HELD")):
         board("text", "DepartureRow", (0, y - 1.4 - row * 1.5, 0.4), (0.8, 0, 0), amber, glow=6, text=text)
     # bags never unpacked, along the rail
-    for x, z, w in ((-34, 18, 3), (-31, 21, 2.4), (-36, 23, 2.8), (33, 34, 3), (36, 30, 2.4)):
+    for x, z, w in ((-28, 16, 3), (-25, 20, 2.4), (-30, 22, 2.8), (27, 28, 3), (30, 24, 2.4)):
         box("Bag", (x, w * 0.35, z), (w, w * 0.7, w * 0.6), (0.3, 0.27, 0.24), plan=False)
     # emergency lamps on the rail
     for bearing in range(20, 360, 40):
-        x, z = ARRIVAL[0] + 43 * math.sin(math.radians(bearing)), ARRIVAL[1] - 43 * math.cos(math.radians(bearing))
+        x, z = ARRIVAL[0] + 38 * math.sin(math.radians(bearing)), ARRIVAL[1] - 38 * math.cos(math.radians(bearing))
         add("sphere", "EmergencyLamp", (x, 4.2, z), (1, 1, 1), amber, glow=12, plan=False)
 
 
@@ -373,12 +402,35 @@ def compass():
         bearing = bearing_to(ARRIVAL, target)
         rot = (180 - bearing) % 360
         nx, nz = math.sin(math.radians(bearing)), -math.cos(math.radians(bearing))
-        box("Compass", (ARRIVAL[0] + nx * 26, 0.08, ARRIVAL[1] + nz * 26), (2, 0.1, 22), colour, glow=4, rot=rot, plan=False)
+        box("Compass", (ARRIVAL[0] + nx * 22, 0.08, ARRIVAL[1] + nz * 22), (2, 0.1, 18), colour, glow=4, rot=rot, plan=False)
+
+
+def bridge_rings():
+    """Aerial Jetpack traversal rings arcing above the bridges."""
+    for index, (a, b) in enumerate(LINKS):
+        dx, dz = b[0] - a[0], b[1] - a[1]
+        mx, mz = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2
+        rot = math.degrees(math.atan2(dx, dz))
+        colour = COLOUR.get(b, COLOUR.get(a, GOLD))
+        add("ring", "BridgeRing%d" % index, (mx, 14, mz), (14, 14, 1), colour, glow=6, tube=0.45, rot=rot, plan=False)
+
+
+def reality_vista():
+    """Distant non-colliding Reality Fracture shards beyond the PLAY gate."""
+    shards = [
+        ("VistaShardIce", (-110, 46, -295), (26, 62, 22), (0.55, 0.85, 1.0), 18, 0.8),
+        ("VistaShardGold", (118, 52, -305), (22, 74, 18), GOLD, -22, 1.2),
+        ("VistaShardVoid", (-45, 76, -340), (18, 42, 18), VIOLET, 35, 1.8),
+        ("VistaShardHull", (58, 28, -280), (36, 16, 14), (0.28, 0.3, 0.35), 14, 0.0),
+    ]
+    for name, pos, size, colour, rot, glow in shards:
+        box(name, pos, size, colour, glow=glow, rot=rot, plan=False)
+    add("ring", "VistaOrbital", (0, 68, -320), (150, 150, 4), (0.35, 0.85, 1.0), glow=4, tube=0.9, tilt=68, plan=False)
 
 
 def factions():
     start()
-    extent = {"x": 235, "north": -320, "south": 180}
+    extent = {"x": 185, "north": -250, "south": 150}
     box("Floor", (0, -140, (extent["north"] + extent["south"]) / 2), (extent["x"] * 2, 2, extent["south"] - extent["north"]), (0.02, 0.015, 0.04))
     add("cyl", "Void", (0, -138, -45), (4000, 0.5, 4000), (0.12, 0.07, 0.25), glow=0.08, plan=False)
     for centre, radius in RADII.items():
@@ -388,20 +440,21 @@ def factions():
     for index, (a, b) in enumerate(LINKS):
         bridge("Bridge%d" % index, a, b, COLOUR.get(b, COLOUR.get(a, NEUTRAL)))
 
-    # neutral spine: arrival, pads, gate
-    add("ring", "ArrivalRing", (0, 0.15, 30), (24, 0.2, 24), GOLD, glow=2.5, tube=0.3, flat=True)
+    # neutral spine: arrival, pads, gate (with Canister centered inside PLAY gate)
+    add("ring", "ArrivalRing", (0, 0.15, 26), (22, 0.2, 22), GOLD, glow=2.5, tube=0.3, flat=True)
     compass()
-    canister(-22, 52)
-    hub.labels.append(("SEASON\nDISPLAY", -22, 52, "place"))
-    purple(22, 55)
-    pad("Duel", "DUEL 1V1", -22, -92, GREEN)
-    pad("TDM", "TEAM DEATHMATCH", 22, -92, GOLD)
-    pad("TrainingObjective", "TRAINING", -22, -134, LILAC)
-    pad("TrainingTDM", "TRAINING TDM", 22, -134, LILAC)
-    pad("Convergence", "CONVERGENCE", 0, -218, GOLD)
-    gate(0, -266)
+    bridge_rings()
+    reality_vista()
+    purple(20, 44)
+    pad("Duel", "DUEL 1V1", -20, -72, GREEN)
+    pad("TDM", "TEAM DEATHMATCH", 21, -72, GOLD)
+    pad("TrainingObjective", "TRAINING", -18, -108, LILAC)
+    pad("TrainingTDM", "TRAINING TDM", 18, -108, LILAC)
+    pad("Convergence", "CONVERGENCE", 0, -162, GOLD)
+    gate(0, -196)
+    canister(0, -192)
     for bearing in (120, 240):
-        purple(48 * math.sin(math.radians(bearing)), -255 - 48 * math.cos(math.radians(bearing)))
+        purple(40 * math.sin(math.radians(bearing)), -188 - 40 * math.cos(math.radians(bearing)))
 
     forge()
     institute()
@@ -413,21 +466,21 @@ def factions():
     ferrymen_detail()
     hold_detail()
 
-    points = [(0, 30), (-8, 33), (8, 33), (-16, 37), (16, 37)]
+    points = [(0, 26), (-7, 28), (7, 28), (-14, 30), (14, 30)]
     spawns(points)
-    hub.labels.append(("ARRIVAL", 0, 48, "place"))
-    people([(-20, -80), (-24, -86), (25, -80), (-5, -215), (7, -213), (-165, -100), (172, -104), (150, 112), (-150, 110), (2, -30), (-80, -40), (90, 70)])
+    hub.labels.append(("ARRIVAL", 0, 40, "place"))
+    people([(-20, -64), (-24, -70), (25, -64), (-5, -158), (7, -156), (-125, -76), (125, -78), (118, 92), (-118, 90), (2, -26), (-64, -32), (64, 58)])
 
-    def approach(centre, distance=68, height=6.0, lift=15):
+    def approach(centre, distance=58, height=6.0, lift=15):
         ux, uz = ARRIVAL[0] - centre[0], ARRIVAL[1] - centre[1]
         length = math.hypot(ux, uz)
         eye = (centre[0] + ux / length * distance, height, centre[1] + uz / length * distance)
         return eye, (centre[0] - ux / length * 10, lift, centre[1] - uz / length * 10)
 
     views = [
-        ("arrival", "First view on arrival", (0, 5.5, 36), (0, 22, -266), 70),
-        ("three_quarter", "From a high corner", (300, 170, 240), (0, -20, -60), 50),
-        ("hero", "From above the Convergence pad, looking back over all four islands", (0, 60, -205), (0, -5, 10), 70),
+        ("arrival", "First view on arrival", (0, 5.5, 32), (0, 22, -196), 70),
+        ("three_quarter", "From a high corner", (240, 150, 200), (0, -15, -50), 50),
+        ("hero", "From above the Convergence pad, looking back over all four islands", (0, 54, -148), (0, -5, 10), 70),
         ("forge", "Crossing the orange bridge to the Forge Union armory", *approach(FORGE_C), 62),
         ("institute", "Crossing the blue bridge to the Coherence Institute kits", *approach(INST_C), 62),
         ("kade", "Crossing the gold bridge to the Kade Dynamics shop", *approach(KADE_C, lift=22), 62),
@@ -436,14 +489,14 @@ def factions():
     lights = [
         ("AREA", (0, 240, -45), (0.6, 0.7, 1.0), 220000, 600),
         ("AREA", (0, -110, -45), VIOLET, 60000, 520),
-        ("POINT", (0, 52, -235), GOLD, 14000, 6),
-        ("POINT", (0, 44, -270), VIOLET, 8000, 4),
+        ("POINT", (0, 52, -172), GOLD, 14000, 6),
+        ("POINT", (0, 44, -202), VIOLET, 8000, 4),
         ("POINT", (FORGE_C[0], 26, FORGE_C[1]), FORGE, 7000, 6),
         ("POINT", (INST_C[0], 26, INST_C[1]), INSTITUTE, 6500, 6),
         ("POINT", (KADE_C[0], 26, KADE_C[1]), KADE, 6500, 6),
         ("POINT", (FERRY_C[0], 26, FERRY_C[1]), FERRY, 6000, 6),
-        ("POINT", (0, 22, 30), (1, 0.9, 0.75), 6000, 8),
-        ("POINT", (0, 22, -112), (1, 0.9, 0.75), 6000, 8),
+        ("POINT", (0, 22, 26), (1, 0.9, 0.75), 6000, 8),
+        ("POINT", (0, 22, -88), (1, 0.9, 0.75), 6000, 8),
     ]
     return alt.finish("factions", "Faction Islands", extent, points, views, lights)
 

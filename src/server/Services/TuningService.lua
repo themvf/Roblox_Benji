@@ -112,6 +112,11 @@ function TuningService:EnsureSetup()
             tuning:SetAttribute("Turret_" .. key, default)
         end
     end
+    for key, default in Config.WeaponGlow do
+        if tuning:GetAttribute("WeaponGlow_" .. key) == nil then
+            tuning:SetAttribute("WeaponGlow_" .. key, default)
+        end
+    end
     for key, default in Config.HeliRocket do
         if tuning:GetAttribute("HeliRocket_" .. key) == nil then
             tuning:SetAttribute("HeliRocket_" .. key, default)

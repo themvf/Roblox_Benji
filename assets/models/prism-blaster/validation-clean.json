@@ -1,0 +1,80 @@
+{
+  "checkedOn": "2026-11-23 16:45",
+  "route": "clean",
+  "builder": "tools/blender/build_prism_blaster.py",
+  "export": "assets/models/prism-blaster/exports/PrismBlasterClean.glb",
+  "exportSha256": "cbfa0bc5772e8d181b463b644d7219432d5a4c16c4f94e6abeebb0c1880b6540",
+  "triangleCapPassed": true,
+  "inspect": [
+    "file     PrismBlasterClean.glb (0.18 MB)",
+    "           Body                             2,428 tris",
+    "           Crystal                             80 tris",
+    "           Glow                               108 tris",
+    "           total                            2,616 tris (3 meshes)",
+    "           texture                          64x48  image/png"
+  ],
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.183,
+      "side": 0.148,
+      "top": 0.119
+    },
+    "surfaceError": {
+      "front": 1.0,
+      "back": 0.999,
+      "right": 0.967,
+      "left": 0.994,
+      "top": 0.93,
+      "bottom": 0.984
+    },
+    "worstSurfaceError": 1.0,
+    "noise": 0.001,
+    "sheet": "assets/models/prism-blaster/review/clean-detail.png",
+    "passed": null
+  },
+  "budget": {
+    "role": "held",
+    "budget": 8000,
+    "triangles": 2616,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      0.8,
+      1.705,
+      4.02
+    ],
+    "heightStuds": 1.7,
+    "kind": "weapon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.262,
+        0.91
+      ],
+      "Muzzle": [
+        0.0,
+        0.367,
+        -2.01
+      ]
+    },
+    "mountSheet": "assets/models/prism-blaster/review/mounts.png",
+    "pivot": "center",
+    "problems": [],
+    "passed": true
+  },
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/prism-blaster/review/audit.png",
+      "assets/models/prism-blaster/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.0,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Shape fidelity is judged by eye on the builder's renders."
+}

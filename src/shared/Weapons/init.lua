@@ -150,6 +150,9 @@ Weapons.Minigun = {
     Auto = true,
 }
 
+-- Heavy Cannon: Minigun numbers in its own body (assets/models/heavy-cannon).
+Weapons.HeavyCannon = table.clone(Weapons.Minigun)
+
 Weapons.EnergyRifle = {
     Slot = "Primary",
     Damage = { 20, 20 },
@@ -165,6 +168,24 @@ Weapons.EnergyRifle = {
     MoveSpeed = 0,
     Auto = true,
 }
+
+-- Plasma Blaster: EnergyRifle numbers in its own body (assets/models/plasma-blaster).
+Weapons.PlasmaBlaster = table.clone(Weapons.EnergyRifle)
+
+-- Halcyon: EnergyRifle numbers in a precision-rifle body (assets/models/halcyon-rifle).
+Weapons.Halcyon = table.clone(Weapons.EnergyRifle)
+
+-- Prism Blaster: EnergyRifle numbers in a white-and-plum body with a glowing crystal
+-- (assets/models/prism-blaster).
+Weapons.PrismBlaster = table.clone(Weapons.EnergyRifle)
+
+-- Lightning Carbine: EnergyRifle numbers in a yellow carbine with a lightning bolt between
+-- twin copper coil rails (assets/models/lightning-carbine).
+Weapons.LightningCarbine = table.clone(Weapons.EnergyRifle)
+
+-- Pulse Rifle: Sniper numbers in a heavy energy-rifle body (assets/models/pulse-rifle),
+-- one charged shot from the violet muzzle.
+Weapons.PulseRifle = table.clone(Weapons.Sniper)
 
 -- ===== Secondary =====
 Weapons.Handgun = {
@@ -182,6 +203,9 @@ Weapons.Handgun = {
     MoveSpeed = 0,
     Auto = false,
 }
+
+-- Ray Gun: Handgun numbers in a retro raygun body (assets/models/ray-gun).
+Weapons.RayGun = table.clone(Weapons.Handgun)
 
 Weapons.Revolver = {
     Slot = "Secondary",

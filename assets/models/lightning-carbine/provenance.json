@@ -1,0 +1,31 @@
+{
+  "asset": "lightning-carbine",
+  "recordedOn": "2026-11-22",
+  "reference": {
+    "file": "assets/models/lightning-carbine/source/reference.png",
+    "sha256": "f1ccfe57cbb3bf699044e4c633700fd64fa58fb972ac0141d87faac4e9ab7410",
+    "origin": "unknown",
+    "madeWith": null,
+    "prompt": null
+  },
+  "mesh": {
+    "file": "assets/models/lightning-carbine/source/LightningCarbine.glb",
+    "sha256": "b322656a87baf9d7732338b86115a57c37e985db6b6d84c7eba6895e765c1665",
+    "generator": {
+      "service": "meshy",
+      "space": null,
+      "seed": 201,
+      "resolution": "imported",
+      "file": "model.glb",
+      "sha256": "b322656a87baf9d7732338b86115a57c37e985db6b6d84c7eba6895e765c1665",
+      "settings": "Meshy latest image-to-3d from the user's concept, textured 2k, remove_lighting, remeshed to 4,000 triangles",
+      "decoded": null,
+      "reference": "reference.png",
+      "importedOn": "2026-11-22"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

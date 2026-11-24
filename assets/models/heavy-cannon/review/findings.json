@@ -1,0 +1,15 @@
+{
+  "exportSha256": "1d408931e649bb9887fb00bcc39b6854eef23edac4d09b17cacc2de9c2d727b8",
+  "reviewedBy": "session-1b3fc1ee",
+  "measured": [
+    "weight: 8,980 triangles against a budget of 4,000"
+  ],
+  "counted": {},
+  "seen": [
+    "front view: a dark recess under the muzzle reads as a black slot head-on; the grey view shows it is closed geometry (no hole), only deep shadow and dark paint",
+    "left/right views: a few hairline back-face slivers along the stock edge and barrel seam, 0.08% worst view, far under the 1% warn line",
+    "core orb: the mesh orb is matte black; the glow is a game-side Neon disc + PointLight at the Core mount (preview review/core_glow.png), not yet wired",
+    "yellow paint reads slightly tan/washed compared with the picture (Meshy lighting removal)"
+  ],
+  "recordedOn": "2026-11-22 23:51"
+}

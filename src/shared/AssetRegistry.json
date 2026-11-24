@@ -320,6 +320,42 @@
       }
     }
   },
+  "burst-rifle": {
+    "package": "assets/models/burst-rifle",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/burst-rifle/exports/BurstRifle.glb",
+    "exportSha256": "648faaa373e0182094316b6ad15fa0ef781fc7422b916b1bfe5c6fa5ef1fa728",
+    "triangles": 3930,
+    "kind": "weapon",
+    "gameName": "BurstRifle",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.39,
+        1.31
+      ],
+      "Muzzle": [
+        0.0,
+        0.13,
+        -2.47
+      ]
+    },
+    "share": "game",
+    "assetId": 104897682701821,
+    "uploadedSha256": "648faaa373e0182094316b6ad15fa0ef781fc7422b916b1bfe5c6fa5ef1fa728",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
   "frostbite": {
     "package": "assets/models/frostbite",
     "role": "held",
@@ -351,6 +387,192 @@
         "loads": true,
         "facing": false,
         "scale": true,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "gilded-derringer": {
+    "package": "assets/models/gilded-derringer",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/gilded-derringer/exports/GildedDerringer.glb",
+    "exportSha256": "9ecb6db750083fe928fd34e5ed6d1ce20583f8c85ae0735a7bb96890ed32137a",
+    "triangles": 3761,
+    "kind": "weapon",
+    "gameName": "GildedDerringer",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.3,
+        0.45
+      ],
+      "Muzzle": [
+        0.0,
+        0.18,
+        -0.7
+      ]
+    },
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "halcyon-rifle": {
+    "package": "assets/models/halcyon-rifle",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/halcyon-rifle/exports/HalcyonRifle.glb",
+    "exportSha256": "4bd081ffc41534acb32d2c341a375c733e9c9e8154c2ad910fae2411a9c825eb",
+    "triangles": 3880,
+    "kind": "weapon",
+    "gameName": "Halcyon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.309,
+        1.516
+      ],
+      "Muzzle": [
+        0.0,
+        0.2,
+        -2.4
+      ]
+    },
+    "share": "game",
+    "assetId": 129812841286596,
+    "uploadedSha256": "4bd081ffc41534acb32d2c341a375c733e9c9e8154c2ad910fae2411a9c825eb",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": true,
+        "facing": false,
+        "scale": true,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "hand-cannon": {
+    "package": "assets/models/hand-cannon",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/hand-cannon/exports/HandCannon.glb",
+    "exportSha256": "727f4694e7e9dc1359b03dc54e8a74eb0f566dfbf5759cbd585ac7f93ed2fdb3",
+    "triangles": 3880,
+    "kind": "weapon",
+    "gameName": "HandCannon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.35,
+        0.7
+      ],
+      "Muzzle": [
+        0.0,
+        0.2,
+        -1.47
+      ]
+    },
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "heavy-cannon": {
+    "package": "assets/models/heavy-cannon",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/heavy-cannon/exports/HeavyCannon.glb",
+    "exportSha256": "1d408931e649bb9887fb00bcc39b6854eef23edac4d09b17cacc2de9c2d727b8",
+    "triangles": 8980,
+    "kind": "weapon",
+    "gameName": "HeavyCannon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.43,
+        1.01
+      ],
+      "Muzzle": [
+        0.0,
+        0.19,
+        -2.25
+      ],
+      "Core": [
+        0.0,
+        0.15,
+        0.33
+      ]
+    },
+    "share": "game",
+    "assetId": 125382461619919,
+    "uploadedSha256": "1d408931e649bb9887fb00bcc39b6854eef23edac4d09b17cacc2de9c2d727b8",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    },
+    "budgetWaiver": "user asked for smoother, more detailed rings and edges after the 4,000-triangle build looked faceted; one mesh stays under the 10,000 per-mesh cap"
+  },
+  "lightning-carbine": {
+    "package": "assets/models/lightning-carbine",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/lightning-carbine/exports/LightningCarbine.glb",
+    "exportSha256": "99e3af6896b1ca678f75164d3998cab53e1c95695f72096b42cefe958c0cf39d",
+    "triangles": 3800,
+    "kind": "weapon",
+    "gameName": "LightningCarbine",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.53,
+        1.06
+      ],
+      "Muzzle": [
+        0.0,
+        -0.08,
+        -2.26
+      ]
+    },
+    "share": "game",
+    "assetId": 120268419196134,
+    "uploadedSha256": "99e3af6896b1ca678f75164d3998cab53e1c95695f72096b42cefe958c0cf39d",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
         "materials": false,
         "collision": false
       }
@@ -712,6 +934,151 @@
       }
     }
   },
+  "plasma-blaster": {
+    "package": "assets/models/plasma-blaster",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/plasma-blaster/exports/PlasmaBlaster.glb",
+    "exportSha256": "2dd46c3d995e9b06ed3fec1ac3ae718ff5a69de2827fde3e4890e9dcf9bb487b",
+    "triangles": 7953,
+    "kind": "weapon",
+    "gameName": "PlasmaBlaster",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.28,
+        1.2
+      ],
+      "Muzzle": [
+        0.0,
+        0.345,
+        -2.08
+      ]
+    },
+    "share": "game",
+    "assetId": 83235832636031,
+    "uploadedSha256": "2dd46c3d995e9b06ed3fec1ac3ae718ff5a69de2827fde3e4890e9dcf9bb487b",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": true,
+        "facing": true,
+        "scale": true,
+        "materials": true,
+        "collision": false
+      }
+    }
+  },
+  "prism-blaster": {
+    "package": "assets/models/prism-blaster",
+    "role": "held",
+    "route": "clean",
+    "export": "assets/models/prism-blaster/exports/PrismBlasterClean.glb",
+    "exportSha256": "cbfa0bc5772e8d181b463b644d7219432d5a4c16c4f94e6abeebb0c1880b6540",
+    "triangles": 2616,
+    "kind": "weapon",
+    "gameName": "PrismBlaster",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.262,
+        0.91
+      ],
+      "Muzzle": [
+        0.0,
+        0.367,
+        -2.01
+      ]
+    },
+    "share": "game",
+    "assetId": 91260616915145,
+    "uploadedSha256": "cbfa0bc5772e8d181b463b644d7219432d5a4c16c4f94e6abeebb0c1880b6540",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "pulse-rifle": {
+    "package": "assets/models/pulse-rifle",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/pulse-rifle/exports/PulseRifle.glb",
+    "exportSha256": "5fb6124106011befa12175bdd4928ca5790b08ec01dae5820610b52789ac7f0c",
+    "triangles": 3879,
+    "kind": "weapon",
+    "gameName": "PulseRifle",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.45,
+        0.9
+      ],
+      "Muzzle": [
+        0.0,
+        0.15,
+        -2.25
+      ]
+    },
+    "share": "game",
+    "assetId": 100668760642895,
+    "uploadedSha256": "5fb6124106011befa12175bdd4928ca5790b08ec01dae5820610b52789ac7f0c",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": true,
+        "facing": false,
+        "scale": true,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "quantum-cannon": {
+    "package": "assets/models/quantum-cannon",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/quantum-cannon/exports/QuantumCannon.glb",
+    "exportSha256": "63ba7b43f5ec455fa0bef2e71ba03c7bf5dad7f53b16ca367997e2c4f917c77e",
+    "triangles": 9539,
+    "kind": "weapon",
+    "gameName": "QuantumCannon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.3,
+        0.85
+      ],
+      "Muzzle": [
+        0.0,
+        0.12,
+        -2.31
+      ]
+    },
+    "share": "game",
+    "assetId": 136171937485033,
+    "uploadedSha256": "63ba7b43f5ec455fa0bef2e71ba03c7bf5dad7f53b16ca367997e2c4f917c77e",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    },
+    "budgetWaiver": "about 9,540 triangles against the 4,000 held starting budget: cut to 3,880 the Meshy body crumpled (the user: 'It looks deformed', 2026-11-23), so the body keeps 9,000 (under the 10,000 per-mesh cap), plus 540 for the hand-modelled muzzle and Neon ring. One gun per player in view; the held budget is a starting value, not a measured one"
+  },
   "radio-tower": {
     "package": "assets/models/radio-tower",
     "role": "scenery",
@@ -736,6 +1103,43 @@
         "collision": false
       }
     }
+  },
+  "ray-gun": {
+    "package": "assets/models/ray-gun",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/ray-gun/exports/RayGun.glb",
+    "exportSha256": "ee18a975f1d0c131d8454ae35c269e88b676027b74abcfb20c7edbff0a7b2b03",
+    "triangles": 6999,
+    "kind": "weapon",
+    "gameName": "RayGun",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.34,
+        0.78
+      ],
+      "Muzzle": [
+        0.0,
+        0.27,
+        -1.33
+      ]
+    },
+    "share": "game",
+    "assetId": 115175467421248,
+    "uploadedSha256": "ee18a975f1d0c131d8454ae35c269e88b676027b74abcfb20c7edbff0a7b2b03",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": "2026-11-23",
+      "checks": {
+        "loads": true,
+        "facing": true,
+        "scale": true,
+        "materials": true,
+        "collision": true
+      }
+    },
+    "budgetWaiver": "held in first person at arm's length; the user asked for smoother coil rings and emitter, so ~7,000 triangles in one mesh (under the 10,000 per-mesh cap), one gun per player on screen"
   },
   "red-suv": {
     "package": "assets/models/red-suv",

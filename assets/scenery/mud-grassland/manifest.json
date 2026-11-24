@@ -1,0 +1,25 @@
+{
+  "_comment": "Blender-compatible manifest. Confirm provenance before building.",
+  "metadata": {
+    "name": "Mud Grassland",
+    "sourceUrl": "https://sketchfab.com/3d-models/mud-grassland-9d49d4797ee24d9bb617aa4142dc4006",
+    "creator": "",
+    "license": "",
+    "retrievedOn": "2026-09-21",
+    "intendedUse": "scenery",
+    "collisionPolicy": "decorative mesh is non-collidable; author simple collision in Studio"
+  },
+  "assets": {
+    "mud-grassland": {
+      "description": "Mud Grassland scenery export",
+      "source": "MapLocations/mud-grassland/source/Untitled.glb",
+      "out": "assets/scenery/mud-grassland/exports/mud-grassland.glb",
+      "textures": "MapLocations/mud-grassland/textures",
+      "fit": {"axis": "x", "size": 128.0},
+      "decimate": 10000,
+      "tile": [1, 1],
+      "pivot": "bottom",
+      "up": "z"
+    }
+  }
+}
