@@ -7,11 +7,11 @@ local Config = {
     RoundsToWin = 5,
     RespawnSeconds = 3, -- lobby respawn only; in a Duel you wait for the next round
     Teams = { "Red", "Blue" },
-    Maps = { "Forest", "Snow", "Arena" }, -- Duel rotation
+    Maps = { "Snow", "Arena" }, -- Duel rotation
     -- Module under Shared/Maps built at server start, before the first match. Also
     -- what Studio's Run (F8) shows, since Run starts the server with no character:
     -- point this at whatever map you are working on to inspect it with a free
-    -- camera and no second player. Design default is "Forest".
+    -- camera and no second player. Design default is "SnowFortress".
     --
     -- This one is NOT a Tuning attribute, unlike everything else here. The map builds
     -- once at server start, so a live attribute could not change it anyway, and a saved
@@ -24,7 +24,7 @@ local Config = {
     MapVoteOptions = 5, -- candidates offered; capped by how many maps the mode's rotation has
 
     -- Convergence (featured objective mode). Every number here is a Tuning attribute too.
-    ConvergenceMaps = { "Carrier", "Forest", "Snow", "SnowFortress", "Swamp" },
+    ConvergenceMaps = { "Snow", "SnowFortress" },
     Convergence = {
         TeamSize = 1, -- TESTING: design target is 6 (set Convergence_TeamSize in Tuning or here)
         MinTeamSize = 1, -- TESTING: design fallback is 4

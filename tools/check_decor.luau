@@ -21,17 +21,6 @@ Vector3 = roblox.Vector3
 local DECOR_DIR = "assets/environment/decor"
 local MARGIN = 6 -- studs of clearance beyond the part's own half-extent
 
--- Derived maps (Snow) require their base by instance path; give them a `script` to walk.
-local preloaded = { Forest = require("../src/shared/Maps/Forest") }
-script = { Parent = preloaded }
-local luneRequire = require
-require = function(target)
-    if type(target) == "table" then
-        return target
-    end
-    return luneRequire(target)
-end
-
 -- Distance from a point to a line segment.
 local function pointToSegment(p, a, b)
     local v = b - a
@@ -72,7 +61,7 @@ for _, file in fs.readDir(DECOR_DIR) do
         continue
     end
     local mapName = file:sub(1, -7)
-    local ok, layout = pcall(luneRequire, "../src/shared/Maps/" .. mapName)
+    local ok, layout = pcall(require, "../src/shared/Maps/" .. mapName)
     if not ok then
         print(("SKIP  %s -- no map module named %s"):format(file, mapName))
         continue
