@@ -107,27 +107,26 @@ who reached 100 and never activated, ability uses and hits). Numbers live in `Sh
   (2 Assault / 2 Anchor / 2 Flanker; 4 Normal, 1 Easy, 1 Hard). `/botlevel easy|normal|hard|mix`,
   `/botdebug off`, `/botreport` prints telemetry (spawn-to-contact, spawn-to-objective, accuracy, stuck events,
   per-bot state time) against the spec's benchmarks; a report also prints when the match ends. Any map with an `Objectives` table works;
-  `Carrier` is the first built for it (Flight Deck -> Hangar -> Bridge).
+  `SnowFortress` is the main one.
 - **Duel**: 1v1 / 2v2 elimination, first to 5 rounds. Side pads in the lobby.
 
 ## Out of bounds (Testability & Safety Fix Spec v1)
 Detection always runs, in production as well as in testing: anyone who reaches water, below-deck or an invalid
 void (`RecoveryY` / `Bounds` / `InvalidRegions`, minus `SafeRegions`) is caught within ~1.5 s. **In production
-they die and respawn normally** — a map over water has no kill plane, so before this a fall into the Carrier's
-sea meant swimming until the match ended, and teleporting them to safety instead would let a player escape a
+they die and respawn normally** — a map over water has no kill plane, so before this a fall into the sea meant swimming until the match ended, and teleporting them to safety instead would let a player escape a
 lost fight by jumping off. Bots go through the same rule (`OUT_OF_BOUNDS` in the bot report, target 0).
 
 `Debug_CarrierTestSafety` (Tuning, default true) switches the response to testing aids: recovery teleports the
 player to the nearest safe point instead of killing them (logged as `RECOVERY: ...` with a reason and position),
 adds an invisible perimeter barrier (bullets pass, players don't), and shows launch pad trigger volumes,
 direction arrows and landing markers. The barrier is built with the map, so a mid-session toggle applies on the
-next map load. It no longer pins Convergence to the Carrier — that hid the map vote in every dev session; use
-`/map carrier` when you want the map pinned.
-`/map carrier` (or any map name) forces the next Convergence map; `/map off` restores rotation. Launch pads use a
+next map load. It no longer pins Convergence to one map — that hid the map vote in every dev session; use
+`/map <name>` when you want the map pinned. The attribute keeps its old name so saved Studio settings still apply.
+`/map snowfortress` (or any map name) forces the next Convergence map; `/map off` restores rotation. Launch pads use a
 server-side trigger volume and apply velocity on the client (character is client-owned), 1 s re-trigger guard.
 
-## Carrier v1 (Map Design Specification)
-Data-driven layers on `Carrier.lua`: `Pickups` (weapon / speed / jetpack, S11-S13), `LaunchPads` (ballistic arcs,
+## Map data layers
+Data-driven layers a map may declare (first built for the Carrier map, since removed): `Pickups` (weapon / speed / jetpack, S11-S13), `LaunchPads` (ballistic arcs,
 S14), `SniperOutposts` (telemetry, S9), `Flyovers` (30-60 s, formations and low passes, S6), `Fleet` (background
 ships with radar, nav lights and drift, S7), events with `Kind = "Kraken"` (visual only, S10) or `Flyover = true`.
 Sounds are upload slots: JetPass, LaunchPad, Pickup, Kraken, Siren. A MAP REPORT prints at match end with score by
@@ -136,12 +135,11 @@ phase, outpost occupancy and kill share, launch/pickup uses and deaths (S22/S23)
 ## Map events and atmosphere
 A map can declare `Vista` (hero camera on entry), `Events` (signature moments fired by Convergence phase: warning
 banner + siren via `upload:Siren`, beacons flash, a blast shield rises, a lethal region for the duration) and living
-pieces: `light`, `beacon` (flashing), `elevator` (moving platform), `jet` (chunky parked aircraft). Carrier uses all
-of them; the jet-launch event fires when phase 2 begins.
+pieces: `light`, `beacon` (flashing), `elevator` (moving platform), `jet` (chunky parked aircraft). 
 
 ## Maps
-`Config.Maps` (Duel) and `Config.ConvergenceMaps` (Convergence) list the rotations. `Snow.lua` shows how to make
-a variant from an existing layout with a new palette. Type `/celebrate` in the lobby to preview your default
+`Config.Maps` (Duel) and `Config.ConvergenceMaps` (Convergence) list the rotations. Swamp, Forest and Carrier were removed
+in November 2026; `Snow.lua` absorbed Forest's layout. Type `/celebrate` in the lobby to preview your default
 celebration on the podium.
 
 ### Map vote
