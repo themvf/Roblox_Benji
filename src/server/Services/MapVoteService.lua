@@ -53,9 +53,9 @@ end
 
 local function pool(kind)
     if kind == "Convergence" then
-        return Config.ConvergenceMaps or { "Forest" }, "Convergence"
+        return Config.ConvergenceMaps or { "SnowFortress" }, "Convergence"
     end
-    return Config.Maps or { "Forest" }, "Duel"
+    return Config.Maps or { "Snow" }, "Duel"
 end
 
 -- Candidates: a random sample of the mode's rotation. The map that just played is dropped, but

@@ -52,24 +52,13 @@ local function isScaffolding(inst)
     return false
 end
 
--- Derived maps (Snow) require their base by instance path; give them a `script` to walk.
-local preloaded = { Forest = require("../src/shared/Maps/Forest") }
-script = { Parent = preloaded }
-local luneRequire = require
-require = function(target)
-    if type(target) == "table" then
-        return target
-    end
-    return luneRequire(target)
-end
-
 local checked, failures = 0, 0
 local files = fs.readDir(MAPS_DIR)
 table.sort(files)
 
 for _, file in files do
     if file:sub(-4) == ".lua" and not SKIP[file] then
-        local ok, layout = pcall(luneRequire, "../" .. MAPS_DIR .. "/" .. file:sub(1, -5))
+        local ok, layout = pcall(require, "../" .. MAPS_DIR .. "/" .. file:sub(1, -5))
         if ok then
             local name = layout.Name or file:sub(1, -5)
             local solids, parts = Baked.load(name, Validate)
