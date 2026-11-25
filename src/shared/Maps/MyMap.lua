@@ -7,7 +7,7 @@
 -- stylua: ignore start
 return {
     Name = "MyMap",
-    Revision = "src-53c217b449",
+    Revision = "src-462e4db660",
     Draft = true,
     RequiresBake = true,
     Authored = {
