@@ -1,0 +1,284 @@
+{
+  "out": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\BlackKnight\\review",
+  "bodyColor": "#1E2430",
+  "glows": [
+    {
+      "part": "Head",
+      "centre": [
+        0.4125,
+        -1.15,
+        5.2925
+      ],
+      "size": [
+        0.26,
+        0.08,
+        0.15
+      ],
+      "color": "#FF8A1E"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.255,
+        -1.15,
+        5.2775
+      ],
+      "size": [
+        0.27,
+        0.08,
+        0.15
+      ],
+      "color": "#FF8A1E"
+    }
+  ],
+  "pieces": [
+    {
+      "name": "helmet",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\BlackKnight\\pieces\\helmet.glb",
+      "turn": -90,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "covers": true,
+      "part": "Head",
+      "centre": [
+        0,
+        0,
+        5.62
+      ],
+      "box": [
+        2.5,
+        2.7,
+        2.8
+      ],
+      "allow": 3800,
+      "about": "the whole head and anything on it: helm, horns, hood, hair, flames"
+    },
+    {
+      "name": "chest",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\BlackKnight\\pieces\\chest.glb",
+      "turn": -90,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "covers": true,
+      "part": "UpperTorso",
+      "centre": [
+        0,
+        0,
+        4.12
+      ],
+      "box": [
+        2.6,
+        1.7,
+        2.16
+      ],
+      "allow": 3000,
+      "fillWidth": 2.5,
+      "sleeve": {
+        "size": [
+          2.1,
+          0.9,
+          1.6
+        ],
+        "drop": 0
+      },
+      "about": "breastplate, collar and back plate as one piece"
+    },
+    {
+      "name": "waist",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\BlackKnight\\pieces\\waist.glb",
+      "turn": -90,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "covers": true,
+      "part": "LowerTorso",
+      "centre": [
+        0,
+        0,
+        2.5
+      ],
+      "box": [
+        2.4,
+        1.5,
+        1.6
+      ],
+      "allow": 1000,
+      "about": "belt, buckle and tassets"
+    },
+    {
+      "name": "pauldron",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\BlackKnight\\pieces\\pauldron.glb",
+      "turn": -90,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "covers": true,
+      "part": "LeftUpperArm",
+      "centre": [
+        1.62,
+        0,
+        4.36
+      ],
+      "box": [
+        2.1,
+        2.1,
+        1.9
+      ],
+      "allow": 1500,
+      "sleeve": {
+        "size": [
+          0.8,
+          0.8,
+          0.9
+        ],
+        "drop": 0.15
+      },
+      "mirror": true,
+      "about": "the left shoulder; the right is its mirror"
+    },
+    {
+      "name": "gauntlet",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\BlackKnight\\pieces\\gauntlet.glb",
+      "turn": -90,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "covers": true,
+      "upright": true,
+      "part": "LeftLowerArm",
+      "centre": [
+        1.5,
+        0,
+        2.95
+      ],
+      "box": [
+        1.6,
+        1.6,
+        1.3
+      ],
+      "allow": 1000,
+      "mirror": true,
+      "about": "the left forearm guard"
+    },
+    {
+      "name": "fist",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\BlackKnight\\pieces\\fist.glb",
+      "turn": 180,
+      "flip": false,
+      "trim": null,
+      "handed": "right",
+      "covers": true,
+      "upright": true,
+      "part": "LeftHand",
+      "centre": [
+        1.5,
+        -0.05,
+        2.0
+      ],
+      "box": [
+        1.15,
+        1.15,
+        0.95
+      ],
+      "allow": 600,
+      "mirror": true,
+      "about": "the left hand, as an armoured fist"
+    },
+    {
+      "name": "thigh",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\BlackKnight\\pieces\\thigh.glb",
+      "turn": -90,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "covers": true,
+      "upright": true,
+      "part": "LeftUpperLeg",
+      "centre": [
+        0.56,
+        0,
+        2.12
+      ],
+      "box": [
+        1.25,
+        1.35,
+        1.25
+      ],
+      "allow": 800,
+      "mirror": true,
+      "about": "the left thigh plate"
+    },
+    {
+      "name": "greave",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\BlackKnight\\pieces\\greave.glb",
+      "turn": -90,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "covers": true,
+      "upright": true,
+      "part": "LeftLowerLeg",
+      "centre": [
+        0.56,
+        0,
+        0.98
+      ],
+      "box": [
+        1.25,
+        1.35,
+        1.15
+      ],
+      "allow": 800,
+      "mirror": true,
+      "about": "the left shin and knee"
+    },
+    {
+      "name": "boot",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\BlackKnight\\pieces\\boot.glb",
+      "turn": -90,
+      "flip": false,
+      "trim": 0.4,
+      "handed": null,
+      "covers": true,
+      "fit": "footprint",
+      "part": "LeftFoot",
+      "centre": [
+        0.57,
+        -0.12,
+        0.26
+      ],
+      "box": [
+        1.3,
+        1.7,
+        0.55
+      ],
+      "allow": 800,
+      "mirror": true,
+      "about": "the left boot"
+    },
+    {
+      "name": "back",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\BlackKnight\\pieces\\back.glb",
+      "turn": 90,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "fit": "cape",
+      "part": "UpperTorso",
+      "centre": [
+        0,
+        1.1,
+        3.0
+      ],
+      "box": [
+        2.4,
+        0.6,
+        3.2
+      ],
+      "allow": 1200,
+      "about": "cape, wings, banner or pack: whatever hangs off the back"
+    }
+  ]
+}

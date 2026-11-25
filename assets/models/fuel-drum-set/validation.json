@@ -1,0 +1,228 @@
+{
+  "checkedAtUtc": "20261111T211320786161Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "exports/FuelDrum_A.glb": "af8002c6b5f1cd8ab0cdce23f346776bd4f47d619510e2e2ea89ef7fd12ffe8e",
+    "exports/FuelDrum_B.glb": "950e45e365bac169a9ad008b9c05da81ea0f30186ca4e4e1a0292e5e08d08e29",
+    "exports/FuelDrum_C.glb": "7803cc9d057f6271b6291cbcd1e6cab13c6143fa832cb27f30c4897aa2f74257",
+    "exports/FuelDrum_ThreePack.glb": "229247afa8ae9f00905307ff54602266c4ea7ac1101da67ce7487552db49d456",
+    "source/FuelDrumSet.blend": "a6e82b0d20fa60496ee8e17a3a443030a584c730f3861a81f1d455c248929227",
+    "source/drum-manifest.json": "d4924b2bb6f6cc6ff7b1366e072e9a5f9f6bbc1b4ee740a9eca8fe3ffc74dc56",
+    "source/trellis-original.glb": "94e718d8378c8c9fda0c3dcab2aadd5bfcba1751a18d2d1662037ecafbc78149",
+    "source/reference-three-drums.png": "ec503856f96b262db0781eb3c6f22953f42db2a979dbef6eec5b65db7e9b2c05",
+    "appraisal.json": "6226a6160b96870a5d09c0448d55b00d998a956a0e31eb47f6f661a07497cdef",
+    "views.png": "4da7c61a01ec4621bb4448711314dc18ecc76963a3399babe45cc630e0ebcaaf",
+    "review/source-quarter.png": "68cf44c85d1499a410c2423d98175d7c9f3a4832d8f334353b2c281054f3edeb",
+    "review/contact-sheet.png": "58b83a7b26ceaf8ca20fb4af99f1747d152eb9d00a999901471bc8ec6fb5338b",
+    "SetupDecoration.luau": "51580ea620c72442e32b1f36459aad33dc827b1c36011a092063e429932ffa78",
+    "trials/drum-analysis.json": "947cea9fe4586fd6754eb7094f4072597b36182f6e77339e2b265cb6c0c4ab23",
+    "textures/FuelDrum_A_Color.png": "d80628380d4696d084db6c2dc6ac14ace5ace0647d1e1a783b1fb0ef9098152c",
+    "textures/FuelDrum_A_Roughness.png": "1c431565b7927dbaf6096e0f4ac320af18413861b830a75677a2df9c371e2ee7",
+    "textures/FuelDrum_B_Color.png": "3bbba34b938d28838c71fa93a0ecc21d8f82b85bad23bc422242b2e1bbd78509",
+    "textures/FuelDrum_B_Roughness.png": "9d54afd243a30e6b4fe20a58ee547935a139eaa917c8fa44f6fe5565d3a27185",
+    "textures/FuelDrum_C_Color.png": "e5316d79d12417bfcc92ce5c05753ca4d09a82e45714f4b2ee607e0aef871cfa",
+    "textures/FuelDrum_C_Roughness.png": "75a26a7f1df596c8c8f9ed2121b0f9a891da94f4411820047553cfc117775be9",
+    "review/FuelDrum_A.png": "5c756da50803686072c239d6c13e55993040d0020acd3c14790c897d1a1fb7be",
+    "review/FuelDrum_B.png": "3a3b3c9c2c810c468cd994c130fd63ef3780ee334db2637c4da5b90bfebb6de2",
+    "review/FuelDrum_C.png": "a9d5f72e49e374a2707342ae78c76c72f7767efc2212f23edd9dcf21bc30b0c7",
+    "review/FuelDrum_ThreePack.png": "dbc123cd50c03b3d859eb462977e01a686d50e0bfee6e5262b4a27c289d166ab",
+    "review/FuelDrum_A-rear.png": "7d516c59061a646e0c348210884c8dcdbc45d272380dd10296383343c4bc67c1",
+    "review/FuelDrum_A-side.png": "c657734f764aa7619d78d2cdf711d99657420c670df9a36b2049c69a28b32b6d",
+    "review/FuelDrum_A-top.png": "ed0a66232d1b32e4ed7110f9f0f9d29aa3da46dd67a3bea4247ed9601af64f80",
+    "review/FuelDrum_ThreePack-rear.png": "5af585c9961c29d00fb9e336188d36089fc9356201bd70ff8d84a98c0676d575",
+    "review/FuelDrum_ThreePack-side.png": "60e3da0cd1c8395b71e45c2b50128f15613655c2ffb05ee5b35ab1a1a88741fd",
+    "review/FuelDrum_ThreePack-top.png": "95ed1e42bc085500ceb5bb79ed4a8f6c2b51f38c3a3d54ef4eb3b17a955c8fa5"
+  },
+  "measured": [
+    {
+      "name": "FuelDrum_A",
+      "meshes": [
+        [
+          "FuelDrum_A",
+          2754
+        ]
+      ],
+      "boundsMin": [
+        -1.1200000047683716,
+        0,
+        -1.1200000047683716
+      ],
+      "boundsMax": [
+        1.1200000047683716,
+        3.5369999408721924,
+        1.1200000047683716
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ],
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ]
+      ],
+      "bytes": 3082536
+    },
+    {
+      "name": "FuelDrum_B",
+      "meshes": [
+        [
+          "FuelDrum_B",
+          2754
+        ]
+      ],
+      "boundsMin": [
+        -1.1200000047683716,
+        0,
+        -1.1200000047683716
+      ],
+      "boundsMax": [
+        1.1200000047683716,
+        3.5369999408721924,
+        1.1200000047683716
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ],
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ]
+      ],
+      "bytes": 3094528
+    },
+    {
+      "name": "FuelDrum_C",
+      "meshes": [
+        [
+          "FuelDrum_C",
+          2754
+        ]
+      ],
+      "boundsMin": [
+        -1.1200000047683716,
+        0,
+        -1.1200000047683716
+      ],
+      "boundsMax": [
+        1.1200000047683716,
+        3.5369999408721924,
+        1.1200000047683716
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ],
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ]
+      ],
+      "bytes": 3085096
+    },
+    {
+      "name": "FuelDrum_ThreePack",
+      "meshes": [
+        [
+          "FuelDrum_ThreePack_1",
+          2754
+        ],
+        [
+          "FuelDrum_ThreePack_2",
+          2754
+        ],
+        [
+          "FuelDrum_ThreePack_3",
+          2754
+        ]
+      ],
+      "boundsMin": [
+        -2.2899999618530273,
+        0,
+        -1.850000023841858
+      ],
+      "boundsMax": [
+        2.2899999618530273,
+        3.5369999408721924,
+        2.240000009536743
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ],
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ],
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ],
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ],
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ],
+        [
+          "image/png",
+          [
+            1024,
+            1024
+          ]
+        ]
+      ],
+      "bytes": 9244936
+    }
+  ],
+  "limitations": [
+    "Rebuilt geometry and recreated weathering are based on the source and reference image; this is not a mesh extraction.",
+    "Local preview is not user visual approval or verified Studio texture loading.",
+    "Static noncolliding decoration and 3.52-stud height are provisional.",
+    "No owner, upload IDs, saved placement, or published-map verification has been observed."
+  ]
+}

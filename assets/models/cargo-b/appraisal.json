@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-10-11",
+  "source": "CargoUnit.glb",
+  "sourceSha256": "6a79edf82f87fe275ec741a84adcb34316aac2be040eab00268257ea48e020a6",
+  "measurements": {
+    "triangles": 3508,
+    "size": [
+      9.374,
+      6.228,
+      6.0
+    ],
+    "reliefRatio": 0.6401,
+    "openEdges": 7608,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Clean, weathered and ransacked rebuild of the selected white cargo unit. The prior intact 7,498-triangle voxel export and its failed Studio uploads are preserved as trial history. This candidate follows the Midjourney proportions and white panel/corner-cap design, with a broken side opening, opened end doors, roof tears, exposed cases, fallen rack and loose metal. Decoration role and six-stud height are provisional until user approval."
+}

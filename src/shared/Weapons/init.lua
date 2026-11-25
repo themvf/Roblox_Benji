@@ -58,6 +58,24 @@ Weapons.Shotgun = {
     Auto = false,
 }
 
+-- Frost cannon art (assets/models/frostbite) on the Shotgun's numbers.
+Weapons.Frostbite = {
+    Slot = "Primary",
+    Damage = { 8, 2.5 },
+    Crit = { 12, 3.7 },
+    DropoffStart = 10,
+    DropoffEnd = 50,
+    Cooldown = 0.70,
+    Spread = 6.5,
+    Pellets = 10,
+    Ammo = { 7, 35 },
+    Reload = 0.55, -- segmented: one shell at a time
+    SegmentedReload = true,
+    EquipTime = 0.75,
+    MoveSpeed = 0,
+    Auto = false,
+}
+
 Weapons.Sniper = {
     Slot = "Primary",
     Damage = { 50, 50 },
@@ -66,6 +84,27 @@ Weapons.Sniper = {
     DropoffEnd = math.huge,
     Cooldown = 1.50,
     Spread = 15.0, -- hip fire; ADS spread is 0
+    AimSpread = 0,
+    Pellets = 1,
+    Ammo = { 4, 12 },
+    Reload = 1.80,
+    EmptyReload = 2.13,
+    EquipTime = 1.15,
+    MoveSpeed = -0.20,
+    Auto = false,
+}
+
+-- Snow Fortress map pickup. Never appears in the selectable loadout.
+Weapons.WhiteSniper = {
+    Slot = "Primary",
+    PickupOnly = true,
+    Damage = { 90, 90 },
+    Crit = { 90, 90 },
+    DamageFractionOfMaxHealth = 0.9,
+    DropoffStart = math.huge,
+    DropoffEnd = math.huge,
+    Cooldown = 1.50,
+    Spread = 15.0,
     AimSpread = 0,
     Pellets = 1,
     Ammo = { 4, 12 },
@@ -111,6 +150,9 @@ Weapons.Minigun = {
     Auto = true,
 }
 
+-- Heavy Cannon: Minigun numbers in its own body (assets/models/heavy-cannon).
+Weapons.HeavyCannon = table.clone(Weapons.Minigun)
+
 Weapons.EnergyRifle = {
     Slot = "Primary",
     Damage = { 20, 20 },
@@ -126,6 +168,24 @@ Weapons.EnergyRifle = {
     MoveSpeed = 0,
     Auto = true,
 }
+
+-- Plasma Blaster: EnergyRifle numbers in its own body (assets/models/plasma-blaster).
+Weapons.PlasmaBlaster = table.clone(Weapons.EnergyRifle)
+
+-- Halcyon: EnergyRifle numbers in a precision-rifle body (assets/models/halcyon-rifle).
+Weapons.Halcyon = table.clone(Weapons.EnergyRifle)
+
+-- Prism Blaster: EnergyRifle numbers in a white-and-plum body with a glowing crystal
+-- (assets/models/prism-blaster).
+Weapons.PrismBlaster = table.clone(Weapons.EnergyRifle)
+
+-- Lightning Carbine: EnergyRifle numbers in a yellow carbine with a lightning bolt between
+-- twin copper coil rails (assets/models/lightning-carbine).
+Weapons.LightningCarbine = table.clone(Weapons.EnergyRifle)
+
+-- Pulse Rifle: Sniper numbers in a heavy energy-rifle body (assets/models/pulse-rifle),
+-- one charged shot from the violet muzzle.
+Weapons.PulseRifle = table.clone(Weapons.Sniper)
 
 -- ===== Secondary =====
 Weapons.Handgun = {
@@ -143,6 +203,9 @@ Weapons.Handgun = {
     MoveSpeed = 0,
     Auto = false,
 }
+
+-- Ray Gun: Handgun numbers in a retro raygun body (assets/models/ray-gun).
+Weapons.RayGun = table.clone(Weapons.Handgun)
 
 Weapons.Revolver = {
     Slot = "Secondary",

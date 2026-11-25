@@ -1,0 +1,456 @@
+{
+  "checkedAtUtc": "20261111T200149478353Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "exports\\SlantedLouverHood.glb": "8a6e793bbca8eb7e10443b9d34cf5a2acc712023c73d8d0213bedc4ad3458383",
+    "review/SlantedLouverHood.png": "9bca47b5e29a6eeb94a731d1d44d31c74e194963a696a0c18265b26295b60edc",
+    "review/SlantedLouverHood-rear.png": "7cbc5ba8c43abef6c2980c4445c90fea544f4a4ee554b6a902b05a03e0302d32",
+    "review/SlantedLouverHood-side.png": "03b92f900576bca602ffba880b8eb6c756814f1056d794eb4f841c7eb32cd462",
+    "exports\\CurvedRoofOutlet.glb": "060a3cc060e71fae1a0e9c5fe9ad573a23515c4e067fd15467ad59eef1ff50f1",
+    "review/CurvedRoofOutlet.png": "c4ca21926999ffb8a80fabf30e2d568e483324a8b1c85814f0366e9fc7a0e539",
+    "review/CurvedRoofOutlet-rear.png": "dec76c856b42b672da6c4b666ed7e53deb86b4917a982fa9b8b1d3c094d64983",
+    "review/CurvedRoofOutlet-side.png": "9bd67cc073f9724faf77a1ced82fdf7ca374afb3452308eabdd4ce9ef83ed8e1",
+    "exports\\RectangularIntakeBox.glb": "a0facaeccf9dcf454c0efee3f00745f44b011186d6b445fe788efd668c929ae9",
+    "review/RectangularIntakeBox.png": "31e00496cc96d7434dad7786b7e8d89952321808ed134a3c644f6a7e622b76bd",
+    "review/RectangularIntakeBox-rear.png": "3d43533e5b50631125e31e5f0bb81a9cc7f7bd321fa1408b54141b0e561cdc17",
+    "review/RectangularIntakeBox-side.png": "ef85c2e975f8660457bd236b89413099bb3cad9ba431ae63e16803e6fae41d46",
+    "exports\\WideRoofLouver.glb": "859c782c598f3f9ed8954a2487fbeabf5d731f51924e2fb2f5d30f4be45c3940",
+    "review/WideRoofLouver.png": "ef7cc7523b7d4ad17333ff23a982eb8463be142d1a80ffaa9e39ef49446dfa96",
+    "review/WideRoofLouver-rear.png": "a1e4267e6eacbcf4ecd3f342df1689a04b1adc280596709aa095f13e200ac47c",
+    "review/WideRoofLouver-side.png": "a9aae486fac3d2103865cc88594c6f5d44afe1847b10a5220ea9dc542f2fa953",
+    "exports\\TallVentStack.glb": "48c5125b3068ba7f49d4c78e92114e1341eab9a29420524349a7c481a0be129f",
+    "review/TallVentStack.png": "43447ac9298e7b05af6fb8970c29682311de7967fc37906f31fcb097670822a7",
+    "review/TallVentStack-rear.png": "50784e71f5c5b99565c1900b7bb956601ce200148790852679531df28da97353",
+    "review/TallVentStack-side.png": "0815dc6772d97f6332998f0b0f96624b7b9cd16a418f54beb676a7ec2379e006",
+    "exports\\RoundRoofExtractor.glb": "efccf2b40832a17e4087d9319e6bbcfe05adb94d8d1c9de43da5c0729823cfa0",
+    "review/RoundRoofExtractor.png": "72817778b42d32a9c29a13b92d0d7008cc4a11c51c96e3f7bee2dc3b298c75e4",
+    "review/RoundRoofExtractor-rear.png": "5c6e307e2f2602829ded66cd2a9110374271014ce86e6c8752cb44e7108efc2e",
+    "review/RoundRoofExtractor-side.png": "07a680a92527727d0c84f90214f5cf75667f752d768d623b1ecb908626d8c9a0",
+    "exports\\PitchedRoofVent.glb": "93f742df6635c5b4336937b887f3d6131ef0526179c52d293a046e49978edf3d",
+    "review/PitchedRoofVent.png": "bdc741ff135fe3f79301a9a9aa148b1a358f1a86432b9d4b3133a7518b59bdaf",
+    "review/PitchedRoofVent-rear.png": "c0349f491ce5b6331b697ecdc8c4ea991771e06a0302a99dfad1262290dc07b4",
+    "review/PitchedRoofVent-side.png": "a57d0254e49e107bfcc80e9a369bace7ac69a023d65c9bd7b7417d9aa16ce6b6",
+    "exports\\RaisedCurvedDuct.glb": "5911edf966bfd3b813f1fc9c7672340f590e9b3efad65af6e0a2d29c947567e3",
+    "review/RaisedCurvedDuct.png": "1692dc0f6606df95ae8a8a6403763b35d32611ef87bf659d57f8f7964ebe359c",
+    "review/RaisedCurvedDuct-rear.png": "f3127d2766baefcb8d0ee225cfcb9515e5c4cd156435acf8947e04ea23d4ca08",
+    "review/RaisedCurvedDuct-side.png": "eadb29fd2cac802eedbe3935254b2052fa539b6164cc019fe4b1e60c9b4fc780",
+    "exports\\TwinDuctIntake.glb": "aadc81c99ebe7f2d306bea9d8928c3121de356c9d7ecf5c23388cb4cd7c86fce",
+    "review/TwinDuctIntake.png": "eb894d9d37544a1939911d5a47b0dff397ffcb49c3f052693279625ec21d5552",
+    "review/TwinDuctIntake-rear.png": "b8887c32b3be3fc6d2e4c18b4042f08ab9fb764ecf3ec5d3f90aa7a65d4e10de",
+    "review/TwinDuctIntake-side.png": "717dbd5bf2f1c5143bb9ccc95959e0fb05863fc20058d2e8b83865fbbbd9a137",
+    "source/trellis-original.glb": "535cce079c9e0f4623d05cf7af279cfc1dd1fc22a33523b3ab140b097c3dd1a1",
+    "source/RoofVentSet.blend": "8e91e4bc712fa4c29ed49455a74a94d241de1194c9de392baae1fe11966ddd6d",
+    "source/vent-manifest.json": "4a36673602cfb6ce55bd870f47d43d22a30352de4e95e267e8a0860057d4f949",
+    "source/roof-vent-reference.png": "1dc0cfc5082c0116208a1a28e99d3b67d43ec1a40ceedeaae4e687b2822b89e3",
+    "source/nine-vent-reference.png": "7350ca85a4f4bb6d8237d32f52a20280559148463d70fa178486f7b703b1dfce",
+    "appraisal.json": "97fc272e9b70b52ae64433be37a5149cf74c939601457f21b75458189ef953d6",
+    "views.png": "6249cb54074e770dd09f7b1cde1c3544b1ea9879d0a2d3209e277e31e1399093",
+    "textures/RoofVents_Color.png": "95990f625fad8ab6aea28b55c251899394054626a10845d8c4d71a7baae5e13f",
+    "textures/RoofVents_ORM.png": "ed356e70a2e1a2565596e3fae5d73662737288c3a1036b8734aeca63c4cd7924",
+    "review/contact-sheet.png": "e11e3a901b958670bad2efd262d0d0083edd9b7988a1b1cfad1d46ef59b59bdf",
+    "SetupDecoration.luau": "4c6df2608ad42e31a4a74aab97ff7a7aba9a0237f002a7216751893f0ee4ced8",
+    "trials/grid-analysis.json": "779fe4e98851c9f68cbc82b270d2555c2ab27903001d7ceee21ea2ba1c9eaa29",
+    "trials/raw/SlantedLouverHood.png": "992a87b96cb4236438242494ac18f9d0daa65c561d5d81db59d034b9d0137775",
+    "trials/raw/WideRoofLouver.png": "ac57e79fa2f6fb7e31b7384b2bd2e3319f1e1cee3dcf45c2e259367a94070bb5"
+  },
+  "measured": [
+    {
+      "name": "SlantedLouverHood",
+      "meshes": [
+        [
+          "SlantedLouverHood_Part01",
+          8500
+        ],
+        [
+          "SlantedLouverHood_Part02",
+          3883
+        ]
+      ],
+      "boundsMin": [
+        -1.999563455581665,
+        -0.0006311159813776612,
+        -1.5054720640182495
+      ],
+      "boundsMax": [
+        1.9997323751449585,
+        2.363461971282959,
+        1.504385232925415
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ],
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ]
+      ],
+      "bytes": 9227616
+    },
+    {
+      "name": "CurvedRoofOutlet",
+      "meshes": [
+        [
+          "CurvedRoofOutlet_Part01",
+          8500
+        ],
+        [
+          "CurvedRoofOutlet_Part02",
+          8500
+        ],
+        [
+          "CurvedRoofOutlet_Part03",
+          862
+        ]
+      ],
+      "boundsMin": [
+        -1.9606285095214844,
+        5.511339622898959e-06,
+        -1.9997529983520508
+      ],
+      "boundsMax": [
+        1.9616429805755615,
+        3.0908167362213135,
+        2.001629114151001
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ],
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ]
+      ],
+      "bytes": 9447412
+    },
+    {
+      "name": "RectangularIntakeBox",
+      "meshes": [
+        [
+          "RectangularIntakeBox_Part01",
+          8500
+        ],
+        [
+          "RectangularIntakeBox_Part02",
+          8500
+        ],
+        [
+          "RectangularIntakeBox_Part03",
+          2157
+        ]
+      ],
+      "boundsMin": [
+        -1.5969281196594238,
+        -4.090688162250444e-05,
+        -2
+      ],
+      "boundsMax": [
+        1.5969281196594238,
+        2.664656400680542,
+        1.9998599290847778
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ],
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ]
+      ],
+      "bytes": 9445272
+    },
+    {
+      "name": "WideRoofLouver",
+      "meshes": [
+        [
+          "WideRoofLouver_Part01",
+          8500
+        ],
+        [
+          "WideRoofLouver_Part02",
+          8500
+        ],
+        [
+          "WideRoofLouver_Part03",
+          8500
+        ],
+        [
+          "WideRoofLouver_Part04",
+          7233
+        ]
+      ],
+      "boundsMin": [
+        -1.4615153074264526,
+        -1.781180253601633e-05,
+        -1.9997923374176025
+      ],
+      "boundsMax": [
+        1.4609698057174683,
+        1.6455557346343994,
+        1.9997830390930176
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ],
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ]
+      ],
+      "bytes": 9995120
+    },
+    {
+      "name": "TallVentStack",
+      "meshes": [
+        [
+          "TallVentStack_Part01",
+          8500
+        ],
+        [
+          "TallVentStack_Part02",
+          3926
+        ]
+      ],
+      "boundsMin": [
+        -1.929538607597351,
+        -0.0002528094919398427,
+        -2.0000269412994385
+      ],
+      "boundsMax": [
+        1.9296927452087402,
+        6.7808661460876465,
+        2.0001344680786133
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ],
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ]
+      ],
+      "bytes": 9130020
+    },
+    {
+      "name": "RoundRoofExtractor",
+      "meshes": [
+        [
+          "RoundRoofExtractor_Part01",
+          8500
+        ],
+        [
+          "RoundRoofExtractor_Part02",
+          8500
+        ],
+        [
+          "RoundRoofExtractor_Part03",
+          2539
+        ]
+      ],
+      "boundsMin": [
+        -1.9921140670776367,
+        0.0006084155756980181,
+        -2.0002830028533936
+      ],
+      "boundsMax": [
+        1.9918729066848755,
+        3.064899444580078,
+        1.9993387460708618
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ],
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ]
+      ],
+      "bytes": 9463632
+    },
+    {
+      "name": "PitchedRoofVent",
+      "meshes": [
+        [
+          "PitchedRoofVent_Part01",
+          8500
+        ],
+        [
+          "PitchedRoofVent_Part02",
+          7606
+        ]
+      ],
+      "boundsMin": [
+        -1.85639488697052,
+        0,
+        -2
+      ],
+      "boundsMax": [
+        1.8580840826034546,
+        2.285738706588745,
+        2
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ],
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ]
+      ],
+      "bytes": 9311128
+    },
+    {
+      "name": "RaisedCurvedDuct",
+      "meshes": [
+        [
+          "RaisedCurvedDuct_Part01",
+          8500
+        ],
+        [
+          "RaisedCurvedDuct_Part02",
+          6430
+        ]
+      ],
+      "boundsMin": [
+        -1.2150720357894897,
+        -0.0001029199265758507,
+        -2
+      ],
+      "boundsMax": [
+        1.2150392532348633,
+        4.731433868408203,
+        1.9995332956314087
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ],
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ]
+      ],
+      "bytes": 9268916
+    },
+    {
+      "name": "TwinDuctIntake",
+      "meshes": [
+        [
+          "TwinDuctIntake_Part01",
+          8500
+        ],
+        [
+          "TwinDuctIntake_Part02",
+          8500
+        ],
+        [
+          "TwinDuctIntake_Part03",
+          8500
+        ],
+        [
+          "TwinDuctIntake_Part04",
+          4097
+        ]
+      ],
+      "boundsMin": [
+        -1.2942390441894531,
+        0,
+        -2
+      ],
+      "boundsMax": [
+        1.2965805530548096,
+        2.3863511085510254,
+        2
+      ],
+      "textures": [
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ],
+        [
+          "image/png",
+          [
+            2048,
+            2048
+          ]
+        ]
+      ],
+      "bytes": 10131392
+    }
+  ],
+  "limitations": [
+    "Local textured renders and geometry checks do not establish user visual approval or Studio import.",
+    "The TRELLIS source already has uneven grille bars in two vents; raw-source trials show this.",
+    "Four-stud maximum footprint and static decoration are provisional.",
+    "No placement, owner, asset IDs, Roblox texture loading, or published-map check has been observed."
+  ]
+}

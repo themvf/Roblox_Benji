@@ -1,0 +1,1222 @@
+{
+  "armored-vehicle": {
+    "package": "assets/models/armored-vehicle",
+    "role": "interactive",
+    "route": "scan",
+    "export": "assets/models/armored-vehicle/exports/ArmoredVehicle.glb",
+    "exportSha256": "471e75fc8ebd9ae8ae11c3f6e821ee3a51a81c017c039d3a5a01166a2da349bb",
+    "triangles": 25303,
+    "kind": "vehicle",
+    "gameName": "ArmoredVehicle",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.8,
+        0.0
+      ],
+      "DriverSeat": [
+        -1.3,
+        2.6,
+        -0.5
+      ],
+      "DriverEye": [
+        -1.2,
+        5.9,
+        -3.7
+      ]
+    },
+    "share": "game",
+    "budgetWaiver": "Tripo's 23,907-triangle export used as delivered; our own reduction tears generated meshes (the patrol boat). A lighter version has to come from Tripo's Retopo at about 13,000. At most a few copies on a map.",
+    "assetId": 74029393130592,
+    "uploadedSha256": "471e75fc8ebd9ae8ae11c3f6e821ee3a51a81c017c039d3a5a01166a2da349bb",
+    "uploadedOn": "2026-11-17",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "black-knight-look": {
+    "package": "assets/kit-looks/BlackKnight",
+    "role": "interactive",
+    "route": "scan",
+    "kind": "prop",
+    "share": "game",
+    "export": "assets/kit-looks/BlackKnight/exports/BlackKnightLook.glb",
+    "exportSha256": "df4066429a5a39bfaf9c14c1f15fb91fb68ec0a0a95c5033ef5bc185e5e2c625",
+    "triangles": 19171,
+    "gameName": "BlackKnight",
+    "budgetWaiver": "A whole kit character, budgeted at 20,000 triangles for ten on a phone (kit_look.py CHARACTER_BUDGET), not as one interactive prop.",
+    "kitLook": {
+      "pieces": [
+        {
+          "mesh": "Head__helmet",
+          "part": "Head",
+          "offset": [
+            0.0,
+            0.32,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftFoot__boot",
+          "part": "LeftFoot",
+          "offset": [
+            -0.07,
+            0.2154,
+            -0.02
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftHand__fist",
+          "part": "LeftHand",
+          "offset": [
+            -0.0,
+            -0.15,
+            -0.05
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftLowerArm__gauntlet",
+          "part": "LeftLowerArm",
+          "offset": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftLowerLeg__greave",
+          "part": "LeftLowerLeg",
+          "offset": [
+            -0.06,
+            0.08,
+            -0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftUpperArm__pauldron",
+          "part": "LeftUpperArm",
+          "offset": [
+            -0.12,
+            0.26,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LeftUpperLeg__thigh",
+          "part": "LeftUpperLeg",
+          "offset": [
+            -0.06,
+            0.02,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "LowerTorso__waist",
+          "part": "LowerTorso",
+          "offset": [
+            -0.0,
+            -0.4,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightFoot__boot",
+          "part": "RightFoot",
+          "offset": [
+            0.07,
+            0.2154,
+            -0.02
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightHand__fist",
+          "part": "RightHand",
+          "offset": [
+            -0.0,
+            -0.15,
+            -0.05
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightLowerArm__gauntlet",
+          "part": "RightLowerArm",
+          "offset": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightLowerLeg__greave",
+          "part": "RightLowerLeg",
+          "offset": [
+            0.06,
+            0.08,
+            -0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightUpperArm__pauldron",
+          "part": "RightUpperArm",
+          "offset": [
+            0.12,
+            0.26,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "RightUpperLeg__thigh",
+          "part": "RightUpperLeg",
+          "offset": [
+            0.06,
+            0.02,
+            0.0
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "UpperTorso__back",
+          "part": "UpperTorso",
+          "offset": [
+            -0.0,
+            -0.9,
+            1.0185
+          ],
+          "covers": true
+        },
+        {
+          "mesh": "UpperTorso__chest",
+          "part": "UpperTorso",
+          "offset": [
+            -0.0,
+            0.22,
+            0.0
+          ],
+          "covers": true
+        }
+      ],
+      "hides": [
+        "Head",
+        "LeftFoot",
+        "LeftHand",
+        "LeftLowerArm",
+        "LeftLowerLeg",
+        "LeftUpperArm",
+        "LeftUpperLeg",
+        "LowerTorso",
+        "RightFoot",
+        "RightHand",
+        "RightLowerArm",
+        "RightLowerLeg",
+        "RightUpperArm",
+        "RightUpperLeg",
+        "UpperTorso"
+      ],
+      "sleeves": [
+        {
+          "part": "UpperTorso",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            2.1,
+            1.6,
+            0.9
+          ]
+        },
+        {
+          "part": "LeftUpperArm",
+          "offset": [
+            0,
+            -0.15,
+            0
+          ],
+          "size": [
+            0.8,
+            0.9,
+            0.8
+          ]
+        },
+        {
+          "part": "RightUpperArm",
+          "offset": [
+            0,
+            -0.15,
+            0
+          ],
+          "size": [
+            0.8,
+            0.9,
+            0.8
+          ]
+        }
+      ],
+      "glows": [
+        {
+          "part": "Head",
+          "color": "#FF8A1E",
+          "offset": [
+            -0.4125,
+            -0.0075,
+            -1.15
+          ],
+          "size": [
+            0.26,
+            0.15,
+            0.08
+          ]
+        },
+        {
+          "part": "Head",
+          "color": "#FF8A1E",
+          "offset": [
+            0.255,
+            -0.0225,
+            -1.15
+          ],
+          "size": [
+            0.27,
+            0.15,
+            0.08
+          ]
+        }
+      ],
+      "bodyColor": "#1E2430",
+      "templateTorsoHeight": 1.6
+    },
+    "assetId": 130504742583014,
+    "uploadedSha256": "df4066429a5a39bfaf9c14c1f15fb91fb68ec0a0a95c5033ef5bc185e5e2c625",
+    "uploadedOn": "2026-11-19",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "burst-rifle": {
+    "package": "assets/models/burst-rifle",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/burst-rifle/exports/BurstRifle.glb",
+    "exportSha256": "648faaa373e0182094316b6ad15fa0ef781fc7422b916b1bfe5c6fa5ef1fa728",
+    "triangles": 3930,
+    "kind": "weapon",
+    "gameName": "BurstRifle",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.39,
+        1.31
+      ],
+      "Muzzle": [
+        0.0,
+        0.13,
+        -2.47
+      ]
+    },
+    "share": "game",
+    "assetId": 104897682701821,
+    "uploadedSha256": "648faaa373e0182094316b6ad15fa0ef781fc7422b916b1bfe5c6fa5ef1fa728",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "frostbite": {
+    "package": "assets/models/frostbite",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/frostbite/exports/Frostbite.glb",
+    "exportSha256": "a451eff9d0b69ed93fbe22f80018ff69f1eca699d9cf376f830b9896c7edf5ae",
+    "triangles": 3870,
+    "kind": "weapon",
+    "gameName": "Frostbite",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.4,
+        0.8
+      ],
+      "Muzzle": [
+        0.0,
+        0.1,
+        -2.0
+      ]
+    },
+    "share": "game",
+    "assetId": 87814599495580,
+    "uploadedSha256": "a451eff9d0b69ed93fbe22f80018ff69f1eca699d9cf376f830b9896c7edf5ae",
+    "uploadedOn": "2026-11-22",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": true,
+        "facing": false,
+        "scale": true,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "gilded-derringer": {
+    "package": "assets/models/gilded-derringer",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/gilded-derringer/exports/GildedDerringer.glb",
+    "exportSha256": "9ecb6db750083fe928fd34e5ed6d1ce20583f8c85ae0735a7bb96890ed32137a",
+    "triangles": 3761,
+    "kind": "weapon",
+    "gameName": "GildedDerringer",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.3,
+        0.45
+      ],
+      "Muzzle": [
+        0.0,
+        0.18,
+        -0.7
+      ]
+    },
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "halcyon-rifle": {
+    "package": "assets/models/halcyon-rifle",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/halcyon-rifle/exports/HalcyonRifle.glb",
+    "exportSha256": "4bd081ffc41534acb32d2c341a375c733e9c9e8154c2ad910fae2411a9c825eb",
+    "triangles": 3880,
+    "kind": "weapon",
+    "gameName": "Halcyon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.309,
+        1.516
+      ],
+      "Muzzle": [
+        0.0,
+        0.2,
+        -2.4
+      ]
+    },
+    "share": "game",
+    "assetId": 129812841286596,
+    "uploadedSha256": "4bd081ffc41534acb32d2c341a375c733e9c9e8154c2ad910fae2411a9c825eb",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": true,
+        "facing": false,
+        "scale": true,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "hand-cannon": {
+    "package": "assets/models/hand-cannon",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/hand-cannon/exports/HandCannon.glb",
+    "exportSha256": "727f4694e7e9dc1359b03dc54e8a74eb0f566dfbf5759cbd585ac7f93ed2fdb3",
+    "triangles": 3880,
+    "kind": "weapon",
+    "gameName": "HandCannon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.35,
+        0.7
+      ],
+      "Muzzle": [
+        0.0,
+        0.2,
+        -1.47
+      ]
+    },
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "heavy-cannon": {
+    "package": "assets/models/heavy-cannon",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/heavy-cannon/exports/HeavyCannon.glb",
+    "exportSha256": "1d408931e649bb9887fb00bcc39b6854eef23edac4d09b17cacc2de9c2d727b8",
+    "triangles": 8980,
+    "kind": "weapon",
+    "gameName": "HeavyCannon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.43,
+        1.01
+      ],
+      "Muzzle": [
+        0.0,
+        0.19,
+        -2.25
+      ],
+      "Core": [
+        0.0,
+        0.15,
+        0.33
+      ]
+    },
+    "share": "game",
+    "assetId": 125382461619919,
+    "uploadedSha256": "1d408931e649bb9887fb00bcc39b6854eef23edac4d09b17cacc2de9c2d727b8",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    },
+    "budgetWaiver": "user asked for smoother, more detailed rings and edges after the 4,000-triangle build looked faceted; one mesh stays under the 10,000 per-mesh cap"
+  },
+  "lightning-carbine": {
+    "package": "assets/models/lightning-carbine",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/lightning-carbine/exports/LightningCarbine.glb",
+    "exportSha256": "99e3af6896b1ca678f75164d3998cab53e1c95695f72096b42cefe958c0cf39d",
+    "triangles": 3800,
+    "kind": "weapon",
+    "gameName": "LightningCarbine",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.53,
+        1.06
+      ],
+      "Muzzle": [
+        0.0,
+        -0.08,
+        -2.26
+      ]
+    },
+    "share": "game",
+    "assetId": 120268419196134,
+    "uploadedSha256": "99e3af6896b1ca678f75164d3998cab53e1c95695f72096b42cefe958c0cf39d",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "military-wave-runner": {
+    "package": "assets/models/military-wave-runner",
+    "role": "interactive",
+    "route": "clean",
+    "export": "assets/models/military-wave-runner/exports/MilitaryWaveRunnerClean.glb",
+    "exportSha256": "99f94d10ea8519f91097a1fd2b272338b64420d37c1f26badd69971b09c41374",
+    "triangles": 1696,
+    "assetId": 134548593522969,
+    "uploadedSha256": "99f94d10ea8519f91097a1fd2b272338b64420d37c1f26badd69971b09c41374",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    },
+    "kind": "vehicle",
+    "gameName": "WaveRunner",
+    "mounts": {
+      "DriverSeat": [
+        0.0,
+        2.15,
+        0.92
+      ],
+      "HullCentre": [
+        0.0,
+        1.1,
+        0.0
+      ]
+    }
+  },
+  "military-wave-runner-scan": {
+    "package": "assets/models/military-wave-runner",
+    "role": "interactive",
+    "route": "scan",
+    "export": null,
+    "exportSha256": null,
+    "triangles": 70044,
+    "budgetWaiver": "Fallback only, drawn when the clean model fails to load. Kept so a place the asset owner does not own still shows a boat.",
+    "assetId": 102870506274928,
+    "uploadedSha256": null,
+    "uploadedOn": "2026-11-16",
+    "template": "assets/environment/runtime/MilitaryWaveRunner.rbxm",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": true,
+        "facing": true,
+        "scale": true,
+        "materials": false,
+        "collision": true
+      }
+    }
+  },
+  "patrol-rhib": {
+    "package": "assets/models/patrol-rhib",
+    "role": "interactive",
+    "route": "clean",
+    "export": "assets/models/patrol-rhib/exports/PatrolRhibClean.glb",
+    "exportSha256": "1047670a070fb4839d427ee0ca58de36e4185f769c4b9c2b0e9e8be24f935019",
+    "triangles": 2104,
+    "kind": "vehicle",
+    "gameName": "RHIB",
+    "mounts": {
+      "DriverSeat": [
+        0.0,
+        2.52,
+        -1.2
+      ],
+      "HullCentre": [
+        0.0,
+        1.2,
+        0.0
+      ]
+    },
+    "share": "public",
+    "assetId": 70498391528292,
+    "uploadedSha256": "1047670a070fb4839d427ee0ca58de36e4185f769c4b9c2b0e9e8be24f935019",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "patrol-rhib-scan": {
+    "package": "assets/models/patrol-rhib-scan",
+    "role": "interactive",
+    "route": "scan",
+    "export": "assets/models/patrol-rhib-scan/exports/PatrolRhibScan.glb",
+    "exportSha256": "b73895a3e9acd963d8494a5fc2e609953e0209fa1638bf106fd4a63b351e5fb8",
+    "triangles": 27348,
+    "kind": "vehicle",
+    "gameName": "RHIB",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.95,
+        0.0
+      ],
+      "DriverSeat": [
+        -0.9,
+        6.6,
+        0.6
+      ]
+    },
+    "share": "public",
+    "assetId": 106441761252352,
+    "uploadedSha256": "b73895a3e9acd963d8494a5fc2e609953e0209fa1638bf106fd4a63b351e5fb8",
+    "uploadedOn": "2026-11-17",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    },
+    "budgetWaiver": "Kept at Tripo's own 25,154-triangle retopology. Cutting it to the 15,000 vehicle budget here made 3.33% of it see-through (build of 2026-11-17); a lighter version has to come from Tripo's Retopo, not from our reduction. At most 4 copies on the map."
+  },
+  "penthouse-aquarium": {
+    "package": "assets/models/penthouse-aquarium",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-aquarium/exports/PenthouseAquarium.glb",
+    "exportSha256": "aafb567f85878433794014a71c8515e530c1a300f35c3e9b0ad5b91bd6ee3447",
+    "triangles": 18442,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-cabinet-wall": {
+    "package": "assets/models/penthouse-cabinet-wall",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-cabinet-wall/exports/PenthouseCabinetWall.glb",
+    "exportSha256": "419c3c74275827a4b424ed1060f0d016c0ab53a56ff67d0199535ba11abe3838",
+    "triangles": 29615,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-daybed": {
+    "package": "assets/models/penthouse-daybed",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-daybed/exports/PenthouseDaybed.glb",
+    "exportSha256": "a60d97e4b942bde5869fdd3136724dc06b197814dc3625cf7813c48d217be9d3",
+    "triangles": 28966,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": 92760681066971,
+    "uploadedSha256": "a60d97e4b942bde5869fdd3136724dc06b197814dc3625cf7813c48d217be9d3",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-elevator": {
+    "package": "assets/models/penthouse-elevator",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-elevator/exports/PenthouseElevator.glb",
+    "exportSha256": "20876ee99191ddadf144b22998817a54833208306fe1d65cbfc5ff9a74d08b83",
+    "triangles": 17786,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-gallery-wall": {
+    "package": "assets/models/penthouse-gallery-wall",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-gallery-wall/exports/PenthouseGalleryWall.glb",
+    "exportSha256": "df432362cac1e318adf3187000fde8306924e152ed7cecc00f6818eaeb519e8f",
+    "triangles": 16186,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-hedge": {
+    "package": "assets/models/penthouse-hedge",
+    "role": "decor",
+    "route": "clean",
+    "export": "assets/models/penthouse-hedge/exports/PenthouseHedgeClean.glb",
+    "exportSha256": "4ff5370bc60906b5831f32619a0001f1aa6e1ec9b31d7c9a6d144603f631b3e4",
+    "triangles": 1900,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-kitchen-island": {
+    "package": "assets/models/penthouse-kitchen-island",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-kitchen-island/exports/PenthouseKitchenIsland.glb",
+    "exportSha256": "df3809a944c5c61d75c03a2d7c6b614dc376a3f94a54e058d02d294858b6eec6",
+    "triangles": 28520,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": 126360548080861,
+    "uploadedSha256": "df3809a944c5c61d75c03a2d7c6b614dc376a3f94a54e058d02d294858b6eec6",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-sculpture": {
+    "package": "assets/models/penthouse-sculpture",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-sculpture/exports/PenthouseSculpture.glb",
+    "exportSha256": "7ad892002d167da0b0a5a09442e8cb12cbc38f0d50bd1e9ed4ff7d9eb8679d95",
+    "triangles": 28307,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": 115249129895050,
+    "uploadedSha256": "7ad892002d167da0b0a5a09442e8cb12cbc38f0d50bd1e9ed4ff7d9eb8679d95",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "penthouse-sofa": {
+    "package": "assets/models/penthouse-sofa",
+    "role": "decor",
+    "route": "scan",
+    "export": "assets/models/penthouse-sofa/exports/PenthouseSofa.glb",
+    "exportSha256": "14fb300eb89e23cfc0b3dc454f6628e4404a89f523d1d42d4ebf2c0ab342c2ee",
+    "triangles": 27833,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "game",
+    "assetId": 93746109947365,
+    "uploadedSha256": "14fb300eb89e23cfc0b3dc454f6628e4404a89f523d1d42d4ebf2c0ab342c2ee",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "plasma-blaster": {
+    "package": "assets/models/plasma-blaster",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/plasma-blaster/exports/PlasmaBlaster.glb",
+    "exportSha256": "2dd46c3d995e9b06ed3fec1ac3ae718ff5a69de2827fde3e4890e9dcf9bb487b",
+    "triangles": 7953,
+    "kind": "weapon",
+    "gameName": "PlasmaBlaster",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.28,
+        1.2
+      ],
+      "Muzzle": [
+        0.0,
+        0.345,
+        -2.08
+      ]
+    },
+    "share": "game",
+    "assetId": 83235832636031,
+    "uploadedSha256": "2dd46c3d995e9b06ed3fec1ac3ae718ff5a69de2827fde3e4890e9dcf9bb487b",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": true,
+        "facing": true,
+        "scale": true,
+        "materials": true,
+        "collision": false
+      }
+    }
+  },
+  "prism-blaster": {
+    "package": "assets/models/prism-blaster",
+    "role": "held",
+    "route": "clean",
+    "export": "assets/models/prism-blaster/exports/PrismBlasterClean.glb",
+    "exportSha256": "cbfa0bc5772e8d181b463b644d7219432d5a4c16c4f94e6abeebb0c1880b6540",
+    "triangles": 2616,
+    "kind": "weapon",
+    "gameName": "PrismBlaster",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.262,
+        0.91
+      ],
+      "Muzzle": [
+        0.0,
+        0.367,
+        -2.01
+      ]
+    },
+    "share": "game",
+    "assetId": 91260616915145,
+    "uploadedSha256": "cbfa0bc5772e8d181b463b644d7219432d5a4c16c4f94e6abeebb0c1880b6540",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "pulse-rifle": {
+    "package": "assets/models/pulse-rifle",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/pulse-rifle/exports/PulseRifle.glb",
+    "exportSha256": "5fb6124106011befa12175bdd4928ca5790b08ec01dae5820610b52789ac7f0c",
+    "triangles": 3879,
+    "kind": "weapon",
+    "gameName": "PulseRifle",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.45,
+        0.9
+      ],
+      "Muzzle": [
+        0.0,
+        0.15,
+        -2.25
+      ]
+    },
+    "share": "game",
+    "assetId": 100668760642895,
+    "uploadedSha256": "5fb6124106011befa12175bdd4928ca5790b08ec01dae5820610b52789ac7f0c",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": true,
+        "facing": false,
+        "scale": true,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "quantum-cannon": {
+    "package": "assets/models/quantum-cannon",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/quantum-cannon/exports/QuantumCannon.glb",
+    "exportSha256": "63ba7b43f5ec455fa0bef2e71ba03c7bf5dad7f53b16ca367997e2c4f917c77e",
+    "triangles": 9539,
+    "kind": "weapon",
+    "gameName": "QuantumCannon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.3,
+        0.85
+      ],
+      "Muzzle": [
+        0.0,
+        0.12,
+        -2.31
+      ]
+    },
+    "share": "game",
+    "assetId": 136171937485033,
+    "uploadedSha256": "63ba7b43f5ec455fa0bef2e71ba03c7bf5dad7f53b16ca367997e2c4f917c77e",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    },
+    "budgetWaiver": "about 9,540 triangles against the 4,000 held starting budget: cut to 3,880 the Meshy body crumpled (the user: 'It looks deformed', 2026-11-23), so the body keeps 9,000 (under the 10,000 per-mesh cap), plus 540 for the hand-modelled muzzle and Neon ring. One gun per player in view; the held budget is a starting value, not a measured one"
+  },
+  "radio-tower": {
+    "package": "assets/models/radio-tower",
+    "role": "scenery",
+    "route": "scan",
+    "export": "assets/models/radio-tower/exports/RadioTower.glb",
+    "exportSha256": "cd338a35a0f14356e704039efc87c7418a605d5d10d7cc9454d11145d0fc126f",
+    "triangles": 59121,
+    "kind": "prop",
+    "gameName": null,
+    "mounts": {},
+    "share": "public",
+    "assetId": 132097701288704,
+    "uploadedSha256": "cd338a35a0f14356e704039efc87c7418a605d5d10d7cc9454d11145d0fc126f",
+    "uploadedOn": "2026-11-16",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "ray-gun": {
+    "package": "assets/models/ray-gun",
+    "role": "held",
+    "route": "scan",
+    "export": "assets/models/ray-gun/exports/RayGun.glb",
+    "exportSha256": "ee18a975f1d0c131d8454ae35c269e88b676027b74abcfb20c7edbff0a7b2b03",
+    "triangles": 6999,
+    "kind": "weapon",
+    "gameName": "RayGun",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.34,
+        0.78
+      ],
+      "Muzzle": [
+        0.0,
+        0.27,
+        -1.33
+      ]
+    },
+    "share": "game",
+    "assetId": 115175467421248,
+    "uploadedSha256": "ee18a975f1d0c131d8454ae35c269e88b676027b74abcfb20c7edbff0a7b2b03",
+    "uploadedOn": "2026-11-23",
+    "studio": {
+      "verifiedOn": "2026-11-23",
+      "checks": {
+        "loads": true,
+        "facing": true,
+        "scale": true,
+        "materials": true,
+        "collision": true
+      }
+    },
+    "budgetWaiver": "held in first person at arm's length; the user asked for smoother coil rings and emitter, so ~7,000 triangles in one mesh (under the 10,000 per-mesh cap), one gun per player on screen"
+  },
+  "red-suv": {
+    "package": "assets/models/red-suv",
+    "role": "interactive",
+    "route": "clean",
+    "export": "assets/models/red-suv/exports/RedSuvClean.glb",
+    "exportSha256": "21412b9765649f9257c56f4631825980132452d19aa78e72670dc66a5c8f5dbc",
+    "triangles": 4860,
+    "kind": "vehicle",
+    "gameName": "SUV",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.8,
+        0.0
+      ],
+      "DriverSeat": [
+        -1.1,
+        2.1,
+        1.1
+      ]
+    },
+    "share": "game",
+    "assetId": null,
+    "uploadedSha256": null,
+    "uploadedOn": null,
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  },
+  "red-suv-scan": {
+    "package": "assets/models/red-suv-scan",
+    "role": "interactive",
+    "route": "scan",
+    "export": "assets/models/red-suv-scan/exports/RedSuvScan.glb",
+    "exportSha256": "01a52822fa4d6b150c2d91b22db6fedafad9f0a6e952f0d2f40c7827d51d3c79",
+    "triangles": 24522,
+    "kind": "vehicle",
+    "gameName": "SUV",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.8,
+        0.0
+      ],
+      "DriverSeat": [
+        -0.95,
+        2.3,
+        -0.8
+      ],
+      "DriverEye": [
+        -0.9,
+        5.15,
+        -3.9
+      ]
+    },
+    "share": "game",
+    "budgetWaiver": "Tripo's 23,426-triangle export used as delivered while a 13,000-triangle Tripo Retopo is awaited; our own reduction tears generated meshes (the patrol boat). At most a few copies on a map.",
+    "assetId": 98420351725413,
+    "uploadedSha256": "01a52822fa4d6b150c2d91b22db6fedafad9f0a6e952f0d2f40c7827d51d3c79",
+    "uploadedOn": "2026-11-17",
+    "studio": {
+      "verifiedOn": null,
+      "checks": {
+        "loads": false,
+        "facing": false,
+        "scale": false,
+        "materials": false,
+        "collision": false
+      }
+    }
+  }
+}

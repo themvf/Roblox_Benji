@@ -1,0 +1,55 @@
+{
+  "checkedAtUtc": "20261022T123407951666Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "appraisal.json": "ef134900a2d48fb47b4459c188a5f4c336fa7cb00e3c5ac6da0b390c07b34883",
+    "views.png": "157eca0b451758d2212e96b4d79a49234ed15d0d26405c36266c7d6aff1a2944",
+    "source/reference.png": "047bbcfcd792f6042726bf002523fee9ca6d11bd439b245803d3b5d1276b445a",
+    "source/trellis-original.glb": "874ddf76691532457d42cb524d6710d080b626fad111f967dbc53ee48bb28d04",
+    "source/SnowFieldShelter.blend": "c435f820d958d04fb2daa3fd77b9c96c748686c6284a660ebc5b1a6837ec65ae",
+    "exports/SnowFieldShelter.glb": "3d7738f31950176d35a8103b20bf28feb05e975eb52190b8b31f0f64e89fda19",
+    "review/export-appraisal.json": "5fb12eeb43c332ae6ee896c975659c8f3a4c25badbf5706a2f343047dd9c6b2c",
+    "SetupDecoration.luau": "c0ec64f3048e3285bce209421a321b4e984b89255e6b99bad1b3843df9cece40",
+    "textures/Black_reinforced_seam_Color.png": "2d3f03b79ef4c7fb8d03fa687c8dd8de097b426013421b12d2aa312caea87539",
+    "textures/Charcoal_insulated_fabric_Color.png": "266d348e79fccad7dd5ea57f9803246b8c8016eaaebc85bbdd699942c6b51e02",
+    "textures/Charcoal_insulated_fabric_Normal.png": "fb31f0397f74b82ff6488486d442afe3e265b3b395efbd2e653633defb80ff2e",
+    "textures/Dark_sealed_window_Color.png": "d42a0cedeaa2a9b82d819b133a0cb5f32ded30a53a7bf2a074406cefe25827e3",
+    "textures/Door_hardware_Color.png": "77216b01a0fd4212f63ed9cb968052384ebee39901e1f39391d7acc58751abf4",
+    "textures/Graphite_window_gasket_Color.png": "6febb95613d325466e0e4555cd2c628872e5cd4489601be91c292d0896dbac67",
+    "textures/Off-white_steel_door_Color.png": "922468f3475b9bbcb253db0e3b3973e74c02b81008b87ba9122f1c1b3850fae1",
+    "textures/White_painted_aluminum_Color.png": "b032232561b51bd9b99b5cff5343153d8f3a37738af6ae07941f54bd8b037b79",
+    "review/final-quarter.png": "b3092f4dcdfe86fc2e44b14dcf0e3b82331b0a2f4bbdbc49770f52df238224c9",
+    "review/final-front.png": "726425c1543366237be58b10698a051e941d53c1d2c8e1f2e278af2ab08eb533",
+    "review/final-side.png": "c22ca29d3cffcc043b961056dddf5e31c9e165716653ea0a377cb3c3a3947bb9",
+    "review/final-rear.png": "e0e7380fbac087aa3ebd5dfd11111439acd886d54e9ce8a7dedc3d6a2dea63f4"
+  },
+  "measured": {
+    "meshTriangles": {
+      "Canvas side -1": 6760,
+      "Front outer white arch": 4700,
+      "Black canvas roof tension band": 3416,
+      "Cube": 220,
+      "Cube.001": 220,
+      "Cube.024": 44,
+      "Sphere": 168
+    },
+    "totalTriangles": 15528,
+    "embeddedImages": 8,
+    "worldDimensionsBlenderXYZ": [
+      24.56,
+      32.805,
+      14.231
+    ],
+    "exportBytes": 2117284
+  },
+  "limitations": [
+    "Visual approval has not been given for this shelter.",
+    "No Studio import, texture appearance, owner, collision, or map placement has been verified.",
+    "This is a closed decorative shell with a nonfunctional door and opaque windows.",
+    "Authoring size and decoration role are provisional until user approval."
+  ]
+}

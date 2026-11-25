@@ -1,0 +1,52 @@
+{
+  "checkedAtUtc": "20261011T141618314361Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "filesSha256": {
+    "source/design-reference.png": "9993c6b9d69cf6df3e2be8bd8cddd78baf42a951b4632214b46b8ccabb6c1741",
+    "source/trellis-original.glb": "579cd188088314186390d4010633e6808ebc01658cfbcc8c2e9414c5eb82be3b",
+    "source/CargoC_Clean.blend": "31152e0111ebb9b2c757a86022549a1c7826edf6e21088f71f1637bc7d97e3e8",
+    "exports/CargoWrecked.glb": "09f099ef75f8242b0d7d980c702a05a4d0df2643f2db384d019b3030ac319a04",
+    "textures/CargoC_Clean_Color.png": "12651c91cd8ac4fd26497ffd88ebe6ba09b699efd5b0fb8939c9f4497640d8b4",
+    "textures/CargoC_Clean_Roughness.png": "ca5a702d13b3f2ee9c0dba4c19dc97903ec0f44800783d8f5f6d1018835221d9",
+    "textures/CargoC_Clean_Metalness.png": "cdaa7127f02814d8f5520f86ed0ac4102519aff75d7e2683d7e7b3eef8045080",
+    "appraisal.json": "40aada7dcc5fa44a824ac1da896d2602d2eee8f1429304de0b9d069714cc5512",
+    "views.png": "4a8112af8ff80d5b8677fbade5808adda8569a2465dfbd31ff4e5eced52cf9f9",
+    "SetupCargoWrecked.luau": "b3eef6b530c8ba4aada11621ac6f7ac3dbe62f0fb0ec26fa60813ac83bb7c1ba",
+    "trials/CargoWrecked_voxel_2026-09-29.glb": "985ea16b0408667dbe5ec3a68718e04d811abc4384ac2d9147fa36d5d6d9af4a",
+    "trials/CargoWrecked_clean_preweather.glb": "0f4b5f813e7dea7776e7c8759b86f8d5f5caf0063b2f940021695cebdc600f83",
+    "review/clean-preweather-front-quarter.png": "3b59d635560aabaa4583129048fcd41b17a50e864350f2787c8173e031e61e95",
+    "review/clean-front-quarter.png": "591448ac59b63649c641e0b06d3f5e81bb269490c5ef2fa0924a8c33adbb322a",
+    "review/clean-end.png": "cc54722d7e7a87249b024ab3df257972c740edfa940d3099155f33f03fefddab",
+    "review/clean-side.png": "05f3d8e0c009b5d723fc5bc82a4a669e342b6d3e48ba56c77076a0e9295c642a",
+    "review/clean-rear.png": "62638125f42aa308182a3f5d47619e4a35af2de97a83c40dfde47a0b1549cfc6"
+  },
+  "measured": {
+    "triangles": 4713,
+    "meshes": 1,
+    "boundsGlbYUp": {
+      "min": [
+        -3.9149999618530273,
+        0,
+        -5.1373186111450195
+      ],
+      "max": [
+        5.456953525543213,
+        5.99500036239624,
+        3.1034998893737793
+      ]
+    },
+    "exportBytes": 1676256,
+    "embeddedTextureFormats": [
+      "image/png",
+      "image/png"
+    ]
+  },
+  "limitations": [
+    "Local validation and Blender renders do not establish user visual approval or Studio import.",
+    "Six-stud height and non-colliding decoration role are provisional.",
+    "Check-only verifies saved files and hashes; it does not regenerate renders."
+  ]
+}

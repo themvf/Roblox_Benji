@@ -1,0 +1,26 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-09-26",
+  "source": "ServerRack_Authored.glb",
+  "sourceSha256": "c7885fea430cb2661824a54c9e54ae50ca869fc29e31bf198a33eba9d28b36d5",
+  "measurements": {
+    "triangles": 4096,
+    "size": [
+      3.2,
+      3.71,
+      8.0
+    ],
+    "reliefRatio": 0.4,
+    "openEdges": 8568,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle."
+  ],
+  "decision": "User-approved eight-stud mesh-front server rack for background decoration. Clean procedural rebuild with recreated surface detail; non-colliding, no touches or raycast queries. One 4096-triangle mesh and shared 1024 PNG material set. Studio setup is supplied separately; import and gameplay appearance remain unverified."
+}

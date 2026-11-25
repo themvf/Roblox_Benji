@@ -1,0 +1,18 @@
+{
+  "BountyController.lua": { "widgets": 1, "colours": 0 },
+  "CelebrationController.lua": { "widgets": 3, "colours": 0 },
+  "ConvergenceController.lua": { "widgets": 7, "colours": 2 },
+  "HudController.lua": { "widgets": 2, "colours": 0 },
+  "LoadoutController.lua": { "widgets": 6, "colours": 23 },
+  "LobbyNavigationController.lua": { "widgets": 3, "colours": 0 },
+  "MapVoteController.lua": { "widgets": 6, "colours": 0 },
+  "MutationController.lua": { "widgets": 3, "colours": 9 },
+  "RecapController.lua": { "widgets": 1, "colours": 0 },
+  "ScoreboardController.lua": { "widgets": 1, "colours": 0 },
+  "TeamIdentityController.lua": { "widgets": 1, "colours": 0 },
+  "TouchController.lua": { "widgets": 4, "colours": 0 },
+  "TurretController.lua": { "widgets": 2, "colours": 0 },
+  "VehicleController.lua": { "widgets": 3, "colours": 0 },
+  "WeaponBarController.lua": { "widgets": 5, "colours": 7 },
+  "WeatherController.lua": { "widgets": 0, "colours": 2 }
+}

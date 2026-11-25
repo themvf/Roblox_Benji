@@ -1,0 +1,120 @@
+{
+  "checkedOn": "2026-11-23 06:58",
+  "export": "assets/models/quantum-cannon/exports/QuantumCannon.glb",
+  "exportSha256": "63ba7b43f5ec455fa0bef2e71ba03c7bf5dad7f53b16ca367997e2c4f917c77e",
+  "sourceSha256": "4acce78040525871ff4b9978b89186394a61bae3d185d2b6059f9c816a83a6f6",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "scan",
+    "suggested": "clean",
+    "reasons": [
+      "the role is held, so players are right next to it and its parts may need to move"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.99,
+      "side": 0.994,
+      "top": 0.989
+    },
+    "surfaceError": {
+      "front": 0.015,
+      "back": 0.024,
+      "right": 0.005,
+      "left": 0.004,
+      "top": 0.004,
+      "bottom": 0.004
+    },
+    "worstSurfaceError": 0.024,
+    "noise": 0.002,
+    "sheet": "assets/models/quantum-cannon/review/detail.png",
+    "limit": 0.08,
+    "passed": true
+  },
+  "ground": {
+    "bottomFill": 0.04,
+    "aboveFill": 0.246,
+    "ratio": 0.16,
+    "footprintStuds": [
+      1.49,
+      4.66
+    ],
+    "flagged": false
+  },
+  "textureBleed": {
+    "image": 0,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.551,
+    "backgroundBrightness": 0.218,
+    "surfaceBrightness": 0.199,
+    "bleedPercent": 1.75
+  },
+  "budget": {
+    "role": "held",
+    "budget": 4000,
+    "triangles": 9539,
+    "waiver": "about 9,540 triangles against the 4,000 held starting budget: cut to 3,880 the Meshy body crumpled (the user: 'It looks deformed', 2026-11-23), so the body keeps 9,000 (under the 10,000 per-mesh cap), plus 540 for the hand-modelled muzzle and Neon ring. One gun per player in view; the held budget is a starting value, not a measured one",
+    "passed": true,
+    "within": false
+  },
+  "contract": {
+    "sizeStuds": [
+      1.494,
+      1.398,
+      4.663
+    ],
+    "heightStuds": 1.4,
+    "kind": "weapon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.3,
+        0.85
+      ],
+      "Muzzle": [
+        0.0,
+        0.12,
+        -2.31
+      ]
+    },
+    "mountSheet": "assets/models/quantum-cannon/review/mounts.png",
+    "pivot": "center",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": null,
+      "decimate": 9000,
+      "worstMesh": 8999,
+      "triangles": 9539,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     QuantumCannon.glb (0.64 MB)",
+    "           Mesh_0                           8,999 tris",
+    "           MuzzleRim                          252 tris",
+    "           MuzzleBore                         144 tris",
+    "           Glow                               144 tris",
+    "           total                            9,539 tris (4 meshes)",
+    "           texture                      1024x1024  image/jpeg",
+    "           texture                           32x8  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/quantum-cannon/review/audit.png",
+      "assets/models/quantum-cannon/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.04,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

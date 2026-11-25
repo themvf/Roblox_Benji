@@ -1,0 +1,133 @@
+{
+  "checkedOn": "2026-11-16 19:53",
+  "export": "assets/models/penthouse-hedge/exports/PenthouseHedge.glb",
+  "exportSha256": "e4d890c3fcb2b628aa030c0d46e96f7486ac8c8d03e8038fff367e47fc18278a",
+  "sourceSha256": "a83789612fc34b9e121c58b9177b41f6beb4750cad9ee16a61266c7319f7f8c8",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "auto",
+    "suggested": "scan",
+    "reasons": []
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.976,
+      "side": 0.953,
+      "top": 0.958
+    },
+    "surfaceError": {
+      "front": 0.518,
+      "back": 0.509,
+      "right": 0.533,
+      "left": 0.541,
+      "top": 0.536,
+      "bottom": 0.427
+    },
+    "worstSurfaceError": 0.541,
+    "sheet": "assets/models/penthouse-hedge/review/detail.png",
+    "limit": 0.08,
+    "passed": false
+  },
+  "ground": {
+    "bottomFill": 0.687,
+    "aboveFill": 0.713,
+    "ratio": 0.96,
+    "footprintStuds": [
+      7.11,
+      2.84
+    ],
+    "flagged": false
+  },
+  "textureBleed": {
+    "image": 0,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.457,
+    "backgroundBrightness": 0.345,
+    "surfaceBrightness": 0.384,
+    "bleedPercent": 0.11
+  },
+  "budget": {
+    "role": "decor",
+    "budget": 30000,
+    "triangles": 77087,
+    "waiver": null,
+    "passed": false,
+    "within": false
+  },
+  "contract": {
+    "sizeStuds": [
+      7.282,
+      8.061,
+      2.931
+    ],
+    "heightStuds": 8.0,
+    "kind": "prop",
+    "mounts": {},
+    "mountSheet": "assets/models/penthouse-hedge/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        6,
+        2
+      ],
+      "decimate": 56859,
+      "worstMesh": 7767,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     PenthouseHedge.glb (6.09 MB)",
+    "           geometry_0.001                   4,977 tris",
+    "           geometry_0.002                   4,442 tris",
+    "           geometry_0.003                   7,761 tris",
+    "           geometry_0.004                   7,269 tris",
+    "           geometry_0.005                   6,349 tris",
+    "           geometry_0.006                   7,024 tris",
+    "           geometry_0.007                   6,783 tris",
+    "           geometry_0.008                   7,095 tris",
+    "           geometry_0.009                   7,634 tris",
+    "           geometry_0.010                   7,767 tris",
+    "           geometry_0.011                   4,927 tris",
+    "           geometry_0.012                   5,059 tris",
+    "           total                           77,087 tris (12 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": false,
+    "waiver": null,
+    "sheets": [
+      "assets/models/penthouse-hedge/review/audit.png",
+      "assets/models/penthouse-hedge/review/audit_closeups.png"
+    ],
+    "flaggedViews": [
+      "front",
+      "back",
+      "left",
+      "right",
+      "top",
+      "bottom",
+      "front-left",
+      "front-right",
+      "back-left",
+      "back-right",
+      "section-1a",
+      "section-1b",
+      "section-2a",
+      "section-2b",
+      "section-3a",
+      "section-3b"
+    ],
+    "worstBackFacePercent": 23.27,
+    "worstPatchPercent": 1.41
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-17",
+  "source": "TestSuv.glb",
+  "sourceSha256": "397c38dcf887f565ef7ff6a1118f7b2f9c43c7a2f3c4bb088b1e68db12164d7c",
+  "measurements": {
+    "triangles": 23426,
+    "size": [
+      0.98,
+      0.461,
+      0.36
+    ],
+    "reliefRatio": 0.3677,
+    "openEdges": 8932,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Provider test: dark red luxury off-road SUV from the user's picture, Tripo simplified export (role: decor, about 6 studs tall)"
+}

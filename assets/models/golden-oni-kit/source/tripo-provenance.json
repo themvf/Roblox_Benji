@@ -1,0 +1,14 @@
+{
+  "generator": "Tripo multiview P2",
+  "credits_used": 120,
+  "balance_after": 2080,
+  "back_view": "Generated from the approved front; visually inspected and passed the revised back-view check. Rear details are inferred.",
+  "files": {
+    "reference.jpg": "b2926fc74a1f3d6af0c2047d2e7c9b8d0f5e7673204f7632f227c82714c40cf4",
+    "tpose-reference.png": "6dc189a803f0f4159f61036416e59090577ae14ea50a6eb7912f200958bf4a5d",
+    "tripo-back-reference.png": "11c7cba39af98a25fad09d67dc6520d8280fea03cf91cc03563d309c6cf8625a",
+    "tripo-multiview.glb": "5d1158c0a15316c49e81f919ec8fce8b88667681bf4c819665053b2b8238799f"
+  },
+  "rights": "unverified",
+  "status": "local candidate only; no approval, upload, or marketplace validation"
+}

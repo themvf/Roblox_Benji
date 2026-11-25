@@ -1,0 +1,134 @@
+{
+  "tool": "tools/asset_generate.py audit",
+  "auditedOn": "2026-11-22 23:24",
+  "source": "assets/models/burst-rifle/exports/BurstRifle.glb",
+  "sourceSha256": "648faaa373e0182094316b6ad15fa0ef781fc7422b916b1bfe5c6fa5ef1fa728",
+  "brightenGamma": 1.0,
+  "flagPercent": 0.15,
+  "holesWarnPercent": 1.0,
+  "holesFailPercent": 1.5,
+  "worstBackFacePercent": 0.0,
+  "worstPatchPercent": 0.0,
+  "flagged": [],
+  "views": [
+    {
+      "name": "front",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "left",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "right",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "top",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "bottom",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "front-left",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "front-right",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back-left",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "back-right",
+      "kind": "overview",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-1a",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-1b",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-2a",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-2b",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-3a",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    },
+    {
+      "name": "section-3b",
+      "kind": "closeup",
+      "backFacePercent": 0.0,
+      "backFacePatchPercent": 0.0,
+      "flagged": false
+    }
+  ],
+  "sheets": [
+    "assets/models/burst-rifle/review/audit.png",
+    "assets/models/burst-rifle/review/audit_closeups.png"
+  ],
+  "panels": "assets/models/burst-rifle/review/audit",
+  "limitations": "Blender renders, not Roblox. Lighting, materials and transparency in Studio are not checked.",
+  "passed": true
+}

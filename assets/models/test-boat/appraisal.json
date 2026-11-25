@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-17",
+  "source": "TestBoat.glb",
+  "sourceSha256": "b757ed666326d61cdc21529bdbbb29250d94cd8651bf527d66213f84c67e62ad",
+  "measurements": {
+    "triangles": 25154,
+    "size": [
+      0.98,
+      0.357,
+      0.378
+    ],
+    "reliefRatio": 0.3644,
+    "openEdges": 26370,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Provider test: patrol RIB boat, same picture as patrol-rhib, logo removed (role: decor, about 8 studs tall)"
+}

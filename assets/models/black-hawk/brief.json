@@ -1,0 +1,14 @@
+{
+  "purpose": "Parked Black Hawk helicopter, static scenery for a military or helipad area",
+  "role": "decor",
+  "heightStuds": 15.0,
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {
+    "decimate": 45000,
+    "tile": [
+      8,
+      4
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "status": "Export-verified",
+  "checkedOn": "2026-09-21",
+  "checks": [
+    {
+      "asset": "mud-grassland",
+      "sourceExists": true,
+      "exportExists": true,
+      "exportBytes": 12123772,
+      "sha256": "260a53d00def9c413b155a5a6069b967248b41aeb9a6e45a52c57e729a6c28cb"
+    }
+  ]
+}

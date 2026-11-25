@@ -1,0 +1,35 @@
+{
+  "purpose": "Provider test: patrol RIB boat, same picture as patrol-rhib, logo removed",
+  "role": "decor",
+  "heightStuds": 8.0,
+  "route": "scan",
+  "kind": "prop",
+  "lengthStuds": 30.0,
+  "widthStuds": 10.2,
+  "where": "ProviderTest",
+  "copies": 1,
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "yes",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "counts": {
+    "seats": 6,
+    "engines": 2
+  },
+  "accepted": [
+    {
+      "stage": "mesh seed 201",
+      "reason": "the brief's 30 x 10.2 x 8 came from the shape-built boat; the picture's arch and engines make it taller for its length [shape: 20.7 studs long at the brief's height, where the brief says 30; shape: 7.6 studs deep at the brief's height, where the brief says 10.2]",
+      "on": "2026-11-17",
+      "by": "session-695e8a9d"
+    },
+    {
+      "stage": "mesh seed 202",
+      "reason": "the brief's size came from the shape-built boat; the picture's boat is taller for its length [shape: 20.7 studs long at the brief's height, where the brief says 30; shape: 7.6 studs deep at the brief's height, where the brief says 10.2]",
+      "on": "2026-11-17",
+      "by": "session-695e8a9d"
+    }
+  ]
+}

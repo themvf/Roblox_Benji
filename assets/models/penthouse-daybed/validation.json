@@ -1,0 +1,86 @@
+{
+  "checkedOn": "2026-11-16 16:38",
+  "export": "assets/models/penthouse-daybed/exports/PenthouseDaybed.glb",
+  "exportSha256": "a60d97e4b942bde5869fdd3136724dc06b197814dc3625cf7813c48d217be9d3",
+  "sourceSha256": "600cae0c2b240ae455d657e328eaf37998d7e585aa90ec05a0ef1dbd67837a10",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "auto",
+    "suggested": "clean",
+    "reasons": [
+      "it needs a 91% triangle cut, past the 90% where shape is lost"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.988,
+      "side": 0.985,
+      "top": 0.994
+    },
+    "surfaceError": {
+      "front": 0.101,
+      "back": 0.13,
+      "right": 0.093,
+      "left": 0.092,
+      "top": 0.142,
+      "bottom": 0.037
+    },
+    "worstSurfaceError": 0.142,
+    "sheet": "assets/models/penthouse-daybed/review/detail.png",
+    "passed": true
+  },
+  "budget": {
+    "role": "decor",
+    "budget": 30000,
+    "triangles": 28966,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      3.835,
+      3.526,
+      7.724
+    ],
+    "heightStuds": 3.5,
+    "kind": "prop",
+    "mounts": {},
+    "mountSheet": "assets/models/penthouse-daybed/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        2,
+        2
+      ],
+      "decimate": 25000,
+      "worstMesh": 7445,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     PenthouseDaybed.glb (3.86 MB)",
+    "           geometry_0.001                   7,176 tris",
+    "           geometry_0.002                   7,445 tris",
+    "           geometry_0.003                   7,184 tris",
+    "           geometry_0.004                   7,161 tris",
+    "           total                           28,966 tris (4 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "sheets": [
+      "assets/models/penthouse-daybed/review/audit.png",
+      "assets/models/penthouse-daybed/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.3,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

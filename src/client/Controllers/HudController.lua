@@ -2,6 +2,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Knit = require(ReplicatedStorage.Packages.Knit)
+local Lore = require(ReplicatedStorage.Shared.Lore)
 local Screen = require(script.Parent.Parent.UI.Screen)
 local Theme = require(script.Parent.Parent.UI.Theme)
 
@@ -169,10 +170,36 @@ function HudController:KnitStart()
 
     local RoundService = Knit.GetService("RoundService")
     local deadline = nil
+    local hasQueuedOnce = false
+    local roundState = "Lobby"
+
+    local function updateLobbyPrompt()
+        if roundState ~= "Lobby" then
+            return
+        end
+        local queueState = Players.LocalPlayer:GetAttribute("QueueState")
+        if queueState == "Queued" or queueState == "Committed" then
+            hasQueuedOnce = true
+        end
+        -- First-use guidance dismisses after the first queue/match so returning
+        -- players get an unobstructed sightline to the Junction gate (B-04).
+        state.Visible = not hasQueuedOnce
+        if state.Visible then
+            state.Text = ("%s  ·  Press PLAY or step onto a mode pad"):format(Lore.Hub:upper())
+        end
+    end
+
+    Players.LocalPlayer:GetAttributeChangedSignal("QueueState"):Connect(updateLobbyPrompt)
+    updateLobbyPrompt()
+
     RoundService.StateChanged:Connect(function(s, data)
+        roundState = s
         local text = s
         if s == "Lobby" then
-            text = "Choose PLAY or enter the arena gate"
+            updateLobbyPrompt()
+            deadline = nil
+            timer.Visible = false
+            return
         elseif data.Mode then
             text = data.Mode .. "  " .. s
         end
@@ -227,10 +254,17 @@ function HudController:KnitStart()
             timer.Visible = false
         end
         if data.Winner then
-            text ..= " - " .. data.Winner .. " wins"
+            text ..= " - " .. Lore.teamName(data.Winner) .. " wins"
+        elseif data.Draw then
+            text ..= " - DRAW"
         end
         if data.Score then
-            text ..= "  Red " .. data.Score.Red .. " - " .. data.Score.Blue .. " Blue"
+            text ..= ("  %s %s - %s %s"):format(
+                Lore.teamName("Red"),
+                tostring(data.Score.Red),
+                tostring(data.Score.Blue),
+                Lore.teamName("Blue")
+            )
         end
         state.Text = text
     end)

@@ -10,7 +10,7 @@ entry in [scenes.json](scenes.json).
 | `preview_scene.py` | render the built asset at map scale from a player's eye |
 | `resize_textures.py` | downscale maps to 1024 and flip DirectX normals |
 | `make_sky_range.py` | generate a mountain horizon and render it as skybox faces |
-| `appraise_asset.py` | **run this first**: says what a source asset is fit for |
+| `appraise_asset.py` | **run this first**: says what a source asset is fit for, and with `--record` renders `views.png` (front/side/top) -- open it |
 | `../gltf_post.py` | meshoptimizer simplify + texture clamp on the exported `.glb` |
 
 `gltf_post.py` sits in `tools/`, not here, because it needs no Blender -- it wraps
@@ -72,9 +72,10 @@ blender -b -noaudio --python tools/blender/scene_kit.py -- --asset glacier \
 | `decimate` | target triangle count, before tiling (Blender's Collapse modifier) |
 | `tile` | `[nx, ny]` bisect grid across the two non-up axes |
 | `pivot` | `center`, `bottom`, `top` or `origin` |
-| `optimize` | `{tris, texture, error, lockBorder, tint, lift}` post-export pass |
+| `optimize` | `{tris, texture, error, lockBorder, tint, lift, gamma}` post-export pass |
+| `cull` | face-deleting rules in source units, run first: `below`/`above`, `x`/`y`/`z` ranges, `outside`/`inside` a radius. For junk copied from the reference photo |
 
-Order is fixed and deliberate: **import, exaggerate, fit, decimate, tile, pivot,
+Order is fixed and deliberate: **import, cull, exaggerate, fit, decimate, tile, pivot,
 textures, export, optimize**. `exaggerate` precedes `fit` so stretch is in source
 proportions while the final width still lands exactly; `pivot` follows `tile` so
 every tile shares one offset and the set places with a single `CFrame`; `optimize`
@@ -123,9 +124,16 @@ The tint appends its new image and orphans the old one, so `optimize` runs a `pr
 straight after to drop the unreferenced bufferView. Skipping that left the helicopter
 at 6.00 MB instead of 3.61 MB.
 
-**`preview_scene.py` will not show any of this.** It renders with its own material, so
-a tinted asset and an untinted one look identical in its output. Check a recolour by
-extracting the texture (`gltf_post` prints each one's format and size) or in Studio.
+**Use `preview_scene.py --materials original` to inspect textures.** Its default
+`--materials clay` intentionally overrides imported materials for shape review.
+A white clay preview is not evidence of a broken texture. Verify final appearance
+in Studio as well.
+
+For a small prop, use `--no-arena` to hide the large map marker and optionally
+`--fit-height 8` to center and uniformly scale the preview with its base at zero.
+This normalization is preview-only and does not validate the exported pivot or size.
+`--resolution 600,700` gives a portrait image. Omitting `--place` places one copy
+at the origin.
 
 ## Preview before Studio
 

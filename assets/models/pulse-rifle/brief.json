@@ -1,0 +1,36 @@
+{
+  "purpose": "Pulse Rifle: a chunky white-and-orange sci-fi energy rifle with a square violet-lit muzzle and dark under-barrel cells that players hold, in every map",
+  "role": "held",
+  "heightStuds": 1.4,
+  "pivot": "center",
+  "route": "scan",
+  "kind": "weapon",
+  "lengthStuds": 4.5,
+  "widthStuds": 1.0,
+  "gameName": "PulseRifle",
+  "where": "held in every map (Primary loadout)",
+  "copies": 12,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "user said 'you decide' to all intake questions after asking for the Meshy API: Primary loadout in every map; 4.5 x 1.7 x 0.9 studs; plays like the Sniper (single heavy energy shot) until its own stats are written; name PulseRifle; game only; stop at the local build; no moving parts; scan route from Meshy image-to-3D of the user's picture",
+  "meshes": "auto",
+  "scene": {
+    "decimate": 3880,
+    "yaw": 90
+  },
+  "counts": {},
+  "mounts": {
+    "Grip": [
+      0.0,
+      -0.45,
+      0.9
+    ],
+    "Muzzle": [
+      0.0,
+      0.15,
+      -2.25
+    ]
+  }
+}

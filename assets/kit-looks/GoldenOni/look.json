@@ -1,0 +1,229 @@
+{
+  "kit": "GoldenOni",
+  "bar": {
+    "outline": "Tall curved oni horns and projecting demon mask",
+    "glow": "No glow in the approved image; gold metal is the accent, subject to style-bar review",
+    "texture": "Gold mask with sculpted facial relief; black cloth with folds and seams",
+    "proportions": "Oversized horned head and broad blocky shoulders"
+  },
+  "bodyColor": "#1E2430",
+  "concept": "assets/kit-looks/GoldenOni/concept.png",
+  "approved": {
+    "said": "Looks good. Please continue",
+    "on": "2026-11-20"
+  },
+  "pieces": {
+    "Head": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/Head.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 3648
+    },
+    "UpperTorso": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/UpperTorso.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 2921
+    },
+    "LowerTorso": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/LowerTorso.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 1178
+    },
+    "LeftUpperArm": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/LeftUpperArm.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 980
+    },
+    "LeftLowerArm": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/LeftLowerArm.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 984
+    },
+    "LeftHand": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/LeftHand.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 908
+    },
+    "LeftUpperLeg": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/LeftUpperLeg.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 980
+    },
+    "LeftLowerLeg": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/LeftLowerLeg.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 990
+    },
+    "LeftFoot": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/LeftFoot.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 954
+    },
+    "RightUpperArm": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/RightUpperArm.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 950
+    },
+    "RightLowerArm": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/RightLowerArm.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 972
+    },
+    "RightHand": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/RightHand.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 940
+    },
+    "RightUpperLeg": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/RightUpperLeg.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 966
+    },
+    "RightLowerLeg": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/RightLowerLeg.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 984
+    },
+    "RightFoot": {
+      "file": "assets/kit-looks/GoldenOni/pieces/whole/RightFoot.glb",
+      "turn": 0,
+      "source": "whole",
+      "triangles": 984
+    }
+  },
+  "glowPlan": "none",
+  "team": "Team-colour trim to be designed and tested without altering the approved mask",
+  "whole": {
+    "drawing": "tpose-reference.png",
+    "turn": 0,
+    "generator": "Tencent Hunyuan3D 2.1",
+    "purpose": "Unrigged shape and texture reference; not a Marketplace deliverable",
+    "model": "assets/kit-looks/GoldenOni/pieces/whole/model.glb",
+    "from": "hunyuan-tpose.glb",
+    "triangles": 40000,
+    "frame": {
+      "centre": [
+        0,
+        0.9626179933547974
+      ],
+      "side": 2.1400005912780764,
+      "pixels": 1024,
+      "height": 1.9252359867095947,
+      "width": 1.9814820289611816
+    },
+    "marks": {
+      "neck": 1.24,
+      "waist": 0.81,
+      "hip": 0.75,
+      "knee": 0.37,
+      "ankle": 0.12,
+      "shoulder": [
+        0.3,
+        1.2
+      ],
+      "elbow": [
+        0.55,
+        1.2
+      ],
+      "wrist": [
+        0.8,
+        1.2
+      ],
+      "armRadius": 0.24,
+      "handLength": 0.3,
+      "overlap": 0.025,
+      "overlapHip": 0.09,
+      "decimate": {
+        "Head": 0.35,
+        "UpperTorso": 0.56,
+        "LowerTorso": 0.39,
+        "LeftUpperArm": 0.5,
+        "RightUpperArm": 0.5,
+        "LeftLowerArm": 0.29,
+        "RightLowerArm": 0.29,
+        "LeftHand": 0.5,
+        "RightHand": 0.5,
+        "LeftUpperLeg": 0.135,
+        "RightUpperLeg": 0.13,
+        "LeftLowerLeg": 0.29,
+        "RightLowerLeg": 0.28,
+        "LeftFoot": 0.46,
+        "RightFoot": 0.46
+      },
+      "caps": true
+    }
+  },
+  "setAside": {
+    "pieces": {
+      "helmet": {
+        "crop": null,
+        "file": null,
+        "turn": -90,
+        "triangles": null
+      },
+      "chest": {
+        "crop": null,
+        "file": null,
+        "turn": -90,
+        "triangles": null
+      },
+      "waist": {
+        "crop": null,
+        "file": null,
+        "turn": -90,
+        "triangles": null
+      },
+      "pauldron": {
+        "crop": null,
+        "file": null,
+        "turn": -90,
+        "triangles": null
+      },
+      "gauntlet": {
+        "crop": null,
+        "file": null,
+        "turn": -90,
+        "triangles": null
+      },
+      "fist": {
+        "crop": null,
+        "file": null,
+        "turn": -90,
+        "triangles": null
+      },
+      "thigh": {
+        "crop": null,
+        "file": null,
+        "turn": -90,
+        "triangles": null
+      },
+      "greave": {
+        "crop": null,
+        "file": null,
+        "turn": -90,
+        "triangles": null
+      },
+      "boot": {
+        "crop": null,
+        "file": null,
+        "turn": -90,
+        "triangles": null
+      }
+    },
+    "glows": []
+  },
+  "glows": []
+}

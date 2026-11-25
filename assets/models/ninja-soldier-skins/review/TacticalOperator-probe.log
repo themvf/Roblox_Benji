@@ -1,0 +1,52 @@
+Extensions: writing cache failed ([Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\extensions\\.cache\\compat.dat').
+Traceback (most recent call last):
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 1027, in register
+    Tracker.initialize(
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 295, in initialize
+    self.set_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 466, in set_tracker_json
+    self.save_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 479, in save_tracker_json
+    outf = open(jpath, 'w')
+           ^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\scripts\\addons\\MCprep_addon\\mcprep_addon_tracker.json'
+
+Failed to register scene update handler
+Reloading external rigs...
+Reloading external metarigs...
+🔄 blenderkit: Verbose is enabled
+🔄 blenderkit: Read in JSON settings from file
+ℹ️  blenderkit: Unregistering BlenderKit add-on [15:39:10.826, __init__.py:2558]
+15:39:11 | INFO: Data are loaded, start creating Blender stuff
+15:39:11 | INFO: Blender create Mesh node geometry_0
+15:39:11 | INFO: glTF import finished in 0.34s
+MESH geometry_0 vertices 252525 faces 292523
+BOUND [(-0.21895518898963928, 0.21437174081802368), (-0.15651196241378784, 0.15219396352767944), (-0.5008726119995117, 0.5006757974624634)]
+MATERIALS ['Material_0']
+UV [('UVMap', 877569)]
+Z 0.5 0.00:567 0.05:609
+Z 0.45 0.00:2483 0.05:6921
+Z 0.4 0.00:2659 0.05:8014 0.10:44
+Z 0.35 0.00:4208 0.05:11645 0.10:4213 0.15:11
+Z 0.3 0.00:1921 0.05:7196 0.10:3180 0.15:2840
+Z 0.25 0.00:1445 0.05:5306 0.10:4534 0.15:3690 0.20:152
+Z 0.2 0.00:1400 0.05:4706 0.10:5599 0.15:3624 0.20:572
+Z 0.15 0.00:3882 0.05:8641 0.10:10148 0.15:3791 0.20:1804
+Z 0.1 0.00:1351 0.05:5757 0.10:9267 0.15:2875 0.20:1610
+Z 0.05 0.00:1987 0.05:4211 0.10:17750 0.15:2858 0.20:3981
+Z 0.0 0.00:827 0.05:4671 0.10:8398 0.15:6228 0.20:4626
+Z -0.05 0.00:2944 0.05:5156 0.10:5531 0.15:7738 0.20:6181
+Z -0.1 0.00:2537 0.05:2887 0.10:3132 0.15:3432 0.20:3761
+Z -0.15 0.00:1355 0.05:1985 0.10:1750 0.15:2589 0.20:1817
+Z -0.2 0.00:775 0.05:2997 0.10:3884 0.15:2593 0.20:1495
+Z -0.25 0.00:611 0.05:2814 0.10:2723 0.15:1302 0.20:132
+Z -0.3 0.00:548 0.05:1572 0.10:1660 0.15:632
+Z -0.35 0.00:753 0.05:1765 0.10:2232 0.15:1151
+Z -0.4 0.00:414 0.05:1434 0.10:2035 0.15:1175
+Z -0.45 0.00:344 0.05:1266 0.10:2611 0.15:1682
+Z -0.5 0.00:305 0.05:1637 0.10:3157 0.15:1822 0.20:5
+IMAGE Image_0 (2048, 2048)  True
+IMAGE Image_1 (2048, 2048)  True
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+
+Blender quit

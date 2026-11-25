@@ -1,0 +1,107 @@
+Extensions: writing cache failed ([Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\extensions\\.cache\\compat.dat').
+Traceback (most recent call last):
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 1027, in register
+    Tracker.initialize(
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 295, in initialize
+    self.set_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 466, in set_tracker_json
+    self.save_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 479, in save_tracker_json
+    outf = open(jpath, 'w')
+           ^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\scripts\\addons\\MCprep_addon\\mcprep_addon_tracker.json'
+
+Failed to register scene update handler
+Reloading external rigs...
+Reloading external metarigs...
+🔄 blenderkit: Verbose is enabled
+🔄 blenderkit: Read in JSON settings from file
+ℹ️  blenderkit: Unregistering BlenderKit add-on [10:42:02.266, __init__.py:2558]
+10:42:02 | INFO: Data are loaded, start creating Blender stuff
+10:42:02 | INFO: Blender create Mesh node Tube_Recessed_graphite
+10:42:02 | INFO: Blender create Mesh node Tube_Dark_rubber_gasket
+10:42:02 | INFO: Blender create Mesh node Tube_Polished_steel_edge
+10:42:02 | INFO: Blender create Mesh node Tube_Glossy_cobalt_blue_enamel
+10:42:02 | INFO: Blender create Mesh node Tube_Indicator_bright_cyan
+10:42:02 | INFO: Blender create Mesh node Tube_Cyan_energy_core
+10:42:02 | INFO: Blender create Mesh node Tube_Worn_light_blue_panels
+10:42:02 | INFO: Blender create Mesh node Tube_Diagnostic_screen
+10:42:02 | INFO: Blender create Mesh node Tube_Warm_status_light
+10:42:02 | INFO: Blender create Mesh node Tube_Cracked_cyan_glass_shell
+10:42:02 | INFO: Blender create Mesh node Tube_Glass_fractures
+10:42:02 | INFO: Blender create Mesh node Tube_Retained_glass_shards
+10:42:02 | INFO: Blender create Mesh node Tube_Electric_blue_ooze
+10:42:02 | INFO: Blender create Mesh node Tube_Deep_blue_residue
+10:42:02 | INFO: glTF import finished in 0.06s
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+Fra:1 Mem:17.17M (Peak 17.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Recessed_graphite
+Fra:1 Mem:17.17M (Peak 17.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Worn_light_blue_panels
+Fra:1 Mem:19.18M (Peak 19.18M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Retained_glass_shards
+Fra:1 Mem:19.19M (Peak 19.19M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Deep_blue_residue
+Fra:1 Mem:19.19M (Peak 19.19M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane
+Fra:1 Mem:22.13M (Peak 22.13M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:22.07M (Peak 22.13M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Deep_blue_pooled_residue_MetallicRoughness.png
+Fra:1 Mem:22.07M (Peak 22.13M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Polished_steel_edge_Color.png
+Fra:1 Mem:22.07M (Peak 22.13M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading Worn_light_blue_panels_Color.png
+Fra:1 Mem:22.20M (Peak 22.20M) | Time:00:00.01 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Images | Loading Worn_light_blue_panels_MetallicRoughness.png
+Fra:1 Mem:22.19M (Peak 22.20M) | Time:00:00.01 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Images | Loading Diagnostic_screen_Emissive.png
+Fra:1 Mem:22.18M (Peak 22.20M) | Time:00:00.01 | Mem:0.05M, Peak:0.05M | Scene, ViewLayer | Updating Images | Loading Diagnostic_screen_Color.png
+Fra:1 Mem:22.16M (Peak 22.20M) | Time:00:00.01 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Images | Loading Warm_status_light_Emissive.png
+Fra:1 Mem:22.18M (Peak 22.20M) | Time:00:00.01 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Images | Loading Warm_status_light_Color.png
+Fra:1 Mem:22.24M (Peak 22.24M) | Time:00:00.01 | Mem:0.11M, Peak:0.11M | Scene, ViewLayer | Updating Images | Loading Warm_status_light_MetallicRoughness.png
+Fra:1 Mem:22.24M (Peak 22.24M) | Time:00:00.01 | Mem:0.12M, Peak:0.12M | Scene, ViewLayer | Updating Images | Loading Cracked_cyan_glass_shell_Color.png
+Fra:1 Mem:22.27M (Peak 22.27M) | Time:00:00.01 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Images | Loading Cracked_cyan_glass_shell_MetallicRoughness.png
+Fra:1 Mem:22.24M (Peak 22.27M) | Time:00:00.01 | Mem:0.16M, Peak:0.16M | Scene, ViewLayer | Updating Images | Loading Dark_fracture_lines_Color.png
+Fra:1 Mem:22.26M (Peak 22.27M) | Time:00:00.01 | Mem:0.17M, Peak:0.17M | Scene, ViewLayer | Updating Images | Loading Dark_fracture_lines_MetallicRoughness.png
+Fra:1 Mem:22.31M (Peak 22.31M) | Time:00:00.01 | Mem:0.19M, Peak:0.19M | Scene, ViewLayer | Updating Images | Loading Sharp_glass_fracture_edges_Color.png
+Fra:1 Mem:22.32M (Peak 22.32M) | Time:00:00.01 | Mem:0.20M, Peak:0.20M | Scene, ViewLayer | Updating Images | Loading Sharp_glass_fracture_edges_MetallicRoughness.png
+Fra:1 Mem:22.32M (Peak 22.32M) | Time:00:00.01 | Mem:0.22M, Peak:0.22M | Scene, ViewLayer | Updating Images | Loading Electric_blue_viscous_leak_Emissive.png
+Fra:1 Mem:22.32M (Peak 22.32M) | Time:00:00.01 | Mem:0.23M, Peak:0.23M | Scene, ViewLayer | Updating Images | Loading Electric_blue_viscous_leak_Color.png
+Fra:1 Mem:22.33M (Peak 22.33M) | Time:00:00.01 | Mem:0.25M, Peak:0.25M | Scene, ViewLayer | Updating Images | Loading Electric_blue_viscous_leak_MetallicRoughness.png
+Fra:1 Mem:22.35M (Peak 22.35M) | Time:00:00.02 | Mem:0.27M, Peak:0.27M | Scene, ViewLayer | Updating Images | Loading Deep_blue_pooled_residue_Emissive.png
+Fra:1 Mem:22.42M (Peak 22.42M) | Time:00:00.02 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Images | Loading Deep_blue_pooled_residue_Color.png
+Fra:1 Mem:21.08M (Peak 22.42M) | Time:00:00.09 | Mem:0.53M, Peak:0.53M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:21.09M (Peak 22.42M) | Time:00:00.09 | Mem:0.53M, Peak:0.53M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:21.09M (Peak 22.42M) | Time:00:00.09 | Mem:0.53M, Peak:0.53M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:21.09M (Peak 22.42M) | Time:00:00.09 | Mem:0.53M, Peak:0.53M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:21.18M (Peak 22.42M) | Time:00:00.09 | Mem:0.54M, Peak:0.54M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:21.18M (Peak 22.42M) | Time:00:00.09 | Mem:0.54M, Peak:0.54M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:21.18M (Peak 22.42M) | Time:00:00.09 | Mem:0.54M, Peak:0.54M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:21.18M (Peak 22.42M) | Time:00:00.09 | Mem:0.54M, Peak:0.54M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:21.18M (Peak 22.42M) | Time:00:00.09 | Mem:0.54M, Peak:0.54M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:21.18M (Peak 22.42M) | Time:00:00.09 | Mem:0.54M, Peak:0.54M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:21.18M (Peak 22.42M) | Time:00:00.09 | Mem:0.55M, Peak:0.55M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:21.18M (Peak 22.42M) | Time:00:00.09 | Mem:0.55M, Peak:0.55M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:21.18M (Peak 22.42M) | Time:00:00.09 | Mem:0.55M, Peak:0.55M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:21.18M (Peak 22.42M) | Time:00:00.09 | Mem:0.55M, Peak:0.55M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:21.54M (Peak 22.42M) | Time:00:00.10 | Mem:0.55M, Peak:0.55M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:22.30M (Peak 22.42M) | Time:00:00.10 | Mem:0.55M, Peak:0.55M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:22.30M (Peak 22.42M) | Time:00:00.10 | Mem:1.30M, Peak:1.30M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:22.30M (Peak 22.42M) | Time:00:00.10 | Mem:1.30M, Peak:1.30M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:22.30M (Peak 22.42M) | Time:00:00.10 | Mem:2.02M, Peak:2.02M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:22.30M (Peak 22.42M) | Time:00:00.10 | Mem:2.88M, Peak:3.59M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:22.30M (Peak 22.42M) | Time:00:00.10 | Mem:2.88M, Peak:3.59M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:23.33M (Peak 23.33M) | Time:00:00.10 | Mem:2.88M, Peak:3.59M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:23.33M (Peak 23.33M) | Time:00:00.10 | Mem:3.91M, Peak:3.91M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:23.33M (Peak 23.33M) | Time:00:00.10 | Mem:3.91M, Peak:3.91M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:23.33M (Peak 23.33M) | Time:00:00.10 | Mem:3.91M, Peak:3.91M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:23.33M (Peak 23.33M) | Time:00:00.10 | Mem:3.91M, Peak:3.91M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:23.33M (Peak 23.33M) | Time:00:00.10 | Mem:3.91M, Peak:3.91M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:23.33M (Peak 23.33M) | Time:00:00.10 | Mem:3.99M, Peak:3.99M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:23.34M (Peak 23.34M) | Time:00:00.10 | Mem:3.99M, Peak:3.99M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:24.34M (Peak 25.03M) | Time:00:00.12 | Mem:5.00M, Peak:5.00M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:24.34M (Peak 25.03M) | Time:00:00.12 | Mem:5.00M, Peak:5.00M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:24.35M (Peak 25.03M) | Time:00:00.12 | Mem:4.92M, Peak:5.00M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:24.35M (Peak 25.03M) | Time:00:00.12 | Mem:5.01M, Peak:5.01M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:24.35M (Peak 25.03M) | Time:00:00.12 | Mem:5.01M, Peak:5.01M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:24.35M (Peak 25.03M) | Time:00:00.12 | Mem:5.01M, Peak:5.01M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:24.35M (Peak 25.03M) | Time:00:00.12 | Mem:5.01M, Peak:5.01M | Scene, ViewLayer | Sample 0/24
+Fra:1 Mem:83.12M (Peak 83.12M) | Time:00:01.14 | Remaining:00:23.42 | Mem:63.73M, Peak:63.73M | Scene, ViewLayer | Sample 1/24
+Fra:1 Mem:107.84M (Peak 144.92M) | Time:00:27.93 | Mem:63.73M, Peak:63.73M | Scene, ViewLayer | Sample 24/24
+Fra:1 Mem:107.84M (Peak 144.92M) | Time:00:27.93 | Mem:63.73M, Peak:63.73M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\blue-cracked-damage.png'
+Time: 00:28.24 (Saving: 00:00.29)
+
+RENDERED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\blue-cracked-damage.png
+
+Blender quit

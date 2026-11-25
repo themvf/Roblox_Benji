@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-22",
+  "source": "QuantumCannon.glb",
+  "sourceSha256": "4acce78040525871ff4b9978b89186394a61bae3d185d2b6059f9c816a83a6f6",
+  "measurements": {
+    "triangles": 19656,
+    "size": [
+      1.902,
+      0.613,
+      0.575
+    ],
+    "reliefRatio": 0.3022,
+    "openEdges": 28526,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Quantum Cannon: a heavy white-and-black two-handed energy launcher with a glowing muzzle ring that players hold, in every map (role: held, about 1.76 studs tall)"
+}

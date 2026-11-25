@@ -1,0 +1,60 @@
+{
+  "checkedAtUtc": "2026-10-04T21:15:12.041411+00:00",
+  "sourceSha256": "78688793465ed3c4d1ac9ad642ed330ddc1af28178e12d2683243ff42f0821e8",
+  "exportSha256": "8bd970391a789353c968798651bf08312e2d20e00c951316768047a26e560867",
+  "textureSha256": {
+    "BaseColor.png": "c8113f35a46ece53935e0a6d1d343abb9642ffcd8c933195ec9ca5b19a5c8d22",
+    "MetallicRoughness.png": "a9555384319c40a0ca07039a945c3cb2b430a55ad94c1a08728a0bc24a8a37a0"
+  },
+  "meshNames": [
+    "Dish_S01_01",
+    "Dish_S02_01",
+    "Dish_S02_02",
+    "Dish_S03_01",
+    "Dish_S03_02",
+    "Dish_S04_01",
+    "Dish_S05_01",
+    "Dish_S06_01",
+    "Dish_S07_01",
+    "Dish_S08_01"
+  ],
+  "trianglesPerMesh": [
+    8169,
+    9000,
+    6706,
+    9000,
+    5887,
+    7183,
+    5731,
+    6268,
+    6564,
+    5749
+  ],
+  "totalTriangles": 70257,
+  "meshCount": 10,
+  "boundsGlbYUp": {
+    "min": [
+      -8.901147842407227,
+      0,
+      -7.629982948303223
+    ],
+    "max": [
+      8.901147842407227,
+      16,
+      7.629982948303223
+    ]
+  },
+  "imageFormats": [
+    "image/png",
+    "image/png"
+  ],
+  "checks": {
+    "meshTriangleLimit": true,
+    "height16Studs": true,
+    "bottomAtZero": true,
+    "embeddedPngTextures": true,
+    "dishSectorNames": true
+  },
+  "studioImport": "unverified; user will upload",
+  "mapPlacement": "unverified"
+}

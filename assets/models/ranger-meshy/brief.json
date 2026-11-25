@@ -1,0 +1,20 @@
+{
+  "purpose": "Playable stylized ranger kit character matching the supplied image, retaining hat sunglasses and watch, intended for sale",
+  "role": "interactive",
+  "heightStuds": 6.05,
+  "kind": "prop",
+  "where": "Standard match character; personal avatar retained in lobby",
+  "copies": 10,
+  "moving": "R15 articulated body; rigid accessories",
+  "share": "public",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "Provisional reference envelope: height 6.05, width 6 across T-pose, depth 2.5 studs; final dimensions measured after generation",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {},
+  "counts": {},
+  "lengthStuds": 2.5,
+  "widthStuds": 6.0
+}

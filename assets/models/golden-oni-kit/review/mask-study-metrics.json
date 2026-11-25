@@ -1,0 +1,11 @@
+{
+  "triangles": 3800,
+  "openEdges": 0,
+  "nonManifoldEdges": 0,
+  "purpose": "Experimental fitting study only; no publication or Marketplace claim",
+  "limitations": [
+    "Unverified face fit and joint movement",
+    "Generated geometry requires visual review",
+    "Outfit, rigging, cages and marketplace validation incomplete"
+  ]
+}

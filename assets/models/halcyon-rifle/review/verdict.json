@@ -1,0 +1,14 @@
+{
+  "looks": "good",
+  "said": "Looks good, upload (to test it in Studio)",
+  "findingsShown": [
+    "white panels: smoothed, but faint grey smudges remain near panel seams on the upper barrel",
+    "front lens: a flat 10-sided cyan disc, faceted when seen dead-on; glows once GlowCyan is Neon",
+    "front jaw: open hollow mouth under the lens, as in the concept; a few hairline see-through slivers, 0.11% worst view, within limits"
+  ],
+  "note": null,
+  "exportSha256": "4bd081ffc41534acb32d2c341a375c733e9c9e8154c2ad910fae2411a9c825eb",
+  "worstSurfaceError": 0.0,
+  "worstBackFacePercent": 0.11,
+  "recordedOn": "2026-11-23"
+}

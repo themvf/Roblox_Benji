@@ -1,0 +1,19 @@
+{
+  "exportSha256": "01a52822fa4d6b150c2d91b22db6fedafad9f0a6e952f0d2f40c7827d51d3c79",
+  "reviewedBy": "session-695e8a9d",
+  "measured": [
+    "weight: 24,522 triangles against a budget of 15,000"
+  ],
+  "counted": {
+    "wheels": 4
+  },
+  "seen": [
+    "grille: a streaky smear, not slats",
+    "rear number plate: garbled characters",
+    "body sides: slightly wavy along the doors and sills up close",
+    "windows: opaque dark paint, no interior; the driver sits hidden inside the body",
+    "wheels: part of the body, so they do not turn",
+    "surface: made matte by changing the texture's roughness to 0.85 and metal to 0; not yet seen in Studio"
+  ],
+  "recordedOn": "2026-11-17 08:33"
+}

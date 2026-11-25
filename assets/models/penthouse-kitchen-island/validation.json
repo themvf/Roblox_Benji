@@ -1,0 +1,90 @@
+{
+  "checkedOn": "2026-11-16 16:42",
+  "export": "assets/models/penthouse-kitchen-island/exports/PenthouseKitchenIsland.glb",
+  "exportSha256": "df3809a944c5c61d75c03a2d7c6b614dc376a3f94a54e058d02d294858b6eec6",
+  "sourceSha256": "13228b339ed2c0c485b2ab143f1a9ad68ff9afeb50749bbae1bf1c63760e7d1f",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "auto",
+    "suggested": "clean",
+    "reasons": [
+      "it needs a 91% triangle cut, past the 90% where shape is lost"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.999,
+      "side": 0.995,
+      "top": 0.999
+    },
+    "surfaceError": {
+      "front": 0.024,
+      "back": 0.011,
+      "right": 0.004,
+      "left": 0.004,
+      "top": 0.052,
+      "bottom": 0.054
+    },
+    "worstSurfaceError": 0.054,
+    "sheet": "assets/models/penthouse-kitchen-island/review/detail.png",
+    "passed": true
+  },
+  "budget": {
+    "role": "decor",
+    "budget": 30000,
+    "triangles": 28520,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      12.675,
+      3.507,
+      5.286
+    ],
+    "heightStuds": 3.5,
+    "kind": "prop",
+    "mounts": {},
+    "mountSheet": "assets/models/penthouse-kitchen-island/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        4,
+        2
+      ],
+      "decimate": 25000,
+      "worstMesh": 5486,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     PenthouseKitchenIsland.glb (3.84 MB)",
+    "           geometry_0.001                   4,885 tris",
+    "           geometry_0.002                   2,544 tris",
+    "           geometry_0.003                   5,486 tris",
+    "           geometry_0.004                   1,675 tris",
+    "           geometry_0.005                   4,870 tris",
+    "           geometry_0.006                   1,815 tris",
+    "           geometry_0.007                   4,665 tris",
+    "           geometry_0.008                   2,580 tris",
+    "           total                           28,520 tris (8 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "sheets": [
+      "assets/models/penthouse-kitchen-island/review/audit.png",
+      "assets/models/penthouse-kitchen-island/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.01,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

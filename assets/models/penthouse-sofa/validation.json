@@ -1,0 +1,86 @@
+{
+  "checkedOn": "2026-11-16 16:41",
+  "export": "assets/models/penthouse-sofa/exports/PenthouseSofa.glb",
+  "exportSha256": "14fb300eb89e23cfc0b3dc454f6628e4404a89f523d1d42d4ebf2c0ab342c2ee",
+  "sourceSha256": "45e7968ae0f2bd33862b5cb621d727dc2b11756071846e6031649f96c3eb624a",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "auto",
+    "suggested": "clean",
+    "reasons": [
+      "it needs a 91% triangle cut, past the 90% where shape is lost"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.987,
+      "side": 0.971,
+      "top": 0.996
+    },
+    "surfaceError": {
+      "front": 0.011,
+      "back": 0.013,
+      "right": 0.022,
+      "left": 0.022,
+      "top": 0.013,
+      "bottom": 0.01
+    },
+    "worstSurfaceError": 0.022,
+    "sheet": "assets/models/penthouse-sofa/review/detail.png",
+    "passed": true
+  },
+  "budget": {
+    "role": "decor",
+    "budget": 30000,
+    "triangles": 27833,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      15.41,
+      3.511,
+      4.46
+    ],
+    "heightStuds": 3.5,
+    "kind": "prop",
+    "mounts": {},
+    "mountSheet": "assets/models/penthouse-sofa/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        4,
+        1
+      ],
+      "decimate": 25000,
+      "worstMesh": 7391,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     PenthouseSofa.glb (2.68 MB)",
+    "           geometry_0.001                   6,825 tris",
+    "           geometry_0.002                   6,424 tris",
+    "           geometry_0.003                   7,193 tris",
+    "           geometry_0.004                   7,391 tris",
+    "           total                           27,833 tris (4 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "sheets": [
+      "assets/models/penthouse-sofa/review/audit.png",
+      "assets/models/penthouse-sofa/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.82,
+    "worstPatchPercent": 0.03
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

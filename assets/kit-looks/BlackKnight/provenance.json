@@ -1,0 +1,73 @@
+{
+  "concept": "assets/kit-looks/BlackKnight/concept.jpg",
+  "approved": {
+    "said": "This looks good",
+    "on": "2026-11-17"
+  },
+  "verdict": {
+    "looks": "good",
+    "said": "Yes (to: does the new review sheet, with the dark torso fill closing the chest gaps, look right to upload?)",
+    "on": "2026-11-19",
+    "sheet": "cc48296cf5e41057",
+    "pieces": {
+      "helmet": "93fdcd229a902a99",
+      "chest": "211f9f1127f3ba0b",
+      "waist": "46a2a1ab27fbe799",
+      "pauldron": "df7a47e78a862ca8",
+      "gauntlet": "0348cc7e46efd418",
+      "fist": "722fcf9b1b3c8a6d",
+      "thigh": "9b1c3ddb8d00e601",
+      "greave": "99db3e7969e382a7",
+      "boot": "9fe441a6b80a1cd2",
+      "back": "79de573ec75ea9b4"
+    },
+    "gaps": {
+      "front": 0.0,
+      "back": 0.0
+    }
+  },
+  "pieces": {
+    "helmet": {
+      "from": "model.glb",
+      "source": "crop"
+    },
+    "chest": {
+      "from": "model.glb",
+      "source": "drawn"
+    },
+    "waist": {
+      "from": "model.glb",
+      "source": "drawn"
+    },
+    "pauldron": {
+      "from": "model.glb",
+      "source": "crop"
+    },
+    "gauntlet": {
+      "from": "model.glb",
+      "source": "drawn"
+    },
+    "fist": {
+      "from": "model.glb",
+      "source": "drawn"
+    },
+    "thigh": {
+      "from": "model.glb",
+      "source": "drawn"
+    },
+    "greave": {
+      "from": "model.glb",
+      "source": "drawn"
+    },
+    "boot": {
+      "from": "model.glb",
+      "source": "drawn"
+    },
+    "back": {
+      "from": "model.glb",
+      "source": "drawn"
+    }
+  },
+  "generator": "Tripo API (tripo-cli), model P2",
+  "rights": "made for this game"
+}

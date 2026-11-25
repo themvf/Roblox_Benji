@@ -1,0 +1,43 @@
+{
+ "purpose": "Quantum Cannon: a heavy white-and-black two-handed energy launcher with a glowing muzzle ring that players hold, in every map",
+ "role": "held",
+ "heightStuds": 1.4,
+ "pivot": "center",
+ "kind": "weapon",
+ "lengthStuds": 4.63,
+ "widthStuds": 1.47,
+ "gameName": "QuantumCannon",
+ "where": "held in every map (Primary loadout)",
+ "copies": 12,
+ "moving": "",
+ "share": "game",
+ "nearestStuds": 0.0,
+ "thin": "no",
+ "assumed": "user said 'you decide' to all, then asked for the Meshy API: Primary loadout in every map; 4.56 x 1.76 x 1.16 studs; plays like the Sniper until an area-blast mode is written; name QuantumCannon; game only; stop at the local build; no moving parts; scan route from Meshy image-to-3D of the user's picture",
+ "meshes": "auto",
+ "route": "scan",
+ "scene": {
+  "yaw": 90,
+  "extraParts": "tools/blender/parts_quantum_cannon.py",
+  "extraMeshes": [
+   "MuzzleRim",
+   "MuzzleBore",
+   "Glow"
+  ],
+  "decimate": 9000
+ },
+ "counts": {},
+ "mounts": {
+  "Grip": [
+   0.0,
+   -0.3,
+   0.85
+  ],
+  "Muzzle": [
+   0.0,
+   0.12,
+   -2.31
+  ]
+ },
+ "budgetWaiver": "about 9,540 triangles against the 4,000 held starting budget: cut to 3,880 the Meshy body crumpled (the user: 'It looks deformed', 2026-11-23), so the body keeps 9,000 (under the 10,000 per-mesh cap), plus 540 for the hand-modelled muzzle and Neon ring. One gun per player in view; the held budget is a starting value, not a measured one"
+}

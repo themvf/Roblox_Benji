@@ -1,0 +1,38 @@
+{
+  "checkedAtUtc": "2026-10-18T18:15:25.620018+00:00",
+  "status": "passed",
+  "mode": "check",
+  "baseExportSha256": "e9f08426a558e02bff92aa3b6bbc1ca682a2c6e43ae41f91743543c7fd0dc3ce",
+  "greenExportSha256": "4846123480dac45e03e1184988ffeddf7a786ef4f81a4bb64bc08998d6385d93",
+  "geometryBinIdentical": true,
+  "meshCount": 10,
+  "trianglesPerMesh": [
+    2168,
+    1276,
+    3196,
+    3732,
+    1456,
+    252,
+    512,
+    1808,
+    108,
+    120
+  ],
+  "totalTriangles": 14628,
+  "sha256": {
+    "assets/models/bluetube-glossy/exports/BlueTube_Glossy.glb": "e9f08426a558e02bff92aa3b6bbc1ca682a2c6e43ae41f91743543c7fd0dc3ce",
+    "assets/models/bluetube-glossy/exports/BlueTube_GreenCore.glb": "4846123480dac45e03e1184988ffeddf7a786ef4f81a4bb64bc08998d6385d93",
+    "assets/models/bluetube-glossy/review/green-front.png": "d8f29042d8aa2797d4442998398500fcef08354e7a5370f73a0b1c5fce335181",
+    "assets/models/bluetube-glossy/review/green-side.png": "d82c274b1401a04843f56a239c2aec84097f23affce84ef8d7e9117b19422e53",
+    "assets/models/bluetube-glossy/review/green-rear.png": "4d3411c26c545ffdb91a7f744497dcadbc74dc97f82322d56dedc9cdc9f8d2d2",
+    "assets/models/bluetube-glossy/review/green-quarter.png": "0f17ea1d6f2686f1747a3c5557b479bbe8bfa1dcc775242a867581d2bda06e72",
+    "assets/models/bluetube-glossy/review/green-top.png": "954c8a40c5b5944e1c42f899d1c77490a3f6734f52c6b82f6a8311e61ca0c1c1"
+  },
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "limitations": [
+    "Green core and glass are static material changes; no new light or particle effect.",
+    "Studio alpha and emission appearance remain unverified."
+  ]
+}

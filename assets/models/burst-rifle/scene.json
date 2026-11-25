@@ -1,0 +1,20 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "burst-rifle": {
+      "description": "Burst Rifle: a gunmetal-and-navy sci-fi burst rifle with a skeleton stock and three glowing amber chevrons in the barrel shroud that players hold, in every map (role: held, about 1.33 studs tall)",
+      "source": "assets/models/burst-rifle/source/BurstRifle.glb",
+      "out": "assets/models/burst-rifle/exports/BurstRifle.glb",
+      "fit": {
+        "axis": "z",
+        "size": 1.33
+      },
+      "decimate": 9000,
+      "pivot": "center",
+      "optimize": {
+        "texture": 1024
+      },
+      "yaw": 90
+    }
+  }
+}

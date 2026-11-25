@@ -1,0 +1,18 @@
+{
+  "exportSha256": "b73895a3e9acd963d8494a5fc2e609953e0209fa1638bf106fd4a63b351e5fb8",
+  "reviewedBy": "session-695e8a9d",
+  "measured": [
+    "weight: 27,348 triangles against a budget of 15,000"
+  ],
+  "counted": {
+    "seats": 6,
+    "engines": 2
+  },
+  "seen": [
+    "collar, both sides amidships: one small flipped sliver each, see-through (0.09% of the model)",
+    "collar, port side near the stern: a faintly lighter rectangle where the maker's label was painted out",
+    "seats and engine cowls: lumpy and faceted at this triangle count",
+    "console screen: the display is a smeared texture, not readable instruments"
+  ],
+  "recordedOn": "2026-11-17 04:12"
+}

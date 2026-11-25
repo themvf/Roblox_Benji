@@ -1,0 +1,68 @@
+{
+  "checkedOn": "2026-11-17 08:16",
+  "route": "clean",
+  "builder": "tools/blender/build_red_suv.py",
+  "export": "assets/models/red-suv/exports/RedSuvClean.glb",
+  "exportSha256": "21412b9765649f9257c56f4631825980132452d19aa78e72670dc66a5c8f5dbc",
+  "triangleCapPassed": true,
+  "inspect": [
+    "file     RedSuvClean.glb (0.33 MB)",
+    "           Body                             2,132 tris",
+    "           Glass                              104 tris",
+    "           WheelFL                            656 tris",
+    "           WheelFR                            656 tris",
+    "           WheelRL                            656 tris",
+    "           WheelRR                            656 tris",
+    "           total                            4,860 tris (6 meshes)",
+    "           texture                          64x64  image/png"
+  ],
+  "detail": {
+    "outlineOverlap": null,
+    "passed": null
+  },
+  "budget": {
+    "role": "interactive",
+    "budget": 15000,
+    "triangles": 4860,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      7.5,
+      6.137,
+      16.9
+    ],
+    "heightStuds": 6.14,
+    "kind": "vehicle",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.8,
+        0.0
+      ],
+      "DriverSeat": [
+        -1.1,
+        2.1,
+        1.1
+      ]
+    },
+    "mountSheet": "assets/models/red-suv/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/red-suv/review/audit.png",
+      "assets/models/red-suv/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.0,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Shape fidelity is judged by eye on the builder's renders."
+}

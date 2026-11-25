@@ -1,0 +1,30 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-09-27",
+  "source": "trellis-original.glb",
+  "sourceSha256": "bf8e2377536b6dd0e8404b04d7b5edf804f5278b0c6761b3a337a8558c8e15b8",
+  "measurements": {
+    "triangles": 289280,
+    "size": [
+      0.519,
+      1.0,
+      0.248
+    ],
+    "reliefRatio": 0.2479,
+    "openEdges": 185872,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "verdict": [
+    "Too dense to survive as ONE mesh.",
+    "  Tiling instead: 8 meshes keeps 25% of the detail (72,320 triangles);",
+    "  Tiling instead: 15 meshes keeps 50% of the detail (144,640 triangles);",
+    "  the 10,000 cap is PER MESH, so `tile` beats `decimate` for anything",
+    "  broad that the player gets close to. Weigh the part count against",
+    "  your device budget."
+  ],
+  "decision": "Reference only, not a delivery source. 289,280 triangles and 2048 WebP textures; a 9,000-triangle collapse decimation (trials/trellis-decimate-9000.glb) shredded the surfaces. It also invents a second pod and a top-surface screen well absent from the Midjourney reference."
+}

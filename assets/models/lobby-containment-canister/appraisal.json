@@ -1,0 +1,33 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-09",
+  "source": "sample_2026-11-09T205221.614.glb",
+  "sourceSha256": "5c2e7ad71a98215167fceb1758ac941ee0f980b86373fa6b98092d7f303eb6d9",
+  "measurements": {
+    "triangles": 290582,
+    "size": [
+      0.596,
+      0.596,
+      1.002
+    ],
+    "reliefRatio": 0.5949,
+    "openEdges": 140514,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "Too dense to survive as ONE mesh.",
+    "  Tiling instead: 8 meshes keeps 25% of the detail (72,645 triangles);",
+    "  Tiling instead: 15 meshes keeps 50% of the detail (145,291 triangles);",
+    "  the 10,000 cap is PER MESH, so `tile` beats `decimate` for anything",
+    "  broad that the player gets close to. Weigh the part count against",
+    "  your device budget.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "User revision reference source/reference-clear-blue-chamber.png supersedes the prior opaque blue-pink chamber look. Keep the source GLB's dark detailed end caps and overall 8-stud provisional proportions. Rebuild the middle as actual separate translucent glass, dark blue interior, and cyan energy concentrated near the bottom. The 25% source reduction preserves cap detail; 15% was visually softer. A transparent energy texture was generated from the reference and saved in textures/. This is a high-detail all-angle lobby decoration candidate; visual approval, Studio rendering, and placement remain unverified stages."
+}

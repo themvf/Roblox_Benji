@@ -1,0 +1,38 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "lightning-carbine": {
+      "description": "Lightning Carbine: a yellow-and-gunmetal sci-fi carbine with twin copper coil rails and a lightning arc between them, held by players in every map (role: held, about 1.49 studs tall)",
+      "source": "assets/models/lightning-carbine/source/LightningCarbine.glb",
+      "out": "assets/models/lightning-carbine/exports/LightningCarbine.glb",
+      "fit": {
+        "axis": "z",
+        "size": 1.49
+      },
+      "decimate": 3880,
+      "pivot": "center",
+      "optimize": {
+        "texture": 1024
+      },
+      "yaw": 90,
+      "split": {
+        "name": "Arc",
+        "colour": {
+          "hue": [
+            195,
+            208
+          ],
+          "sat": [
+            0.35,
+            0.55
+          ],
+          "val": [
+            0.95,
+            1.0
+          ]
+        },
+        "minFaces": 50
+      }
+    }
+  }
+}

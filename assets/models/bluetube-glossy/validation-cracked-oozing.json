@@ -1,0 +1,64 @@
+{
+  "checkedAtUtc": "2026-10-18T18:15:25.610555+00:00",
+  "status": "passed",
+  "mode": "check",
+  "baseYellowSha256": "b229a998309dace3fd3d8aca7b58f3ceea829df14f75917b1a8429262d1a07fd",
+  "blueSha256": "e9f08426a558e02bff92aa3b6bbc1ca682a2c6e43ae41f91743543c7fd0dc3ce",
+  "greenSha256": "4846123480dac45e03e1184988ffeddf7a786ef4f81a4bb64bc08998d6385d93",
+  "exportSha256": "b91152dc8ff9551b2f50d778c9877197a688e51027abc02e75c19216eaee40ee",
+  "meshCount": 14,
+  "trianglesPerMesh": {
+    "Tube_Recessed_graphite": 2168,
+    "Tube_Dark_rubber_gasket": 1276,
+    "Tube_Polished_steel_edge": 3196,
+    "Tube_Glossy_cobalt_blue_enamel": 3732,
+    "Tube_Indicator_neon_yellow": 1456,
+    "Tube_Neon_yellow_energy_core": 252,
+    "Tube_Worn_light_blue_panels": 1808,
+    "Tube_Diagnostic_screen": 108,
+    "Tube_Warm_status_light": 120,
+    "Tube_Cracked_yellow_glass_shell": 5204,
+    "Tube_Glass_fractures": 472,
+    "Tube_Retained_glass_shards": 4,
+    "Tube_Fluorescent_ooze": 3020,
+    "Tube_Thick_residue": 624
+  },
+  "totalTriangles": 23440,
+  "boundsGlbYUp": {
+    "min": [
+      -4.783285617828369,
+      -0.08157283067703247,
+      -3.477780342102051
+    ],
+    "max": [
+      4.654874801635742,
+      12.100000381469727,
+      4.206304550170898
+    ]
+  },
+  "exportBytes": 747212,
+  "sha256": {
+    "assets/models/bluetube-glossy/exports/BlueTube_NeonYellowCore.glb": "b229a998309dace3fd3d8aca7b58f3ceea829df14f75917b1a8429262d1a07fd",
+    "assets/models/bluetube-glossy/exports/BlueTube_Glossy.glb": "e9f08426a558e02bff92aa3b6bbc1ca682a2c6e43ae41f91743543c7fd0dc3ce",
+    "assets/models/bluetube-glossy/exports/BlueTube_GreenCore.glb": "4846123480dac45e03e1184988ffeddf7a786ef4f81a4bb64bc08998d6385d93",
+    "assets/models/bluetube-glossy/exports/BlueTube_CrackedOozing.glb": "b91152dc8ff9551b2f50d778c9877197a688e51027abc02e75c19216eaee40ee",
+    "assets/models/bluetube-glossy/source/CrackedOozingTube.blend": "3796c9e2e5aeca69c94282f6d51992d2a6eaed768ff384c046cd5f420d6c05dd",
+    "tools/blender/build_bluetube_cracked_oozing.py": "98ae3ef173e0c30d10b83b86fccf5bb57d8f2986b5aa8d558d7090ec20d1344e",
+    "tools/blender/render_bluetube_glossy.py": "1ed30deb74a9df84008cc450ff1ec9a50174e4188f42720106d6aa35e93e9e22",
+    "assets/models/bluetube-glossy/review/leaking-front.png": "a9b59bd1ac89138aaa334649b5d8e70691104db8ea71e4435b5acbb8e0b6a66a",
+    "assets/models/bluetube-glossy/review/leaking-side.png": "03785403bc19425fb76a63f9b050076bb99690d9188f681a49cc57a610d41e2a",
+    "assets/models/bluetube-glossy/review/leaking-rear.png": "3bef5c491038734b4c7fb7da8037982edb43ba56029f596d886f85261dd3870e",
+    "assets/models/bluetube-glossy/review/leaking-quarter.png": "f1f484f580524d55324c92c3f0f56573300027341e781860665ed4d4280464dc",
+    "assets/models/bluetube-glossy/review/leaking-top.png": "7316c1b7e745bb335f25df4ae571d2e42d262c6fca1df9ab1584ce40c1bcb02b",
+    "assets/models/bluetube-glossy/review/leaking-damage.png": "5b0e405bfd74057501eeba7422641d00364348fd6c97479509c1d0735322f8c5",
+    "assets/models/bluetube-glossy/review/leaking-night.png": "3b9e3385e26e22d903b9b6ebbe94c365f76120647935c812c91aa4375a0bdec0"
+  },
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "limitations": [
+    "The leak, droplets and pool are static geometry; no simulation, particle effect or gameplay is included.",
+    "The cracked shell is intentionally open; its alpha and emissive appearance require Studio inspection.",
+    "The neon material helper has not been run on this variant in Studio."
+  ]
+}

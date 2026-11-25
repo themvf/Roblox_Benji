@@ -1,0 +1,33 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-10-17",
+  "source": "trellis-original.glb",
+  "sourceSha256": "6dd90da72429503086027a7817d69cf3bf09c75741c67a6ab41caf12bf47c271",
+  "measurements": {
+    "triangles": 284153,
+    "size": [
+      1.001,
+      1.001,
+      1.001
+    ],
+    "reliefRatio": 0.9993,
+    "openEdges": 235273,
+    "nonManifoldEdges": 2,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "Too dense to survive as ONE mesh.",
+    "  Tiling instead: 8 meshes keeps 25% of the detail (71,038 triangles);",
+    "  Tiling instead: 15 meshes keeps 50% of the detail (142,076 triangles);",
+    "  the 10,000 cap is PER MESH, so `tile` beats `decimate` for anything",
+    "  broad that the player gets close to. Weigh the part count against",
+    "  your device budget.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "A closed cubic sci-fi cargo box for provisional non-colliding decoration, viewed at player height from all sides. The supplied BlackBox.png is the design reference and the user-selected TRELLIS GLB is 3D reference. A 9,000-triangle reduction shredded the panels, so the delivery is a clean hard-surface rebuild with paired doors, service latch, armored corners, silver trim and corner reflectors. The user requested a shiny finish: dark graphite metal with low roughness and polished chrome trim is authored in the color and metallic-roughness atlases. Approximate 4.45-stud height and decoration role await visual approval."
+}

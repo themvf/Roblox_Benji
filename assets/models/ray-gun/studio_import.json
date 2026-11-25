@@ -1,0 +1,25 @@
+{
+  "source": "InsertService:LoadAsset(115175467421248), the model publish uploaded on 2026-11-23; offsets are from the model pivot (the export's centre), Roblox axes, -Z forward",
+  "assetId": 115175467421248,
+  "parts": [
+    {
+      "name": "Mesh_0",
+      "meshId": "rbxassetid://113837092155497",
+      "textureId": "",
+      "size": [
+        0.6658661961555481,
+        1.4200000762939454,
+        2.6967878341674806
+      ],
+      "offset": [
+        0.0,
+        0,
+        0
+      ],
+      "colorMap": "rbxassetid://137648788209945",
+      "metalnessMap": "rbxassetid://71854323483545",
+      "roughnessMap": "rbxassetid://86628277122321",
+      "normalMap": "rbxassetid://114368763678170"
+    }
+  ]
+}

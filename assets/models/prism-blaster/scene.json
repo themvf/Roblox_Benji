@@ -1,0 +1,57 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "prism-blaster": {
+      "description": "Prism Blaster: a white-and-plum sci-fi energy rifle with a glowing violet crystal core that players hold, in every map (role: held, about 1.66 studs tall)",
+      "source": "assets/models/prism-blaster/source/PrismBlaster.glb",
+      "out": "assets/models/prism-blaster/exports/PrismBlaster.glb",
+      "fit": {
+        "axis": "z",
+        "size": 1.66
+      },
+      "decimate": {
+        "tris": 12000,
+        "weld": false
+      },
+      "pivot": "center",
+      "optimize": {
+        "texture": 1024
+      },
+      "yaw": 90,
+      "tile": [
+        2,
+        1
+      ],
+      "split": {
+        "name": "Crystal",
+        "colour": {
+          "hue": [
+            235,
+            290
+          ],
+          "sat": [
+            0.12,
+            1
+          ],
+          "val": [
+            0.6,
+            1
+          ]
+        },
+        "box": [
+          [
+            -0.36,
+            -1.4,
+            -0.2
+          ],
+          [
+            0.36,
+            0.15,
+            0.48
+          ]
+        ]
+      },
+      "extraParts": "tools/blender/prism_blaster_parts.py"
+    }
+  }
+}

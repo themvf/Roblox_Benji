@@ -1,0 +1,31 @@
+{
+  "source": "InsertService:LoadAsset(129812841286596), the model publish uploaded on 2026-11-23; offsets are from the model pivot (the export's centre), Roblox axes, -Z forward",
+  "assetId": 129812841286596,
+  "parts": [
+    {
+      "name": "Mesh_0",
+      "meshId": "rbxassetid://103140301550685",
+      "textureId": "",
+      "size": [0.460279, 0.97, 5.064275],
+      "offset": [0.0, 0.0, 0.0],
+      "colorMap": "rbxassetid://108065916498828",
+      "metalnessMap": "rbxassetid://115098772224701",
+      "roughnessMap": "rbxassetid://119853282790081",
+      "normalMap": "rbxassetid://80112091736279"
+    },
+    {
+      "name": "GlowCyan",
+      "meshId": "rbxassetid://122416559817592",
+      "textureId": "",
+      "size": [0.220929, 0.136702, 2.068219],
+      "offset": [0.0258, 0.1411, -1.3499]
+    },
+    {
+      "name": "GlowMagenta",
+      "meshId": "rbxassetid://78194832555986",
+      "textureId": "",
+      "size": [0.220929, 0.021294, 0.239562],
+      "offset": [0.0258, 0.1544, -0.196]
+    }
+  ]
+}

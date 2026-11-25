@@ -1,0 +1,21 @@
+{
+  "purpose": "Abstract bronze sculpture, visual shell over a full-cover block at the south end of the Penthouse gallery",
+  "role": "decor",
+  "heightStuds": 12.0,
+  "kind": "prop",
+  "where": "Penthouse",
+  "copies": 1,
+  "moving": "",
+  "share": "game",
+  "assumed": "copies=1, share=game, no moving parts, stop at local build; target block 16x8x12 studs",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {
+    "decimate": 25000,
+    "tile": [
+      2,
+      2
+    ]
+  }
+}

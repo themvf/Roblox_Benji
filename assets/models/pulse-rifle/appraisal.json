@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-22",
+  "source": "PulseRifle.glb",
+  "sourceSha256": "47e22974e12bba6651e47f2d269b2e8bb234704949da976325782d8d014b96e9",
+  "measurements": {
+    "triangles": 4109,
+    "size": [
+      1.901,
+      0.403,
+      0.585
+    ],
+    "reliefRatio": 0.2121,
+    "openEdges": 9003,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Pulse Rifle: a chunky white-and-orange sci-fi energy rifle with a square violet-lit muzzle and dark under-barrel cells that players hold, in every map (role: held, about 1.4 studs tall)"
+}

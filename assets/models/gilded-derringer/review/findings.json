@@ -1,0 +1,14 @@
+{
+  "exportSha256": "9ecb6db750083fe928fd34e5ed6d1ce20583f8c85ae0735a7bb96890ed32137a",
+  "reviewedBy": "session-25f6d295",
+  "measured": [],
+  "counted": {},
+  "seen": [
+    "gold: now metal (tools/glb_metal.py adds a metal/roughness map from the colour texture); reads as polished gold with highlights, a little more yellow than the picture's pale champagne gold",
+    "barrel, sections 1a/1b: a thin dark texture seam still wraps the barrel just behind the muzzle ring",
+    "grip butt underside (bottom view): a darker brownish-gold patch stayed non-metal because it is too dark for the mask; only visible from below",
+    "barrel sides: faint scratch-like streaks in the baked texture show more now the surface reflects",
+    "mounts: Muzzle sits slightly below the bore centre (about 0.03 studs)"
+  ],
+  "recordedOn": "2026-11-22 23:20"
+}

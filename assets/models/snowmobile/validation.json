@@ -1,0 +1,63 @@
+{
+  "checkedAtUtc": "20261024T235757240889Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "appraisal.json": "a70951ee720a4a90e723a9be8f7f1cda6c431cdbbb1ae41719e56b817fc7a8fd",
+    "views.png": "1856af8204f9f888100302f00ce65f94c3f48d456a75b8e3e13db3c9a82d8282",
+    "source/reference.png": "c9a145381e229c954addfb731d21114992cb36152aac21ddb8c81b2fc3091adb",
+    "source/trellis-original.glb": "065afcd85a2ec25f6e27fccd3728aff2af2a64f0d895b3a5f3b3ae1e3748f5e5",
+    "source/Snowmobile.blend": "4b1062713ded4a4bb54645b2329288c19346970605d70a0c0478c9185134090c",
+    "exports/Snowmobile.glb": "83735cbf0ccc7efe638ce452efb7aa0c93edf8aa89ede272f9b32d5ca0aadb13",
+    "textures/Snowmobile_Color.png": "a7f1aa730c97a07e9575301e22273a373972d64ef3020f7b677e3aae4feda52c",
+    "textures/Snowmobile_MetalRough.png": "75f1ed83c00a040bd4f7de5bed0a697a2147002e310ae6444d9f3007e52a71b5",
+    "review/export-appraisal.json": "d0a9cc8d09e51c0d8509bcf5880ed0c3ef1c064fe6f12132b78f90f50908b010",
+    "SetupDecoration.luau": "0863f11615d11d27c0c214e35c156c5ec370d2cefcfab39f8bc739f53f3ac743",
+    "review/final-quarter.png": "fc5b8d2bc033f61931aff79e8deafd5ef7b0a19f85c673cc4b807888f29aab60",
+    "review/final-front.png": "1aed1d6a901a2dbb7874436ede474b1c4e49758c815a3876b9d1f8ed7d754fdc",
+    "review/final-side.png": "3edc392c4f538f62d7facb43b4879e5a07958836719deab901bba125e66b464a",
+    "review/final-rear.png": "d4821108cd85bb7462087641cdb9270df1ca6a036f0d60787c2d30136d75701d"
+  },
+  "measured": {
+    "meshTriangles": {
+      "Vehicle segment 01": 8500,
+      "Vehicle segment 02": 8500,
+      "Vehicle segment 03": 8500,
+      "Vehicle segment 04": 8500,
+      "Vehicle segment 05": 8500,
+      "Vehicle segment 06": 8500,
+      "Vehicle segment 07": 8500,
+      "Vehicle segment 08": 8500,
+      "Vehicle segment 09": 3692
+    },
+    "totalTriangles": 71692,
+    "boundsGlbYUp": {
+      "min": [
+        -2.7445192337036133,
+        0,
+        -6.897552967071533
+      ],
+      "max": [
+        2.7445192337036133,
+        5.5,
+        6.897552967071533
+      ]
+    },
+    "worldDimensionsBlenderXYZ": [
+      5.489,
+      13.795,
+      5.5
+    ],
+    "embeddedImages": 2,
+    "exportBytes": 5343276
+  },
+  "limitations": [
+    "The current package is a stationary visual prop, not a drivable Roblox snowmobile.",
+    "71,692 triangles across nine meshes is relatively high; avoid mass placement until Studio performance is checked.",
+    "Visual approval, Studio texture/physics verification, and map integration are pending.",
+    "A successful PNG GLB export does not prove Studio will apply the packed metal/roughness map."
+  ]
+}

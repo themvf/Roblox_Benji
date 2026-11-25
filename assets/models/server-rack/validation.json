@@ -1,0 +1,23 @@
+{
+  "checkedAtUtc": "20260928T214319421502Z",
+  "mode": "check",
+  "status": "passed",
+  "studioVerified": false,
+  "filesSha256": {
+    "exports/ServerRack.glb": "a478d73e425b3495cc27673cc4ec2e89df9e8122d6c234887629666869f18a8c",
+    "source/ServerRack.blend": "2e9a82a95b097f51ebd3d73ebb25e55646b5d4a368d70792e95900487bbb3958",
+    "source/ServerRack_Authored.glb": "c7885fea430cb2661824a54c9e54ae50ca869fc29e31bf198a33eba9d28b36d5",
+    "source/design-reference.png": "eb0b7fcea85082679f2966b98742dfaca96f5b9d8aa269f2f3fca1c2ea398948",
+    "review/prototype-front.png": "3d693da620229f6afe25d474a8743276ef728b5d2df027e87f7cc0fae800c765",
+    "review/prototype-rear.png": "39e195f8691021a86552b2d7b7f65e2832df418a1461b847c1f6f972e572aa8c",
+    "textures/Rack_Color.png": "f55c3987cee6f064b5da89ffa09aa13aa3cc3e478f30513bbcc77cbad69677bf",
+    "textures/Rack_Roughness.png": "4a0a3191c6a9b7a15f60ab1a42ccd1f198d0e4ec5c273c80a5d5b109ace3c2a2",
+    "textures/Rack_Metalness.png": "d1903107678c8149e8749f186be424fee0e7e99a8d1b03ed6912f7999752aba5",
+    "SetupDecoration.luau": "c4adb69899bd3b35d53905e6c6a93703c5124ddc79bf8f4fad6e987d2029cddd",
+    "appraisal.json": "df40692b4932f9beb93a94f40e1dfed8dd246fd3149e285a79a67dba7af46908"
+  },
+  "limitations": [
+    "File checks do not establish Studio import or visual approval.",
+    "Check-only hashes existing previews; it does not regenerate them."
+  ]
+}

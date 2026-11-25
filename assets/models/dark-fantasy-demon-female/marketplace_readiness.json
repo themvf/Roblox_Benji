@@ -1,0 +1,416 @@
+{
+  "checkedAt": "2026-11-14T20:05:11.843573+00:00",
+  "gameSkinPassed": true,
+  "marketplaceLocalPrecheckPassed": true,
+  "marketplaceUploadReady": false,
+  "passed": true,
+  "gameSkinFailures": [],
+  "marketplaceLocalFailures": [],
+  "remainingStudioBlockers": [
+    "Dynamic Head FACS animation poses (17+ poses / FaceControls) require Roblox Studio Avatar Setup / Character Auto-Setup execution & verification",
+    "Layered Accessory cage deformation and Studio Character Validation pass must be confirmed inside Roblox Studio before Marketplace submission"
+  ],
+  "sourceHashes": {
+    "source/DarkFantasyDemonFemaleSource.glb": "1e43724c86c74d4ffd2b3d0789c50cd4603cff86a51276eb8ed3f87607278760",
+    "source/DarkFantasyDemonFemaleReference.png": "0d99fabbb97b9552b7691975f8a469b01f717f265b207a184f997d0b1a8fa438"
+  },
+  "textures": {
+    "DarkFantasyDemonAcc_ALB.png": {
+      "width": 1024,
+      "height": 1024,
+      "within1024": true,
+      "sha256": "2ae4723311c62de3f38b752cb587da3e3b5cd34fd6af9a177faa35442ec9f8d6"
+    },
+    "DarkFantasyDemonAcc_NRM.png": {
+      "width": 1024,
+      "height": 1024,
+      "within1024": true,
+      "sha256": "3255677590ac9efcfed3db963689721bb1ac3868269c3d9bf8069d742e5451a3"
+    },
+    "DarkFantasyDemonAcc_RGH.png": {
+      "width": 1024,
+      "height": 1024,
+      "within1024": true,
+      "sha256": "8c2fe43fbd1fc0a937aea449753dc96898af44f6dc43b0ee00ba5560051ec532"
+    },
+    "DarkFantasyDemonAcc_TeamBlue_ALB.png": {
+      "width": 1024,
+      "height": 1024,
+      "within1024": true,
+      "sha256": "790b32cda0960db411b37f4313fac150cc0befe9db0b8962dac2ef4682a7e57b"
+    },
+    "DarkFantasyDemonAcc_TeamRed_ALB.png": {
+      "width": 1024,
+      "height": 1024,
+      "within1024": true,
+      "sha256": "e5ba2fee26f8e96e01ba908ec69629b05c91fc6dc5c0aa57b1036266c21d9e0b"
+    },
+    "DarkFantasyDemonBody_ALB.png": {
+      "width": 1024,
+      "height": 1024,
+      "within1024": true,
+      "sha256": "1a0993946e5238d04df6cff6317de2b857ab697e8b137aa68e92f4088d2710ef"
+    },
+    "DarkFantasyDemonBody_NRM.png": {
+      "width": 1024,
+      "height": 1024,
+      "within1024": true,
+      "sha256": "5fb8158232da252df9aa40bd84112444104ea57d3c41e93d2c5a7401ed21905e"
+    },
+    "DarkFantasyDemonBody_RGH.png": {
+      "width": 1024,
+      "height": 1024,
+      "within1024": true,
+      "sha256": "aacce8b41d53e8fade1ae4a63154520b43d145d845f8acf7d71cf633d3f738b8"
+    },
+    "DarkFantasyDemonBody_TeamBlue_ALB.png": {
+      "width": 1024,
+      "height": 1024,
+      "within1024": true,
+      "sha256": "505e333add8e680007b8b2edf1dabbb8c121752938dc2f4ce0da90b04313606e"
+    },
+    "DarkFantasyDemonBody_TeamRed_ALB.png": {
+      "width": 1024,
+      "height": 1024,
+      "within1024": true,
+      "sha256": "851ebb25909457429b4b7c64deddec2c89c0095829841110cbcee19f64d8ccd7"
+    }
+  },
+  "body": {
+    "path": "exports/DarkFantasyDemonFemaleBody.glb",
+    "sha256": "842c854bbfa28696433979b2631e68ffd88dcee13b68abd0c780ecef9fcf8591",
+    "totalTriangles": 9580,
+    "budget": 10742,
+    "withinBudget": true,
+    "regionGroupTotals": {
+      "Head": 3028,
+      "Torso": 1680,
+      "LeftArm": 1220,
+      "RightArm": 1220,
+      "LeftLeg": 1216,
+      "RightLeg": 1216
+    },
+    "regionBudgets": {
+      "Head": 4000,
+      "Torso": 1750,
+      "LeftArm": 1248,
+      "RightArm": 1248,
+      "LeftLeg": 1248,
+      "RightLeg": 1248
+    },
+    "regions": {
+      "Head": {
+        "name": "Head",
+        "vertices": 1526,
+        "triangles": 3028,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "LeftFoot": {
+        "name": "LeftFoot",
+        "vertices": 226,
+        "triangles": 448,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "LeftHand": {
+        "name": "LeftHand",
+        "vertices": 292,
+        "triangles": 580,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "LeftLowerArm": {
+        "name": "LeftLowerArm",
+        "vertices": 162,
+        "triangles": 320,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "LeftLowerLeg": {
+        "name": "LeftLowerLeg",
+        "vertices": 226,
+        "triangles": 448,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "LeftUpperArm": {
+        "name": "LeftUpperArm",
+        "vertices": 162,
+        "triangles": 320,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "LeftUpperLeg": {
+        "name": "LeftUpperLeg",
+        "vertices": 162,
+        "triangles": 320,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "LowerTorso": {
+        "name": "LowerTorso",
+        "vertices": 266,
+        "triangles": 528,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "RightFoot": {
+        "name": "RightFoot",
+        "vertices": 226,
+        "triangles": 448,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "RightHand": {
+        "name": "RightHand",
+        "vertices": 292,
+        "triangles": 580,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "RightLowerArm": {
+        "name": "RightLowerArm",
+        "vertices": 162,
+        "triangles": 320,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "RightLowerLeg": {
+        "name": "RightLowerLeg",
+        "vertices": 226,
+        "triangles": 448,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "RightUpperArm": {
+        "name": "RightUpperArm",
+        "vertices": 162,
+        "triangles": 320,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "RightUpperLeg": {
+        "name": "RightUpperLeg",
+        "vertices": 162,
+        "triangles": 320,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      },
+      "UpperTorso": {
+        "name": "UpperTorso",
+        "vertices": 578,
+        "triangles": 1152,
+        "hasUV": true,
+        "openEdges": 0,
+        "nonManifoldEdges": 0,
+        "watertight": true
+      }
+    },
+    "bodyOuterCagesCount": 15,
+    "dynamicHeadGeo": {
+      "passed": true,
+      "componentCount": 6,
+      "anteriorEyeComponents": 2,
+      "anteriorMouthComponents": 3,
+      "facialRigStatus": "no_facial_bones (requires Roblox Studio Avatar Setup to generate 17-pose FACS FaceControls)"
+    },
+    "r15Bones": [
+      "LowerTorso",
+      "UpperTorso",
+      "Head",
+      "LeftUpperArm",
+      "LeftLowerArm",
+      "LeftHand",
+      "RightUpperArm",
+      "RightLowerArm",
+      "RightHand",
+      "LeftUpperLeg",
+      "LeftLowerLeg",
+      "LeftFoot",
+      "RightUpperLeg",
+      "RightLowerLeg",
+      "RightFoot"
+    ],
+    "orientation": "glTF Y-up, Roblox forward -Z"
+  },
+  "accessories": {
+    "DemonHorns.glb": {
+      "sha256": "b166c3ff5777276206a12864a46f5ec620b51c4d66d5c7d5c385358ce63242ea",
+      "layered": false,
+      "hasR15Skin": false,
+      "cageCount": 0,
+      "cagesTemplateValid": true,
+      "meshes": [
+        {
+          "name": "DemonHorns",
+          "vertices": 1540,
+          "triangles": 3072,
+          "hasUV": true,
+          "openEdges": 0,
+          "nonManifoldEdges": 0,
+          "watertight": true
+        }
+      ]
+    },
+    "DemonHair.glb": {
+      "sha256": "4adbb684b6ff5a525e2845593021870fa1d70b7b9e87bea5ca03175caee74181",
+      "layered": false,
+      "hasR15Skin": false,
+      "cageCount": 0,
+      "cagesTemplateValid": true,
+      "meshes": [
+        {
+          "name": "DemonHair",
+          "vertices": 1730,
+          "triangles": 3456,
+          "hasUV": true,
+          "openEdges": 0,
+          "nonManifoldEdges": 0,
+          "watertight": true
+        }
+      ]
+    },
+    "FeatheredShoulderMantle.glb": {
+      "sha256": "5bcb6a32ed40a7ba268c41c6254225ff779d5e76fab183bdcbd1f432838b6b47",
+      "layered": true,
+      "hasR15Skin": true,
+      "cageCount": 2,
+      "cagesTemplateValid": true,
+      "meshes": [
+        {
+          "name": "FeatheredShoulderMantle",
+          "vertices": 966,
+          "triangles": 1776,
+          "hasUV": true,
+          "openEdges": 0,
+          "nonManifoldEdges": 0,
+          "watertight": true
+        },
+        {
+          "name": "FeatheredShoulderMantle_InnerCage",
+          "vertices": 1358,
+          "triangles": 2690,
+          "hasUV": true,
+          "openEdges": 28,
+          "nonManifoldEdges": 0,
+          "watertight": false
+        },
+        {
+          "name": "FeatheredShoulderMantle_OuterCage",
+          "vertices": 1358,
+          "triangles": 2690,
+          "hasUV": true,
+          "openEdges": 28,
+          "nonManifoldEdges": 0,
+          "watertight": false
+        }
+      ]
+    },
+    "HipTassets.glb": {
+      "sha256": "04c58e4594436d7152962049ac5139be2c534d1aefce5ad90e92de391a0001db",
+      "layered": true,
+      "hasR15Skin": true,
+      "cageCount": 2,
+      "cagesTemplateValid": true,
+      "meshes": [
+        {
+          "name": "HipTassets",
+          "vertices": 1728,
+          "triangles": 3456,
+          "hasUV": true,
+          "openEdges": 0,
+          "nonManifoldEdges": 0,
+          "watertight": true
+        },
+        {
+          "name": "HipTassets_InnerCage",
+          "vertices": 1358,
+          "triangles": 2690,
+          "hasUV": true,
+          "openEdges": 28,
+          "nonManifoldEdges": 0,
+          "watertight": false
+        },
+        {
+          "name": "HipTassets_OuterCage",
+          "vertices": 1358,
+          "triangles": 2690,
+          "hasUV": true,
+          "openEdges": 28,
+          "nonManifoldEdges": 0,
+          "watertight": false
+        }
+      ]
+    },
+    "LeftWristFeathers.glb": {
+      "sha256": "4cdf04db7d321ba4d9e99105495416647682c7248bd507aa14194cc6733fc6bc",
+      "layered": false,
+      "hasR15Skin": false,
+      "cageCount": 0,
+      "cagesTemplateValid": true,
+      "meshes": [
+        {
+          "name": "LeftWristFeathers",
+          "vertices": 154,
+          "triangles": 288,
+          "hasUV": true,
+          "openEdges": 0,
+          "nonManifoldEdges": 0,
+          "watertight": true
+        }
+      ]
+    },
+    "RightWristFeathers.glb": {
+      "sha256": "436b7658603ebb0d52f0ee34289fe6f6377cb659a5aab02e06847df82b416a5f",
+      "layered": false,
+      "hasR15Skin": false,
+      "cageCount": 0,
+      "cagesTemplateValid": true,
+      "meshes": [
+        {
+          "name": "RightWristFeathers",
+          "vertices": 154,
+          "triangles": 288,
+          "hasUV": true,
+          "openEdges": 0,
+          "nonManifoldEdges": 0,
+          "watertight": true
+        }
+      ]
+    }
+  },
+  "notLocallyVerifiable": [
+    "Avatar Setup Platform Avatar processing and generated dynamic head FACS FaceControls",
+    "Studio animation playback (idle/run/jump/swim/emotes) and layered clothing fitting",
+    "Roblox Marketplace creator eligibility, upload fees, and moderation"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-21",
+  "source": "tripo-multiview.glb",
+  "sourceSha256": "5d1158c0a15316c49e81f919ec8fce8b88667681bf4c819665053b2b8238799f",
+  "measurements": {
+    "triangles": 5434,
+    "size": [
+      0.313,
+      1.0,
+      0.994
+    ],
+    "reliefRatio": 0.3131,
+    "openEdges": 2094,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Tripo multiview source for a playable kit candidate; static generated source only, requiring visual and animation audit. Marketplace suitability and commercial rights unverified."
+}

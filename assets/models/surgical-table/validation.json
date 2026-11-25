@@ -1,0 +1,144 @@
+{
+  "checkedAtUtc": "20261017T230908717071Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "source/trellis-original.glb": "17c2b311b64c5e6d43d9585456c3001fba7998b074dacd09fc30d8d285b0d45f",
+    "source/design-reference.png": "df822e55c913022914c67b4edd568f25e507a2cbe2b3e36ee0f33e52d7049a12",
+    "source/SurgicalTable.blend": "9fb0df3a1650671388bd0c792203a2e99d8338a919a6f5aaa3dde9a70591a791",
+    "source/assembly-layout.json": "c1f7143ada2896eb7b20da4620146b768d1e3cb0ceee233976abf1974b2702c6",
+    "appraisal.json": "3b9ac6060af6bd8c95053b242a9866e03a241b57e3112727c732580bc124d215",
+    "views.png": "ba7d77d6618a032419175dbf8b9c3047d21e1e97dea8f57ddfd4b59e9fd12dcb",
+    "textures/SurgicalTable_BlueVinyl_Color.png": "2c240e98140ef48bcaf42209c200365ee6af72526b02c6e114ad837d12390253",
+    "exports/SurgicalTable.glb": "5fdbb850a08af81780f857926304a6a513a51afce03a98f923ea93b9251174f5",
+    "exports/SurgicalLights.glb": "62eee7848caca8489f8858a2b854f6d2a52b4120d24d0db0bf35b4b29f6230ec",
+    "exports/PatientMonitor.glb": "83b24f2673dd6c126a203505577a97b941922c498700c5ce77646804da777f87",
+    "exports/IVStand.glb": "8f97368c5b92c4f7fe7f190b986bb4e8db800e0b4bbd9a9faa3dc30f89497e23",
+    "review/table-front.png": "51bd27e31657489e85586a9daa9f0f4019becf01b08580eb0cce0b543359b0c0",
+    "review/table-side.png": "789b97989dea49c89879d9f2ecef315dc97a13a94c8c59ebad93e068dc55d66a",
+    "review/table-rear.png": "9fcaa7189333acbcf1ccdd83eb1ff4a8005d9cbe6ccb42f44f6c09aeae6208a8",
+    "review/table-quarter.png": "cc9c082d906faf645f06b6cf6985e80709bc05d7a586b0ba136855293c503a94",
+    "review/lights-front.png": "8e889e61b0ef5e0434bc67695366f5bba958b06614a1659e913e737f0d4fc262",
+    "review/lights-side.png": "cf3ce5a34069c2d3f55e42c25241823cfb4b56e7c17c2ecdb7c0dd6bc83949a3",
+    "review/lights-rear.png": "89648fb452af06781e4e19ba369db6f546ce08bf48f4120e72f60bfda38128a6",
+    "review/lights-quarter.png": "a8f1a3f356b5a8e50083a4cee72b25f31e847740aa8278b072632adb39e00b11",
+    "review/monitor-front.png": "cb1fad93438d05f250ac9efcd5d28ded22ff7263b68b17e64546c70855b83f8f",
+    "review/monitor-side.png": "e6358ba31dc413f07dbcfafc6eb7eee8d67df5fcc70ab1eacd7efd30e3120e10",
+    "review/monitor-rear.png": "6aee61b70b0d955ef386e5cd02af6d3e50b026ba4bff68795a5987b3d127b19a",
+    "review/monitor-quarter.png": "a878dc030409867a6f2f3473c1dd0e89e092ffa01c7c0dc80d0c5dbec6be0809",
+    "review/iv-front.png": "418ce8e0de1439563adbbdf05a63c7f01dcab86bd69a077aff6e3dc0990647e8",
+    "review/iv-side.png": "c38bf63a6743ffd9390b76afc53e8b4099017d214e5be86b778f8453c1eb0b54",
+    "review/iv-rear.png": "5915f83bda25284414b436f80ed2bace2cb270c7bff43ea6fb426deaf0587dab",
+    "review/iv-quarter.png": "68c8519f6307b32c052586927f561f96ce648154ce91ab8ad614250f947f4fbc"
+  },
+  "measured": {
+    "table": {
+      "meshCount": 5,
+      "trianglesPerMesh": [
+        1648,
+        1608,
+        276,
+        1404,
+        324
+      ],
+      "totalTriangles": 5260,
+      "boundsGlbYUp": {
+        "min": [
+          -4.887499809265137,
+          0,
+          -1.6949999332427979
+        ],
+        "max": [
+          4.887499809265137,
+          4.751996994018555,
+          1.6949999332427979
+        ]
+      },
+      "embeddedPngCount": 1,
+      "exportBytes": 1006956
+    },
+    "lights": {
+      "meshCount": 5,
+      "trianglesPerMesh": [
+        108,
+        352,
+        1172,
+        248,
+        856
+      ],
+      "totalTriangles": 2736,
+      "boundsGlbYUp": {
+        "min": [
+          -3.2750000953674316,
+          0,
+          -2.565000057220459
+        ],
+        "max": [
+          3.2750000953674316,
+          7.339999675750732,
+          2.565000057220459
+        ]
+      },
+      "embeddedPngCount": 0,
+      "exportBytes": 165300
+    },
+    "monitor": {
+      "meshCount": 6,
+      "trianglesPerMesh": [
+        324,
+        212,
+        216,
+        44,
+        108,
+        192
+      ],
+      "totalTriangles": 1096,
+      "boundsGlbYUp": {
+        "min": [
+          -0.6700000762939453,
+          0,
+          -0.4100000858306885
+        ],
+        "max": [
+          0.6700000762939453,
+          5.360000133514404,
+          0.4100000858306885
+        ]
+      },
+      "embeddedPngCount": 0,
+      "exportBytes": 77872
+    },
+    "iv": {
+      "meshCount": 4,
+      "trianglesPerMesh": [
+        416,
+        160,
+        108,
+        108
+      ],
+      "totalTriangles": 792,
+      "boundsGlbYUp": {
+        "min": [
+          -0.532500147819519,
+          0,
+          -0.48000001907348633
+        ],
+        "max": [
+          0.532500147819519,
+          6.199999809265137,
+          0.48000001907348633
+        ]
+      },
+      "embeddedPngCount": 0,
+      "exportBytes": 53840
+    }
+  },
+  "limitations": [
+    "Four exports are independent visual props; no functional medical interaction or real lighting is implemented.",
+    "Appearance, scale, and roles await user review; Studio import and map placement remain unverified.",
+    "Check-only verifies saved structure and hashes, not visual quality."
+  ]
+}

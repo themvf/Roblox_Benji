@@ -1,0 +1,20 @@
+{
+  "tool": "tools/package_foundry_props.py",
+  "appraisedOn": "2026-11-14",
+  "source": "UndergroundFacilityProps/ScifiProps/ScifiProps/Scifi_Chamber/Chamber.fbx",
+  "sourceSha256": "4c87528f6fa17aae7378cd39f59ab9382a43bcc4c2b4d406b93c3544a4898bca",
+  "measurements": {
+    "triangles": 1088,
+    "meshObjects": 2,
+    "hasUvLayers": true,
+    "boundsStuds": [
+      5.394,
+      5.394,
+      10.5
+    ],
+    "reliefRatio": 1.9466
+  },
+  "verdict": "PASS - low/mid-poly game-ready prop within Roblox 10k tri limit with 1024px OpenGL PBR maps.",
+  "decision": "Cryo stasis chamber pod with cyan glow ring for SciFiFoundry CryoBay stasis alcoves (10.5 studs tall).",
+  "views": "views.png"
+}

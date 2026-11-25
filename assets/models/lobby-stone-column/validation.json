@@ -1,0 +1,59 @@
+{
+  "checkedAtUtc": "20261109T195920935349Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "appraisal.json": "f85fd66f0dacabe3f6c6806a5fb108990bb323c766bc64f0581b52b7decef96a",
+    "views.png": "ef6b0c8a8bc5037a54492c33baf416dc47127a24ccafef6f125bf69db77eb448",
+    "source/trellis-original.glb": "61da228c6f37b362ad03b3194108daa245db255cc1e2e64a498bdb938d6ced9a",
+    "source/LobbyStoneColumn.blend": "4e17062ee774bf5ce9b03161109bc1b719e29c953b00d32ce817d29829c1e4b1",
+    "exports/LobbyStoneColumn.glb": "a9453ca4fe0894dd7c45df8bdf01c819624cdcf7614b2dce9db20f782afcdb5d",
+    "textures/LobbyStoneColumn_Color.png": "558ae5687a48d26d70097cbd5a5d320bfee872f655ec810f42db160ad9bfe5e7",
+    "textures/LobbyStoneColumn_MetalRough.png": "6a0af8d2510040956febd1d7e111fb55ad025496d61d04b54cf0e62e45e47508",
+    "review/export-appraisal.json": "2a320b5b436cbdbca4171dec080f3627e00c1e2c8b2d687f0022d2f4224b8a2c",
+    "SetupDecoration.luau": "4e6fc247431d4bd25e2eea33d664bc87c23f7ce4d9b69b8ac5e552978ff9eb16",
+    "review/final-quarter.png": "eebfa1c4f08c4edf0ba60d7a0d60c164443b6d59f0e9af5da656b2b2af3a4b28",
+    "review/final-front.png": "e4b1560a0bd85955e9ced2883168d4e9d1e9bffa165f261bcf32a0f3b3780106",
+    "review/final-side.png": "1b877829b596bad16a580adb1494caeaabb053b3748c0aac08b99638105b0c35",
+    "review/final-rear.png": "b7f2e71e88270d8378cdc9c5617b8439c48d86d1720e3d164acee9a743fe9bbb"
+  },
+  "measured": {
+    "meshTriangles": {
+      "Column segment 01": 8500,
+      "Column segment 02": 8500,
+      "Column segment 03": 8500,
+      "Column segment 04": 8500,
+      "Column segment 05": 8500,
+      "Column segment 06": 400
+    },
+    "totalTriangles": 42900,
+    "boundsGlbYUp": {
+      "min": [
+        -1.1854408979415894,
+        0,
+        -1.2032796144485474
+      ],
+      "max": [
+        1.1973869800567627,
+        12,
+        1.1969691514968872
+      ]
+    },
+    "worldDimensionsBlenderXYZ": [
+      2.383,
+      2.4,
+      12.0
+    ],
+    "embeddedImages": 2,
+    "exportBytes": 5080724
+  },
+  "limitations": [
+    "This local delivery is a lobby decoration candidate; gameplay collision has not been specified.",
+    "42,900 triangles across six meshes is a high-detail prop; repeated placement needs a Studio performance check.",
+    "Visual approval, Studio texture and collision verification, and lobby placement are pending.",
+    "A successful PNG GLB export does not prove Studio will apply the packed metal/roughness map."
+  ]
+}

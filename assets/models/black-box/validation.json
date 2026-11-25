@@ -1,0 +1,67 @@
+{
+  "checkedAtUtc": "20261017T214253171139Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "filesSha256": {
+    "appraisal.json": "c05e8c8be1a81f3854579a1c2bd071855aa82062040639cb9990443b08f4faad",
+    "views.png": "f575aae6168d6f8c243a8ea920bca290fe75e23dabbb312ccb6fe4bf44dae691",
+    "source/design-reference.png": "9cef06c8962cf0af133b58a42426d7f7465f5a0813c4e9f85a5122fd9b14e267",
+    "source/trellis-original.glb": "6dd90da72429503086027a7817d69cf3bf09c75741c67a6ab41caf12bf47c271",
+    "source/GlossyBlackBox.blend": "27dcf0b375c8c2db48231019ec810f5c64d95141d393e64bddeec3a09ec0fc0c",
+    "exports/GlossyBlackBox.glb": "0c8d3967ee00afee4cd096b332183da021fe82b0ef25b8ac3c6d9da4e55c2ca6",
+    "textures/BlackBox_Color.png": "cf6c215a0500f5108586ea38a86f506cfac3fcf5359885832839756d3f17c403",
+    "textures/BlackBox_Roughness.png": "dcc5e5a941d5dd6765f7f4f3a3d8cc7fb33f7c8044975c103e8f1cd21a4cf0e8",
+    "textures/BlackBox_Metalness.png": "92f08a5ee0ed58fd66d825ab0a24a98d238cd5d8d1ddd356051dc80f72603721",
+    "trials/decimate-manifest.json": "d269a897d95b71b3c39a2e2ce7f7481acc0eba70b76a10b5b9837337ebe7c24c",
+    "trials/decimated-9000.glb": "5a54398fd334eaa1d2a85e6bb858bce0b53951bc7f512081e33c4fa2c32453c2",
+    "trials/decimated-9000-quarter.png": "a8d34541b1fc23c02cc4cef855c99ca790fe94ae8c9a85bd45d97d3c25d622a3",
+    "SetupDecoration.luau": "8edf22e191f80b7d5faf2f54e3980ddc067c309b157b7d990746c1af787847bc",
+    "review/gloss-study.png": "b01ee3e227d7ef7c411ca1181af83a51a1162dceca606aabe48901e0044cba7f",
+    "review/front-quarter.png": "eb05b942991a6f21af3e80f26e93d89c6db5956f1dad059dcb70749a357b3660",
+    "review/doors.png": "985b9608f3a7fc94de361ae0d6a1bf713f3711105d9e9d36bcb719c8b5cee1fa",
+    "review/service.png": "42a2336b5a697ef5c6fa8b032ef481eb9c8e503da669dbe03f49b2db4e870be1",
+    "review/rear.png": "cf9b6550677a9378a9280c7d2f0a513ee3a16224311c00138cefc2bb082aef5a"
+  },
+  "measured": {
+    "triangles": 3740,
+    "meshes": 1,
+    "materials": 1,
+    "boundsMin": [
+      -2.315000057220459,
+      0,
+      -2.2709999084472656
+    ],
+    "boundsMax": [
+      2.315000057220459,
+      4.447500228881836,
+      2.2709999084472656
+    ],
+    "embeddedTextures": [
+      [
+        "image/png",
+        [
+          1024,
+          1024
+        ]
+      ],
+      [
+        "image/png",
+        [
+          1024,
+          1024
+        ]
+      ]
+    ],
+    "exportBytes": 978068
+  },
+  "limitations": [
+    "Blender renders establish local appearance, not Studio visual approval.",
+    "Roblox texture loading and actual Studio highlights are unverified.",
+    "Size and non-colliding decoration role are provisional.",
+    "Studio import and map integration are unverified.",
+    "Check-only hashes previews but does not regenerate them."
+  ]
+}

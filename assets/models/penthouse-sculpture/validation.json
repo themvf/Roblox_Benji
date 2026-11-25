@@ -1,0 +1,86 @@
+{
+  "checkedOn": "2026-11-16 16:49",
+  "export": "assets/models/penthouse-sculpture/exports/PenthouseSculpture.glb",
+  "exportSha256": "7ad892002d167da0b0a5a09442e8cb12cbc38f0d50bd1e9ed4ff7d9eb8679d95",
+  "sourceSha256": "f25bddccf5dbd4d768aabf3c1641e35bf1875f1e35c353ab1a59e9575a3fb7ee",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "auto",
+    "suggested": "clean",
+    "reasons": [
+      "it needs a 91% triangle cut, past the 90% where shape is lost"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.993,
+      "side": 0.995,
+      "top": 0.994
+    },
+    "surfaceError": {
+      "front": 0.254,
+      "back": 0.253,
+      "right": 0.244,
+      "left": 0.243,
+      "top": 0.272,
+      "bottom": 0.269
+    },
+    "worstSurfaceError": 0.272,
+    "sheet": "assets/models/penthouse-sculpture/review/detail.png",
+    "passed": true
+  },
+  "budget": {
+    "role": "decor",
+    "budget": 30000,
+    "triangles": 28307,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      8.848,
+      12.014,
+      11.111
+    ],
+    "heightStuds": 12.0,
+    "kind": "prop",
+    "mounts": {},
+    "mountSheet": "assets/models/penthouse-sculpture/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        2,
+        2
+      ],
+      "decimate": 25000,
+      "worstMesh": 8033,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     PenthouseSculpture.glb (3.72 MB)",
+    "           geometry_0.001                   6,281 tris",
+    "           geometry_0.002                   7,429 tris",
+    "           geometry_0.003                   6,564 tris",
+    "           geometry_0.004                   8,033 tris",
+    "           total                           28,307 tris (4 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "sheets": [
+      "assets/models/penthouse-sculpture/review/audit.png",
+      "assets/models/penthouse-sculpture/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.01,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

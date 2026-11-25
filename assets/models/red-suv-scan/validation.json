@@ -1,0 +1,129 @@
+{
+  "checkedOn": "2026-11-17 08:32",
+  "export": "assets/models/red-suv-scan/exports/RedSuvScan.glb",
+  "exportSha256": "01a52822fa4d6b150c2d91b22db6fedafad9f0a6e952f0d2f40c7827d51d3c79",
+  "sourceSha256": "51a036c1ea22f30fc8eefd0f2a7eaaf1993c84e4515fd7f98a04308e20ac91aa",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "scan",
+    "suggested": "clean",
+    "reasons": [
+      "the role is interactive, so players are right next to it and its parts may need to move"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 1.0,
+      "side": 0.999,
+      "top": 1.0
+    },
+    "surfaceError": {
+      "front": 0.0,
+      "back": 0.0,
+      "right": 0.001,
+      "left": 0.001,
+      "top": 0.0,
+      "bottom": 0.0
+    },
+    "worstSurfaceError": 0.001,
+    "noise": 0.001,
+    "sheet": "assets/models/red-suv-scan/review/detail.png",
+    "limit": 0.08,
+    "passed": true
+  },
+  "ground": {
+    "bottomFill": 0.079,
+    "aboveFill": 0.769,
+    "ratio": 0.1,
+    "footprintStuds": [
+      7.68,
+      16.32
+    ],
+    "flagged": false
+  },
+  "textureBleed": {
+    "image": 1,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.565,
+    "backgroundBrightness": 0.186,
+    "surfaceBrightness": 0.168,
+    "bleedPercent": 0.18
+  },
+  "budget": {
+    "role": "interactive",
+    "budget": 15000,
+    "triangles": 24522,
+    "waiver": "Tripo's 23,426-triangle export used as delivered while a 13,000-triangle Tripo Retopo is awaited; our own reduction tears generated meshes (the patrol boat). At most a few copies on a map.",
+    "passed": true,
+    "within": false
+  },
+  "contract": {
+    "sizeStuds": [
+      7.681,
+      6.0,
+      16.319
+    ],
+    "heightStuds": 6.0,
+    "kind": "vehicle",
+    "mounts": {
+      "HullCentre": [
+        0.0,
+        1.8,
+        0.0
+      ],
+      "DriverSeat": [
+        -0.95,
+        2.3,
+        -0.8
+      ],
+      "DriverEye": [
+        -0.9,
+        5.15,
+        -3.9
+      ]
+    },
+    "mountSheet": "assets/models/red-suv-scan/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        2,
+        2
+      ],
+      "decimate": 25000,
+      "worstMesh": 6691,
+      "triangles": 24522,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     RedSuvScan.glb (0.98 MB)",
+    "           tripo_mesh_1c916023-b186-411a-b1ef-8cdafbd403ef.001     6,691 tris",
+    "           tripo_mesh_1c916023-b186-411a-b1ef-8cdafbd403ef.002     6,331 tris",
+    "           tripo_mesh_1c916023-b186-411a-b1ef-8cdafbd403ef.003     6,184 tris",
+    "           tripo_mesh_1c916023-b186-411a-b1ef-8cdafbd403ef.004     5,316 tris",
+    "           total                           24,522 tris (4 meshes)",
+    "           texture                      1024x1024  image/jpeg",
+    "           texture                      1024x1024  image/jpeg",
+    "           texture                      1024x1024  image/jpeg"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/red-suv-scan/review/audit.png",
+      "assets/models/red-suv-scan/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.0,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

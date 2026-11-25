@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-23",
+  "source": "LightningCarbine.glb",
+  "sourceSha256": "99e3af6896b1ca678f75164d3998cab53e1c95695f72096b42cefe958c0cf39d",
+  "measurements": {
+    "triangles": 3800,
+    "size": [
+      0.565,
+      4.527,
+      1.49
+    ],
+    "reliefRatio": 0.1249,
+    "openEdges": 7810,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": ""
+}

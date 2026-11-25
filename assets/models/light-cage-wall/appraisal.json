@@ -1,0 +1,20 @@
+{
+  "tool": "tools/package_foundry_props.py",
+  "appraisedOn": "2026-11-14",
+  "source": "UndergroundFacilityProps/UndergroundFacilityProps_FreeSample/UndergroundFacilityProps_FreeSample/FBX/Light_Cage_Wall.fbx",
+  "sourceSha256": "f10c9535e11bb354b853409415e882af69c1a5b6c2aaf36270fd37ca14f54b3d",
+  "measurements": {
+    "triangles": 1152,
+    "meshObjects": 2,
+    "hasUvLayers": true,
+    "boundsStuds": [
+      2.4,
+      2.182,
+      2.4
+    ],
+    "reliefRatio": 1.0
+  },
+  "verdict": "PASS - low/mid-poly game-ready prop within Roblox 10k tri limit with 1024px OpenGL PBR maps.",
+  "decision": "Caged industrial bulkhead wall fixture for SciFiFoundry Spawn Bays & dark bulkhead corners (2.4 studs).",
+  "views": "views.png"
+}

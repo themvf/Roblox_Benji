@@ -1,0 +1,13 @@
+{
+  "views": [
+    "terrace-hedges",
+    "spawn-elevators",
+    "foyer-aquarium",
+    "gallery-wall",
+    "atrium",
+    "terrace-door"
+  ],
+  "lamps": 23,
+  "parts": 351,
+  "props": 80
+}

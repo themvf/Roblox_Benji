@@ -1,0 +1,41 @@
+{
+  "purpose": "Futuristic armored vehicle made by Tripo, surface made matte; a heavy drivable land vehicle",
+  "role": "interactive",
+  "heightStuds": 8.5,
+  "route": "scan",
+  "budgetWaiver": "Tripo's 23,907-triangle export used as delivered; our own reduction tears generated meshes (the patrol boat). A lighter version has to come from Tripo's Retopo at about 13,000. At most a few copies on a map.",
+  "kind": "vehicle",
+  "lengthStuds": 18.0,
+  "widthStuds": 10.3,
+  "gameName": "ArmoredVehicle",
+  "where": "not placed yet",
+  "copies": 2,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "no picture supplied, only Tripo's model; map not stated; 18 studs long as a large armored car; two seats; wheels fused to the body; the roof turret is part of the body and does not turn or fire; no cabin, so the inside view is a camera over the bonnet; share game",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "counts": {
+    "wheels": 6
+  },
+  "mounts": {
+    "HullCentre": [
+      0.0,
+      1.8,
+      0.0
+    ],
+    "DriverSeat": [
+      -1.3,
+      2.6,
+      -0.5
+    ],
+    "DriverEye": [
+      -1.2,
+      5.9,
+      -3.7
+    ]
+  }
+}

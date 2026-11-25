@@ -1,0 +1,62 @@
+{
+  "checkedOn": "2026-11-16 20:27",
+  "route": "clean",
+  "builder": "tools/blender/build_patrol_rhib.py",
+  "export": "assets/models/patrol-rhib/exports/PatrolRhibClean.glb",
+  "exportSha256": "1047670a070fb4839d427ee0ca58de36e4185f769c4b9c2b0e9e8be24f935019",
+  "triangleCapPassed": true,
+  "inspect": [
+    "file     PatrolRhibClean.glb (0.15 MB)",
+    "           PatrolRhib                       2,104 tris",
+    "           texture                          64x64  image/png"
+  ],
+  "detail": {
+    "outlineOverlap": null,
+    "passed": null
+  },
+  "budget": {
+    "role": "interactive",
+    "budget": 15000,
+    "triangles": 2104,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      10.22,
+      8.0,
+      29.998
+    ],
+    "heightStuds": 8.0,
+    "kind": "vehicle",
+    "mounts": {
+      "DriverSeat": [
+        0.0,
+        2.52,
+        -1.2
+      ],
+      "HullCentre": [
+        0.0,
+        1.2,
+        0.0
+      ]
+    },
+    "mountSheet": "assets/models/patrol-rhib/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/patrol-rhib/review/audit.png",
+      "assets/models/patrol-rhib/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.28,
+    "worstPatchPercent": 0.08
+  },
+  "limitations": "Local checks only. Shape fidelity is judged by eye on the builder's renders."
+}

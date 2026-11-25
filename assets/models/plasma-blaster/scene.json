@@ -1,0 +1,59 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "plasma-blaster": {
+      "description": "Plasma Blaster: a heavy rust-red and gunmetal sci-fi blaster with a glowing molten plasma core window that players hold, in every map (role: held, about 1.29 studs tall)",
+      "source": "assets/models/plasma-blaster/source/PlasmaBlaster.glb",
+      "out": "assets/models/plasma-blaster/exports/PlasmaBlaster.glb",
+      "fit": {
+        "axis": "z",
+        "size": 1.29
+      },
+      "decimate": {
+        "tris": 7600,
+        "weld": true
+      },
+      "pivot": "center",
+      "optimize": {
+        "texture": 1024
+      },
+      "yaw": 90,
+      "split": {
+        "name": "Plasma",
+        "colour": {
+          "hue": [
+            0,
+            60
+          ],
+          "sat": [
+            0.45,
+            1
+          ],
+          "val": [
+            0.5,
+            1
+          ]
+        },
+        "box": [
+          [
+            -0.25,
+            -0.85,
+            0.1
+          ],
+          [
+            0.25,
+            0.4,
+            0.5
+          ]
+        ],
+        "minFaces": 30
+      },
+      "extraParts": "tools/blender/parts_plasma_blaster.py",
+      "bakeNormals": {
+        "size": 1024,
+        "extrusion": 0.025,
+        "distance": 0.06
+      }
+    }
+  }
+}

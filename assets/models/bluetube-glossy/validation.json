@@ -1,0 +1,57 @@
+{
+  "checkedAtUtc": "2026-10-18T18:15:25.589747+00:00",
+  "status": "passed",
+  "mode": "check",
+  "meshCount": 10,
+  "trianglesPerMesh": {
+    "Tube_Recessed_graphite": 2168,
+    "Tube_Dark_rubber_gasket": 1276,
+    "Tube_Polished_steel_edge": 3196,
+    "Tube_Glossy_cobalt_blue_enamel": 3732,
+    "Tube_Indicator_bright_cyan": 1456,
+    "Tube_Cyan_energy_core": 252,
+    "Tube_Cyan_glass_shell": 512,
+    "Tube_Worn_light_blue_panels": 1808,
+    "Tube_Diagnostic_screen": 108,
+    "Tube_Warm_status_light": 120
+  },
+  "totalTriangles": 14628,
+  "embeddedTextureCount": 0,
+  "boundsGlbYUp": {
+    "min": [
+      -4.783285617828369,
+      0,
+      -3.477780342102051
+    ],
+    "max": [
+      4.654874801635742,
+      12.100000381469727,
+      3.156754493713379
+    ]
+  },
+  "exportBytes": 547320,
+  "sha256": {
+    "assets/models/bluetube-glossy/source/bluetube_clean.glb": "70f218923f30d12880bddf27daa157f5c125a03f22b36b561ccd58e333ab9f3a",
+    "assets/models/bluetube-glossy/source/BlueTube_OptimizedBaseline.glb": "7e5508e0da0e494852897798a3873fa9b174ce482cd2e5f1854a30a2344ec5f3",
+    "assets/models/bluetube-glossy/source/design-reference.png": "b9562572c08d51107cc6f7780c5c8c1f2949713f84557f0e9943b12d157335f6",
+    "assets/models/bluetube-glossy/source/GlossyBlueTube.blend": "4483f33ce4c9ba2d4e202dfa8daae4571280f5a1fd3776d11d344510e2ea12c6",
+    "assets/models/bluetube-glossy/appraisal.json": "45180de31886dd6506e600f4dc79fc339a1fb27e80bc12acde416fe3bc01acee",
+    "assets/models/bluetube-glossy/views.png": "17ed0e13db07fdb6cdeaf0b95998253ef79b9e7e65fffd4ebb76d76a24648da5",
+    "assets/models/bluetube-glossy/exports/BlueTube_Glossy.glb": "e9f08426a558e02bff92aa3b6bbc1ca682a2c6e43ae41f91743543c7fd0dc3ce",
+    "tools/blender/build_bluetube_clean_geometry.py": "89475e692d77b2433950e96e2c327787bbcf59787f0a9f7902af2f757ab2dc2a",
+    "tools/blender/render_bluetube_glossy.py": "1ed30deb74a9df84008cc450ff1ec9a50174e4188f42720106d6aa35e93e9e22",
+    "assets/models/bluetube-glossy/review/front.png": "b7b70cfbaf493de1479aee466ffeba56beafc093b018073e8389e941ae921dca",
+    "assets/models/bluetube-glossy/review/side.png": "47f232b4abcb3af35636b740578ab8d0a5dddf770600a0f8dc5fcf01a7fdb571",
+    "assets/models/bluetube-glossy/review/rear.png": "c43d63f79854ed476c1a5dc8abf2b9e458a2798b9fdc54c30c73e8c2f93a7720",
+    "assets/models/bluetube-glossy/review/quarter.png": "a78c19147980f170958142034afe5537378ace15d89a707d8876fa243b36ffeb",
+    "assets/models/bluetube-glossy/review/top.png": "5f8401e5c771facfba873e4cee570fc378eba5e365164b1e9628309fa039111a"
+  },
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "limitations": [
+    "The clean geometry recreates major surface details; it is not a texture transfer from the damaged source.",
+    "Transparent cyan glass and glossy response require Studio lighting/material verification.",
+    "The sci-fi chamber remains a static visual prop; no particles, lights, or gameplay are included."
+  ]
+}

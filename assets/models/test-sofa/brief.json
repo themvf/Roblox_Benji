@@ -1,0 +1,20 @@
+{
+  "purpose": "Provider test: long low sectional sofa, same picture as penthouse-sofa",
+  "role": "decor",
+  "heightStuds": 3.5,
+  "route": "scan",
+  "kind": "prop",
+  "lengthStuds": 22.0,
+  "widthStuds": 4.0,
+  "where": "ProviderTest",
+  "copies": 1,
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "counts": {
+    "seats": 8
+  }
+}

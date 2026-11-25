@@ -1,0 +1,15 @@
+{
+  "exportSha256": "2dd46c3d995e9b06ed3fec1ac3ae718ff5a69de2827fde3e4890e9dcf9bb487b",
+  "reviewedBy": "session-0b565455",
+  "measured": [],
+  "counted": {},
+  "seen": [
+    "section-2a/2b window top: two small dark chips where the scan's swirl sheet does not reach the frame",
+    "front-left panels: faint diagonal facet creases where the collapse left long triangles; the baked normal map softens but does not erase them",
+    "back three-quarter: the inner window-frame lip catches a bright grazing highlight that reads slightly chrome",
+    "whole gun: 7,953 triangles, inside the new 8,000 held budget; the export is about 4.9 MB, just under the 5 MB large-file line",
+    "top rail and rear sight: 0.03% back-face specks, too small to see in play",
+    "not seen in Studio: the Core Neon glow, the normal map and the metal-roughness SurfaceAppearance are only previewed in Blender (review/glow.png)"
+  ],
+  "recordedOn": "2026-11-23 07:57"
+}

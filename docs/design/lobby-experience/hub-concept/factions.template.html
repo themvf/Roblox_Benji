@@ -1,0 +1,99 @@
+<title>Faction Islands</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Same review-sheet look as the alternatives page; each side gets its own colour stripe. */
+:root{--bg:#f3f4f7;--card:#ffffff;--fg:#161922;--muted:#5b6274;--line:#d9dce5;--accent:#8a5a00;
+  --text:"Inter",system-ui,sans-serif;--head:"Space Grotesk","Inter",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#101218;--card:#181b24;--fg:#eef0f6;--muted:#a0a6b8;--line:#2b2f3c;--accent:#ffc846;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101218;--card:#181b24;--fg:#eef0f6;--muted:#a0a6b8;--line:#2b2f3c;--accent:#ffc846;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--text);font-size:15px;line-height:1.55;padding-block:28px 64px;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{font-family:var(--head);margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(26px,4vw,38px)} h2{font-size:26px} h3{font-size:20px;margin:2px 0 8px}
+p{margin:0;max-width:72ch} .muted{color:var(--muted)}
+section{display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-family:var(--head);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+figure{margin:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+figure img{display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--line)}
+.plan{overflow:auto;border-radius:8px;border:1px solid var(--line);aspect-ratio:16/9;background:#0b0d12}
+.plan svg{display:block;height:100%;width:auto;margin:0 auto}
+figcaption{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.sides{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
+.side{display:flex;flex-direction:column;gap:12px;border-top:4px solid var(--side);padding-top:12px}
+.side .eyebrow{color:var(--fg);opacity:.75}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.caveat{border-left:3px solid var(--line);padding-left:12px}
+.arts{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px}
+.art{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--side);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.art h3{font-size:18px;margin:0}
+.swatches{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;font-size:12px;line-height:1.3}
+.swatches li{display:flex;gap:8px;align-items:center}
+.chip{width:26px;height:26px;border-radius:6px;border:1px solid var(--line);flex:none}
+code{font-size:11px;color:var(--muted)}
+.spec{border-collapse:collapse;width:100%;font-size:13.5px}
+.spec th{text-align:left;vertical-align:top;padding:6px 10px 6px 0;font-family:var(--head);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap;width:1%}
+.spec td{padding:6px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.spec tr:last-child td{border-bottom:none}
+</style>
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:12px">
+    <div class="eyebrow">Islands, reimagined</div>
+    <h1>Faction Islands: a neutral Hold where the four sides meet</h1>
+    <p>The lobby is a Hold on a Convergence Point: a departure lounge where everyone waits for a crossing. The neutral spine runs straight ahead from the arrival island over the pad island to the PLAY gate. Each of the four sides runs one island off it, built in its own style and lit in its own colour, and each island is one of the lobby's destinations. Every bridge takes its island's colour and four coloured strips on the arrival floor point the way, so "follow the orange bridge to the armory" is all the wayfinding a player needs.</p>
+    <p class="caveat muted">Blockout renders from Blender, built from simple shapes with no roofs or final art, to show layout, scale and the identity of each island. Walk times are straight-line at Roblox's default walk speed. Nothing is built; the lobby file still holds the fifth version.</p>
+  </header>
+
+  <section>
+    <h2>First view on arrival</h2>
+    __ARRIVAL__
+    <p class="muted">The pads and the gate are straight ahead; the Forge and Institute islands sit at the edges of the view, left and right. Kade and the Ferrymen are behind you.</p>
+  </section>
+
+  <section>
+    <h2>The four sides</h2>
+    <div class="sides">
+    __SIDES__
+    </div>
+  </section>
+
+  <section id="art">
+    <h2>Art direction</h2>
+    <p>One sheet per island and one for the neutral Hold: palette, materials, light, the props it is remembered by, signage, effects and sound. Materials are Roblox materials and fonts are Roblox font families, so each sheet can be built from directly.</p>
+    <div class="arts">
+    __ART__
+    </div>
+    <div><h3>Rules across all five</h3><ul>__NOTES__</ul></div>
+  </section>
+
+  <section>
+    <h2>The whole layout</h2>
+    <div class="grid">
+      <figure><div class="plan">__PLAN__</div><figcaption>Plan, to scale. The player arrives facing up; dotted rings are walking time.</figcaption></figure>
+      __AERIAL__
+      __HERO__
+      __CORNER__
+    </div>
+  </section>
+
+  <section>
+    <div class="cols">
+      <div><h3>What the factions add</h3><ul>
+        <li>Each destination is recognisable from across the void by silhouette alone: crane and chimneys, domes, rocket, container stack.</li>
+        <li>The lore arrives without a cutscene. A new player learns there are four sides, what each looks like and what each believes (every sign carries its motto) just by walking to the armory.</li>
+        <li>The front islands double as loops: the Forge and Institute bridge to both the arrival island and the pad island, so there are no dead ends and fewer pinch points than the plain Islands.</li>
+        <li>It is ready for allegiance if you build it: each island has its side's standard at the mouth, a natural place to pledge, show the side's banner and later hold faction events.</li>
+      </ul></div>
+      <div><h3>What to watch</h3><ul>
+        <li>Still islands: players can fall, so it needs invisible walls along every rail and a recovery teleport, which the lobby does not have today.</li>
+        <li>About __PARTS__ parts in this blockout, roughly five times the fifth version. Railings would be merged into a few meshes for real, and the faction props are the place for a small set of uploaded models.</li>
+        <li>Faction colours must not compete with Red and Blue, which stay the team colours in matches. Orange sits close to Red; worth checking on the actual HUD.</li>
+        <li>Which side runs which room is a design call. This draft gives the Forge the weapons, the Institute the abilities, Kade the store and the Ferrymen the leaderboard; the lore's open question about how four sides map onto two teams is untouched.</li>
+      </ul></div>
+    </div>
+  </section>
+</div>

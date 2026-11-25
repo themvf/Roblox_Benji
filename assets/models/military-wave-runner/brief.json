@@ -1,0 +1,28 @@
+{
+  "purpose": "Military wave runner, drivable vehicle at the Five Islands Hurricane docks",
+  "role": "interactive",
+  "heightStuds": 3.5,
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "route": "clean",
+  "kind": "vehicle",
+  "gameName": "WaveRunner",
+  "mounts": {
+    "DriverSeat": [
+      0.0,
+      2.15,
+      0.92
+    ],
+    "HullCentre": [
+      0.0,
+      1.1,
+      0.0
+    ]
+  },
+  "where": "Five Islands Hurricane",
+  "copies": 4,
+  "moving": "",
+  "share": "game",
+  "assumed": "copies (4) and share (game) were chosen by Claude on 2026-11-16, not stated by the user"
+}

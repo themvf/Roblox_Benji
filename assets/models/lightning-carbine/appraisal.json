@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-22",
+  "source": "LightningCarbine.glb",
+  "sourceSha256": "b322656a87baf9d7732338b86115a57c37e985db6b6d84c7eba6895e765c1665",
+  "measurements": {
+    "triangles": 3938,
+    "size": [
+      1.901,
+      0.237,
+      0.626
+    ],
+    "reliefRatio": 0.1249,
+    "openEdges": 8222,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Lightning Carbine: a yellow-and-gunmetal sci-fi carbine with twin copper coil rails and a lightning arc between them, held by players in every map (role: held, about 1.9 studs tall)"
+}

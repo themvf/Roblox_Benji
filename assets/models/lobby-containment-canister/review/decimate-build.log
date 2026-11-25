@@ -1,0 +1,21 @@
+15:32:17 | INFO: Data are loaded, start creating Blender stuff
+15:32:17 | INFO: Blender create Mesh node geometry_0
+15:32:17 | INFO: glTF import finished in 0.56s
+INFO Draco mesh compression is available, use library at C:\Program Files\Blender Foundation\Blender 4.3\4.3\python\lib\site-packages\extern_draco.dll
+15:32:25 | INFO: Starting glTF 2.0 export
+15:32:25 | INFO: Extracting primitive: geometry_0.001
+15:32:25 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+15:32:25 | INFO: Primitives created: 1
+15:32:25 | INFO: Finished glTF 2.0 export in 0.515998363494873 s
+
+TRIAL decimate-15pct 43587
+15:32:31 | INFO: Starting glTF 2.0 export
+15:32:31 | INFO: Extracting primitive: geometry_0.002
+15:32:31 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+15:32:31 | INFO: Primitives created: 1
+15:32:31 | INFO: Finished glTF 2.0 export in 0.1761777400970459 s
+
+TRIAL decimate-25pct 72645
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+
+Blender quit

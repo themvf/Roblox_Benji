@@ -133,10 +133,11 @@ function MapVoteController:BuildChoice(index, mapName)
     outline.Parent = button
 
     local name = Instance.new("TextLabel")
-    name.Position = UDim2.fromScale(0, 0.16)
-    name.Size = UDim2.new(1, 0, 0, 24)
+    name.Position = UDim2.new(0, 6, 0.08, 0)
+    name.Size = UDim2.new(1, -12, 0, 38)
     name.BackgroundTransparency = 1
-    name.Text = mapName:upper()
+    name.Text = mapName:gsub("([a-z])([A-Z])", "%1 %2"):gsub("%s*TDM$", ""):upper()
+    name.TextWrapped = true
     name.TextSize = Theme.textSize(Theme.Type.Body)
     name.TextScaled = false
     name.Font = Enum.Font.GothamBold

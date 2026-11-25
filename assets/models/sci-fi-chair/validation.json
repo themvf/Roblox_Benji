@@ -1,0 +1,53 @@
+{
+  "checkedAtUtc": "20261010T232416334666Z",
+  "mode": "check",
+  "status": "passed",
+  "visualApproval": "approved 2026-10-10 for this exact export",
+  "studioImport": "unverified",
+  "filesSha256": {
+    "source/design-reference.png": "3a1766ed46439f5325b249bd2893ec2db137fc5d91aaf07477f5b4aa3b0c3cc3",
+    "source/trellis-original.glb": "747e06dda5a8d5d873a84a1f15a63d81612d040d7afaaa276a7494da5ea18af4",
+    "source/Chair.blend": "4aa41db884cd7cfc88e8c869aa888859f805f0cc31eae76d86e311b70d8b83fb",
+    "exports/SciFiChair.glb": "c2c958617df168f0be089654c6468264eb2f09f33cc915fd37b16a089b735f7c",
+    "textures/Chair_Color.png": "651684b1b7c0ddae0e4b8e5f626cff280e6a7e3c942b18942553b9e85e45397d",
+    "textures/Chair_MetallicRoughness.png": "7e41d38f394c870fe85b69f0ab6a8bfdc299fc0b8070857949f68165eee424e6",
+    "appraisal.json": "945b4ca366bdaa9094df3bbd4d2d83c25407e43442bf716f4af5c815c3fffbc4",
+    "views.png": "fbb7f496844009b58952bc5d48adb39b558934c7255453fa72f382e1c1410590",
+    "SetupDecoration.luau": "f5ca97a91e6c8a964ef2952e1ec57e2a2924e46a2ec3118272e534053963d3fa",
+    "approval.json": "e385111b023a6e0a21043a37845f27afda343b5bf71ab488ce55d7bf7aa763f2",
+    "review/final-front.png": "d45aabb87b73e69e576d493eb08be08bddc1e0d9f2bee0295b048d1204f30583",
+    "review/final-side.png": "0e0c74b9fa94247d117b7ce26d0906dbe996c8ac7603f97a64662f39d7085d77",
+    "review/final-rear.png": "73783160c79edb692ab02b8fdda9806f9d79aa0e395aa689487045516e52e81b",
+    "review/final-quarter.png": "0141017ea3abc7027b41507da723c2f95b9e8f5260fd62e1e3d7621063578ab5"
+  },
+  "measured": {
+    "meshCount": 3,
+    "trianglesPerMesh": [
+      8910,
+      8911,
+      8911
+    ],
+    "boundsGlbYUp": {
+      "min": [
+        -1.944931983947754,
+        0.003375465050339699,
+        -1.5068687200546265
+      ],
+      "max": [
+        1.9647244215011597,
+        5,
+        1.5068687200546265
+      ]
+    },
+    "embeddedTextureFormats": [
+      "image/png",
+      "image/png"
+    ],
+    "exportBytes": 7480336
+  },
+  "limitations": [
+    "User approval applies only to the recorded export hash; Studio import remains unverified.",
+    "The chair has no interactive Seat.",
+    "Check-only verifies saved hashes and structure; it does not regenerate renders."
+  ]
+}

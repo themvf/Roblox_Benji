@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-16",
+  "source": "PenthouseSculpture.glb",
+  "sourceSha256": "7ad892002d167da0b0a5a09442e8cb12cbc38f0d50bd1e9ed4ff7d9eb8679d95",
+  "measurements": {
+    "triangles": 28307,
+    "size": [
+      8.848,
+      11.111,
+      12.014
+    ],
+    "reliefRatio": 0.7365,
+    "openEdges": 40843,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": ""
+}

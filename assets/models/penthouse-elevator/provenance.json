@@ -1,0 +1,28 @@
+{
+  "asset": "penthouse-elevator",
+  "recordedOn": "2026-11-16",
+  "reference": {
+    "file": "assets/models/penthouse-elevator/source/reference.png",
+    "sha256": "43dcbe0f87042664b718f42004fbb6343f071e7840eb77c935b910d6df05291e",
+    "origin": "generated",
+    "madeWith": "Tongyi-MAI/Z-Image-Turbo",
+    "prompt": "Product photograph style render of a game-ready 3D asset, isolated on a seamless pure white background, realistic materials with fine surface detail: A freestanding section of thick interior wall clad in polished white marble with faint grey veins, one solid upright rectangular slab whose front face is almost square: eleven units long, twelve units tall and four units thick. Centred in the front face is one pair of closed brushed stainless steel elevator doors in a slim steel frame. A small steel call-button panel with two round buttons sits on the marble beside the doors, and a small black floor indicator display sits above them. Both ends of the wall are flat, square, plain marble. Clean and new. One single subject centred in the frame, shown complete from end to end with empty white margin on every side, front three-quarter view from slightly above. Static and at rest, unoccupied, every part sharp and in focus. Soft even studio lighting from all sides, uniform pure white background and white floor, only a faint soft contact shadow directly underneath."
+  },
+  "mesh": {
+    "file": "assets/models/penthouse-elevator/source/PenthouseElevator.glb",
+    "sha256": "c7ae14aab1302622978b6e46b2f6e394b3bfa472ad1dd28479cc62436d3fbec8",
+    "generator": {
+      "space": "microsoft/TRELLIS.2",
+      "seed": 1,
+      "resolution": "1024",
+      "decimationTarget": 300000,
+      "textureSize": 2048,
+      "reference": "reference.png",
+      "generatedOn": "2026-11-16"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

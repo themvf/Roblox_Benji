@@ -1,0 +1,21 @@
+{
+ "triangles": {
+  "RightHand": 1039,
+  "RightLowerArm": 702,
+  "RightFoot": 686,
+  "RightLowerLeg": 1025,
+  "RightUpperLeg": 919,
+  "LowerTorso": 914,
+  "UpperTorso": 4778,
+  "LeftUpperLeg": 943,
+  "RightUpperArm": 564,
+  "Head": 4269,
+  "LeftFoot": 671,
+  "LeftLowerLeg": 1041,
+  "LeftHand": 1035,
+  "LeftLowerArm": 703,
+  "LeftUpperArm": 511
+ },
+ "scale": 6.811594202898552,
+ "armX": 1.669
+}

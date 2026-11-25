@@ -11,8 +11,12 @@ entry rather than a code change.
 One Blender unit is one stud (ROBLOX_BLENDER_ASSET_PIPELINE_SPEC.md section 3).
 Operations run in this order, because each depends on the last:
 
-    import -> exaggerate -> fit -> decimate -> tile -> pivot -> textures -> export
+    import -> cull -> exaggerate -> fit -> decimate -> tile -> pivot -> textures -> export
           -> optimize
+
+`cull` runs first, on the source as it arrived, so its numbers are in source units and
+stay valid however the asset is later scaled. It deletes junk that image-to-3D copies in
+from the reference photo (floor cables, a mat, loose props); see op_cull.
 
 `exaggerate` runs before `fit` so vertical stretch is expressed in source
 proportions while `fit` still lands the final width exactly. `pivot` runs after
@@ -109,6 +113,65 @@ def join(objs, name):
 # --- operations ----------------------------------------------------------
 
 
+def op_cull(ob, rules):
+    """Delete faces by position, before anything is scaled. Source units, Blender Z up.
+
+    Each rule is a dict of filters that must ALL match a face's centroid; the first rule
+    that matches takes the face. Filters, all optional:
+
+        below / above   z <  n  /  z >  n
+        x, y, z         [lo, hi] inclusive range on that axis
+        outside         {center: [cx, cy], radius: r}  further than r from the axis
+        inside          {center: [cx, cy], radius: r}  within r of the axis
+        name            only used in the report
+
+    Positions are read off orthographic renders of the one file, which is why this is
+    data in the manifest rather than a heuristic: no automatic measure told a cable
+    tangle from an intended rubble pile (a floor-clutter metric was tried and flagged both
+    walls and the helicopter while giving the junk-ridden tube 3%). Look at views.png,
+    write the rule, check the result."""
+    if not rules:
+        return
+    import bmesh
+    import math
+
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    bm.faces.ensure_lookup_table()
+
+    def hit(rule, c):
+        if "below" in rule and not c.z < rule["below"]:
+            return False
+        if "above" in rule and not c.z > rule["above"]:
+            return False
+        for axis in "xyz":
+            if axis in rule and not rule[axis][0] <= getattr(c, axis) <= rule[axis][1]:
+                return False
+        for key, want_outside in (("outside", True), ("inside", False)):
+            if key in rule:
+                cx, cy = rule[key]["center"]
+                far = math.hypot(c.x - cx, c.y - cy) > rule[key]["radius"]
+                if far != want_outside:
+                    return False
+        return True
+
+    removed, counts = [], {}
+    for f in bm.faces:
+        c = f.calc_center_median()
+        for i, rule in enumerate(rules):
+            if hit(rule, c):
+                removed.append(f)
+                label = rule.get("name", "rule %d" % i)
+                counts[label] = counts.get(label, 0) + 1
+                break
+    total = len(bm.faces)
+    bmesh.ops.delete(bm, geom=removed, context="FACES_ONLY")
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    bm.to_mesh(ob.data)
+    bm.free()
+    print("  cull     removed %s of %s faces: %s" % (format(len(removed), ","), format(total, ","), counts))
+
+
 def op_orient(ob, up):
     """Rotate so the source's up axis becomes Blender Z, then bake it.
 
@@ -147,10 +210,192 @@ def op_fit(ob, axis, size):
     apply_transform(ob)
 
 
+def op_weld(ob):
+    """Merge coincident vertices. Meshy delivers every triangle as its own three vertices; Collapse then
+    shrinks each triangle on its own and the surface tears into shards (hand-cannon, 2026-11-22: 9.9%
+    see-through). UVs live on the corners, so texture seams survive the merge."""
+    mn, mx = bounds([ob])
+    select([ob])
+    bpy.context.view_layer.objects.active = ob
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.mesh.remove_doubles(threshold=1e-5 * max(mx - mn))
+    bpy.ops.object.mode_set(mode="OBJECT")
+
+
+def op_repair_normals(ob):
+    """Weld, then turn every face to point outward. Roblox draws one side only, so a patch
+    Meshy wound inward shows as a see-through hole (halcyon-rifle, 2026-11-22). Opt-in with
+    `repairNormals: true`; it cannot help a real hole or a one-sided sheet."""
+    op_weld(ob)
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.mesh.normals_make_consistent(inside=False)
+    bpy.ops.object.mode_set(mode="OBJECT")
+
+
+def op_yaw(ob, degrees):
+    """Turn about the up axis, so a held or driven model's front lands on Blender +Y (Roblox -Z)."""
+    if not degrees:
+        return
+    # On the mesh itself: glTF imports in quaternion mode, where setting rotation_euler does nothing.
+    from mathutils import Matrix
+
+    ob.data.transform(Matrix.Rotation(math.radians(degrees), 4, "Z"))
+    ob.data.update()
+
+
+def op_split(final, spec):
+    """Move the faces inside a cylinder into their own mesh, origin on the cylinder's axis, so game code can
+    spin it (the Hand Cannon's drum, 2026-11-22). spec: name, axis x|y|z, center [x, y, z] and radius and
+    halfLength in studs, in the exported model's frame after `pivot`. Runs last, so tiles never cut it."""
+    if not spec:
+        return final
+    if isinstance(spec, list):
+        # Several splits in turn, e.g. one Neon mesh per glow colour (the Halcyon's strip).
+        for one in spec:
+            final = op_split(final, one)
+        return final
+    if "colour" in spec:
+        return op_split_colour(final, spec)
+    import bmesh
+    from mathutils import Matrix, Vector
+
+    body = final[0]
+    axis = "xyz".index(spec.get("axis", "y"))
+    centre = Vector(spec["center"])
+    radius, half = spec["radius"], spec["halfLength"]
+    bm = bmesh.new()
+    bm.from_mesh(body.data)
+    picked = []
+    for face in bm.faces:
+        offset = face.calc_center_median() - centre
+        along = offset[axis]
+        across = sum(offset[i] ** 2 for i in range(3) if i != axis) ** 0.5
+        face.select = abs(along) <= half and across <= radius
+        if face.select:
+            picked.append(face.index)
+    bm.to_mesh(body.data)
+    bm.free()
+    if not picked:
+        raise SystemExit("split %s: no faces inside the cylinder" % spec["name"])
+    select([body])
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.separate(type="SELECTED")
+    bpy.ops.object.mode_set(mode="OBJECT")
+    part = next(o for o in bpy.context.selected_objects if o is not body)
+    part.name = part.data.name = spec["name"]
+    # origin on the axis: the mesh moves by -centre, the object by +centre, so nothing moves in the world
+    part.data.transform(Matrix.Translation(-centre))
+    part.location = part.location + centre
+    print("  split    %s: %s triangles, origin %s" % (spec["name"], format(tris([part]), ","),
+                                                     [round(c, 3) for c in centre]))
+    return final + [part]
+
+
+def op_extra_parts(final, path):
+    """Add hand-modelled pieces to a scanned asset: the parts a generator gets wrong and shapes get right,
+    such as a round bore or a ring that must be its own mesh to glow (the Quantum Cannon's muzzle,
+    2026-11-22). path is a Python file whose add(final) returns new mesh objects, built in the exported
+    model's frame after `pivot`. Their triangles count toward the brief's budget like any other mesh."""
+    if not path:
+        return final
+    import importlib.util
+
+    module_spec = importlib.util.spec_from_file_location("extra_parts", resolve(path))
+    module = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(module)
+    added = module.add(final)
+    for ob in added:
+        print("  extra    %s: %s triangles" % (ob.name, format(tris([ob]), ",")))
+    return list(final) + list(added)
+
+
+def op_split_colour(final, spec):
+    """Move every face whose texture colour falls in a hue/saturation/value window into its own mesh,
+    gathered from all tiles, so Studio can give that part its own material. The Prism Blaster's crystal
+    is painted lavender by Meshy and only glows as a separate Neon MeshPart (2026-11-22).
+    spec: name, colour {hue: [lo, hi] in degrees, sat: [lo, hi], val: [lo, hi]}, minFaces (default 50)."""
+    import colorsys
+
+    import bmesh
+
+    window = spec["colour"]
+    hue = window.get("hue", [0, 360])
+    sat = window.get("sat", [0, 1])
+    val = window.get("val", [0, 1])
+    # Optional [[min x, y, z], [max x, y, z]] in the exported frame: the colour alone also took stray
+    # lavender slivers on the Prism Blaster's bezel rim and grip.
+    box = spec.get("box")
+
+    def texture_of(ob):
+        for slot in ob.material_slots:
+            mat = slot.material
+            if mat and mat.use_nodes:
+                for node in mat.node_tree.nodes:
+                    if node.type == "TEX_IMAGE" and node.image:
+                        return node.image
+        return None
+
+    pieces = []
+    for body in final:
+        image = texture_of(body)
+        if image is None:
+            continue
+        w, h = image.size
+        px = list(image.pixels[:])  # byte images hold their sRGB values as stored, scaled to 0..1
+        bm = bmesh.new()
+        bm.from_mesh(body.data)
+        uv = bm.loops.layers.uv.active
+        count = 0
+        for face in bm.faces:
+            u = sum(l[uv].uv.x for l in face.loops) / len(face.loops)
+            v = sum(l[uv].uv.y for l in face.loops) / len(face.loops)
+            x = min(w - 1, max(0, int((u % 1.0) * w)))
+            y = min(h - 1, max(0, int((v % 1.0) * h)))
+            o = (y * w + x) * 4
+            hh, ss, vv = colorsys.rgb_to_hsv(px[o], px[o + 1], px[o + 2])
+            hh *= 360
+            face.select = hue[0] <= hh <= hue[1] and sat[0] <= ss <= sat[1] and val[0] <= vv <= val[1]
+            if face.select and box:
+                c = face.calc_center_median()
+                face.select = all(box[0][i] <= c[i] <= box[1][i] for i in range(3))
+            count += face.select
+        bm.to_mesh(body.data)
+        bm.free()
+        if not count:
+            continue
+        select([body])
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.separate(type="SELECTED")
+        bpy.ops.object.mode_set(mode="OBJECT")
+        pieces += [o for o in bpy.context.selected_objects if o is not body]
+    picked = tris(pieces) if pieces else 0
+    if picked < spec.get("minFaces", 50):
+        raise SystemExit("split %s: only %d faces in the colour window %s" % (spec["name"], picked, window))
+    select(pieces)
+    bpy.context.view_layer.objects.active = pieces[0]
+    if len(pieces) > 1:
+        bpy.ops.object.join()
+    part = bpy.context.view_layer.objects.active
+    part.name = part.data.name = spec["name"]
+    print("  split    %s by colour: %s triangles" % (spec["name"], format(tris([part]), ",")))
+    return final + [part]
+
+
 def op_decimate(ob, target):
+    """target is a triangle count, or {"tris": n, "weld": false}. Welding first joins the copies of
+    each vertex that sit on a UV seam, so the collapse then pulls texture across seams; on the Prism
+    Blaster that smeared the white shell with dark blotches (2026-11-22). weld false keeps seams."""
+    weld = True
+    if isinstance(target, dict):
+        weld = target.get("weld", True)
+        target = target.get("tris")
     current = tris([ob])
     if not target or current <= target:
         return
+    if weld:
+        op_weld(ob)
     modifier = ob.modifiers.new("dec", "DECIMATE")
     modifier.decimate_type = "COLLAPSE"
     modifier.ratio = target / current
@@ -201,7 +446,7 @@ def op_pivot(objs, mode, up):
     """Move geometry so the chosen point sits at the origin. Every tile is shifted
     by the SAME offset, so a tiled set keeps its layout and places with one CFrame."""
     if mode == "origin":
-        return
+        return mathutils.Vector((0, 0, 0))
     mn, mx = bounds(objs)
     centre = (mn + mx) / 2
     if mode == "center":
@@ -217,6 +462,78 @@ def op_pivot(objs, mode, up):
         o.data.transform(shift)
         o.location = (0, 0, 0)
         apply_transform(o)
+    return offset
+
+
+def keep_detail(ob, spec):
+    """Copy the full-detail mesh before `decimate`, for `bakeNormals` to read from later."""
+    if not spec:
+        return None
+    hi = ob.copy()
+    hi.data = ob.data.copy()
+    hi.name = ob.name + "_detail"
+    bpy.context.scene.collection.objects.link(hi)
+    return hi
+
+
+def op_bake_normals(final, hi, spec):
+    """Bake the full-detail mesh's surface into a tangent-space normal map on the decimated one, so
+    panel edges and bevels the triangle budget cannot keep still catch the light. The map shares the
+    scan's UV atlas and is wired into its material, which glTF exports as normalTexture and the
+    Roblox importer turns into a SurfaceAppearance (the Plasma Blaster, 2026-11-23).
+    spec: true or {size: 1024, extrusion: 0.015, distance: 0.04} (studs). Hand-made extra parts keep
+    their own materials and are skipped; any piece sharing the scan's material gets baked."""
+    if not spec or hi is None:
+        return
+    spec = spec if isinstance(spec, dict) else {}
+    size = int(spec.get("size", 1024))
+    scan_mats = {s.material.name for s in final[0].material_slots if s.material}  # the scan body is first
+    targets = []
+    for ob in final:
+        mats = [s.material for s in ob.material_slots if s.material and s.material.name in scan_mats]
+        if mats and mats[0].use_nodes:
+            targets.append((ob, mats[0]))
+    if not targets:
+        raise SystemExit("bakeNormals: no textured mesh to bake onto")
+    image = bpy.data.images.new("baked_normal", size, size, alpha=False, float_buffer=False)
+    image.colorspace_settings.name = "Non-Color"
+    image.generated_color = (0.5, 0.5, 1.0, 1.0)
+    wired = set()
+    for _, mat in targets:
+        if mat.name in wired:
+            continue
+        wired.add(mat.name)
+        nodes, links = mat.node_tree.nodes, mat.node_tree.links
+        tex = nodes.new("ShaderNodeTexImage")
+        tex.image = image
+        tex.name = "baked_normal"
+        nmap = nodes.new("ShaderNodeNormalMap")
+        bsdf = next(n for n in nodes if n.type == "BSDF_PRINCIPLED")
+        links.new(tex.outputs["Color"], nmap.inputs["Color"])
+        links.new(nmap.outputs["Normal"], bsdf.inputs["Normal"])
+    scene = bpy.context.scene
+    scene.render.engine = "CYCLES"
+    scene.cycles.device = "CPU"
+    scene.cycles.samples = 1
+    bake = scene.render.bake
+    bake.use_selected_to_active = True
+    bake.cage_extrusion = float(spec.get("extrusion", 0.015))
+    bake.max_ray_distance = float(spec.get("distance", 0.04))
+    bake.normal_space = "TANGENT"
+    bake.margin = 4
+    bake.use_clear = False
+    for ob, mat in targets:
+        for node in mat.node_tree.nodes:
+            node.select = False
+        mat.node_tree.nodes.active = mat.node_tree.nodes["baked_normal"]
+        bpy.ops.object.select_all(action="DESELECT")
+        hi.select_set(True)
+        ob.select_set(True)
+        bpy.context.view_layer.objects.active = ob
+        bpy.ops.object.bake(type="NORMAL")
+        print("  bake     normals onto %s (%dx%d)" % (ob.name, size, size))
+    image.pack()
+    bpy.data.objects.remove(hi, do_unlink=True)
 
 
 def op_textures(tex_dir):
@@ -292,6 +609,8 @@ def op_optimize(path, spec, tiled):
         command += ["--tint", ",".join(str(v) for v in spec["tint"])]
     if spec.get("lift"):
         command += ["--lift", str(spec["lift"])]
+    if spec.get("gamma"):
+        command += ["--gamma", str(spec["gamma"])]
     sys.stdout.flush()  # or Blender's buffered output lands after the child's
     if subprocess.call(command) != 0:
         raise SystemExit("gltf_post failed; the exported file is left as-is")
@@ -349,15 +668,25 @@ def build(name, spec, out_override=None):
     # axis-indexed operation below can assume it.
     op_orient(ob, up)
     up = 2
+    op_yaw(ob, spec.get("yaw"))
+    if spec.get("repairNormals"):
+        op_repair_normals(ob)
+    op_cull(ob, spec.get("cull"))
     op_exaggerate(ob, spec.get("exaggerate"), up)
     fit = spec.get("fit")
     if fit:
         op_fit(ob, fit.get("axis", "x"), fit["size"])
+    hi = keep_detail(ob, spec.get("bakeNormals"))
     op_decimate(ob, spec.get("decimate"))
 
     tile = spec.get("tile")
     final = op_tile(ob, tile[0], tile[1], up) if tile else [ob]
-    op_pivot(final, spec.get("pivot", "center"), up)
+    offset = op_pivot(final, spec.get("pivot", "center"), up)
+    if hi is not None:
+        hi.data.transform(mathutils.Matrix.Translation(-offset))
+    final = op_split(final, spec.get("split"))
+    final = op_extra_parts(final, spec.get("extraParts"))
+    op_bake_normals(final, hi, spec.get("bakeNormals"))
     op_textures(resolve(spec["textures"]) if spec.get("textures") else None)
 
     mn, mx = bounds(final)

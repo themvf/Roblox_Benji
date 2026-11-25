@@ -19,13 +19,27 @@ local function onDamage(_system, target, amount, _damageType, dealer, hitInfo, w
     if not target:IsA("Humanoid") then
         return
     end
+    if target.Parent and target.Parent:GetAttribute("IsVehicle") then
+        local dealerTeam = dealer and dealer:IsA("Player") and dealer:GetAttribute("Team")
+        local vehicleTeam = target.Parent:GetAttribute("DriverTeam")
+        if dealerTeam and vehicleTeam and dealerTeam == vehicleTeam then
+            return
+        end
+        target:TakeDamage(amount)
+        return
+    end
     if dealer and dealer:IsA("Player") and target.Parent then
         target.Parent:SetAttribute("LastHitBy", dealer.UserId)
         target.Parent:SetAttribute("LastHitByName", dealer.Name)
+        target.Parent:SetAttribute("LastHitAt", os.clock())
     end
     local part = hitInfo and hitInfo.part
+    local config = weaponInstance and weaponInstance:FindFirstChild("Configuration")
+    local fraction = config and config:FindFirstChild("DamageFractionOfMaxHealth")
+    if fraction and fraction:IsA("NumberValue") then
+        amount = target.MaxHealth * fraction.Value
+    end
     if part and part.Name == "Head" and weaponInstance then
-        local config = weaponInstance:FindFirstChild("Configuration")
         local crit = config and config:FindFirstChild("CritMultiplier")
         if crit then
             amount *= crit.Value
@@ -79,6 +93,24 @@ end
 
 function WeaponService:KnitStart()
     self.Tools = ReplicatedStorage:WaitForChild("WeaponTools")
+
+    -- Studio can drop Model.PrimaryPart while importing a generated .rbxm
+    -- through Rojo. The kit uses it to align the muzzle and firing model.
+    for _, folder in { self.Tools, ReplicatedStorage:WaitForChild("StudioWeaponTools") } do
+        for _, tool in folder:GetChildren() do
+            if tool:IsA("Tool") then
+                for _, model in tool:GetChildren() do
+                    if model:IsA("Model") and not model.PrimaryPart then
+                        local attachment = model:FindFirstChild("HandleAttachment", true)
+                        local body = attachment and attachment.Parent
+                        if body and body:IsA("BasePart") then
+                            model.PrimaryPart = body
+                        end
+                    end
+                end
+            end
+        end
+    end
 
     -- The kit's ServerWeaponsScript clones its folder into ReplicatedStorage on startup.
     local systemFolder = ReplicatedStorage:WaitForChild("WeaponsSystem", 30)

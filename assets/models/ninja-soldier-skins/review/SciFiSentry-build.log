@@ -1,0 +1,106 @@
+Extensions: writing cache failed ([Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\extensions\\.cache\\compat.dat').
+Traceback (most recent call last):
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 1027, in register
+    Tracker.initialize(
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 295, in initialize
+    self.set_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 466, in set_tracker_json
+    self.save_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 479, in save_tracker_json
+    outf = open(jpath, 'w')
+           ^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\scripts\\addons\\MCprep_addon\\mcprep_addon_tracker.json'
+
+Failed to register scene update handler
+Reloading external rigs...
+Reloading external metarigs...
+🔄 blenderkit: Verbose is enabled
+🔄 blenderkit: Read in JSON settings from file
+ℹ️  blenderkit: Unregistering BlenderKit add-on [15:33:40.384, __init__.py:2558]
+Info: Saved "SciFiSentryArmor.blend"
+INFO Draco mesh compression is available, use library at C:\Program Files\Blender Foundation\Blender 4.3\4.3\python\lib\site-packages\extern_draco.dll
+15:33:40 | INFO: Starting glTF 2.0 export
+15:33:40 | INFO: Extracting primitive: Sphere
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.001
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.002
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.003
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Sphere.001
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cylinder
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.004
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.005
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Sphere.002
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.006
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.007
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.008
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.009
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.010
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.011
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Sphere.003
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.012
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.013
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Sphere.004
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cylinder.001
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.014
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.015
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Sphere.005
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.016
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.017
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.018
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.019
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.020
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.021
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Sphere.006
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.022
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.023
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.024
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.025
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.026
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.027
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.028
+15:33:40 | INFO: Primitives created: 1
+15:33:40 | INFO: Extracting primitive: Cube.029
+15:33:40 | INFO: Primitives created: 1
+15:33:41 | INFO: Finished glTF 2.0 export in 0.13691163063049316 s
+
+EXPORTED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\ninja-soldier-skins\exports\SciFiSentryArmor.glb
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+
+Blender quit

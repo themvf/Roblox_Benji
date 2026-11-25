@@ -1,0 +1,16 @@
+{
+  "exportSha256": "63ba7b43f5ec455fa0bef2e71ba03c7bf5dad7f53b16ca367997e2c4f917c77e",
+  "reviewedBy": "session-e550d38e",
+  "measured": [
+    "weight: 9,539 triangles against a budget of 4,000"
+  ],
+  "counted": {},
+  "seen": [
+    "white collar behind receiver: a few dark texture smears where seams were welded",
+    "white stock: faint pink specks from the red trim",
+    "muzzle rim and throat: 18 flat facets visible up close",
+    "budget: 9,539 triangles against the 4,000 held starting value, waived because the 3,880 cut deformed the body",
+    "underside of fore-grip and stock: tiny back-face slivers, 0.04% worst view"
+  ],
+  "recordedOn": "2026-11-23 07:03"
+}

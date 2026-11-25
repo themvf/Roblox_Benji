@@ -1,0 +1,41 @@
+{
+  "purpose": "Dark red off-road SUV made by Tripo from the user's picture, surface made matte; the drivable SUV's body",
+  "role": "interactive",
+  "heightStuds": 6.0,
+  "route": "scan",
+  "budgetWaiver": "Tripo's 23,426-triangle export used as delivered while a 13,000-triangle Tripo Retopo is awaited; our own reduction tears generated meshes (the patrol boat). At most a few copies on a map.",
+  "kind": "vehicle",
+  "lengthStuds": 16.3,
+  "widthStuds": 7.7,
+  "gameName": "SUV",
+  "where": "not placed yet; drives like the combat buggy",
+  "copies": 2,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "map not stated; two seats; wheels are fused to the body and do not turn; no cabin, so the inside view is a camera over the bonnet; size from a real SUV; share game",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "scene": {},
+  "counts": {
+    "wheels": 4
+  },
+  "mounts": {
+    "HullCentre": [
+      0.0,
+      1.8,
+      0.0
+    ],
+    "DriverSeat": [
+      -0.95,
+      2.3,
+      -0.8
+    ],
+    "DriverEye": [
+      -0.9,
+      5.15,
+      -3.9
+    ]
+  }
+}

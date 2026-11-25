@@ -90,8 +90,10 @@ local Theme = require(script.Parent.Parent.UI.Theme)   -- from src/client/Contro
 
 Theme holds tokens and checks, not widgets: assign them directly
 (`frame.BackgroundColor3 = Theme.Color.Panel`, `label.TextSize = Theme.textSize(Theme.Type.Body)`). There is
-deliberately no `Theme.panel()` or `Theme.text()` wrapper -- each controller builds its own widgets, and a
-wrapper nothing called would drift from how they actually do it.
+deliberately no `Theme.panel()` or `Theme.text()` wrapper -- HUD controllers build their own widgets.
+
+Catalog-style screens (kits, packs, passes, a pre-match pick) are the exception: they are built from
+`src/client/UI/Components.lua` and the `CatalogScreen` templates. Use the `ui-from-prompt` skill for those.
 
 ## Visual rules
 

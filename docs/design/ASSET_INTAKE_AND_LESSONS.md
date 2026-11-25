@@ -1,5 +1,8 @@
 # Asset intake: deciding what a source asset is good for
 
+For durable delivery and resuming with another engineer, also follow
+[ASSET_DELIVERY_WORKFLOW.md](ASSET_DELIVERY_WORKFLOW.md).
+
 Written after the Snow Fortress horizon took four attempts. Every one of them was
 avoidable, and the thing that would have avoided them is a five-second check at the
 start rather than a pipeline built on an assumption.
@@ -117,3 +120,34 @@ never asked to carry.
 - [ ] Check whether an existing map or service already solves this.
 - [ ] Pick the destination from the table in section 4 before any pipeline work.
 - [ ] For anything distant, default to a skybox and justify any alternative.
+
+## 8. Generated meshes: the shard soup and the copied-in junk
+
+Added after the blue tube. An image-to-3D mesh (TRELLIS and similar) arrives as tens of
+thousands of disconnected shards: 9,000 to 27,000 pieces on every asset we have, none
+with a main body above 3% of its faces. That is the generator's normal output, so a
+piece count cannot be a gate, and decimating to 9,000 triangles hides it anyway.
+
+What does go wrong is **content**. The generator copies whatever surrounds the object in
+the reference photo, and cannot make transparency. The tube arrived with a floor cable
+tangle, a flat plate, a bottle, a second canister, loose wires, and glass as an opaque
+pale slab. None of it showed in the triangle count or relief ratio.
+
+- **Brief the generator.** Isolated object only: no floor, cables, ground plane, loose
+  props or transparent materials. This prevents most of it for free.
+- **Look at `views.png`.** `appraise_asset.py --record` renders front, side and top next
+  to `appraisal.json`, and `check_assets` fails a package dated 2026-10-05 or later
+  without it. Open it before building. One look found everything above.
+- **Cull by rule, not by guess.** Read positions off the views and write them as `cull`
+  rules in `scenes.json` (op_cull in `scene_kit.py`), so the removal is reviewable data.
+- **Do not trust a metric for this.** A "floor clutter" percentage was built and
+  discarded: it flagged both broken walls (their rubble apron is intended) and the
+  helicopter, and gave the junk-ridden tube 3%, because the cables loop inside the body's
+  footprint. No number told cables from rubble; a person looking did.
+- **Glass is a modelling decision.** Replace it with something that reads, e.g. a column
+  of colour painted into free atlas space (`prepare_bluetube.py`), or a separate
+  transparent part added in Studio.
+
+Checklist additions: [ ] generator brief excluded floor/cables/props/transparency;
+[ ] `views.png` opened and the junk, if any, listed; [ ] `cull` rules written and the
+result re-viewed.

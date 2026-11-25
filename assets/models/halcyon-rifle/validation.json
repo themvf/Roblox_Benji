@@ -1,0 +1,120 @@
+{
+  "checkedOn": "2026-11-23 08:13",
+  "export": "assets/models/halcyon-rifle/exports/HalcyonRifle.glb",
+  "exportSha256": "4bd081ffc41534acb32d2c341a375c733e9c9e8154c2ad910fae2411a9c825eb",
+  "sourceSha256": "3fa89fb244fa9acb182edaffe27079797a81255c665d9b5782d96df239efc16f",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "scan",
+    "suggested": "clean",
+    "reasons": [
+      "the role is held, so players are right next to it and its parts may need to move"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 1.0,
+      "side": 0.999,
+      "top": 0.999
+    },
+    "surfaceError": {
+      "front": 0.0,
+      "back": 0.0,
+      "right": 0.0,
+      "left": 0.0,
+      "top": 0.0,
+      "bottom": 0.0
+    },
+    "worstSurfaceError": 0.0,
+    "noise": 0.001,
+    "sheet": "assets/models/halcyon-rifle/review/detail.png",
+    "limit": 0.08,
+    "passed": true
+  },
+  "ground": {
+    "bottomFill": 0.029,
+    "aboveFill": 0.224,
+    "ratio": 0.13,
+    "footprintStuds": [
+      0.46,
+      5.06
+    ],
+    "flagged": false
+  },
+  "textureBleed": {
+    "image": 1,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.58,
+    "backgroundBrightness": 0.389,
+    "surfaceBrightness": 0.386,
+    "bleedPercent": 2.08
+  },
+  "budget": {
+    "role": "held",
+    "budget": 8000,
+    "triangles": 3880,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      0.46,
+      0.97,
+      5.064
+    ],
+    "heightStuds": 0.97,
+    "kind": "weapon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.309,
+        1.516
+      ],
+      "Muzzle": [
+        0.0,
+        0.2,
+        -2.4
+      ]
+    },
+    "mountSheet": "assets/models/halcyon-rifle/review/mounts.png",
+    "pivot": "center",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": null,
+      "decimate": 9000,
+      "worstMesh": 3819,
+      "triangles": 3880,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     HalcyonRifle.glb (5.08 MB)",
+    "           Mesh_0                           3,819 tris",
+    "           GlowCyan                            47 tris",
+    "           GlowMagenta                         14 tris",
+    "           total                            3,880 tris (3 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/halcyon-rifle/review/audit.png",
+      "assets/models/halcyon-rifle/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.11,
+    "worstPatchPercent": 0.01
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

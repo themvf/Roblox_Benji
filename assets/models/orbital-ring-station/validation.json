@@ -1,0 +1,63 @@
+{
+  "checkedAtUtc": "2026-10-04T20:27:02.700224+00:00",
+  "sourceSha256": "96e1265722b93375fe97fd08f2a66920992530af43140abcfd69079def835447",
+  "exportSha256": "ef734dbfbc21bcdc6e2f71ee3355455cc6f3ed866410625074f9f73968c49842",
+  "textureSha256": {
+    "BaseColor.png": "ce3623ec8077f46a9a08096daf5f236a9d30ea02cb4f587494c4deb95c27bd3e",
+    "MetallicRoughness.png": "f5c7d323034c5b0338083d9a3334255487e54e449ab655af74175ea7facd6795"
+  },
+  "meshNames": [
+    "Station_S01_01",
+    "Station_S01_02",
+    "Station_S02_01",
+    "Station_S02_02",
+    "Station_S03_01",
+    "Station_S03_02",
+    "Station_S04_01",
+    "Station_S04_02",
+    "Station_S05_01",
+    "Station_S06_01",
+    "Station_S07_01",
+    "Station_S08_01"
+  ],
+  "trianglesPerMesh": [
+    9000,
+    2162,
+    9000,
+    913,
+    9000,
+    378,
+    9000,
+    935,
+    8132,
+    7359,
+    8197,
+    8909
+  ],
+  "totalTriangles": 72985,
+  "meshCount": 12,
+  "boundsGlbYUp": {
+    "min": [
+      -38.670352935791016,
+      0,
+      -39.153743743896484
+    ],
+    "max": [
+      38.670352935791016,
+      80,
+      39.153743743896484
+    ]
+  },
+  "imageFormats": [
+    "image/png",
+    "image/png"
+  ],
+  "checks": {
+    "meshTriangleLimit": true,
+    "height80Studs": true,
+    "embeddedPngTextures": true,
+    "sectorNames": true
+  },
+  "studioImport": "unverified",
+  "mapPlacement": "unverified"
+}

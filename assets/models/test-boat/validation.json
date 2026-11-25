@@ -1,0 +1,115 @@
+{
+  "checkedOn": "2026-11-17 03:56",
+  "export": "assets/models/test-boat/exports/TestBoat.glb",
+  "exportSha256": "678c869340be89465b8fb7e62a330502c364f873e2f923525209803a5ee42878",
+  "sourceSha256": "b757ed666326d61cdc21529bdbbb29250d94cd8651bf527d66213f84c67e62ad",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "scan",
+    "suggested": "clean",
+    "reasons": [
+      "it has thin bars or open framework, which a generated mesh tears and a reduction tears further"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.999,
+      "side": 0.999,
+      "top": 0.999
+    },
+    "surfaceError": {
+      "front": 0.002,
+      "back": 0.002,
+      "right": 0.002,
+      "left": 0.002,
+      "top": 0.001,
+      "bottom": 0.0
+    },
+    "worstSurfaceError": 0.002,
+    "noise": 0.002,
+    "sheet": "assets/models/test-boat/review/detail.png",
+    "limit": 0.08,
+    "passed": true
+  },
+  "ground": {
+    "bottomFill": 0.003,
+    "aboveFill": 0.748,
+    "ratio": 0.0,
+    "footprintStuds": [
+      20.72,
+      7.55
+    ],
+    "flagged": false
+  },
+  "textureBleed": {
+    "image": 1,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.3,
+    "backgroundBrightness": 0.053,
+    "surfaceBrightness": 0.154,
+    "bleedPercent": 1.22
+  },
+  "budget": {
+    "role": "decor",
+    "budget": 30000,
+    "triangles": 27334,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      20.722,
+      8.0,
+      7.551
+    ],
+    "heightStuds": 8.0,
+    "kind": "prop",
+    "mounts": {},
+    "mountSheet": "assets/models/test-boat/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [
+      "length is 7.55 studs, the brief says 30"
+    ],
+    "passed": false
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        2,
+        2
+      ],
+      "decimate": 25000,
+      "worstMesh": 8572,
+      "triangles": 27334,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     TestBoat.glb (1.97 MB)",
+    "           tripo_mesh_e3676336-31d4-4126-bd5d-6132232e0266.001     8,572 tris",
+    "           tripo_mesh_e3676336-31d4-4126-bd5d-6132232e0266.002     8,506 tris",
+    "           tripo_mesh_e3676336-31d4-4126-bd5d-6132232e0266.003     5,340 tris",
+    "           tripo_mesh_e3676336-31d4-4126-bd5d-6132232e0266.004     4,916 tris",
+    "           total                           27,334 tris (4 meshes)",
+    "           texture                      1024x1024  image/jpeg",
+    "           texture                      1024x1024  image/jpeg",
+    "           texture                      1024x1024  image/jpeg"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/test-boat/review/audit.png",
+      "assets/models/test-boat/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.09,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

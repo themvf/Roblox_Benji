@@ -1,0 +1,35 @@
+{
+  "purpose": "Burst Rifle: a gunmetal-and-navy sci-fi burst rifle with a skeleton stock and three glowing amber chevrons in the barrel shroud that players hold, in every map",
+  "role": "held",
+  "heightStuds": 1.33,
+  "pivot": "center",
+  "kind": "weapon",
+  "lengthStuds": 5.0,
+  "widthStuds": 0.57,
+  "gameName": "BurstRifle",
+  "where": "held in every map",
+  "copies": 12,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "user accepted defaults: name BurstRifle (the model for the existing BurstRifle weapon), 5 studs long, 12 on screen, no moving parts, game only, stop at local build, Meshy credits approved. I chose: scan route (Meshy mesh kept, as for Halcyon); height 1.33 and width 0.57 measured off the Meshy model at 5 studs long; sight posts are tiny and the stock frame is thick, so thin=no",
+  "meshes": "auto",
+  "route": "scan",
+  "scene": {
+    "yaw": 90
+  },
+  "counts": {},
+  "mounts": {
+    "Grip": [
+      0.0,
+      -0.39,
+      1.31
+    ],
+    "Muzzle": [
+      0.0,
+      0.13,
+      -2.47
+    ]
+  }
+}

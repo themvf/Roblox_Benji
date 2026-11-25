@@ -18,12 +18,13 @@ Progression.Score = {
 
 -- ===== Streaks (completed public matches) =====
 Progression.StreakTiers = {
-    { Wins = 2, Name = "Heating Up", Prestige = 0 },
-    { Wins = 3, Name = "Hot Streak", Prestige = 1 },
-    { Wins = 5, Name = "On Fire", Prestige = 2 },
-    { Wins = 8, Name = "Elite Streak", Prestige = 3 },
-    { Wins = 10, Name = "Legendary", Prestige = 4 },
-    { Wins = 15, Name = "Mythic", Prestige = 5 },
+    -- Names are display text (lore: Resonance). Nothing saves or compares them.
+    { Wins = 2, Name = "Resonant", Prestige = 0 },
+    { Wins = 3, Name = "Stable", Prestige = 1 },
+    { Wins = 5, Name = "Coherent", Prestige = 2 },
+    { Wins = 8, Name = "Anchored", Prestige = 3 },
+    { Wins = 10, Name = "Absolute", Prestige = 4 },
+    { Wins = 15, Name = "Eternal", Prestige = 5 },
 }
 Progression.StreakCheckpoints = { 3, 5, 8, 10 } -- saved forever as legacy badges
 
@@ -39,9 +40,10 @@ end
 
 -- ===== Match bounties (Phase 2: XP + titles only) =====
 Progression.CombatBounty = {
-    { Kills = 4, Name = "Marked", XP = 60 },
-    { Kills = 7, Name = "Priority Target", XP = 120 },
-    { Kills = 10, Name = "Overrun", XP = 200 },
+    -- display names (lore: an Entangled fighter is visible from every branch)
+    { Kills = 4, Name = "Entangled", XP = 60 },
+    { Kills = 7, Name = "Observed", XP = 120 },
+    { Kills = 10, Name = "Singularity", XP = 200 },
 }
 Progression.ObjectiveBounty = {
     Name = "Objective Specialist",
@@ -74,7 +76,7 @@ function Progression.xpForLevel(level)
     return (level - 1) ^ 2 * 100
 end
 
--- ===== Convergence Rating (featured board) =====
+-- ===== Convergence Rating (featured board; shown to players as Coherence Rating) =====
 -- L = 0.40 WQ + 0.25 OC + 0.20 M + 0.10 BS + 0.05 BC, each term normalised per match
 function Progression.rating(stats)
     local matches = math.max(stats.Matches or 0, 1)

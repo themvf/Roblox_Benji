@@ -1,0 +1,24 @@
+{
+  "triangles": {
+    "helmet": 3745,
+    "chest": 3085,
+    "waist": 938,
+    "pauldron": 1437,
+    "gauntlet": 1056,
+    "fist": 666,
+    "thigh": 814,
+    "greave": 808,
+    "boot": 520,
+    "back": 801
+  },
+  "gaps": {
+    "front": {
+      "area": 0.0,
+      "holes": []
+    },
+    "back": {
+      "area": 0.0,
+      "holes": []
+    }
+  }
+}

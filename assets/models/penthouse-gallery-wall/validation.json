@@ -1,0 +1,110 @@
+{
+  "checkedOn": "2026-11-16 19:59",
+  "export": "assets/models/penthouse-gallery-wall/exports/PenthouseGalleryWall.glb",
+  "exportSha256": "df432362cac1e318adf3187000fde8306924e152ed7cecc00f6818eaeb519e8f",
+  "sourceSha256": "f3604f0607500f1ff23d229a29bf8d6d828d92ada5ac5493d73a1cd01495aebd",
+  "triangleCapPassed": true,
+  "route": {
+    "brief": "auto",
+    "suggested": "clean",
+    "reasons": [
+      "it needs a 95% triangle cut, past the 90% where shape is lost"
+    ]
+  },
+  "detail": {
+    "outlineOverlap": {
+      "front": 0.999,
+      "side": 0.984,
+      "top": 0.996
+    },
+    "surfaceError": {
+      "front": 0.025,
+      "back": 0.025,
+      "right": 0.025,
+      "left": 0.028,
+      "top": 0.023,
+      "bottom": 0.023
+    },
+    "worstSurfaceError": 0.028,
+    "sheet": "assets/models/penthouse-gallery-wall/review/detail.png",
+    "limit": 0.08,
+    "passed": true
+  },
+  "ground": {
+    "bottomFill": 0.863,
+    "aboveFill": 0.113,
+    "ratio": 7.65,
+    "footprintStuds": [
+      11.01,
+      1.32
+    ],
+    "flagged": true
+  },
+  "textureBleed": {
+    "image": 0,
+    "size": [
+      1024,
+      1024
+    ],
+    "usedShare": 0.752,
+    "backgroundBrightness": 0.446,
+    "surfaceBrightness": 0.731,
+    "bleedPercent": 4.57
+  },
+  "budget": {
+    "role": "decor",
+    "budget": 30000,
+    "triangles": 16186,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      11.009,
+      8.008,
+      1.349
+    ],
+    "heightStuds": 8.0,
+    "kind": "prop",
+    "mounts": {},
+    "mountSheet": "assets/models/penthouse-gallery-wall/review/mounts.png",
+    "pivot": "bottom",
+    "problems": [],
+    "passed": true
+  },
+  "buildAttempts": [
+    {
+      "tile": [
+        2,
+        2
+      ],
+      "decimate": 15000,
+      "worstMesh": 6382,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     PenthouseGalleryWall.glb (2.45 MB)",
+    "           geometry_0.001                   6,382 tris",
+    "           geometry_0.002                   1,629 tris",
+    "           geometry_0.003                   5,962 tris",
+    "           geometry_0.004                   2,213 tris",
+    "           total                           16,186 tris (4 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/penthouse-gallery-wall/review/audit.png",
+      "assets/models/penthouse-gallery-wall/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.08,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-10-18",
+  "source": "StylizedMale_Geo-Only.fbx",
+  "sourceSha256": "fc15cd79f725cedeeaefb395c27e539864bafdb559efdd1cd56f929581bf56a6",
+  "measurements": {
+    "triangles": 7946,
+    "size": [
+      2.89,
+      0.969,
+      6.496
+    ],
+    "reliefRatio": 0.1492,
+    "openEdges": 118,
+    "nonManifoldEdges": 20,
+    "oneSided": false,
+    "uvLayers": [
+      "map1"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Official Roblox Stylized Male Avatar Setup reference: use as a platform body topology, 15-region proportions, and validation guide for the sentry rebuild; do not use its human appearance as the target visual or infer approval from the generic prop appraisal verdict."
+}

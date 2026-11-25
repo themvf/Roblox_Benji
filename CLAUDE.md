@@ -11,10 +11,11 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - Tools come from Rokit (`rokit.toml`): rojo 7.7, wally, stylua, selene, lune. Run them from the project root.
 - `rojo serve` owns one terminal tab; run checks in another tab or Rojo stops.
 - Before committing: `stylua src && selene src && rojo build -o /tmp/arena.rbxl`. Zero warnings is the bar.
-- Build gates: `lune run tools/check_skins.luau`, `lune run tools/check_celebrations.luau`,
+- Build gates: `lune run tools/check_skins.luau`, `lune run tools/check_celebrations.luau`, `lune run tools/check_kits.luau`,
   `lune run tools/check_maps.luau`, `lune run tools/check_assets.luau`,
   `lune run tools/check_decor.luau`, `lune run tools/check_bake.luau`, `lune run tools/check_map_authoring.luau`,
-  `lune run tools/check_live_map.luau`, `lune run tools/check_movement.luau`,
+  `lune run tools/check_live_map.luau`, `lune run tools/check_lobby_authoring.luau`, `lune run tools/check_movement.luau`,
+  `lune run tools/check_ui.luau`,
   `lune run tools/build_weapons.luau` (regenerates weapon tools from `src/shared/Weapons`).
 - Lune scripts need datatypes imported from the roblox lib (`local Vector3 = roblox.Vector3` etc.).
 
@@ -29,7 +30,48 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
 - Line endings are LF everywhere (`.gitattributes`, `eol=lf`). Git for Windows sets `core.autocrlf=true`
   system-wide, which otherwise makes `stylua --check src` fail on every file locally while CI passes.
 
+## Generated assets: one flow, enforced
+- **Animation credit policy (user decision, 2026-11-21):** Do not spend Meshy credits on
+  animation generation or library retargeting unless the user explicitly requests that paid
+  route. Author and retarget animations locally in Blender or Studio, and reuse the shared
+  match-body animation set across kits. Mesh generation and initial rigging are separate
+  decisions. See `docs/design/kits/MATCH_BODY.md` for skeleton compatibility requirements.
+- **Ask before you build.** For any new asset, run `python tools/asset_generate.py questions` and put
+  those questions to the user in one message, skipping what the request already answers. Record the
+  answers in the brief. That is the only check-in; after it, run hands-off and report once.
+  `reference` and `generate` refuse to run on a brief without the answers.
+- **Hosted GPU is a shared daily quota.** Before generating: `asset_generate.py find <words>` for something
+  to reuse, and build boxy, thin, driven or held things from shapes (no GPU). A map's third generated asset
+  needs `asset_generate.py plan "<Map>"` with a run count the user approved. `generate` makes one 512 draft;
+  `pick` runs the winner once at 1024. Out of quota means queued, not stopped: carry on with other work.
+- The brief holds size (`--height --length --width`) and counts (`--count seats=8` or `--count none`).
+  `reference --use`, `pick` and `findings` need `--counted` with what you counted; a wrong shape or count
+  is refused unless `--accept "<reason>"`. `build` finds the triangle count for the budget itself.
+- Order is brief -> reference -> mesh -> build -> approve -> publish -> Studio, all through
+  `python tools/asset_generate.py`; the table is at the top of
+  [ASSET_DELIVERY_WORKFLOW.md](docs/design/ASSET_DELIVERY_WORKFLOW.md). Write the brief first: its role
+  sets the triangle budget and whether the mesh is kept (`scan`) or rebuilt from shapes (`clean`).
+- A vehicle or a gun is `brief --kind vehicle|weapon` with named mounts (`DriverSeat`, `HullCentre`;
+  `Grip`, `Muzzle`), a `--game-name`, and code the workflow doc lists per kind. `build` draws the
+  mounts and the front on `review/mounts.png`; look at it. Game code reads mounts from the registry.
+- Never type an uploaded asset id into a script. `publish` writes it to `src/shared/AssetRegistry.json`
+  and code reads `require(ReplicatedStorage.Shared.AssetRegistry)[name].assetId`.
+- `publish --confirm` uploads, so it needs the user's approval of the review sheets first.
+  First read every close-up yourself and record the defects (`findings <name>`); the user gets your list.
+  Show them `review/audit.png` and `review/audit_closeups.png`, ask whether it looks right up close, and
+  record their own words with `verdict <name> --looks good|bad --said "..."`. "Continue" is not approval.
+- Thin bars, railings, antennas or open framework (`--thin yes`) are built from shapes, not scanned, and
+  nothing a player can get within 100 studs of is `scenery`. A radio tower passed every gate with torn struts.
+- Gates: `lune run tools/check_asset_registry.luau` (hashes, stale uploads, budgets, template settings,
+  ids typed into `src/`) and `lune run tools/check_large_files.luau` (nothing over 5 MB without a reason
+  in `tools/large_files.json`). Both run in CI.
+- One session per asset package. If a command says another session holds the package, work on
+  something else; do not `--take-over` unless the user says that session is finished.
+
 ## External art: appraise before you build
+- For asset handoff and resumption, follow [ASSET_DELIVERY_WORKFLOW.md](docs/design/ASSET_DELIVERY_WORKFLOW.md). Read the asset package's `HANDOFF.md` before rebuilding; record approved decisions and continue from the first unverified stage. The server rack is the worked example.
+- A new asset asked for by description alone ("make me a palm tree") goes through the `asset-from-prompt`
+  skill (.claude/skills): run text -> reference -> mesh -> local build without check-ins, report once at the end.
 - **Any** model, scan or scenery pack gets appraised before a pipeline is pointed at it:
   `blender -b -noaudio --python tools/blender/appraise_asset.py -- --source "<file>" --record assets/<kind>/<name>/appraisal.json`
   Then fill in `decision`, stating what the asset is for. `check_assets` fails until you do.
@@ -77,6 +119,11 @@ the spec records baseline discrepancies, preserved screenshots, and ordered desi
   in any order. The Weapons Kit's own sprint/aim-slow are switched off in `tools/build_weapons.luau`.
 
 ## UI and screens
+The lobby world is editable in Studio through `assets/environment/source/Lobby.rbxm`.
+Follow [the lobby editing walkthrough](docs/design/lobby-experience/EDITING.md): edit the
+Workspace source, Play to preview, then Save to File and run `tools/save_lobby.cmd`.
+Do not hand-edit the generated playable copy or the temporary `Workspace.Lobby`.
+
 Layout goes through `src/client/UI/Screen.lua`: safe-area insets, device class, a UIScale per panel, 44pt
 tap targets (96pt ceiling), one DisplayOrder table, and reserved zones (crosshair, thumbstick, jump button,
 hotbar). Never build a raw `ScreenGui` or position off a raw screen edge. World-space `BillboardGui` sizes
@@ -90,6 +137,34 @@ over the 3D world gets `Theme.overWorld`.
 
 Use the `roblox-ui-layout` skill (.claude/skills) before adding or moving any HUD, button, panel or
 billboard, or picking any colour or text size; it holds both module APIs and the multi-device QA gate.
+
+A new kit (a passive plus one tactical a player can unlock or buy) goes through the `kit-from-prompt` skill
+(.claude/skills): ask the eight intake questions once -> `lune run tools/new_kit.luau <Id>` -> definition in
+`src/shared/Kits/Registry` + design record -> `lune run tools/check_kits.luau`. Kits are sidegrades priced in
+Credits, with Robux optional beside it (never Robux-only; the amount lives in Creator Hub); the gate refuses
+weapon stats, a Robux-only price and over-cap effects. `KitService` and the store are
+not built yet, so kits stop at `Status = "Design"` until they are.
+
+A kit's character look goes through the `kit-look` skill (`python tools/kit_look.py`). BedWars kits are the
+**minimum** bar (`docs/design/kits/look-benchmarks/`): bar -> Midjourney concept the user approves -> each
+piece either cropped from it (240 px or more) or drawn alone in Midjourney (`draw`) -> Tripo GLB per piece ->
+`intake` -> `review` (assembled on R15 beside the benchmarks) -> `verdict` -> `export` -> `publish`. Never build
+kit armour from shapes, and never one whole-body statue: each piece rides one R15 body part. `KitLookService`
+welds an uploaded look onto a character; Tuning `Debug_KitLook = "<KitId>"` dresses everyone for testing.
+The visual audit runs before any look is reported or handed over, whatever the route: `kit_look.py audit
+<folder>` (every view, the back, close-ups, each accessory alone), then `findings`. `kit_look.py ready
+<folder>` must pass before an FBX or GLB goes to the user.
+Clothed whole-body builds (Meshy) come in stacked layers whose hidden insides are painted black: every
+splotch, wrist shard and spike so far was an inside surface our cutting or bending exposed. Before changing
+a prep rule, measure (flat-grey render, `"debugWrist"` layer map) and check render timestamps; in findings,
+say whether a defect is in the model or only in the preview rig (Studio rigs it itself). Table and
+lessons: "Layered clothing" in the kit-look skill.
+
+A shop, browser, picker, unlock or pass screen goes through the `ui-from-prompt` skill (.claude/skills):
+`CatalogItem` records from the server -> a `CatalogScreen` template (`Browser`, `LockIn`, `Track`) built from
+`UI/Components` -> `lune run tools/check_ui.luau`, which builds it offline on seven screen sizes. A new
+controller may not create raw buttons, labels or ScreenGuis (`tools/ui_baseline.json` only goes down), and
+the client never works out ownership or price itself. Preview with `Tuning.Debug_UiGallery`.
 
 ## Map decor vs map geometry
 Geometry that decides fights -- floors, walls, cover, routes, objectives -- is Lua in
@@ -107,6 +182,12 @@ map file, where the gates can see its shape.
 ## Map building
 Use the `roblox-map-building` skill (.claude/skills) before adding or editing a map layout. It holds the geometry
 audit checklist, the safety data every map must declare, and the QA gate.
+
+A new map asked for by setting alone ("make a map in a penthouse") goes through the `map-from-prompt`
+skill (.claude/skills): design data in `assets/environment/source/<Name>.design.luau` ->
+`lune run tools/map_generate.luau <Name>` -> `save_map.sh` -> `lune run tools/measure_map.luau <Name>`
+(lanes, chokes, lines of fire, spawn safety) -> `tools/map_plan.py` and `tools/map_views.py`. For such a map
+the design file is the thing to edit; its `.rbxm` is regenerated. `Penthouse` is the worked example.
 
 New Convergence maps are authored, not written: `bash tools/save_map.sh new <Name>` makes an editable
 `assets/environment/source/<Name>.rbxm` whose markers are the map data, and `bash tools/save_map.sh <Name>`

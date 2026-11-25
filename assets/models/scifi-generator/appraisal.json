@@ -1,0 +1,20 @@
+{
+  "tool": "tools/package_foundry_props.py",
+  "appraisedOn": "2026-11-14",
+  "source": "UndergroundFacilityProps/ScifiProps/ScifiProps/ScifiGenerator/ScifiGenerator.fbx",
+  "sourceSha256": "2265fb9e95f4250d371c298c2dd6a73f7eafdb9ec9ae8f634a8fcb8f5a827d57",
+  "measurements": {
+    "triangles": 3438,
+    "meshObjects": 1,
+    "hasUvLayers": true,
+    "boundsStuds": [
+      13.5,
+      6.748,
+      6.5
+    ],
+    "reliefRatio": 0.4815
+  },
+  "verdict": "PASS - low/mid-poly game-ready prop within Roblox 10k tri limit with 1024px OpenGL PBR maps.",
+  "decision": "Heavy turbine generator skid for SciFiFoundry CryoBay/ReactorBay side machinery bays (13.5 studs long, grounded bottom pivot).",
+  "views": "views.png"
+}

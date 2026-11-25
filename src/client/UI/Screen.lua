@@ -30,11 +30,13 @@ Screen.Layers = {
     Objective = 4, -- Convergence top bar and zone chips
     Meter = 6, -- mutation / jetpack meters
     Touch = 8, -- on-screen buttons: always above the readouts they drive
+    Lobby = 9, -- lobby navigation above movement, below loadout and map vote
     MapVote = 12, -- lobby map vote: above the touch buttons, below the scoreboard
     Scoreboard = 15,
     Recap = 18,
     Celebration = 20,
     Modal = 30, -- loadout, kiosks: full-screen, blocks everything
+    Persistent = 32, -- queue status and toasts: stay readable above a modal (UI/LobbyShell)
 }
 
 -- Smallest comfortable touch target in points (Apple HIG 44pt, Material 48dp). Anything the
@@ -265,7 +267,9 @@ function Screen.start()
         return Screen
     end
     Screen._started = true
-    recompute()
+    if recompute() then
+        fire()
+    end
     local function refresh()
         if recompute() then
             fire()

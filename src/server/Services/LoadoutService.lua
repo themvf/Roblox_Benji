@@ -27,7 +27,7 @@ local function available()
     end
     for _, tool in tools:GetChildren() do
         local stats = Weapons[tool.Name]
-        if stats and out[stats.Slot] then
+        if stats and not stats.PickupOnly and out[stats.Slot] then
             table.insert(out[stats.Slot], tool.Name)
         end
     end

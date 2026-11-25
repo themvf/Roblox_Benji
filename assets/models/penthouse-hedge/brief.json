@@ -1,0 +1,17 @@
+{
+  "purpose": "Clipped hedge in a stone planter, repeated along terrace cover blocks in the Penthouse",
+  "role": "decor",
+  "heightStuds": 8.0,
+  "kind": "prop",
+  "where": "Penthouse",
+  "copies": 31,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "copies=31, share=game, no moving parts, nearest=0, thin=no, stop at local build; target block 8 long x 4 deep x 8 tall studs",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "clean",
+  "scene": {}
+}

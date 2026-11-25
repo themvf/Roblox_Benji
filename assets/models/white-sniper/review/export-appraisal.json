@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-12",
+  "source": "WhiteSniper.glb",
+  "sourceSha256": "d1e377b7c303c1eda920430f0279d76eb0ec692d20425f67db9d98d2bcfb42a9",
+  "measurements": {
+    "triangles": 72000,
+    "size": [
+      0.531,
+      5.504,
+      1.302
+    ],
+    "reliefRatio": 0.0966,
+    "openEdges": 82184,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Eight-section, 72,000-triangle Roblox import candidate for a player-held sniper. Side/front/rear textured renders show the rifle silhouette and surface survived reduction. Studio texture, size, and wield tests remain required."
+}

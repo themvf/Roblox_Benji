@@ -1,0 +1,23 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "radio-tower": {
+      "description": "Rusted steel lattice radio tower with two railed platforms, antennas, a dish and base cabinets, seen from a distance as Snow Fortress scenery (role: scenery, about 60 studs tall)",
+      "source": "assets/models/radio-tower/source/RadioTower.glb",
+      "out": "assets/models/radio-tower/exports/RadioTower.glb",
+      "fit": {
+        "axis": "z",
+        "size": 60.0
+      },
+      "decimate": 32000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      },
+      "tile": [
+        3,
+        15
+      ]
+    }
+  }
+}

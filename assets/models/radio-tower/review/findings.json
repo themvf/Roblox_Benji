@@ -1,0 +1,16 @@
+{
+  "exportSha256": "cd338a35a0f14356e704039efc87c7418a605d5d10d7cc9454d11145d0fc126f",
+  "reviewedBy": "session-695e8a9d",
+  "measured": [
+    "holes: 4.25% of the model is see-through in the worst view (no view over the fail line)",
+    "shape: the surface has drifted from the source (error 0.122); expect bent bars or crumpled panels"
+  ],
+  "seen": [
+    "legs and cross-braces, every section: ragged and torn along their length, with see-through slivers",
+    "upper and lower platform railings: bent, broken into spikes, some posts hanging loose",
+    "antenna rods under the lower platform: detached fragments floating beside the tower",
+    "base: a patch of dirt and grass copied from the reference, full of small holes",
+    "dish: a hole through its centre in one view"
+  ],
+  "recordedOn": "2026-11-16 19:28"
+}

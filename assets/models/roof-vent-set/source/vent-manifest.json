@@ -1,0 +1,169 @@
+{
+  "source": "trellis-original.glb",
+  "sourceFaces": 291236,
+  "retainedRatio": 0.6,
+  "partTriangleBudget": 8500,
+  "footprintStuds": 4.0,
+  "assets": [
+    {
+      "name": "SlantedLouverHood",
+      "gridRowBottomFirst": 2,
+      "gridColumnLeftFirst": 0,
+      "sourceTriangles": 20639,
+      "exportTriangles": 12383,
+      "partTriangles": [
+        8500,
+        3883
+      ],
+      "dimensionsStuds": [
+        4.0,
+        3.009,
+        2.361
+      ],
+      "export": "exports\\SlantedLouverHood.glb"
+    },
+    {
+      "name": "CurvedRoofOutlet",
+      "gridRowBottomFirst": 2,
+      "gridColumnLeftFirst": 1,
+      "sourceTriangles": 29770,
+      "exportTriangles": 17862,
+      "partTriangles": [
+        8500,
+        8500,
+        862
+      ],
+      "dimensionsStuds": [
+        3.921,
+        4.0,
+        3.091
+      ],
+      "export": "exports\\CurvedRoofOutlet.glb"
+    },
+    {
+      "name": "RectangularIntakeBox",
+      "gridRowBottomFirst": 2,
+      "gridColumnLeftFirst": 2,
+      "sourceTriangles": 31930,
+      "exportTriangles": 19157,
+      "partTriangles": [
+        8500,
+        8500,
+        2157
+      ],
+      "dimensionsStuds": [
+        3.194,
+        4.0,
+        2.665
+      ],
+      "export": "exports\\RectangularIntakeBox.glb"
+    },
+    {
+      "name": "WideRoofLouver",
+      "gridRowBottomFirst": 1,
+      "gridColumnLeftFirst": 0,
+      "sourceTriangles": 54557,
+      "exportTriangles": 32733,
+      "partTriangles": [
+        8500,
+        8500,
+        8500,
+        7233
+      ],
+      "dimensionsStuds": [
+        2.923,
+        4.0,
+        1.646
+      ],
+      "export": "exports\\WideRoofLouver.glb"
+    },
+    {
+      "name": "TallVentStack",
+      "gridRowBottomFirst": 1,
+      "gridColumnLeftFirst": 1,
+      "sourceTriangles": 20710,
+      "exportTriangles": 12426,
+      "partTriangles": [
+        8500,
+        3926
+      ],
+      "dimensionsStuds": [
+        3.859,
+        4.0,
+        6.78
+      ],
+      "export": "exports\\TallVentStack.glb"
+    },
+    {
+      "name": "RoundRoofExtractor",
+      "gridRowBottomFirst": 1,
+      "gridColumnLeftFirst": 2,
+      "sourceTriangles": 32568,
+      "exportTriangles": 19539,
+      "partTriangles": [
+        8500,
+        8500,
+        2539
+      ],
+      "dimensionsStuds": [
+        3.984,
+        4.0,
+        3.065
+      ],
+      "export": "exports\\RoundRoofExtractor.glb"
+    },
+    {
+      "name": "PitchedRoofVent",
+      "gridRowBottomFirst": 0,
+      "gridColumnLeftFirst": 0,
+      "sourceTriangles": 26846,
+      "exportTriangles": 16106,
+      "partTriangles": [
+        8500,
+        7606
+      ],
+      "dimensionsStuds": [
+        3.713,
+        4.0,
+        2.286
+      ],
+      "export": "exports\\PitchedRoofVent.glb"
+    },
+    {
+      "name": "RaisedCurvedDuct",
+      "gridRowBottomFirst": 0,
+      "gridColumnLeftFirst": 1,
+      "sourceTriangles": 24885,
+      "exportTriangles": 14930,
+      "partTriangles": [
+        8500,
+        6430
+      ],
+      "dimensionsStuds": [
+        2.43,
+        4.0,
+        4.731
+      ],
+      "export": "exports\\RaisedCurvedDuct.glb"
+    },
+    {
+      "name": "TwinDuctIntake",
+      "gridRowBottomFirst": 0,
+      "gridColumnLeftFirst": 2,
+      "sourceTriangles": 49331,
+      "exportTriangles": 29597,
+      "partTriangles": [
+        8500,
+        8500,
+        8500,
+        4097
+      ],
+      "dimensionsStuds": [
+        2.592,
+        4.0,
+        2.388
+      ],
+      "export": "exports\\TwinDuctIntake.glb"
+    }
+  ]
+}

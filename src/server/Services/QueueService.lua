@@ -175,11 +175,18 @@ function QueueService:KnitStart()
                     full = red >= need and blue >= need
                     viable = red >= minNeed and blue >= minNeed
                 end
-                local rules = Config.GetConvergence()
+                local waitSeconds = nil
+                if viable and not full then
+                    if pad.Kind == "Convergence" then
+                        waitSeconds = Config.GetConvergence().FillWaitSeconds
+                    elseif pad.Kind == "TDM" then
+                        waitSeconds = Config.GetTDM().FillWaitSeconds
+                    end
+                end
                 local waitLeft = nil
-                if viable and not full and pad.Kind == "Convergence" then
+                if waitSeconds then
                     fillSince[pad] = fillSince[pad] or os.clock()
-                    waitLeft = math.max(0, rules.FillWaitSeconds - (os.clock() - fillSince[pad]))
+                    waitLeft = math.max(0, waitSeconds - (os.clock() - fillSince[pad]))
                 else
                     fillSince[pad] = nil
                 end
@@ -200,7 +207,10 @@ function QueueService:KnitStart()
                 elseif solo then
                     -- "Pick a side (1 per team)" would be a lie here: there is no side
                     -- to pick and nobody to wait for.
-                    status = "Step on to pick a map"
+                    local rotation = pad.Kind == "Convergence" and Config.ConvergenceMaps
+                        or pad.Kind == "TDM" and Config.TDMMaps
+                        or Config.Maps
+                    status = #rotation == 1 and "Step on to start a match" or "Step on to pick a map"
                 elseif red == 0 and blue == 0 then
                     status = minNeed < need and ("Pick a side  (%d-%d per team)"):format(minNeed, need)
                         or ("Pick a side  (%d per team)"):format(need)
@@ -241,12 +251,24 @@ function QueueService:KnitStart()
                     end
                     local kind, mode = pad.Kind, pad.Mode
                     MapVoteService:Begin(picked, n, kind, function(players, teamSize, mapName)
+                        if (kind == "TDM" or kind == "Convergence") and teamSize < minNeed and not solo then
+                            for _, player in players do
+                                clearMenuQueue(player)
+                            end
+                            return -- a departure during voting dropped the match below MinTeamSize
+                        end
                         for _, player in players do
                             menuQueue[player] = nil
                             setQueueAttributes(player, "Committed", nil, nil)
                         end
                         if kind == "Convergence" then
                             Knit.GetService("ConvergenceService"):StartMatch(players, teamSize, mapName, solo)
+                        elseif kind == "TDM" then
+                            if not Knit.GetService("TDMService"):StartMatch(players, mapName, solo) then
+                                for _, player in players do
+                                    clearMenuQueue(player)
+                                end
+                            end
                         else
                             RoundService:StartMatch(players, teamSize, mode, mapName)
                         end

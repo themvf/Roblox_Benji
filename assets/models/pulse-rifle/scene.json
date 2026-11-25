@@ -1,0 +1,20 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "pulse-rifle": {
+      "description": "Pulse Rifle: a chunky white-and-orange sci-fi energy rifle with a square violet-lit muzzle and dark under-barrel cells that players hold, in every map (role: held, about 1.4 studs tall)",
+      "source": "assets/models/pulse-rifle/source/PulseRifle.glb",
+      "out": "assets/models/pulse-rifle/exports/PulseRifle.glb",
+      "fit": {
+        "axis": "z",
+        "size": 1.4
+      },
+      "decimate": 3880,
+      "pivot": "center",
+      "optimize": {
+        "texture": 1024
+      },
+      "yaw": 90
+    }
+  }
+}

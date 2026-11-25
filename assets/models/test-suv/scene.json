@@ -1,0 +1,23 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "test-suv": {
+      "description": "Provider test: dark red luxury off-road SUV from the user's picture, Tripo simplified export (role: decor, about 6 studs tall)",
+      "source": "assets/models/test-suv/source/TestSuv.glb",
+      "out": "assets/models/test-suv/exports/TestSuv.glb",
+      "fit": {
+        "axis": "z",
+        "size": 6.0
+      },
+      "decimate": 25000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      },
+      "tile": [
+        2,
+        2
+      ]
+    }
+  }
+}

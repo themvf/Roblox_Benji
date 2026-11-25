@@ -1,0 +1,35 @@
+{
+  "purpose": "Gilded Derringer: a glossy black-and-gold sidearm with an octagonal cylinder plate and oxblood grip that players hold, in every map",
+  "role": "held",
+  "heightStuds": 0.9,
+  "pivot": "center",
+  "route": "scan",
+  "kind": "weapon",
+  "lengthStuds": 1.4,
+  "widthStuds": 0.3,
+  "gameName": "GildedDerringer",
+  "where": "held in every map",
+  "copies": 12,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "user accepted defaults: new sidearm GildedDerringer behaving like the Revolver (Pistol kit base), 1.4 x 0.9 x 0.3 studs, no moving parts, 12 on screen, game only, stop at local build. I chose: thin=no with the trigger guard and hammer spur checked in close-ups; route scan via Meshy image-to-3D as requested",
+  "meshes": "auto",
+  "scene": {
+    "yaw": 90
+  },
+  "counts": {},
+  "mounts": {
+    "Grip": [
+      0.0,
+      -0.3,
+      0.45
+    ],
+    "Muzzle": [
+      0.0,
+      0.18,
+      -0.7
+    ]
+  }
+}

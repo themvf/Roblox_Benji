@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-23",
+  "source": "HalcyonRifle.glb",
+  "sourceSha256": "4bd081ffc41534acb32d2c341a375c733e9c9e8154c2ad910fae2411a9c825eb",
+  "measurements": {
+    "triangles": 3880,
+    "size": [
+      0.46,
+      5.064,
+      0.97
+    ],
+    "reliefRatio": 0.0909,
+    "openEdges": 5922,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": ""
+}

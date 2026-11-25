@@ -1,0 +1,957 @@
+{
+  "out": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\review",
+  "bodyColor": "#1E2430",
+  "glows": [
+    {
+      "part": "Head",
+      "centre": [
+        0,
+        -0.92,
+        5.44
+      ],
+      "size": [
+        0.66,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0.482,
+        -0.766,
+        5.44
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": 36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.482,
+        -0.766,
+        5.44
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": -36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0,
+        -0.92,
+        5.51
+      ],
+      "size": [
+        0.66,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0.482,
+        -0.766,
+        5.51
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": 36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.482,
+        -0.766,
+        5.51
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": -36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0,
+        -0.92,
+        5.58
+      ],
+      "size": [
+        0.66,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0.482,
+        -0.766,
+        5.58
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": 36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.482,
+        -0.766,
+        5.58
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": -36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0,
+        -0.92,
+        5.65
+      ],
+      "size": [
+        0.66,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0.482,
+        -0.766,
+        5.65
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": 36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.482,
+        -0.766,
+        5.65
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": -36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0,
+        -0.92,
+        5.72
+      ],
+      "size": [
+        0.66,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        0.482,
+        -0.766,
+        5.72
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": 36
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.482,
+        -0.766,
+        5.72
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.035
+      ],
+      "color": "#FF3CDC",
+      "turn": -36
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        2.0782,
+        0.1467,
+        3.8
+      ],
+      "size": [
+        0.3329,
+        0.035,
+        0.26
+      ],
+      "turn": 100.18,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -2.0782,
+        0.1467,
+        3.8
+      ],
+      "size": [
+        0.3329,
+        0.035,
+        0.26
+      ],
+      "turn": -100.18,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.9663,
+        0.4289,
+        3.8
+      ],
+      "size": [
+        0.3752,
+        0.035,
+        0.26
+      ],
+      "turn": 120.82,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.9663,
+        0.4289,
+        3.8
+      ],
+      "size": [
+        0.3752,
+        0.035,
+        0.26
+      ],
+      "turn": -120.82,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.7185,
+        0.6331,
+        3.8
+      ],
+      "size": [
+        0.4054,
+        0.035,
+        0.26
+      ],
+      "turn": 157.71,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.7185,
+        0.6331,
+        3.8
+      ],
+      "size": [
+        0.4054,
+        0.035,
+        0.26
+      ],
+      "turn": -157.71,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.369,
+        0.6742,
+        3.8
+      ],
+      "size": [
+        0.4361,
+        0.035,
+        0.26
+      ],
+      "turn": -172.88,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.369,
+        0.6742,
+        3.8
+      ],
+      "size": [
+        0.4361,
+        0.035,
+        0.26
+      ],
+      "turn": 172.88,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.5951,
+        0.2199,
+        3.8
+      ],
+      "size": [
+        1.4116,
+        0.035,
+        0.26
+      ],
+      "turn": -47.85,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.5951,
+        0.2199,
+        3.8
+      ],
+      "size": [
+        1.4116,
+        0.035,
+        0.26
+      ],
+      "turn": 47.85,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        2.0565,
+        -0.127,
+        3.8
+      ],
+      "size": [
+        0.3174,
+        0.035,
+        0.26
+      ],
+      "turn": 69.4,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -2.0565,
+        -0.127,
+        3.8
+      ],
+      "size": [
+        0.3174,
+        0.035,
+        0.26
+      ],
+      "turn": -69.4,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        2.0782,
+        0.1467,
+        3.8
+      ],
+      "size": [
+        0.3329,
+        0.035,
+        0.26
+      ],
+      "turn": 100.18,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -2.0782,
+        0.1467,
+        3.8
+      ],
+      "size": [
+        0.3329,
+        0.035,
+        0.26
+      ],
+      "turn": -100.18,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.6324,
+        -0.1825,
+        3.8
+      ],
+      "size": [
+        1.4253,
+        0.035,
+        0.26
+      ],
+      "turn": -133.29,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.6324,
+        -0.1825,
+        3.8
+      ],
+      "size": [
+        1.4253,
+        0.035,
+        0.26
+      ],
+      "turn": 133.29,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.3778,
+        -0.5885,
+        3.8
+      ],
+      "size": [
+        0.414,
+        0.035,
+        0.26
+      ],
+      "turn": 8.02,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.3778,
+        -0.5885,
+        3.8
+      ],
+      "size": [
+        0.414,
+        0.035,
+        0.26
+      ],
+      "turn": -8.02,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.689,
+        -0.5129,
+        3.8
+      ],
+      "size": [
+        0.3289,
+        0.035,
+        0.26
+      ],
+      "turn": 22.47,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.689,
+        -0.5129,
+        3.8
+      ],
+      "size": [
+        0.3289,
+        0.035,
+        0.26
+      ],
+      "turn": -22.47,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        1.9154,
+        -0.3584,
+        3.8
+      ],
+      "size": [
+        0.3114,
+        0.035,
+        0.26
+      ],
+      "turn": 47.45,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -1.9154,
+        -0.3584,
+        3.8
+      ],
+      "size": [
+        0.3114,
+        0.035,
+        0.26
+      ],
+      "turn": -47.45,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "LeftUpperArm",
+      "centre": [
+        2.0565,
+        -0.127,
+        3.8
+      ],
+      "size": [
+        0.3174,
+        0.035,
+        0.26
+      ],
+      "turn": 69.4,
+      "color": "team",
+      "neon": false
+    },
+    {
+      "part": "RightUpperArm",
+      "centre": [
+        -2.0565,
+        -0.127,
+        3.8
+      ],
+      "size": [
+        0.3174,
+        0.035,
+        0.26
+      ],
+      "turn": -69.4,
+      "color": "team",
+      "neon": false
+    }
+  ],
+  "pieces": [
+    {
+      "name": "Head",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\Head.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "Head",
+      "fit": "asis",
+      "covers": true,
+      "allow": 4000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the Head, cut from the whole-body model"
+    },
+    {
+      "name": "UpperTorso",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\UpperTorso.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "UpperTorso",
+      "fit": "asis",
+      "covers": true,
+      "allow": 3000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the UpperTorso, cut from the whole-body model"
+    },
+    {
+      "name": "LowerTorso",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\LowerTorso.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "LowerTorso",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1200,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the LowerTorso, cut from the whole-body model"
+    },
+    {
+      "name": "LeftUpperArm",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\LeftUpperArm.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "LeftUpperArm",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the LeftUpperArm, cut from the whole-body model"
+    },
+    {
+      "name": "LeftLowerArm",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\LeftLowerArm.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "LeftLowerArm",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the LeftLowerArm, cut from the whole-body model"
+    },
+    {
+      "name": "LeftHand",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\LeftHand.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "LeftHand",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the LeftHand, cut from the whole-body model"
+    },
+    {
+      "name": "LeftUpperLeg",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\LeftUpperLeg.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "LeftUpperLeg",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the LeftUpperLeg, cut from the whole-body model"
+    },
+    {
+      "name": "LeftLowerLeg",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\LeftLowerLeg.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "LeftLowerLeg",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the LeftLowerLeg, cut from the whole-body model"
+    },
+    {
+      "name": "LeftFoot",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\LeftFoot.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "LeftFoot",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the LeftFoot, cut from the whole-body model"
+    },
+    {
+      "name": "RightUpperArm",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\RightUpperArm.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "RightUpperArm",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the RightUpperArm, cut from the whole-body model"
+    },
+    {
+      "name": "RightLowerArm",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\RightLowerArm.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "RightLowerArm",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the RightLowerArm, cut from the whole-body model"
+    },
+    {
+      "name": "RightHand",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\RightHand.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "RightHand",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the RightHand, cut from the whole-body model"
+    },
+    {
+      "name": "RightUpperLeg",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\RightUpperLeg.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "RightUpperLeg",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the RightUpperLeg, cut from the whole-body model"
+    },
+    {
+      "name": "RightLowerLeg",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\RightLowerLeg.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "RightLowerLeg",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the RightLowerLeg, cut from the whole-body model"
+    },
+    {
+      "name": "RightFoot",
+      "file": "C:\\Docs\\_AI Python Projects\\Roblox_Benji\\assets\\kit-looks\\Bouncer\\pieces\\whole\\RightFoot.glb",
+      "turn": 0,
+      "flip": false,
+      "trim": null,
+      "handed": null,
+      "part": "RightFoot",
+      "fit": "asis",
+      "covers": true,
+      "allow": 1000,
+      "centre": [
+        0,
+        0,
+        0
+      ],
+      "box": [
+        1,
+        1,
+        1
+      ],
+      "about": "the RightFoot, cut from the whole-body model"
+    }
+  ]
+}

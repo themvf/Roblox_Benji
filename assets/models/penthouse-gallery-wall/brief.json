@@ -1,0 +1,23 @@
+{
+  "purpose": "Freestanding gallery wall with paintings, repeated along a gallery cover block in the Penthouse",
+  "role": "decor",
+  "heightStuds": 8.0,
+  "kind": "prop",
+  "where": "Penthouse",
+  "copies": 3,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "copies=3 (repeated end to end along the block), share=game, no moving parts, stop at local build; target proportions 12 long x 4 deep x 8 tall studs",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {
+    "decimate": 15000,
+    "tile": [
+      2,
+      2
+    ]
+  }
+}

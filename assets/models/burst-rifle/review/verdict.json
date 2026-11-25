@@ -1,0 +1,14 @@
+{
+  "looks": "good",
+  "said": "Looks good",
+  "findingsShown": [
+    "barrel shroud: the amber chevrons are painted texture and come out a little soft at 1024; they will not glow in Roblox unless a neon strip or emissive map is added",
+    "muzzle: the bore opening is an eight-sided faceted ring, visible only in the straight-on front view",
+    "grip: no separate trigger or trigger guard; the grip is one solid wedge, as in the picture"
+  ],
+  "note": null,
+  "exportSha256": "648faaa373e0182094316b6ad15fa0ef781fc7422b916b1bfe5c6fa5ef1fa728",
+  "worstSurfaceError": 0.0,
+  "worstBackFacePercent": 0.0,
+  "recordedOn": "2026-11-23"
+}

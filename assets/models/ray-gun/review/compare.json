@@ -1,0 +1,26 @@
+{
+  "asset": "ray-gun",
+  "comparedOn": "2026-11-22 22:24",
+  "budget": 4000,
+  "brief": [
+    2.4,
+    0.55,
+    1.42
+  ],
+  "candidates": [
+    {
+      "seed": 201,
+      "madeBy": "meshy",
+      "triangles": 4073,
+      "cutNeeded": 0.263,
+      "studs": [
+        2.7,
+        0.6
+      ],
+      "shapeProblems": [],
+      "holesPercent": 0.02,
+      "openEdges": 8189,
+      "closeups": "assets/models/ray-gun/trials/seed-201/audit_closeups.png"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "penthouse-daybed": {
+      "description": "Outdoor daybed, visual shell over a low-cover block on the Penthouse terrace and gallery (role: decor, about 3.5 studs tall)",
+      "source": "assets/models/penthouse-daybed/source/PenthouseDaybed.glb",
+      "out": "assets/models/penthouse-daybed/exports/PenthouseDaybed.glb",
+      "fit": {
+        "axis": "z",
+        "size": 3.5
+      },
+      "decimate": 25000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      },
+      "tile": [
+        2,
+        2
+      ]
+    }
+  }
+}

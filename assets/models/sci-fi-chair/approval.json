@@ -1,0 +1,12 @@
+{
+  "approvedOn": "2026-10-10",
+  "approvedBy": "user in this chat",
+  "decisions": {
+    "role": "decoration; no usable Seat",
+    "appearance": "approved from the presented final-quarter preview",
+    "heightStuds": 5
+  },
+  "export": "exports/SciFiChair.glb",
+  "exportSha256": "c2c958617df168f0be089654c6468264eb2f09f33cc915fd37b16a089b735f7c",
+  "studioImportApprovedOrObserved": false
+}

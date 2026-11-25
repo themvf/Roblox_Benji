@@ -1,0 +1,38 @@
+{
+  "checkedAtUtc": "2026-10-19T14:42:59.893550+00:00",
+  "status": "local pass; visual approval and Studio import pending",
+  "baseSha256": "b91152dc8ff9551b2f50d778c9877197a688e51027abc02e75c19216eaee40ee",
+  "exportSha256": "ec7f9dc29101e352667ee08a023833894a397ba854959a8ac4764636c04264a0",
+  "studioTexturedSha256": "8b970f6c4691215b23638186b840c857ef730d014ab49a443c06048026fd4511",
+  "geometryBinaryIdenticalToCrackedYellow": true,
+  "meshCount": 14,
+  "totalTriangles": 23440,
+  "trianglesPerMesh": {
+    "Tube_Recessed_graphite": 2168,
+    "Tube_Dark_rubber_gasket": 1276,
+    "Tube_Polished_steel_edge": 3196,
+    "Tube_Glossy_cobalt_blue_enamel": 3732,
+    "Tube_Indicator_bright_cyan": 1456,
+    "Tube_Cyan_energy_core": 252,
+    "Tube_Worn_light_blue_panels": 1808,
+    "Tube_Diagnostic_screen": 108,
+    "Tube_Warm_status_light": 120,
+    "Tube_Cracked_cyan_glass_shell": 5204,
+    "Tube_Glass_fractures": 472,
+    "Tube_Retained_glass_shards": 4,
+    "Tube_Electric_blue_ooze": 3020,
+    "Tube_Deep_blue_residue": 624
+  },
+  "reviewSha256": {
+    "blue-cracked-front.png": "f6c503bc2d48d8acab106a07a11f34f4da77176d5e046fdd8783ca44969aa5c1",
+    "blue-cracked-side.png": "90dc0626c2c065cdb64c1607b496ecaf74112b423a043bb36d695f18d3ad608f",
+    "blue-cracked-rear.png": "4b5fff2e0694e7fa13dbb1a056cddf404d5c9e29755257de0a3b394ed1639e42",
+    "blue-cracked-quarter.png": "051ec88de805dbd00db0c1be8006495ca43a7595aae7f113d36a60b97626ea3f",
+    "blue-cracked-top.png": "8e84adbe4c882044f4e404f5bb46c120c6c04f5fcda660c3389edaadd93851b4",
+    "blue-cracked-damage.png": "0df7b643d51c0134b1e4c82ec496d338fc9969a060dffbe028469965396ef456"
+  },
+  "limitations": [
+    "The spill is static geometry, not a fluid simulation.",
+    "Glass alpha and blue emissive appearance require Studio inspection."
+  ]
+}

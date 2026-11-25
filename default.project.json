@@ -1,5 +1,6 @@
 {
   "name": "Arena",
+  "globIgnorePaths": ["assets/weapons/tools/WhiteSniper.rbxm"],
   "tree": {
     "$className": "DataModel",
     "ReplicatedStorage": {
@@ -11,6 +12,10 @@
       },
       "WeaponTools": {
         "$path": "assets/weapons/tools"
+      },
+      "StudioWeaponTools": {
+        "$className": "Folder",
+        "$ignoreUnknownInstances": true
       },
       "SkinAssets": {
         "$className": "Folder",
@@ -29,6 +34,7 @@
           "RoundSeconds": 90,
           "RoundsToWin": 5,
           "RespawnSeconds": 3,
+          "WhiteSniperRespawnSeconds": 24,
           "MapVoteEnabled": true,
           "MapVoteSeconds": 12,
           "MapVoteOptions": 5,
@@ -47,10 +53,17 @@
           "Convergence_RespawnSeconds": 3.5,
           "Convergence_SpawnProtectSeconds": 2,
           "Convergence_BotsPerTeam": 5,
+          "TDM_ScoreToWin": 50,
+          "TDM_RegulationSeconds": 600,
+          "TDM_OvertimeSeconds": 120,
+          "TDM_RespawnSeconds": 3,
+          "TDM_SpawnProtectSeconds": 1,
+          "TDM_RecentHitSeconds": 10,
           "Debug_ForceMap": "",
           "Debug_CarrierTestSafety": true,
           "Debug_CountBotMatches": true,
-          "Debug_ForceTouchUi": false
+          "Debug_ForceTouchUi": false,
+          "Debug_KitLook": ""
         }
       },
       "Uploads": {

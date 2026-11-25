@@ -360,6 +360,9 @@ end
 -- Every entry in a list that is meant to be team-fair needs an x-mirror partner.
 -- Entries on the centre line (x ~ 0) are their own partner.
 local function checkMirrored(errors, label, list, getPos, symmetry)
+    if symmetry == "asymmetric" then
+        return
+    end
     if symmetry ~= nil and symmetry ~= "x" and symmetry ~= "rotational" then
         table.insert(errors, label .. ": unsupported symmetry " .. tostring(symmetry))
         return
@@ -442,8 +445,12 @@ function Validate.check(layout, weapons, solids)
                 err("%s: color %q is not a Palette key", where, piece.color)
             end
             if Validate.KINDS[kind] and Validate.KINDS[kind].asset then
-                if type(piece.assetId) ~= "number" or piece.assetId <= 0 then
-                    err("%s: prop needs a numeric `assetId` from the Creator Store", where)
+                -- Either a model id, or `asset`: a key in Shared.AssetRegistry, which is how
+                -- a model this project uploaded is named (check_asset_registry keeps its
+                -- id out of code).
+                local keyed = type(piece.asset) == "string" and piece.asset ~= ""
+                if not keyed and (type(piece.assetId) ~= "number" or piece.assetId <= 0) then
+                    err("%s: prop needs a numeric `assetId`, or `asset` naming an AssetRegistry entry", where)
                 end
                 if piece.scale ~= nil and (type(piece.scale) ~= "number" or piece.scale <= 0) then
                     err("%s: prop `scale` must be a positive number", where)
@@ -579,7 +586,7 @@ function Validate.check(layout, weapons, solids)
         pos,
         layout.Symmetry and layout.Symmetry.SniperOutposts
     )
-    checkMirrored(fairness, "Pickups", layout.Pickups, pos)
+    checkMirrored(fairness, "Pickups", layout.Pickups, pos, layout.Symmetry and layout.Symmetry.Pickups)
     checkMirrored(fairness, "Barrier", layout.Barrier, pos)
     checkMirrored(fairness, "SafeRegions", layout.SafeRegions, pos)
     checkMirrored(fairness, "InvalidRegions", layout.InvalidRegions, pos)

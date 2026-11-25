@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-17",
+  "source": "RedSuvScan.glb",
+  "sourceSha256": "51a036c1ea22f30fc8eefd0f2a7eaaf1993c84e4515fd7f98a04308e20ac91aa",
+  "measurements": {
+    "triangles": 23426,
+    "size": [
+      0.98,
+      0.461,
+      0.36
+    ],
+    "reliefRatio": 0.3677,
+    "openEdges": 8932,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Dark red off-road SUV made by Tripo from the user's picture, surface made matte; the drivable SUV's body (role: interactive, about 6 studs tall)"
+}

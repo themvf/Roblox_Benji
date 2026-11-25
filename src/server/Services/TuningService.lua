@@ -18,6 +18,7 @@ local TUNABLE = {
     "RoundSeconds",
     "RoundsToWin",
     "RespawnSeconds",
+    "WhiteSniperRespawnSeconds",
     "MapVoteEnabled",
     "MapVoteSeconds",
     "MapVoteOptions",
@@ -106,10 +107,36 @@ function TuningService:EnsureSetup()
             tuning:SetAttribute("Movement_" .. key, default)
         end
     end
+    for key, default in Config.Turret do
+        if tuning:GetAttribute("Turret_" .. key) == nil then
+            tuning:SetAttribute("Turret_" .. key, default)
+        end
+    end
+    for key, default in Config.WeaponGlow do
+        if tuning:GetAttribute("WeaponGlow_" .. key) == nil then
+            tuning:SetAttribute("WeaponGlow_" .. key, default)
+        end
+    end
+    for key, default in Config.HeliRocket do
+        if tuning:GetAttribute("HeliRocket_" .. key) == nil then
+            tuning:SetAttribute("HeliRocket_" .. key, default)
+        end
+    end
+    -- how each vehicle drives (VehicleController reads these live while driving)
+    for kind, profile in Config.VehicleHandling do
+        for key, default in profile do
+            if tuning:GetAttribute("Handling_" .. kind .. "_" .. key) == nil then
+                tuning:SetAttribute("Handling_" .. kind .. "_" .. key, default)
+            end
+        end
+    end
     -- arena camera framing (CameraController) -- experiment, tune while moving
     for key, default in
         {
             Camera_ArenaFraming = true,
+            Vehicle_InsideView = false,
+            Vehicle_InsideFov = 80,
+            Vehicle_InsideEyeHeight = 0,
             Camera_Zoom = 14,
             Camera_MinZoom = 10,
             Camera_MaxZoom = 20,
@@ -138,16 +165,42 @@ function TuningService:EnsureSetup()
             tuning:SetAttribute(key, default)
         end
     end
+    if tuning:GetAttribute("Debug_VehicleAtBuggyPads") == nil then
+        -- dev: type SUV or ArmoredVehicle to spawn that wherever a map has a buggy
+        tuning:SetAttribute("Debug_VehicleAtBuggyPads", "")
+    end
+    if tuning:GetAttribute("Debug_KitLook") == nil then
+        -- dev: type a kit id (BlackKnight) to dress everyone who spawns in that kit's look
+        tuning:SetAttribute("Debug_KitLook", "")
+    end
     if tuning:GetAttribute("Debug_CountBotMatches") == nil then
         tuning:SetAttribute("Debug_CountBotMatches", true) -- dev: bot matches count for stats/streaks
     end
     if tuning:GetAttribute("Debug_ForceTouchUi") == nil then
         tuning:SetAttribute("Debug_ForceTouchUi", false) -- dev: show the phone/tablet touch HUD on PC
     end
+    if tuning:GetAttribute("Debug_UiGallery") == nil then
+        -- dev: "Browser", "LockIn", "Track" or "Shell" opens that screen on made-up data
+        tuning:SetAttribute("Debug_UiGallery", "")
+    end
+    if tuning:GetAttribute("Debug_PerfProbe") == nil then
+        -- dev: record frame rate, memory, triangles and draw calls per device (PerfProbeService)
+        tuning:SetAttribute("Debug_PerfProbe", false)
+    end
     local conv = Config.Convergence
     for _, key in Config.CONVERGENCE_TUNABLE do
         if tuning:GetAttribute("Convergence_" .. key) == nil then
             tuning:SetAttribute("Convergence_" .. key, conv[key])
+        end
+    end
+    for key, default in Config.TDM do
+        if tuning:GetAttribute("TDM_" .. key) == nil then
+            tuning:SetAttribute("TDM_" .. key, default)
+        end
+    end
+    for key, default in Config.Training do
+        if tuning:GetAttribute("Training_" .. key) == nil then
+            tuning:SetAttribute("Training_" .. key, default)
         end
     end
     local note = tuning:FindFirstChild("README")

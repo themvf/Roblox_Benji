@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-22",
+  "source": "HeavyCannon.glb",
+  "sourceSha256": "73bfd1f1c1eada8ac5f88cfc51d460eebd343b6d51e90d862830271c42a610ba",
+  "measurements": {
+    "triangles": 8980,
+    "size": [
+      1.903,
+      0.3,
+      0.636
+    ],
+    "reliefRatio": 0.1576,
+    "openEdges": 17004,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Heavy Cannon: a heavy yellow-and-gunmetal sci-fi machine cannon with a black core orb in a ring housing that players hold, in every map (role: held, about 1.4 studs tall)"
+}

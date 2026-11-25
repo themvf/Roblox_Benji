@@ -1,0 +1,82 @@
+{
+ "rendered": "2026-11-21T09:42:31",
+ "build": {
+  "Body.glb": "8c4247e989116877",
+  "GoldenOniTripo-AvatarSetup.fbx": "77497828bacdfa7a"
+ },
+ "sheets": [
+  "sheet-views.png",
+  "sheet-close-front.png",
+  "sheet-close-back.png",
+  "sheet-joints.png",
+  "sheet-poses-front.png",
+  "sheet-poses-side.png",
+  "sheet-camera.png"
+ ],
+ "weights": "heat",
+ "poses": {
+  "bind": {
+   "stretchedOver2x": 0.0,
+   "crushedUnder035": 0.0
+  },
+  "idle": {
+   "stretchedOver2x": 0.0052,
+   "crushedUnder035": 0.0022,
+   "rifleThroughBody": {
+    "front": 0,
+    "stock": 19
+   },
+   "crosshairCovered": 0.0
+  },
+  "walk": {
+   "stretchedOver2x": 0.0064,
+   "crushedUnder035": 0.0032,
+   "rifleThroughBody": {
+    "front": 0,
+    "stock": 2
+   }
+  },
+  "run": {
+   "stretchedOver2x": 0.0091,
+   "crushedUnder035": 0.0111,
+   "rifleThroughBody": {
+    "front": 0,
+    "stock": 7
+   }
+  },
+  "crouch": {
+   "stretchedOver2x": 0.0064,
+   "crushedUnder035": 0.0266,
+   "rifleThroughBody": {
+    "front": 11,
+    "stock": 35
+   }
+  },
+  "aim": {
+   "stretchedOver2x": 0.0067,
+   "crushedUnder035": 0.0037,
+   "rifleThroughBody": {
+    "front": 0,
+    "stock": 6
+   },
+   "crosshairCovered": 0.0
+  },
+  "jump": {
+   "stretchedOver2x": 0.0048,
+   "crushedUnder035": 0.0103,
+   "rifleThroughBody": {
+    "front": 0,
+    "stock": 0
+   }
+  },
+  "headturn": {
+   "stretchedOver2x": 0.005,
+   "crushedUnder035": 0.0044
+  }
+ },
+ "findings": {
+  "recorded": "2026-11-21T09:43:16",
+  "defects": "Gold spikes cross both eye openings; rough black edge at back of head; rifle intersects body in test (11 faces worst); mask and horns are fused into body, with no separate Marketplace accessory or verified dynamic head; camera, movement and attachment behavior not tested in Studio.",
+  "passed": "Reviewed all generated view, front and back close-up, joint, front and side pose, and camera sheets. Body reports 8,994 triangles, zero open edges; FBX readback 6.768 studs and +Z; simulated heat weights worst stretch 0.91 percent, test crosshair coverage 0 percent."
+ }
+}

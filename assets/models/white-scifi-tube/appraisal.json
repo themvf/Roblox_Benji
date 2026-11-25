@@ -1,0 +1,18 @@
+{
+  "tool": "manual image-only intake",
+  "appraisedOn": "2026-10-04",
+  "source": "reference.png",
+  "sourceSha256": "9b3c03c6a6109b08291007cc5e63709f321c05105f11ed4bf799e532cc8c3d35",
+  "measurements": {
+    "triangles": 0,
+    "reliefRatio": null,
+    "sourceType": "single front-view reference image",
+    "imageSizePixels": [1024, 1024]
+  },
+  "verdict": [
+    "No matching 3D source was supplied for this white cylinder.",
+    "Build a clean all-angle 3D prop based on the visible form and palette.",
+    "Back and side details are inferred because the image shows only the front."
+  ],
+  "decision": "User requested the white sci-fi tube pictured in SciFiTubes/biggertube.png as the next locally saved Roblox prop. Build a 12-stud-tall static decorative cylindrical housing with pale body, dark mechanical bands, front access panel, and small amber indicator. The nearby bluetubelarge.glb represents a different blue tube and is not this asset. User will upload; final size and map placement are provisional."
+}

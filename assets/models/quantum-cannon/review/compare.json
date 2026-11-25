@@ -1,0 +1,26 @@
+{
+  "asset": "quantum-cannon",
+  "comparedOn": "2026-11-22 22:16",
+  "budget": 4000,
+  "brief": [
+    4.6,
+    1.5,
+    1.4
+  ],
+  "candidates": [
+    {
+      "seed": 201,
+      "madeBy": "meshy",
+      "triangles": 19656,
+      "cutNeeded": 0.847,
+      "studs": [
+        4.6,
+        1.5
+      ],
+      "shapeProblems": [],
+      "holesPercent": 0.05,
+      "openEdges": 28526,
+      "closeups": "assets/models/quantum-cannon/trials/seed-201/audit_closeups.png"
+    }
+  ]
+}

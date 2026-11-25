@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-17",
+  "source": "ArmoredVehicle.glb",
+  "sourceSha256": "471e75fc8ebd9ae8ae11c3f6e821ee3a51a81c017c039d3a5a01166a2da349bb",
+  "measurements": {
+    "triangles": 25303,
+    "size": [
+      18.036,
+      10.362,
+      8.5
+    ],
+    "reliefRatio": 0.4713,
+    "openEdges": 11841,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": ""
+}

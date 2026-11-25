@@ -1,0 +1,31 @@
+08:40:40 | INFO: Data are loaded, start creating Blender stuff
+08:40:40 | INFO: Blender create Mesh node geometry_0
+08:40:40 | INFO: glTF import finished in 0.33s
+Info: Saved "SnowUtilityVehicle.blend"
+INFO Draco mesh compression is available, use library at C:\Program Files\Blender Foundation\Blender 4.3\4.3\python\lib\site-packages\extern_draco.dll
+08:40:46 | INFO: Starting glTF 2.0 export
+08:40:46 | INFO: Extracting primitive: Vehicle segment 01
+08:40:46 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+08:40:46 | INFO: Primitives created: 1
+08:40:46 | INFO: Extracting primitive: Vehicle segment 02
+08:40:46 | INFO: Primitives created: 1
+08:40:46 | INFO: Extracting primitive: Vehicle segment 03
+08:40:46 | INFO: Primitives created: 1
+08:40:46 | INFO: Extracting primitive: Vehicle segment 04
+08:40:46 | INFO: Primitives created: 1
+08:40:46 | INFO: Extracting primitive: Vehicle segment 05
+08:40:46 | INFO: Primitives created: 1
+08:40:46 | INFO: Extracting primitive: Vehicle segment 06
+08:40:46 | INFO: Primitives created: 1
+08:40:46 | INFO: Extracting primitive: Vehicle segment 07
+08:40:46 | INFO: Primitives created: 1
+08:40:46 | INFO: Extracting primitive: Vehicle segment 08
+08:40:46 | INFO: Primitives created: 1
+08:40:46 | INFO: Extracting primitive: Vehicle segment 09
+08:40:46 | INFO: Primitives created: 1
+08:40:46 | INFO: Finished glTF 2.0 export in 0.12698006629943848 s
+
+EXPORTED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\snow-utility-vehicle\exports\SnowUtilityVehicle.glb 9 meshes 70178 triangles dimensions (8.449, 14.144, 7.0)
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+
+Blender quit

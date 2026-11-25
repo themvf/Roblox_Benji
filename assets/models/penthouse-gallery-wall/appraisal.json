@@ -1,0 +1,35 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-16",
+  "source": "PenthouseGalleryWall.glb",
+  "sourceSha256": "f3604f0607500f1ff23d229a29bf8d6d828d92ada5ac5493d73a1cd01495aebd",
+  "measurements": {
+    "triangles": 289331,
+    "size": [
+      1.002,
+      0.118,
+      0.728
+    ],
+    "reliefRatio": 0.1182,
+    "openEdges": 50833,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "Too dense to survive as ONE mesh.",
+    "  If it is meant to be seen from a distance, render it to a skybox,",
+    "  where detail is free.",
+    "  Tiling instead: 8 meshes keeps 25% of the detail (72,332 triangles);",
+    "  Tiling instead: 15 meshes keeps 50% of the detail (144,665 triangles);",
+    "  the 10,000 cap is PER MESH, so `tile` beats `decimate` for anything",
+    "  broad that the player gets close to. Weigh the part count against",
+    "  your device budget.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Freestanding gallery wall with paintings, repeated along a gallery cover block in the Penthouse (role: decor, about 8 studs tall)"
+}

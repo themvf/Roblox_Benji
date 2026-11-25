@@ -1,0 +1,149 @@
+{
+  "source": "assets/models/white-sniper/source/WhiteSniperImported.rbxmx",
+  "parts": [
+    {
+      "name": "RifleSection_07",
+      "meshId": "rbxassetid://132516644368972",
+      "size": [
+        0.420238197,
+        1.16161501,
+        1.15268075
+      ],
+      "colorMap": "rbxassetid://81127963957026",
+      "metalnessMap": "rbxassetid://85696957908496",
+      "roughnessMap": "rbxassetid://78963669332898",
+      "normalMap": "",
+      "offset": [
+        0.0005571,
+        0.0659596,
+        1.494297
+      ]
+    },
+    {
+      "name": "RifleSection_01",
+      "meshId": "rbxassetid://131737734770494",
+      "size": [
+        0.53143096,
+        0.672307372,
+        1.26596689
+      ],
+      "colorMap": "rbxassetid://81127963957026",
+      "metalnessMap": "rbxassetid://85696957908496",
+      "roughnessMap": "rbxassetid://78963669332898",
+      "normalMap": "",
+      "offset": [
+        0.0008161,
+        -0.0582612,
+        -2.430569
+      ]
+    },
+    {
+      "name": "RifleSection_02",
+      "meshId": "rbxassetid://74152241491051",
+      "size": [
+        0.407523572,
+        0.634994268,
+        1.84800637
+      ],
+      "colorMap": "rbxassetid://81127963957026",
+      "metalnessMap": "rbxassetid://85696957908496",
+      "roughnessMap": "rbxassetid://78963669332898",
+      "normalMap": "",
+      "offset": [
+        0.0002061,
+        -0.1047676,
+        -1.510601
+      ]
+    },
+    {
+      "name": "RifleSection_03",
+      "meshId": "rbxassetid://79015701543365",
+      "size": [
+        0.499778867,
+        1.10011292,
+        0.943371177
+      ],
+      "colorMap": "rbxassetid://81127963957026",
+      "metalnessMap": "rbxassetid://85696957908496",
+      "roughnessMap": "rbxassetid://78963669332898",
+      "normalMap": "",
+      "offset": [
+        -0.0009229,
+        0.1083333,
+        -0.593182
+      ]
+    },
+    {
+      "name": "RifleSection_04",
+      "meshId": "rbxassetid://113882419306684",
+      "size": [
+        0.517687559,
+        1.23365593,
+        0.715225697
+      ],
+      "colorMap": "rbxassetid://81127963957026",
+      "metalnessMap": "rbxassetid://85696957908496",
+      "roughnessMap": "rbxassetid://78963669332898",
+      "normalMap": "",
+      "offset": [
+        -0.0008169,
+        0.0435802,
+        -0.162838
+      ]
+    },
+    {
+      "name": "RifleSection_05",
+      "meshId": "rbxassetid://99155035036591",
+      "size": [
+        0.489088953,
+        1.28473616,
+        0.662351966
+      ],
+      "colorMap": "rbxassetid://81127963957026",
+      "metalnessMap": "rbxassetid://85696957908496",
+      "roughnessMap": "rbxassetid://78963669332898",
+      "normalMap": "",
+      "offset": [
+        -8.39e-05,
+        0.0561072,
+        0.295567
+      ]
+    },
+    {
+      "name": "RifleSection_06",
+      "meshId": "rbxassetid://84961183795521",
+      "size": [
+        0.481764138,
+        1.2468462,
+        0.921617985
+      ],
+      "colorMap": "rbxassetid://81127963957026",
+      "metalnessMap": "rbxassetid://85696957908496",
+      "roughnessMap": "rbxassetid://78963669332898",
+      "normalMap": "",
+      "offset": [
+        0.0002061,
+        0.0201432,
+        0.762074
+      ]
+    },
+    {
+      "name": "RifleSection_08",
+      "meshId": "rbxassetid://79868002964540",
+      "size": [
+        0.424766302,
+        0.76941359,
+        0.590337515
+      ],
+      "colorMap": "rbxassetid://81127963957026",
+      "metalnessMap": "rbxassetid://85696957908496",
+      "roughnessMap": "rbxassetid://78963669332898",
+      "normalMap": "",
+      "offset": [
+        3.81e-05,
+        -0.1310948,
+        2.145252
+      ]
+    }
+  ]
+}

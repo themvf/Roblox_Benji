@@ -1,0 +1,24 @@
+{
+  "purpose": "Built-in aquarium wall, repeated along the foyer cover block in the Penthouse",
+  "role": "decor",
+  "heightStuds": 10.0,
+  "kind": "prop",
+  "where": "Penthouse",
+  "copies": 3,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "copies=3 (repeated end to end along the block), share=game, no moving parts, stop at local build; target proportions 13 long x 4 deep x 10 tall studs; water is a lit picture on a solid face",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {
+    "decimate": 15000,
+    "tile": [
+      2,
+      2
+    ]
+  },
+  "detailWaiver": "Surface error is 0.177 at 68k triangles and 0.181 at 18k, so it comes from the source scan (soft generated faces), not the reduction; the audit views show flat faces and square ends at 18k. Build run with --allow-detail-loss; agent decision, not user-approved."
+}

@@ -1,0 +1,11 @@
+{
+  "sourceSha256": "588cacb7a220d74a93a05a1f599ced4836eded2c5ab31e5b09c17af4c5961a01",
+  "textureSize": [
+    2048,
+    2048
+  ],
+  "changedPixels": 278899,
+  "upholsteryCandidates": 1383629,
+  "peakBlend": 0.3199999928474426,
+  "method": "localized yellow-tan blend on bright neutral upholstery pixels; dark hardware excluded"
+}

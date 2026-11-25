@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-10-11",
+  "source": "Cargo_Authored.glb",
+  "sourceSha256": "e7d286dd4cd3bf4aea29f3722b38baafbd42ac27bd9c7c81ec179d41aa389284",
+  "measurements": {
+    "triangles": 7470,
+    "size": [
+      1.001,
+      0.498,
+      0.583
+    ],
+    "reliefRatio": 0.4969,
+    "openEdges": 12328,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Provisional (look, size and role not yet user-approved): six-stud-tall destroyed dark cargo unit, a prop seen from any angle at close range. Optimized from the TRELLIS shape, whose silhouette and torn top survive: voxel remesh, planar dissolve and collapse to 7,500 triangles, with colour, normal, roughness and metalness baked from the dense source. One mesh, one 1024 PNG material set. Default Studio setup is anchored and non-colliding; solid-prop collision is an open choice, and cover players rely on belongs in map Lua blocks. Studio import is unverified."
+}

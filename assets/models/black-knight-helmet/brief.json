@@ -1,0 +1,23 @@
+{
+  "purpose": "Black Knight kit helmet, worn rigidly on the R15 Head in matches: dark plate box-helm with a black visor band, two angled orange glowing eye slits, a central crest and two short swept-back horns",
+  "role": "held",
+  "heightStuds": 2.2,
+  "pivot": "center",
+  "kind": "prop",
+  "lengthStuds": 1.9,
+  "widthStuds": 2.1,
+  "where": "worn by players on every map",
+  "copies": 10,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "role held (worn armour has no role of its own; held carries the 4,000-triangle budget); horns and crest chosen by Claude; local build only, no upload",
+  "meshes": "auto",
+  "route": "scan",
+  "scene": {},
+  "counts": {
+    "eyes": 2,
+    "horns": 2
+  }
+}

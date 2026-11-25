@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-09",
+  "source": "PurpleColumn.glb",
+  "sourceSha256": "c9e7e84c473cac315c9ed74cf74591d695edb4e438364e572729fcbc95560884",
+  "measurements": {
+    "triangles": 42819,
+    "size": [
+      2.521,
+      2.563,
+      11.994
+    ],
+    "reliefRatio": 0.2102,
+    "openEdges": 50021,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Saved high-quality purple lobby column candidate: 42,819 triangles split into six Roblox-size meshes, two embedded 1024 PNG maps, and a ground-level pivot."
+}

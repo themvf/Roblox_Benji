@@ -1,0 +1,13 @@
+{
+  "sourceTriangles": 294974,
+  "weldedTriangles": 294974,
+  "triangles": 7500,
+  "sourceDimensions": [
+    1.0019,
+    0.5002,
+    0.5853
+  ],
+  "method": "collapse decimation + selected-to-active bake (colour, normal, roughness, metalness)",
+  "textureSize": 1024,
+  "materialCount": 1
+}

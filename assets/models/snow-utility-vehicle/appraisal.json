@@ -1,0 +1,33 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-10-22",
+  "source": "trellis-original.glb",
+  "sourceSha256": "d8f6aab2ee5634285f5795792563e61e8e8f26c3ed4863f1d654d2e2e9705490",
+  "measurements": {
+    "triangles": 280713,
+    "size": [
+      0.597,
+      1.001,
+      0.491
+    ],
+    "reliefRatio": 0.4902,
+    "openEdges": 221645,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "Too dense to survive as ONE mesh.",
+    "  Tiling instead: 8 meshes keeps 25% of the detail (70,178 triangles);",
+    "  Tiling instead: 15 meshes keeps 50% of the detail (140,356 triangles);",
+    "  the 10,000 cap is PER MESH, so `tile` beats `decimate` for anything",
+    "  broad that the player gets close to. Weigh the part count against",
+    "  your device budget.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Textured all-angle snow utility vehicle prop matching the supplied image. Its intended first use is a stationary visual asset, not an operable vehicle; authoring size is provisionally about 8.45 wide x 14.14 long x 7 high studs. The source has 280,713 triangles in one mesh and two 2048 WebP maps. Textured 25% reduction retains the visible body and tire silhouette; deliver that source-derived geometry in nine sub-10k meshes with 1024 PNG maps. Visual approval, Studio import, and gameplay role remain separate checks."
+}

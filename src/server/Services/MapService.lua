@@ -9,11 +9,14 @@ local RunService = game:GetService("RunService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Palette = require(ReplicatedStorage.Shared.Palette)
 local Config = require(ReplicatedStorage.Shared.Config)
+local Lore = require(ReplicatedStorage.Shared.Lore)
 local TweenService = game:GetService("TweenService")
 local InsertService = game:GetService("InsertService")
 local Uploads = require(ReplicatedStorage.Shared.Uploads)
 local Validate = require(ReplicatedStorage.Shared.Maps.Validate)
+local AssetRegistry = require(ReplicatedStorage.Shared.AssetRegistry)
 local MapAuthoring = require(ReplicatedStorage.Shared.MapAuthoring)
+local LobbyAuthoring = require(ReplicatedStorage.Shared.LobbyAuthoring)
 
 -- The startup map is Config.StartupMap, from Shared/Config.lua only -- TuningService
 -- clears any saved StartupMap attribute before this reads it, because one set in an old
@@ -34,6 +37,8 @@ local GREY = Color3.fromRGB(160, 160, 160)
 -- Theme palette; overwritten from layout.Palette when a map is built
 local ROCK = Color3.fromRGB(96, 98, 92)
 local ROCK_EDGE = nil
+local ROCK_MATERIAL = nil
+local MATERIAL_VARIANTS = {}
 local BARK = Color3.fromRGB(78, 56, 40)
 local WOOD = Color3.fromRGB(110, 75, 45)
 local NEEDLE = { Color3.fromRGB(34, 68, 44), Color3.fromRGB(42, 80, 50), Color3.fromRGB(28, 58, 40) }
@@ -46,10 +51,14 @@ local PREFABS = {}
 local function applyPalette(pal)
     PALETTE = pal or {}
     if not pal then
+        ROCK_MATERIAL = nil
+        MATERIAL_VARIANTS = {}
         return
     end
     ROCK = pal.Rock or ROCK
     ROCK_EDGE = pal.RockEdge
+    ROCK_MATERIAL = pal.RockMaterial
+    MATERIAL_VARIANTS = pal.MaterialVariants or {}
     BARK = pal.Bark or BARK
     WOOD = pal.Wood or WOOD
     NEEDLE = pal.Needles or NEEDLE
@@ -70,10 +79,15 @@ local function cframe(pos, rot)
 end
 
 local function makePart(folder, name, pos, size, rot, color, material, shape)
-    local part = Instance.new("Part")
+    local part
+    if shape == "Wedge" then
+        part = Instance.new("WedgePart")
+    else
+        part = Instance.new("Part")
+        part.Shape = shape or Enum.PartType.Block
+    end
     part.Name = name
     part.Anchored = true
-    part.Shape = shape or Enum.PartType.Block
     part.Size = v3(size)
     part.CFrame = cframe(pos, rot)
     part.Color = color or GREY
@@ -90,8 +104,12 @@ local function makeRock(folder, name, pos, size, rot, rng)
     -- A few overlapping blocks with slight tilt reads as a boulder.
     local model = Instance.new("Model")
     model.Name = name
-    local base =
-        makePart(model, "Base", { pos[1], pos[2] + size[2] / 2, pos[3] }, size, rot, ROCK, Enum.Material.SmoothPlastic)
+    local rockMat = ROCK_MATERIAL or Enum.Material.SmoothPlastic
+    local rockVariant = MATERIAL_VARIANTS.Rock
+    local base = makePart(model, "Base", { pos[1], pos[2] + size[2] / 2, pos[3] }, size, rot, ROCK, rockMat)
+    if rockVariant then
+        base.MaterialVariant = rockVariant
+    end
     if ROCK_EDGE then
         -- accent band near the top so cover height reads instantly
         local band = makePart(
@@ -112,11 +130,14 @@ local function makeRock(folder, name, pos, size, rot, rng)
             size[3] * rng:NextNumber(0.5, 0.8),
         }
         local off = { rng:NextNumber(-0.3, 0.3) * size[1], size[2] * 0.15 * i, rng:NextNumber(-0.3, 0.3) * size[3] }
-        makePart(model, "Lump" .. i, { pos[1] + off[1], pos[2] + s[2] / 2 + off[2], pos[3] + off[3] }, s, {
+        local lump = makePart(model, "Lump" .. i, { pos[1] + off[1], pos[2] + s[2] / 2 + off[2], pos[3] + off[3] }, s, {
             rng:NextNumber(-12, 12),
             rng:NextNumber(0, 360),
             rng:NextNumber(-12, 12),
-        }, ROCK, Enum.Material.SmoothPlastic)
+        }, ROCK, rockMat)
+        if rockVariant then
+            lump.MaterialVariant = rockVariant
+        end
     end
     model.PrimaryPart = base
     model.Parent = folder
@@ -227,6 +248,9 @@ local function buildTerrain(layout)
     local terrain = workspace.Terrain
     terrain:Clear()
     local t = layout.Terrain
+    if t.Void then
+        return
+    end
     if t.GroundColor then
         terrain:SetMaterialColor(t.GroundMaterial, t.GroundColor)
     end
@@ -332,9 +356,16 @@ local function applySky(env)
     -- identical to one that was never wired, and telling those apart from the
     -- outside cost a long round of guessing.
     if not spec then
-        -- A map that declares no Sky leaves whatever the place has alone. Destroying
-        -- it would mean a skybox chosen in Studio -- which is how you actually shop
-        -- for one -- gets wiped on every build.
+        -- A map that declares no Sky leaves whatever the place has alone, unless HideCelestial is
+        -- explicitly requested (e.g., overcast hurricane clouds hiding a bright sun disc).
+        if env.HideCelestial ~= nil then
+            local skybox = existing or Instance.new("Sky")
+            skybox.CelestialBodiesShown = not env.HideCelestial
+            skybox.StarCount = env.HideCelestial and 0 or 3000
+            skybox.Parent = Lighting
+        elseif existing then
+            existing.CelestialBodiesShown = true
+        end
         if missing then
             warn(("[MapSky] %s face is unresolved; leaving the place's own sky"):format(missing))
         else
@@ -361,8 +392,8 @@ local function applyLighting(env)
     Lighting.FogStart = env.FogStart
     Lighting.FogEnd = env.FogEnd
     Lighting.GlobalShadows = true
-    Lighting.EnvironmentDiffuseScale = 0.6
-    Lighting.EnvironmentSpecularScale = 0.4
+    Lighting.EnvironmentDiffuseScale = env.EnvironmentDiffuseScale or 0.6
+    Lighting.EnvironmentSpecularScale = env.EnvironmentSpecularScale or 0.4
 
     -- Lighting.LightingStyle and Lighting.PrioritizeLightingQuality are NOT set here on purpose.
     -- Both are Security.Write = RobloxScriptSecurity in the API dump, so a game script cannot write
@@ -408,7 +439,10 @@ local function applyLighting(env)
     atmo.Haze = env.Atmosphere.Haze
     atmo.Glare = env.Atmosphere.Glare
     atmo.Color = env.Atmosphere.Color
-    atmo.Decay = Color3.fromRGB(120, 110, 100)
+    atmo.Decay = env.Atmosphere.Decay or Color3.fromRGB(120, 110, 100)
+    if env.Atmosphere.Offset then
+        atmo.Offset = env.Atmosphere.Offset
+    end
     atmo.Parent = Lighting
 
     local rays = Instance.new("SunRaysEffect")
@@ -426,6 +460,22 @@ local function applyLighting(env)
     cc.Contrast = env.Contrast or 0.08
     cc.TintColor = env.Tint or Color3.fromRGB(240, 235, 225)
     cc.Parent = Lighting
+
+    local oldClouds = workspace.Terrain:FindFirstChild("MapClouds")
+    if oldClouds then
+        oldClouds:Destroy()
+    end
+    if env.Clouds then
+        local clouds = Instance.new("Clouds")
+        clouds.Name = "MapClouds"
+        clouds.Cover = env.Clouds.Cover or 0.9
+        clouds.Density = env.Clouds.Density or 0.9
+        clouds.Color = env.Clouds.Color or Color3.fromRGB(50, 58, 72)
+        clouds.Enabled = true
+        clouds.Parent = workspace.Terrain
+    end
+    workspace:SetAttribute("MapBaseBrightness", env.Brightness)
+    workspace:SetAttribute("MapWeather", env.Weather or "")
 end
 
 -- ===== Lobby =====
@@ -445,48 +495,139 @@ local function buildLobby(self, layout)
         return { o[1] + p[1], o[2] + p[2], o[3] + p[3] }
     end
 
-    local w, d = layout.Size[1], layout.Size[2]
-    makePart(folder, "Floor", at({ 0, -1, 0 }), { w, 2, d }, nil, pal.Floor)
-    -- thin grid lines so the floor reads as a designed surface
-    for x = -w / 2 + 10, w / 2 - 10, 10 do
-        local line = makePart(folder, "GridX", at({ x, 0.02, 0 }), { 0.3, 0.04, d }, nil, pal.FloorGrid)
-        line.CanCollide = false
-    end
-    for z = -d / 2 + 10, d / 2 - 10, 10 do
-        local line = makePart(folder, "GridZ", at({ 0, 0.02, z }), { w, 0.04, 0.3 }, nil, pal.FloorGrid)
-        line.CanCollide = false
-    end
-    -- invisible rails so nobody walks off
-    local h = 30
-    for _, wall in
-        {
-            { at({ 0, h / 2, -d / 2 }), { w, h, 1 } },
-            { at({ 0, h / 2, d / 2 }), { w, h, 1 } },
-            { at({ -w / 2, h / 2, 0 }), { 1, h, d } },
-            { at({ w / 2, h / 2, 0 }), { 1, h, d } },
-        }
-    do
-        local p = makePart(folder, "Rail", wall[1], wall[2])
-        p.Transparency = 1
+    local mist = layout.ArrivalMist
+    if mist then
+        local field = Instance.new("Folder")
+        field.Name = "ArrivalMist"
+        field.Parent = folder
+        for row = 1, mist.Rows do
+            for column = 1, mist.Columns do
+                local x = mist.Center[1] + (column - (mist.Columns + 1) / 2) * mist.Spacing[1]
+                local z = mist.Center[3] + (row - (mist.Rows + 1) / 2) * mist.Spacing[2]
+                local anchor = makePart(field, "MistSource", at({ x, mist.Center[2], z }), { 0.2, 0.2, 0.2 })
+                anchor.Transparency = 1
+                anchor.CanCollide = false
+                anchor.CanTouch = false
+                anchor.CanQuery = false
+                anchor.CastShadow = false
+                local emitter = Instance.new("ParticleEmitter")
+                emitter.Name = "FloorMist"
+                emitter.Texture = mist.Texture
+                emitter.Color = ColorSequence.new(Color3.fromRGB(184, 198, 207), Color3.fromRGB(220, 226, 230))
+                emitter.Transparency = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0, 0.8),
+                    NumberSequenceKeypoint.new(0.2, 0.25),
+                    NumberSequenceKeypoint.new(0.8, 0.25),
+                    NumberSequenceKeypoint.new(1, 0.8),
+                })
+                emitter.Size = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0, 2),
+                    NumberSequenceKeypoint.new(0.5, 4),
+                    NumberSequenceKeypoint.new(1, 4.5),
+                })
+                emitter.Lifetime = NumberRange.new(3, 4)
+                emitter.Speed = NumberRange.new(0.05, 0.2)
+                emitter.Drag = 1.5
+                emitter.SpreadAngle = Vector2.new(75, 75)
+                emitter.Rotation = NumberRange.new(0, 360)
+                emitter.RotSpeed = NumberRange.new(-5, 5)
+                emitter.EmissionDirection = Enum.NormalId.Top
+                emitter.Rate = mist.RatePerEmitter
+                emitter.LightEmission = 0
+                emitter.Parent = anchor
+            end
+        end
     end
 
-    for _, piece in layout.Pieces do
-        local part = makePart(folder, piece.name, at(piece.pos), piece.size, piece.rot, pal[piece.color] or GREY)
-        -- accent strips are the only emissive surfaces in the room, so they read as signal
-        if piece.color == "Accent" or (piece.color == "Ego" and piece.name:find("Ring")) then
-            part.Material = Enum.Material.Neon
+    if layout.SourceGeometry then
+        for _, child in layout.SourceGeometry:GetChildren() do
+            child:Clone().Parent = folder
         end
+    else
+        local w, d = layout.Size[1], layout.Size[2]
+        makePart(folder, "Floor", at({ 0, -1, 0 }), { w, 2, d }, nil, pal.Floor)
+        -- thin grid lines so the floor reads as a designed surface
+        for x = -w / 2 + 10, w / 2 - 10, 10 do
+            local line = makePart(folder, "GridX", at({ x, 0.02, 0 }), { 0.3, 0.04, d }, nil, pal.FloorGrid)
+            line.CanCollide = false
+        end
+        for z = -d / 2 + 10, d / 2 - 10, 10 do
+            local line = makePart(folder, "GridZ", at({ 0, 0.02, z }), { w, 0.04, 0.3 }, nil, pal.FloorGrid)
+            line.CanCollide = false
+        end
+        -- invisible rails so nobody walks off
+        local h = 30
+        for _, wall in
+            {
+                { at({ 0, h / 2, -d / 2 }), { w, h, 1 } },
+                { at({ 0, h / 2, d / 2 }), { w, h, 1 } },
+                { at({ -w / 2, h / 2, 0 }), { 1, h, d } },
+                { at({ w / 2, h / 2, 0 }), { 1, h, d } },
+            }
+        do
+            local p = makePart(folder, "Rail", wall[1], wall[2])
+            p.Transparency = 1
+        end
+        for _, piece in layout.Pieces do
+            local part = makePart(folder, piece.name, at(piece.pos), piece.size, piece.rot, pal[piece.color] or GREY)
+            if piece.collide == false then
+                part.CanCollide = false
+                part.CanTouch = false
+                part.CanQuery = false
+            end
+            if piece.color == "Accent" or (piece.color == "Ego" and piece.name:find("Ring")) then
+                part.Material = Enum.Material.Neon
+            end
+        end
+    end
+
+    for _, spec in layout.Wayfinding or {} do
+        local color = typeof(spec.color) == "Color3" and spec.color or pal[spec.color] or pal.Accent
+        local anchor = makePart(folder, spec.name .. "Wayfinding", at(spec.pos), { 1, 1, 1 }, nil, color)
+        anchor.Transparency = 1
+        anchor.CanCollide = false
+        anchor.CanTouch = false
+        anchor.CanQuery = false
+
+        local sign = Instance.new("BillboardGui")
+        sign.Name = "Wayfinding"
+        sign.Size = UDim2.fromScale(spec.size[1], spec.size[2])
+        sign.AlwaysOnTop = true
+        sign.MaxDistance = 170 -- the hub's PLAY sign is about 125 studs from the arrival point
+        sign.Parent = anchor
+
+        local title = Instance.new("TextLabel")
+        title.Size = UDim2.fromScale(1, 0.68)
+        title.BackgroundTransparency = 1
+        title.Text = spec.title
+        title.TextScaled = true
+        title.Font = Enum.Font.GothamBlack
+        title.TextColor3 = color
+        Palette.worldText(title)
+        title.Parent = sign
+
+        local detail = Instance.new("TextLabel")
+        detail.Position = UDim2.fromScale(0, 0.68)
+        detail.Size = UDim2.fromScale(1, 0.32)
+        detail.BackgroundTransparency = 1
+        detail.Text = spec.detail
+        detail.TextScaled = true
+        detail.Font = Enum.Font.GothamBold
+        detail.TextColor3 = Color3.fromRGB(245, 245, 250)
+        Palette.worldText(detail)
+        detail.Parent = sign
     end
 
     -- One controlled light per destination instead of a uniformly blown-out floor. The room
     -- should read as three lit places in a dark hall, which is what makes the hierarchy legible.
     for _, spec in layout.Lights or {} do
-        local anchor = makePart(folder, spec.name, at(spec.pos), { 1, 1, 1 }, nil, pal[spec.color] or GREY)
+        local color = typeof(spec.color) == "Color3" and spec.color or pal[spec.color] or GREY
+        local anchor = makePart(folder, spec.name, at(spec.pos), { 1, 1, 1 }, nil, color)
         anchor.Transparency = 1
         anchor.CanCollide = false
         anchor.CanQuery = false
         local light = Instance.new("PointLight")
-        light.Color = pal[spec.color] or Color3.new(1, 1, 1)
+        light.Color = color
         light.Range = spec.range or 30
         light.Brightness = spec.brightness or 1.5
         light.Shadows = true
@@ -515,12 +656,20 @@ local function buildLobby(self, layout)
 
     self.Pads = {}
     for _, spec in layout.Pads do
+        if spec.disabled then
+            continue
+        end
         if spec.kind == "Convergence" and not spec.solo then
             -- team sizes come from Config/Tuning so tests can shrink the featured mode.
             -- A solo pad is exempt: its whole point is that one person can start, and
-            -- inheriting a team size of six would make it as unusable as the pad it
+            -- inheriting a team size of five would make it as unusable as the pad it
             -- exists to work around.
             local rules = Config.GetConvergence()
+            spec = table.clone(spec)
+            spec.teamSize = rules.TeamSize
+            spec.minTeamSize = rules.MinTeamSize
+        elseif spec.kind == "TDM" and not spec.solo then
+            local rules = Config.GetTDM()
             spec = table.clone(spec)
             spec.teamSize = rules.TeamSize
             spec.minTeamSize = rules.MinTeamSize
@@ -555,7 +704,7 @@ local function buildLobby(self, layout)
             local count = (spec.minTeamSize and spec.minTeamSize < spec.teamSize)
                     and (spec.minTeamSize .. "-" .. spec.teamSize .. " PLAYERS")
                 or (spec.teamSize .. (spec.teamSize == 1 and " PLAYER" or " PLAYERS"))
-            floorLabel(part, side.team:upper() .. "\n" .. count, Color3.fromRGB(20, 24, 30))
+            floorLabel(part, Lore.teamName(side.team):upper() .. "\n" .. count, Color3.fromRGB(20, 24, 30))
             sides[side.team] = part
         end
 
@@ -626,6 +775,8 @@ local function buildLobby(self, layout)
     for _, p in layout.Spawns do
         table.insert(self.LobbySpawns, v3(at(p)))
     end
+    local fall = layout.FallRecovery
+    self.LobbyFall = fall and { min = v3(at(fall.min)), max = v3(at(fall.max)) } or nil
 
     -- Leaderboard wall
     local b = layout.Board
@@ -635,7 +786,7 @@ local function buildLobby(self, layout)
             "LeaderboardWall",
             at({ b.pos[1], b.pos[2] + b.size[2] / 2, b.pos[3] }),
             b.size,
-            nil,
+            { 0, b.yaw or 0, 0 },
             pal.Wall
         )
         local sg = Instance.new("SurfaceGui")
@@ -653,7 +804,7 @@ local function buildLobby(self, layout)
         title.Parent = sg
         self.BoardLabels = {}
         local names = { "Rating", "BestStreak", "Wins", "BountiesClaimed" }
-        local titles = { "CONVERGENCE RATING", "BEST STREAK", "WINS", "BOUNTIES CLAIMED" }
+        local titles = { Lore.Rating:upper(), "BEST STREAK", "WINS", "BOUNTIES CLAIMED" }
         for i, name in names do
             local col = Instance.new("TextLabel")
             col.Position = UDim2.new((i - 1) * 0.25, 4, 0.15, 0)
@@ -673,6 +824,8 @@ local function buildLobby(self, layout)
     -- Weapon kiosk
     local k = layout.Kiosk
     if k then
+        -- The kiosk turns as one piece about its marker; the sign is on the -Z (Front) side.
+        local kioskAt = CFrame.new(v3(at(k.pos))) * CFrame.Angles(0, math.rad(k.yaw or 0), 0)
         local counter = makePart(
             folder,
             "WeaponKiosk",
@@ -681,6 +834,7 @@ local function buildLobby(self, layout)
             nil,
             pal.Pillar
         )
+        counter.CFrame = kioskAt * CFrame.new(0, k.size[2] / 2, 0)
         local top = makePart(
             folder,
             "KioskTop",
@@ -690,6 +844,7 @@ local function buildLobby(self, layout)
             pal.Accent,
             Enum.Material.Neon
         )
+        top.CFrame = kioskAt * CFrame.new(0, k.size[2] + 0.2, 0)
         top.CanCollide = false
         local backboard = makePart(
             folder,
@@ -699,6 +854,7 @@ local function buildLobby(self, layout)
             nil,
             pal.Wall
         )
+        backboard.CFrame = kioskAt * CFrame.new(0, 7, -k.size[3] / 2 - 0.5)
 
         local sign = Instance.new("SurfaceGui")
         sign.Face = Enum.NormalId.Front
@@ -747,8 +903,7 @@ local function buildLobby(self, layout)
             show:ScaleTo(2.5)
             local _, size = show:GetBoundingBox()
             show:PivotTo(
-                CFrame.new(v3(at({ k.pos[1], k.pos[2] + k.size[2] + 0.4 + size.Y / 2 + 1, k.pos[3] })))
-                    * CFrame.Angles(0, math.rad(90), 0)
+                kioskAt * CFrame.new(0, k.size[2] + 0.4 + size.Y / 2 + 1, 0) * CFrame.Angles(0, math.rad(90), 0)
             )
             show.Parent = folder
             self.Showcase = show
@@ -843,9 +998,17 @@ end
 
 local function cloneBaked(folder, baked)
     local parts = 0
+    local geometryCopied = false
     for _, child in baked:GetChildren() do
         if child.Name:sub(1, 13) == "SafetyBarrier" then
             continue
+        end
+        if child.Name == "Geometry" and child:IsA("Folder") then
+            if geometryCopied then
+                warn("[MapBuild] duplicate Geometry folder in " .. baked.Name .. " bake; skipping extra copy")
+                continue
+            end
+            geometryCopied = true
         end
         local copy = child:Clone()
         copy.Parent = folder
@@ -1012,8 +1175,20 @@ local function placePiece(folder, prefix, piece, rng, mirror)
                 tint = Color3.fromRGB(190, 190, 120)
             end
         end
-        local part =
-            makePart(folder, name, pos, piece.size, rot, tint, piece.material and Enum.Material[piece.material] or nil)
+        local part = makePart(
+            folder,
+            name,
+            pos,
+            piece.size,
+            rot,
+            tint,
+            piece.material and Enum.Material[piece.material] or nil,
+            piece.shape
+        )
+        local variant = piece.materialVariant or (type(piece.color) == "string" and MATERIAL_VARIANTS[piece.color])
+        if variant then
+            part.MaterialVariant = variant
+        end
         if piece.transparency then
             part.Transparency = piece.transparency
         end
@@ -1037,7 +1212,19 @@ local function placePiece(folder, prefix, piece, rng, mirror)
         -- has to answer raycasts as well, because cover that stops players but not
         -- bullets -- or the reverse -- is worse than no cover at all. The gates still
         -- cannot see it, so a collidable prop is a deliberate, reviewed exception.
-        local template = propTemplate(piece.assetId)
+        -- `asset` names an entry in Shared.AssetRegistry; an entry that is not uploaded
+        -- yet has no id, and its prop is simply not drawn.
+        local assetId = piece.assetId
+        if assetId == nil and piece.asset then
+            local entry = AssetRegistry[piece.asset]
+            assetId = entry and entry.assetId
+            if assetId == nil then
+                warn(
+                    ("[MapService] prop %s: asset %q is not uploaded yet; it will be missing"):format(name, piece.asset)
+                )
+            end
+        end
+        local template = propTemplate(assetId)
         if template then
             local model = template:Clone()
             local solid = piece.collide == true
@@ -1293,7 +1480,7 @@ function MapService:Build(layout)
         -- in Studio since the last run. Warn only, never block a test session.
         -- A baked map's geometry is its bake, not its layout's (empty) piece lists; checking
         -- without it reported every barrier and launch landing as floating in empty space.
-        local bake = bakedModel(layout.Name)
+        local bake = bakedModel(layout.BakedMap or layout.Name)
         local ok, errors = Validate.check(layout, nil, bake and MapAuthoring.solids({ bake }, Validate) or nil)
         if not ok then
             warn(("[MapService] %s fails validation (%d):"):format(layout.Name, #errors))
@@ -1362,7 +1549,7 @@ function MapService:Build(layout)
     -- build. Never both. Everything outside this block -- terrain, lighting, spawns,
     -- objectives, pickups, traversal, the barrier -- comes from the layout either way,
     -- because none of it is geometry.
-    local baked = bakedModel(layout.Name)
+    local baked = bakedModel(layout.BakedMap or layout.Name)
     -- A map whose geometry lives only in its bake has nothing to fall back to. Failing
     -- here is the honest outcome: MapService:Load pcalls this and falls back to a map
     -- that works, which beats dropping players into an empty skybox.
@@ -1376,6 +1563,21 @@ function MapService:Build(layout)
     end
     if baked then
         cloneBaked(folder, baked)
+        local decor = folder:FindFirstChild("Decor")
+        if not decor then
+            decor = Instance.new("Folder")
+            decor.Name = "Decor"
+            decor.Parent = folder
+        end
+        authoredDecor(decor, layout.BakedMap or layout.Name)
+        -- An authored map's props are markers in its source: they arrive as a Decor list
+        -- and are not in the bake. Maps baked from a built map already hold their props
+        -- in the bake, and placing their lists as well would draw every one twice.
+        if layout.Authored then
+            for _, piece in layout.Decor or {} do
+                placePiece(decor, "", piece, rng, nil)
+            end
+        end
     else
         -- Outer walls: visible for greybox, invisible for themed maps
         local half = layout.Size / 2
@@ -1452,9 +1654,19 @@ function MapService:Build(layout)
         end
     end
 
+    Knit.GetService("TurretService"):Build(layout, folder)
+    Knit.GetService("VehicleService"):Build(layout, folder)
+
     if layout.Environment then
         applyLighting(layout.Environment)
         applySky(layout.Environment)
+    else
+        local oldClouds = workspace.Terrain:FindFirstChild("MapClouds")
+        if oldClouds then
+            oldClouds:Destroy()
+        end
+        workspace:SetAttribute("MapBaseBrightness", nil)
+        workspace:SetAttribute("MapWeather", "")
     end
 
     -- Studio's template place adds these; the map provides its own
@@ -1557,6 +1769,40 @@ function MapService:PlaceCharacter(player, character)
         -- face the pads (toward -Z of the lobby)
         root.CFrame = CFrame.lookAt(pos, pos + Vector3.new(0, 0, -10))
     end
+end
+
+-- The lobby floats over a void. Anyone outside a match who drops into the box under the
+-- islands (Maps/Lobby.lua FallRecovery) is put back on an arrival spawn: in the lobby a fall
+-- is a slip, not a lost fight, so there is no penalty. The box is far from every match map.
+function MapService:WatchLobbyFalls()
+    task.spawn(function()
+        while true do
+            task.wait(0.5)
+            local box = self.LobbyFall
+            local points = self.LobbySpawns
+            if box and points and #points > 0 then
+                for _, player in Players:GetPlayers() do
+                    local character = player.Character
+                    local root = character and character:FindFirstChild("HumanoidRootPart")
+                    if root and not player:GetAttribute("InMatch") then
+                        local p = root.Position
+                        if
+                            p.X > box.min.X
+                            and p.X < box.max.X
+                            and p.Y > box.min.Y
+                            and p.Y < box.max.Y
+                            and p.Z > box.min.Z
+                            and p.Z < box.max.Z
+                        then
+                            local pos = pickSpawn(points, character) + Vector3.new(0, 3, 0)
+                            root.AssemblyLinearVelocity = Vector3.zero
+                            root.CFrame = CFrame.lookAt(pos, pos + Vector3.new(0, 0, -10))
+                        end
+                    end
+                end
+            end
+        end
+    end)
 end
 
 -- ===== Map events (signature moments) =====
@@ -1810,6 +2056,7 @@ function MapService:ReadLiveMaps()
     end
     for _, child in workspace:GetChildren() do
         local keep = IGNORED_IN_WORKSPACE[child.Name]
+            or child:GetAttribute("LobbySource") == true
             or child:IsA("Camera")
             or child:IsA("Terrain")
             or child:IsA("LuaSourceContainer")
@@ -1840,7 +2087,7 @@ function MapService:LiveNotice(player)
     if self.ExploreMap then
         notice:Fire(
             player,
-            ("Playing %s from Studio. /lobby for the lobby; the PRACTICE pad plays a match here"):format(
+            ("Playing %s from Studio. /lobby for the lobby; the TRAINING · OBJECTIVE pad plays a match here"):format(
                 self.ExploreMap
             )
         )
@@ -1848,6 +2095,55 @@ function MapService:LiveNotice(player)
             notice:Fire(player, ("%d loose piece(s) left out -- see Output"):format(#self.LooseRemoved))
         end
     end
+end
+
+-- A Workspace editing copy wins in Studio, just as it does for authored maps.
+-- The saved copy in BakedMaps is the production source. Both use one marker
+-- reader; a bad edit falls back to the last converted copy without deleting it.
+function MapService:ReadLobbyLayout()
+    local base = require(ReplicatedStorage.Shared.Maps.Lobby)
+    local function read(root, label)
+        local layout, errors = LobbyAuthoring.read(root, base)
+        if not layout then
+            warn(("[LobbyAuthoring] %s cannot be played:"):format(label))
+            for _, message in errors do
+                warn("    " .. message)
+            end
+        end
+        return layout
+    end
+    local live = {}
+    for _, child in workspace:GetChildren() do
+        if child:GetAttribute("LobbySource") == true then
+            table.insert(live, child)
+        end
+    end
+    if RunService:IsStudio() and #live == 1 then
+        local layout = read(live[1], "editable lobby")
+        live[1]:Destroy() -- only the Play-session copy; the Studio edit model remains
+        if layout then
+            print("[LobbyAuthoring] playing lobby straight from Workspace")
+            return layout
+        end
+    elseif #live > 1 then
+        warn("[LobbyAuthoring] more than one editable lobby in Workspace; using the last saved copy")
+    end
+    for _, root in live do
+        if root.Parent then
+            root:Destroy()
+        end
+    end
+    local store = ServerStorage:FindFirstChild("BakedMaps")
+    local saved = store and store:FindFirstChild("Lobby")
+    if saved and saved:GetAttribute("LobbySource") ~= true then
+        for _, child in saved:GetChildren() do
+            if child:GetAttribute("LobbySource") == true then
+                saved = child
+                break
+            end
+        end
+    end
+    return (saved and read(saved, "saved lobby")) or base
 end
 
 function MapService:KnitInit()
@@ -1868,7 +2164,8 @@ function MapService:KnitInit()
     elseif live[1] then
         self.ExploreMap = startup
     end
-    buildLobby(self, require(ReplicatedStorage.Shared.Maps.Lobby))
+    buildLobby(self, self:ReadLobbyLayout())
+    self:WatchLobbyFalls()
 
     -- Hook spawns here, in KnitInit, so this runs before RoundService (KnitStart) can
     -- load anyone's character. Otherwise the first spawn lands at the world origin.

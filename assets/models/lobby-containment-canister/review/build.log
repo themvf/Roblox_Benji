@@ -1,0 +1,52 @@
+16:18:13 | INFO: Data are loaded, start creating Blender stuff
+16:18:13 | INFO: Blender create Mesh node geometry_0
+16:18:13 | INFO: glTF import finished in 0.34s
+Info: Saved "LobbyContainmentCanister.blend"
+INFO Draco mesh compression is available, use library at C:\Program Files\Blender Foundation\Blender 4.3\4.3\python\lib\site-packages\extern_draco.dll
+16:18:19 | INFO: Starting glTF 2.0 export
+16:18:19 | INFO: Extracting primitive: Preserved cap geometry
+16:18:19 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+16:18:19 | INFO: Primitives created: 1
+16:18:19 | INFO: Extracting primitive: Preserved cap geometry.001
+16:18:19 | INFO: Primitives created: 1
+16:18:19 | INFO: Extracting primitive: Preserved cap geometry.002
+16:18:19 | INFO: Primitives created: 1
+16:18:19 | INFO: Extracting primitive: Preserved cap geometry.003
+16:18:19 | INFO: Primitives created: 1
+16:18:19 | INFO: Extracting primitive: Preserved cap geometry.004
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Extracting primitive: Preserved cap geometry.005
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Extracting primitive: Preserved cap geometry.006
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Extracting primitive: Clear chamber shell
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Extracting primitive: Dark far-side lining
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Extracting primitive: Torus
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Extracting primitive: Torus.002
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Extracting primitive: Energy_Bright_Wisps_00
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Extracting primitive: Energy_Cyan_Wisps_03
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Extracting primitive: Energy_Faint_Wisps_06
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | WARNING: Mesh Layered blue vapor is not valid, and may be exported wrongly
+16:18:20 | INFO: Extracting primitive: Layered blue vapor
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | WARNING: Mesh Energy volume plane is not valid, and may be exported wrongly
+16:18:20 | INFO: Extracting primitive: Energy volume plane
+16:18:20 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Extracting primitive: Sphere
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Extracting primitive: Glass_Reflection_1
+16:18:20 | INFO: Primitives created: 1
+16:18:20 | INFO: Finished glTF 2.0 export in 0.1978907585144043 s
+
+EXPORTED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\lobby-containment-canister\exports\LobbyContainmentCanister.glb 18 meshes 56911 source cap triangles
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+
+Blender quit

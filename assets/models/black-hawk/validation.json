@@ -1,0 +1,62 @@
+{
+  "checkedOn": "2026-11-16 10:31",
+  "export": "assets/models/black-hawk/exports/BlackHawk.glb",
+  "exportSha256": "7f931787f6f2ea8009590d6eef21d59afb93986c5073a1276d117cd2ced4905c",
+  "sourceSha256": "34faa71e8b29d49f1c9df634ac6a5904eab790c941925ab9990e1e981a8d7e5c",
+  "triangleCapPassed": true,
+  "buildAttempts": [
+    {
+      "tile": [
+        6,
+        4
+      ],
+      "decimate": 45000,
+      "worstMesh": 10619,
+      "passed": false
+    },
+    {
+      "tile": [
+        8,
+        4
+      ],
+      "decimate": 45000,
+      "worstMesh": 8353,
+      "passed": true
+    }
+  ],
+  "inspect": [
+    "file     BlackHawk.glb (5.21 MB)",
+    "           geometry_0.002                   1,310 tris",
+    "           geometry_0.003                     797 tris",
+    "           geometry_0.006                   5,319 tris",
+    "           geometry_0.007                   4,589 tris",
+    "           geometry_0.010                   7,924 tris",
+    "           geometry_0.011                   6,680 tris",
+    "           geometry_0.013                     378 tris",
+    "           geometry_0.014                   8,293 tris",
+    "           geometry_0.015                   8,353 tris",
+    "           geometry_0.016                     497 tris",
+    "           geometry_0.018                   1,908 tris",
+    "           geometry_0.019                   1,898 tris",
+    "           geometry_0.022                   1,324 tris",
+    "           geometry_0.023                   1,393 tris",
+    "           geometry_0.026                   1,617 tris",
+    "           geometry_0.027                   1,722 tris",
+    "           geometry_0.030                     754 tris",
+    "           geometry_0.031                   1,819 tris",
+    "           total                           56,575 tris (18 meshes)",
+    "           texture                      1024x1024  image/png",
+    "           texture                      1024x1024  image/png"
+  ],
+  "views": "review/views.png",
+  "audit": {
+    "sheets": [
+      "assets/models/black-hawk/review/audit.png",
+      "assets/models/black-hawk/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.79,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Not uploaded, not seen in Studio, not approved."
+}

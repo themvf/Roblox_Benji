@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-16",
+  "source": "PatrolRhibClean.glb",
+  "sourceSha256": "1047670a070fb4839d427ee0ca58de36e4185f769c4b9c2b0e9e8be24f935019",
+  "measurements": {
+    "triangles": 2104,
+    "size": [
+      10.22,
+      29.998,
+      8.0
+    ],
+    "reliefRatio": 0.2667,
+    "openEdges": 4260,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Black rigid inflatable patrol boat with a centre console, outboard engines and a tubular radar arch; replaces the block-built RHIBs at the Five Islands Hurricane docks (role: interactive, about 8 studs tall)"
+}

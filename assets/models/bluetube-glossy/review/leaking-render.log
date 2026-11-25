@@ -1,0 +1,280 @@
+Extensions: writing cache failed ([Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\extensions\\.cache\\compat.dat').
+Traceback (most recent call last):
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 1027, in register
+    Tracker.initialize(
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 295, in initialize
+    self.set_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 466, in set_tracker_json
+    self.save_tracker_json()
+  File "C:\Users\joshb\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons\MCprep_addon\tracking.py", line 479, in save_tracker_json
+    outf = open(jpath, 'w')
+           ^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\joshb\\AppData\\Roaming\\Blender Foundation\\Blender\\4.3\\scripts\\addons\\MCprep_addon\\mcprep_addon_tracker.json'
+
+Failed to register scene update handler
+Reloading external rigs...
+Reloading external metarigs...
+🔄 blenderkit: Verbose is enabled
+🔄 blenderkit: Read in JSON settings from file
+ℹ️  blenderkit: Unregistering BlenderKit add-on [13:40:40.222, __init__.py:2558]
+13:40:40 | INFO: Data are loaded, start creating Blender stuff
+13:40:40 | INFO: Blender create Mesh node Tube_Recessed_graphite
+13:40:40 | INFO: Blender create Mesh node Tube_Dark_rubber_gasket
+13:40:40 | INFO: Blender create Mesh node Tube_Polished_steel_edge
+13:40:40 | INFO: Blender create Mesh node Tube_Glossy_cobalt_blue_enamel
+13:40:40 | INFO: Blender create Mesh node Tube_Indicator_neon_yellow
+13:40:40 | INFO: Blender create Mesh node Tube_Neon_yellow_energy_core
+13:40:40 | INFO: Blender create Mesh node Tube_Worn_light_blue_panels
+13:40:40 | INFO: Blender create Mesh node Tube_Diagnostic_screen
+13:40:40 | INFO: Blender create Mesh node Tube_Warm_status_light
+13:40:40 | INFO: Blender create Mesh node Tube_Cracked_yellow_glass_shell
+13:40:40 | INFO: Blender create Mesh node Tube_Glass_fractures
+13:40:40 | INFO: Blender create Mesh node Tube_Retained_glass_shards
+13:40:40 | INFO: Blender create Mesh node Tube_Fluorescent_ooze
+13:40:40 | INFO: Blender create Mesh node Tube_Thick_residue
+13:40:40 | INFO: glTF import finished in 0.04s
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+Fra:1 Mem:15.96M (Peak 15.96M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Recessed_graphite
+Fra:1 Mem:15.96M (Peak 15.96M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Dark_rubber_gasket
+Fra:1 Mem:17.97M (Peak 17.97M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Diagnostic_screen
+Fra:1 Mem:17.98M (Peak 17.98M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Fluorescent_ooze
+Fra:1 Mem:17.98M (Peak 17.98M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane
+Fra:1 Mem:20.39M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:19.58M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:19.81M (Peak 20.39M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.24M, Peak:0.24M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.24M, Peak:0.24M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.95M, Peak:0.95M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.92M, Peak:2.92M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.93M, Peak:2.93M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.26M, Peak:3.26M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.26M, Peak:3.26M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.18M, Peak:3.26M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Sample 0/24
+Fra:1 Mem:79.96M (Peak 79.96M) | Time:00:00.28 | Remaining:00:06.27 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Sample 1/24
+Fra:1 Mem:104.68M (Peak 141.76M) | Time:00:09.06 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Sample 24/24
+Fra:1 Mem:104.68M (Peak 141.76M) | Time:00:09.06 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\leaking-front.png'
+Time: 00:09.33 (Saving: 00:00.26)
+
+Fra:1 Mem:19.12M (Peak 19.12M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Recessed_graphite
+Fra:1 Mem:19.12M (Peak 19.12M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Worn_light_blue_panels
+Fra:1 Mem:19.13M (Peak 19.13M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Fluorescent_ooze
+Fra:1 Mem:19.14M (Peak 19.14M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane
+Fra:1 Mem:20.39M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:19.58M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:19.81M (Peak 20.39M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.24M, Peak:0.24M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.24M, Peak:0.24M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.95M, Peak:0.95M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.92M, Peak:2.92M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.93M, Peak:2.93M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.26M, Peak:3.26M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.26M, Peak:3.26M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.18M, Peak:3.26M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Sample 0/24
+Fra:1 Mem:79.96M (Peak 79.96M) | Time:00:00.27 | Remaining:00:05.91 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Sample 1/24
+Fra:1 Mem:104.68M (Peak 141.76M) | Time:00:08.54 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Sample 24/24
+Fra:1 Mem:104.68M (Peak 141.76M) | Time:00:08.54 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\leaking-side.png'
+Time: 00:08.62 (Saving: 00:00.08)
+
+Fra:1 Mem:19.12M (Peak 19.12M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Recessed_graphite
+Fra:1 Mem:19.13M (Peak 19.13M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Glass_fractures
+Fra:1 Mem:19.13M (Peak 19.13M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Thick_residue
+Fra:1 Mem:19.17M (Peak 19.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane
+Fra:1 Mem:20.39M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:19.58M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:19.81M (Peak 20.39M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.24M, Peak:0.24M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.24M, Peak:0.24M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.95M, Peak:0.95M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.92M, Peak:2.92M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.93M, Peak:2.93M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.26M, Peak:3.26M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.26M, Peak:3.26M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.18M, Peak:3.26M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Sample 0/24
+Fra:1 Mem:79.96M (Peak 79.96M) | Time:00:00.29 | Remaining:00:06.32 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Sample 1/24
+Fra:1 Mem:104.68M (Peak 141.76M) | Time:00:09.30 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Sample 24/24
+Fra:1 Mem:104.68M (Peak 141.76M) | Time:00:09.30 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\leaking-rear.png'
+Time: 00:09.39 (Saving: 00:00.08)
+
+Fra:1 Mem:19.12M (Peak 19.12M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Recessed_graphite
+Fra:1 Mem:19.12M (Peak 19.12M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Warm_status_light
+Fra:1 Mem:19.13M (Peak 19.13M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Fluorescent_ooze
+Fra:1 Mem:19.21M (Peak 19.21M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane
+Fra:1 Mem:20.39M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:19.58M (Peak 20.39M) | Time:00:00.00 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:19.81M (Peak 20.39M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.24M, Peak:0.24M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.24M, Peak:0.24M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:0.95M, Peak:0.95M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.92M, Peak:2.92M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.00 | Mem:2.93M, Peak:2.93M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.26M, Peak:3.26M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.26M, Peak:3.26M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.18M, Peak:3.26M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.01 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Sample 0/24
+Fra:1 Mem:79.96M (Peak 79.96M) | Time:00:00.30 | Remaining:00:06.70 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Sample 1/24
+Fra:1 Mem:104.68M (Peak 141.76M) | Time:00:09.58 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Sample 24/24
+Fra:1 Mem:104.68M (Peak 141.76M) | Time:00:09.58 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\leaking-quarter.png'
+Time: 00:09.67 (Saving: 00:00.09)
+
+Fra:1 Mem:19.12M (Peak 19.12M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Recessed_graphite
+Fra:1 Mem:19.13M (Peak 19.13M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Worn_light_blue_panels
+Fra:1 Mem:19.61M (Peak 19.61M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Diagnostic_screen
+Fra:1 Mem:19.73M (Peak 19.73M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Tube_Retained_glass_shards
+Fra:1 Mem:19.82M (Peak 19.82M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane
+Fra:1 Mem:20.39M (Peak 20.39M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:19.13M (Peak 20.39M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:19.22M (Peak 20.39M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:19.58M (Peak 20.39M) | Time:00:00.01 | Mem:0.01M, Peak:0.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:19.81M (Peak 20.39M) | Time:00:00.01 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.01 | Mem:0.24M, Peak:0.24M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.01 | Mem:0.24M, Peak:0.24M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.01 | Mem:0.95M, Peak:0.95M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.01 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:19.80M (Peak 20.39M) | Time:00:00.01 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.01 | Mem:1.81M, Peak:2.52M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.01 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.01 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.01 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.01 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.01 | Mem:2.84M, Peak:2.84M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.01 | Mem:2.92M, Peak:2.92M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:20.84M (Peak 20.84M) | Time:00:00.01 | Mem:2.93M, Peak:2.93M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.02 | Mem:3.26M, Peak:3.26M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.02 | Mem:3.26M, Peak:3.26M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.02 | Mem:3.18M, Peak:3.26M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.02 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.02 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.02 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:21.18M (Peak 21.18M) | Time:00:00.02 | Mem:3.27M, Peak:3.27M | Scene, ViewLayer | Sample 0/24
+Fra:1 Mem:79.96M (Peak 79.96M) | Time:00:00.41 | Remaining:00:08.96 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Sample 1/24
+Fra:1 Mem:104.68M (Peak 141.76M) | Time:00:11.62 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Sample 24/24
+Fra:1 Mem:104.68M (Peak 141.76M) | Time:00:11.62 | Mem:61.98M, Peak:61.98M | Scene, ViewLayer | Finished
+Saved: 'C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\leaking-top.png'
+Time: 00:11.71 (Saving: 00:00.08)
+
+RENDERED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\leaking-front.png
+RENDERED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\leaking-side.png
+RENDERED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\leaking-rear.png
+RENDERED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\leaking-quarter.png
+RENDERED C:\Docs\_AI Python Projects\Roblox_Benji\assets\models\bluetube-glossy\review\leaking-top.png
+
+Blender quit

@@ -1,0 +1,41 @@
+{
+  "checkedAtUtc": "2026-10-19T01:08:23.656037+00:00",
+  "status": "local structural pass; Studio preview not yet verified",
+  "sourceSha256": "e9f08426a558e02bff92aa3b6bbc1ca682a2c6e43ae41f91743543c7fd0dc3ce",
+  "exportSha256": "6d94c706faedd4aac6011347ff49612b71ed86c4136a8d9ac99aa214d4a112c9",
+  "meshCount": 10,
+  "materialCount": 10,
+  "embeddedImages": 24,
+  "addedUvPrimitives": 1,
+  "originalGeometryBytesPreserved": true,
+  "textureSha256": {
+    "Recessed_graphite_Color.png": "4951658e7048e6be40f9195b687ef28c13b6fc5ab094793915b26b8a56cf8b5c",
+    "Recessed_graphite_MetallicRoughness.png": "696f7c93626d94595ad4b399c85b8a9e367fdee4f5487074874f215784dcab48",
+    "Dark_rubber_gasket_Color.png": "b4b28b04e6b04613c34e5402f0828bf53cee26d7c0aa45ddbc4762c74009f7b4",
+    "Dark_rubber_gasket_MetallicRoughness.png": "1b7fbf1414f4fe9ffa942c7e82f893508c85eac903b3adb184c355ab88bdf04d",
+    "Polished_steel_edge_Color.png": "05373d4892f4b060b4fb60412a1c49e481bc5deb307079a2310169491a52ad7c",
+    "Polished_steel_edge_MetallicRoughness.png": "a8d7e909515e9acfb9e577fe0da8f1a4bd328c918ec0219d4b16b224148731a3",
+    "Glossy_cobalt_blue_enamel_Color.png": "58540c76da80a6e4ffba444ebe97ba37eefe20c7049e520544bf257fadf6d3d6",
+    "Glossy_cobalt_blue_enamel_MetallicRoughness.png": "08502cd7dfbd743763d2a77a92cbf4b8f7feaf74e99097c7dc405f85764e09ad",
+    "Indicator_bright_cyan_Color.png": "5aa1c696afa623e17fa25d6e98432f179d6c43a5c403481bd062aef6930e1daa",
+    "Indicator_bright_cyan_MetallicRoughness.png": "9d2afeafbb69b813823d340556ffc7c6a005535ef4263c54a02f7bbeb4dae8bd",
+    "Indicator_bright_cyan_Emissive.png": "5cd7c0acb68a4a8ce545d1ed8c88c5035f1aaf3dd1e92060ca885ddaf9183850",
+    "Cyan_energy_core_Color.png": "b41b8302bb0be38e5dd1343bf9f5b6a000f886173d789a5a782bf4396e71002b",
+    "Cyan_energy_core_MetallicRoughness.png": "1e6110488fb07489e60df8d9a6129ca6a3e9eca5ccf59ac45031ce08e8804da5",
+    "Cyan_energy_core_Emissive.png": "f2ed4b2f23f8d30b5ad6c14c865a2d8c71dd0a6aabcd63ca015ed5a8cd166565",
+    "Cyan_glass_shell_Color.png": "da4561c1993b50ba8c5186f3ac323682387ebc48700175ef3f01a884b6c85b3e",
+    "Cyan_glass_shell_MetallicRoughness.png": "fba2852dd1e522cebdf96b3af2912664c9ccea18f844ea9de6bffb30e3bf2bb8",
+    "Worn_light_blue_panels_Color.png": "b00b5412f5424d7e75408cf31851c97d85564cad7421420ea167ea5e6dfdb0d8",
+    "Worn_light_blue_panels_MetallicRoughness.png": "bd61ca1b5df0af652fd9b04e77f190d6d3da0c8b0e35e1acdd63b3bcf1626647",
+    "Diagnostic_screen_Color.png": "19d41855a643ba030ae80c24899f16cacc3507e8afff1800c13340abf1df383f",
+    "Diagnostic_screen_MetallicRoughness.png": "3b6e6c5033e0d75a48a2221d05b84e0a428763f75e3dff919265ed50f9f28fea",
+    "Diagnostic_screen_Emissive.png": "6838cf1c8880cde4df934a5a5da28796352fd4906894d1e4f5ecc0b7ecb2b9f9",
+    "Warm_status_light_Color.png": "7a110d4321dbaee15382e183a8f29a114f3dc971761104fd16cef83c0ff6a9ce",
+    "Warm_status_light_MetallicRoughness.png": "0cec05443242ccf99027c209b9f95fe34aee16a20955a206c2edf167afcd06f1",
+    "Warm_status_light_Emissive.png": "3ab227b9f56ad7b8f41fe8f63b48ec4f6d53c5733d8ce0d00f39e3cbbfd1ee2a"
+  },
+  "limitations": [
+    "Studio importer preview and in-game rendering remain unverified",
+    "Roblox glass alpha and emissive response require Studio review"
+  ]
+}

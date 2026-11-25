@@ -10,3 +10,9 @@ __pycache__/
 # map authoring: staging/rollback scratch and local source history
 .mapbuild/
 assets/environment/source/.history/
+
+# asset pipeline: rejected candidates and backups rebuild from each package's source;
+# a claim marks which session is working on a package right now
+assets/models/*/trials/
+assets/models/*/.claim.json
+assets/kit-looks/trials/

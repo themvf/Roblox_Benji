@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-17",
+  "source": "ArmoredVehicle.glb",
+  "sourceSha256": "36d894ac3a62726088ed9d534ea56402d640a7b9c7df5bb285829e54ffb9a956",
+  "measurements": {
+    "triangles": 23907,
+    "size": [
+      0.979,
+      0.562,
+      0.461
+    ],
+    "reliefRatio": 0.4713,
+    "openEdges": 9863,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Futuristic armored vehicle made by Tripo, surface made matte; a heavy drivable land vehicle (role: interactive, about 8.5 studs tall)"
+}

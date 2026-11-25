@@ -1,0 +1,23 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "black-hawk": {
+      "description": "Parked Black Hawk helicopter, static scenery for a military or helipad area (role: decor, about 15 studs tall)",
+      "source": "assets/models/black-hawk/source/BlackHawk.glb",
+      "out": "assets/models/black-hawk/exports/BlackHawk.glb",
+      "fit": {
+        "axis": "z",
+        "size": 15.0
+      },
+      "decimate": 45000,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      },
+      "tile": [
+        8,
+        4
+      ]
+    }
+  }
+}

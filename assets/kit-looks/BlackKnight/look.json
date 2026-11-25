@@ -1,0 +1,197 @@
+{
+  "kit": "BlackKnight",
+  "bar": {
+    "outline": "horns and a crest on the helm, a spike on each oversized shoulder plate, a tattered dark cape",
+    "glow": "one orange glow (#FF5A12): the eye slits and thin seams between armour plates",
+    "texture": "hand-painted blue-steel plate with worn bright edges, rivets and scratches; dark leather under-layer",
+    "proportions": "big helm, oversized shoulders and fists, heavy boots, narrow waist"
+  },
+  "bodyColor": "#1E2430",
+  "concept": "assets/kit-looks/BlackKnight/concept.jpg",
+  "approved": {
+    "said": "This looks good",
+    "on": "2026-11-17"
+  },
+  "pieces": {
+    "helmet": {
+      "crop": [
+        322,
+        140,
+        622,
+        528
+      ],
+      "file": "assets/kit-looks/BlackKnight/pieces/helmet.glb",
+      "turn": -90,
+      "triangles": 3745,
+      "from": "model.glb",
+      "source": "crop",
+      "flip": false,
+      "finish": {
+        "like": "pauldron",
+        "glow": "#FF7A1E",
+        "scratches": true
+      }
+    },
+    "chest": {
+      "crop": null,
+      "file": "assets/kit-looks/BlackKnight/pieces/chest.glb",
+      "turn": -90,
+      "triangles": 3085,
+      "source": "drawn",
+      "from": "model.glb",
+      "flip": false,
+      "drawing": "8b88272e-image.jpg"
+    },
+    "waist": {
+      "crop": null,
+      "file": "assets/kit-looks/BlackKnight/pieces/waist.glb",
+      "turn": -90,
+      "triangles": 938,
+      "source": "drawn",
+      "drawing": "94c183c1-image.jpg",
+      "from": "model.glb",
+      "flip": false
+    },
+    "pauldron": {
+      "crop": [
+        632,
+        330,
+        875,
+        700
+      ],
+      "file": "assets/kit-looks/BlackKnight/pieces/pauldron.glb",
+      "turn": -90,
+      "triangles": 1437,
+      "source": "crop",
+      "from": "model.glb",
+      "flip": false
+    },
+    "gauntlet": {
+      "crop": null,
+      "file": "assets/kit-looks/BlackKnight/pieces/gauntlet.glb",
+      "turn": -90,
+      "triangles": 1056,
+      "source": "drawn",
+      "drawing": "24f166bb-image.jpg",
+      "from": "model.glb",
+      "flip": false
+    },
+    "fist": {
+      "crop": null,
+      "file": "assets/kit-looks/BlackKnight/pieces/fist.glb",
+      "turn": 180,
+      "triangles": 666,
+      "source": "drawn",
+      "drawing": "89318e12-image.jpg",
+      "from": "model.glb",
+      "flip": false,
+      "handed": "right"
+    },
+    "thigh": {
+      "crop": null,
+      "file": "assets/kit-looks/BlackKnight/pieces/thigh.glb",
+      "turn": -90,
+      "triangles": 814,
+      "source": "drawn",
+      "drawing": "b57c8b87-image.jpg",
+      "from": "model.glb",
+      "flip": false
+    },
+    "greave": {
+      "crop": null,
+      "file": "assets/kit-looks/BlackKnight/pieces/greave.glb",
+      "turn": -90,
+      "triangles": 808,
+      "source": "drawn",
+      "drawing": "5274f384-image.jpg",
+      "from": "model.glb",
+      "flip": false
+    },
+    "boot": {
+      "crop": null,
+      "file": "assets/kit-looks/BlackKnight/pieces/boot.glb",
+      "turn": -90,
+      "triangles": 844,
+      "source": "drawn",
+      "drawing": "5edadcd8-image.jpg",
+      "trim": 0.4,
+      "from": "model.glb",
+      "flip": false
+    },
+    "back": {
+      "crop": null,
+      "file": "assets/kit-looks/BlackKnight/pieces/back.glb",
+      "turn": 90,
+      "triangles": 941,
+      "source": "drawn",
+      "drawing": "3f8aa1bc-image.jpg",
+      "note": "drawn from behind, so turned the other way to the other pieces",
+      "from": "model.glb",
+      "flip": false
+    }
+  },
+  "earlierHelmet": {
+    "file": "assets/kit-looks/BlackKnight/pieces/helmet-before-concept.glb",
+    "note": "first Tripo helmet, made before the concept; does not match it"
+  },
+  "setAside": [
+    {
+      "piece": "chest",
+      "file": "assets/kit-looks/BlackKnight/pieces/chest-set-aside-2026-11-18.glb"
+    }
+  ],
+  "verdict": {
+    "looks": "good",
+    "said": "Yes (to: does the new review sheet, with the dark torso fill closing the chest gaps, look right to upload?)",
+    "on": "2026-11-19",
+    "sheet": "cc48296cf5e41057",
+    "pieces": {
+      "helmet": "93fdcd229a902a99",
+      "chest": "211f9f1127f3ba0b",
+      "waist": "46a2a1ab27fbe799",
+      "pauldron": "df7a47e78a862ca8",
+      "gauntlet": "0348cc7e46efd418",
+      "fist": "722fcf9b1b3c8a6d",
+      "thigh": "9b1c3ddb8d00e601",
+      "greave": "99db3e7969e382a7",
+      "boot": "9fe441a6b80a1cd2",
+      "back": "79de573ec75ea9b4"
+    },
+    "gaps": {
+      "front": 0.0,
+      "back": 0.0
+    }
+  },
+  "glows": [
+    {
+      "part": "Head",
+      "centre": [
+        0.4125,
+        -1.15,
+        5.2925
+      ],
+      "size": [
+        0.26,
+        0.08,
+        0.15
+      ],
+      "color": "#FF8A1E"
+    },
+    {
+      "part": "Head",
+      "centre": [
+        -0.255,
+        -1.15,
+        5.2775
+      ],
+      "size": [
+        0.27,
+        0.08,
+        0.15
+      ],
+      "color": "#FF8A1E"
+    }
+  ],
+  "glowPlan": "eyes",
+  "reference": "pauldron"
+}

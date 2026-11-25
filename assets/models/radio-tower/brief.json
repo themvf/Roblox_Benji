@@ -1,0 +1,21 @@
+{
+  "purpose": "Rusted steel lattice radio tower with two railed platforms, antennas, a dish and base cabinets, seen from a distance as Snow Fortress scenery",
+  "role": "scenery",
+  "heightStuds": 60.0,
+  "kind": "prop",
+  "where": "Snow Fortress (currently MyMap)",
+  "copies": 2,
+  "moving": "",
+  "share": "game",
+  "assumed": "name radio-tower; copies on screen 2; realistic style from user's reference image",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {
+    "decimate": 32000,
+    "tile": [
+      3,
+      15
+    ]
+  }
+}

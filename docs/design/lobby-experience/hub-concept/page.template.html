@@ -1,0 +1,109 @@
+<title>Hub Concept</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: a design review sheet. The arrival view leads, because it is the claim being made;
+   the plan and the other views follow as evidence, then what changes and what to decide. */
+:root{--bg:#f3f4f7;--card:#ffffff;--fg:#161922;--muted:#5b6274;--line:#d9dce5;--accent:#8a5a00;
+  --text:"Inter",system-ui,sans-serif;--head:"Space Grotesk","Inter",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#101218;--card:#181b24;--fg:#eef0f6;--muted:#a0a6b8;--line:#2b2f3c;--accent:#ffc846;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101218;--card:#181b24;--fg:#eef0f6;--muted:#a0a6b8;--line:#2b2f3c;--accent:#ffc846;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--text);font-size:15px;line-height:1.55;padding-block:28px 64px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:30px}
+h1,h2{font-family:var(--head);margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(26px,4vw,38px)} h2{font-size:22px}
+p{margin:0;max-width:68ch} .muted{color:var(--muted)}
+section{display:flex;flex-direction:column;gap:14px}
+figure{margin:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+figure img,.plan svg{display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--line)}
+figcaption{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.plan{overflow-x:auto} .plan svg{min-width:640px}
+.tbl{overflow-x:auto} table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--head);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:72ch}
+.caveat{border-left:3px solid var(--accent);padding-left:12px}
+</style>
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:12px">
+    <h1>Walk-in hub: what I plan to build</h1>
+    <p>A small round plaza where you arrive, with every destination leading off it. Straight ahead, a wide avenue lined with mode pads runs to the PLAY gate. The ARMORY and KITS halls open left and right. The SHOP is behind you.</p>
+    <p><b>Fifth version:</b> the fourth layout scaled up by 40% across the floor. Distances, openings, the halls and the gate grow; wall height, queue pads and props stay the same size. </p>
+    <p><b>How we got here.</b> The first two put everything in one open hall: the first felt cramped, the second empty. The third copied the RIVALS structure (separate places off a central spot) but was narrow and closed in. This one keeps that structure and opens it up: the PLAY avenue is 80 studs wide instead of 44, the plaza 116 across instead of 72, the side halls are open along their whole front, and the walls are 14 studs tall instead of 26, so you see sky and the landmarks over them.</p>
+    <p class="caveat muted">These are blockout renders from Blender, with no roofs: the lobby is open to the sky. They show layout, scale and sightlines. They do not show final art, materials or Roblox lighting, and the figures are stand-ins. The layout is now built into the lobby file; it has not been played in Studio yet.</p>
+  </header>
+
+  <section>
+    <h2>Built into the lobby file</h2>
+    <p>The fifth version is now the editable lobby (<code>assets/environment/source/Lobby.rbxm</code>) and its playable copy. These renders are of that file, read the way the game reads it, with the queue pads, leaderboard, kiosk and signs the game adds from markers. They check placement and orientation; Roblox lighting and materials will look different in Studio.</p>
+    <div class="grid">
+      <figure><img src="built/arrival.jpg" alt="Built lobby, first-person view on arrival" width="1280" height="720"><figcaption>Arrival, as built.</figcaption></figure>
+      <figure><img src="built/aerial.jpg" alt="Built lobby from above" width="1280" height="720"><figcaption>From above, as built.</figcaption></figure>
+      <figure><img src="built/corridor.jpg" alt="Built PLAY avenue with team pads and wall screens" width="1280" height="720"><figcaption>The PLAY avenue: red and blue halves on each pad, as the game draws them.</figcaption></figure>
+      <figure><img src="built/back.jpg" alt="Built plaza facing the shop, leaderboard and canister" width="1280" height="720"><figcaption>Turning round: the shop opening, the leaderboard and the existing canister.</figcaption></figure>
+    </div>
+    <p class="muted">What differs from the concept: the queue pads keep their gameplay sizes; the leaderboard and kiosk face north, because lobby markers cannot be rotated yet; the kit plinths are empty until kit looks exist; the existing stone and purple columns are used as they are, so they are grey, not purple.</p>
+  </section>
+
+  <section>
+    <h2>The first five seconds</h2>
+    <figure><img src="renders/arrival.jpg" alt="First-person view on arrival: a glowing ring gate ahead with a dark sphere inside it, an armory bay to the left and a kit display bay to the right" width="1280" height="720">
+      <figcaption>The player's own view on arrival, at Roblox's default field of view, before moving or turning.</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>Bird's eye</h2>
+    <div class="plan">__PLAN__</div>
+    <p class="muted">To scale. The gate is at the top and the player arrives facing it. Dotted rings are walking time from the arrival point.</p>
+    <figure><img src="renders/aerial.jpg" alt="The hall seen from directly above and slightly behind" width="1280" height="720"><figcaption>The same layout as a render, from above.</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>Hero shots</h2>
+    <div class="grid">
+      <figure><img src="renders/corridor.jpg" alt="A corridor with lit mode pads along both walls and a screen above each, the ring gate at the far end" width="1280" height="720"><figcaption>Halfway down the PLAY avenue. Each pad has a screen above it with the mode and how many have joined, as RIVALS does.</figcaption></figure>
+      <figure><img src="renders/gate.jpg" alt="Low view up at the ring gate from the Convergence pad" width="1280" height="720"><figcaption>The gate court at the end of the avenue, from the Convergence pad. The two tall stone columns the lobby already has stand behind the gate and can be seen from everywhere.</figcaption></figure>
+      <figure><img src="renders/armory.jpg" alt="A room with a counter and a lit weapon wall" width="1280" height="720"><figcaption>ARMORY hall, left of the plaza and open along its front: loadout counter, weapon wall, and the practice range door for later.</figcaption></figure>
+      <figure><img src="renders/kits.jpg" alt="A room with four figures on lit plinths" width="1280" height="720"><figcaption>KITS hall, right of the plaza: one display per kit. It opens as ALTER EGO with one display until more kits exist.</figcaption></figure>
+      <figure><img src="renders/back.jpg" alt="The plaza seen facing the shop doors, with posters, a leaderboard and the canister" width="1280" height="720"><figcaption>Turning round in the plaza: the shop opening with a season poster either side, the leaderboard, and the existing canister as the season display.</figcaption></figure>
+      <figure><img src="renders/three_quarter.jpg" alt="The whole lobby from a high corner" width="1280" height="720"><figcaption>The whole lobby from above.</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>How far everything is</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Destination</th><th>Walk from arrival</th><th>Seen without turning</th></tr></thead>
+      <tbody>__ROWS__</tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>What changes from today</h2>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>Today (measured from the lobby file)</th><th>Proposed</th></tr></thead>
+      <tbody>
+        <tr><td>Room</td><td>One open floor, 500 by 500 studs, with 16-stud walls</td><td>A round plaza 162 studs across, a 112-stud-wide avenue, a gate court and three halls of about 90 by 90, with 14-stud walls. About 400 by 440 studs overall, close to today's 500 by 500 but with every part of it in use</td></tr>
+        <tr><td>Play destination</td><td>A floor plate with coloured pads and a sign</td><td>A ring gate about 70 studs tall holding the dark-matter anomaly, in its own court at the end of the PLAY avenue</td></tr>
+        <tr><td>Armory and kits</td><td>A marker and a sign each, to the left and right of the arrival point, outside the first view</td><td>Two halls off the plaza, left and right, each open along its whole front</td></tr>
+        <tr><td>Arrival point</td><td>Five markers on bare floor</td><td>The plaza, with a low lit centrepiece that does not block the view down the avenue</td></tr>
+        <tr><td>Canister</td><td>Behind the arrival point, unlabelled</td><td>In the plaza beside the shop doors, as the season display</td></tr>
+        <tr><td>Columns</td><td>Purple columns across the middle of the floor; tall stone columns to one side</td><td>Four purple columns around the plaza; the two stone columns stand behind the gate</td></tr>
+        <tr><td>Pads</td><td>Convergence, Duel, TDM and two Training pads</td><td>The same five. Four line the avenue; Convergence sits in the gate court. Queue rules do not change.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Open choices</h2>
+    <ul>
+      <li><b>Armory, kits and shop are not in the first view.</b> A sign beam over each opening faces the plaza, so a quarter turn shows each one. The first view is kept for PLAY.</li>
+      <li><b>Bigger means further.</b> The halls are now about 9 seconds on foot and the gate about 15. PLAY on the menu still queues from anywhere. If walking feels slow, a faster walk speed inside the lobby only is a small change and keeps the size.</li>
+      <li><b>The queue pads did not grow.</b> They are play areas, so they keep their sizes; in a wider avenue they look smaller. They can be enlarged separately.</li>
+      <li><b>The gate is the one new landmark that needs real art.</b> Everything else can be built from blocks and the assets already in the lobby.</li>
+    </ul>
+  </section>
+</div>

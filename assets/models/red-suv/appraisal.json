@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-17",
+  "source": "RedSuvClean.glb",
+  "sourceSha256": "21412b9765649f9257c56f4631825980132452d19aa78e72670dc66a5c8f5dbc",
+  "measurements": {
+    "triangles": 4860,
+    "size": [
+      7.5,
+      16.9,
+      6.137
+    ],
+    "reliefRatio": 0.3631,
+    "openEdges": 9182,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Detailed, matte, shape-built off-road SUV from the user's picture: driven, two working seats, with a cabin for the view from the driver's seat (role: interactive, about 6.14 studs tall)"
+}

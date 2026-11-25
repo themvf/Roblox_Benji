@@ -1,0 +1,41 @@
+{
+  "checkedAtUtc": "2026-10-18T18:15:25.630483+00:00",
+  "status": "passed",
+  "mode": "check",
+  "blueExportSha256": "e9f08426a558e02bff92aa3b6bbc1ca682a2c6e43ae41f91743543c7fd0dc3ce",
+  "greenExportSha256": "4846123480dac45e03e1184988ffeddf7a786ef4f81a4bb64bc08998d6385d93",
+  "yellowExportSha256": "b229a998309dace3fd3d8aca7b58f3ceea829df14f75917b1a8429262d1a07fd",
+  "geometryBinIdenticalToBlue": true,
+  "meshCount": 10,
+  "totalTriangles": 14628,
+  "trianglesPerMesh": [
+    2168,
+    1276,
+    3196,
+    3732,
+    1456,
+    252,
+    512,
+    1808,
+    108,
+    120
+  ],
+  "sha256": {
+    "assets/models/bluetube-glossy/exports/BlueTube_Glossy.glb": "e9f08426a558e02bff92aa3b6bbc1ca682a2c6e43ae41f91743543c7fd0dc3ce",
+    "assets/models/bluetube-glossy/exports/BlueTube_GreenCore.glb": "4846123480dac45e03e1184988ffeddf7a786ef4f81a4bb64bc08998d6385d93",
+    "assets/models/bluetube-glossy/exports/BlueTube_NeonYellowCore.glb": "b229a998309dace3fd3d8aca7b58f3ceea829df14f75917b1a8429262d1a07fd",
+    "assets/models/bluetube-glossy/review/yellow-front.png": "0cefdde2d44ef7fa33f569e36e42258b378211ecc0371b98d729638827501f96",
+    "assets/models/bluetube-glossy/review/yellow-side.png": "2a312a8fbad5ce2a1febbbdc61b2051a4ec891b9ec4c41826db29bbbfc949cef",
+    "assets/models/bluetube-glossy/review/yellow-rear.png": "803c8ebd398343fc718907b6fd191517a1737a41182cc127946566d57f4e150d",
+    "assets/models/bluetube-glossy/review/yellow-quarter.png": "6ea78a344425d4299e8496462254de547c8c7faff87af502387c1b1d7950c17f",
+    "assets/models/bluetube-glossy/review/yellow-top.png": "fd422304693c540f3d187807967bb937ae1e5ffa0310d3568f71f2b26002af62",
+    "assets/models/bluetube-glossy/review/yellow-night.png": "0b1c049c2b093dbb473df9380859ee04664d4b7851f372363c1f2c77ef66fac2"
+  },
+  "visualApproval": "pending",
+  "studioImport": "unverified",
+  "mapIntegration": "unverified",
+  "limitations": [
+    "Emissive yellow PBR factors do not establish an actual Roblox Neon material or Light instance.",
+    "Studio glow, alpha and lighting must be inspected after import."
+  ]
+}

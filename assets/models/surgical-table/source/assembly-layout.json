@@ -1,0 +1,38 @@
+{
+  "table": {
+    "export": "SurgicalTable.glb",
+    "placementRobloxXYZStuds": [
+      -0.0625,
+      0,
+      -0.08
+    ],
+    "sourceGroundOffsetBlenderZ": -0.04
+  },
+  "lights": {
+    "export": "SurgicalLights.glb",
+    "placementRobloxXYZStuds": [
+      2.875,
+      0,
+      -0.625
+    ],
+    "sourceGroundOffsetBlenderZ": 0.11
+  },
+  "monitor": {
+    "export": "PatientMonitor.glb",
+    "placementRobloxXYZStuds": [
+      4.42,
+      0,
+      -2.53
+    ],
+    "sourceGroundOffsetBlenderZ": 0.0
+  },
+  "iv": {
+    "export": "IVStand.glb",
+    "placementRobloxXYZStuds": [
+      4.3775,
+      0,
+      1.98
+    ],
+    "sourceGroundOffsetBlenderZ": 0.0
+  }
+}

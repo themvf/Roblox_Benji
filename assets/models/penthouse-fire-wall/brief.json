@@ -1,0 +1,17 @@
+{
+  "purpose": "Outdoor fireplace wall, repeated along a terrace cover block in the Penthouse",
+  "role": "decor",
+  "heightStuds": 9.0,
+  "kind": "prop",
+  "where": "Penthouse",
+  "copies": 3,
+  "moving": "",
+  "share": "game",
+  "nearestStuds": 0.0,
+  "thin": "no",
+  "assumed": "copies=3, share=game, no moving parts (flame is static), nearest=0, thin=no, stop at local build; target block 14 long x 4 deep x 9 tall studs",
+  "pivot": "bottom",
+  "meshes": "auto",
+  "route": "auto",
+  "scene": {}
+}

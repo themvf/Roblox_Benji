@@ -1,0 +1,28 @@
+{
+  "asset": "pulse-rifle",
+  "comparedOn": "2026-11-22 22:31",
+  "budget": 4000,
+  "brief": [
+    4.5,
+    0.9,
+    1.7
+  ],
+  "candidates": [
+    {
+      "seed": 201,
+      "madeBy": "meshy",
+      "triangles": 4109,
+      "cutNeeded": 0.27,
+      "studs": [
+        5.5,
+        1.2
+      ],
+      "shapeProblems": [
+        "5.5 studs long at the brief's height, where the brief says 4.5"
+      ],
+      "holesPercent": 0.01,
+      "openEdges": 9003,
+      "closeups": "assets/models/pulse-rifle/trials/seed-201/audit_closeups.png"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "sourceTriangles": 284422,
+  "weldedTriangles": 284422,
+  "triangles": 7500,
+  "arrivedDimensions": [
+    0.596,
+    1.002,
+    0.7333
+  ],
+  "sourceDimensions": [
+    1.002,
+    0.596,
+    0.7333
+  ],
+  "voxelSize": 0.0035,
+  "dissolveDegrees": 2.0,
+  "method": "voxel remesh + planar dissolve + collapse, then selected-to-active bake (colour, normal, roughness, metalness)",
+  "textureSize": 1024,
+  "materialCount": 1
+}

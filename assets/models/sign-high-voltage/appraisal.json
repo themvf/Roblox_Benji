@@ -1,0 +1,20 @@
+{
+  "tool": "tools/package_foundry_props.py",
+  "appraisedOn": "2026-11-14",
+  "source": "UndergroundFacilityProps/UndergroundFacilityProps_FreeSample/UndergroundFacilityProps_FreeSample/FBX/Sign_Danger_HighVoltage.fbx",
+  "sourceSha256": "1397d4e43204a9b9516fe68cbf61a2990724ed5d67b31d7f6e3014f18d0b7690",
+  "measurements": {
+    "triangles": 108,
+    "meshObjects": 1,
+    "hasUvLayers": true,
+    "boundsStuds": [
+      2.72,
+      0.048,
+      3.4
+    ],
+    "reliefRatio": 1.25
+  },
+  "verdict": "PASS - low/mid-poly game-ready prop within Roblox 10k tri limit with 1024px OpenGL PBR maps.",
+  "decision": "High-voltage hazard plaque for SciFiFoundry portal jambs and generator alcoves (3.4 studs tall).",
+  "views": "views.png"
+}

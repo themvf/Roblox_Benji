@@ -1,0 +1,40 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "penthouse-cabinet-wall": {
+      "description": "Kitchen cabinet wall with ovens and fridge, repeated along kitchen cover blocks in the Penthouse (role: decor, about 10 studs tall)",
+      "source": "assets/models/penthouse-cabinet-wall/source/PenthouseCabinetWall.glb",
+      "out": "assets/models/penthouse-cabinet-wall/exports/PenthouseCabinetWall.glb",
+      "fit": {
+        "axis": "z",
+        "size": 10.0
+      },
+      "decimate": 24500,
+      "pivot": "bottom",
+      "optimize": {
+        "texture": 1024
+      },
+      "tile": [
+        3,
+        2
+      ],
+      "cull": [
+        {
+          "name": "interior",
+          "x": [
+            -0.44,
+            0.415
+          ],
+          "y": [
+            -0.105,
+            0.135
+          ],
+          "z": [
+            -0.42,
+            0.46
+          ]
+        }
+      ]
+    }
+  }
+}

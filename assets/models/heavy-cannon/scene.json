@@ -1,0 +1,20 @@
+{
+  "_comment": "Generated from brief.json by tools/asset_generate.py build.",
+  "assets": {
+    "heavy-cannon": {
+      "description": "Heavy Cannon: a heavy yellow-and-gunmetal sci-fi machine cannon with a black core orb in a ring housing that players hold, in every map (role: held, about 1.505 studs tall)",
+      "source": "assets/models/heavy-cannon/source/HeavyCannon.glb",
+      "out": "assets/models/heavy-cannon/exports/HeavyCannon.glb",
+      "fit": {
+        "axis": "z",
+        "size": 1.505
+      },
+      "decimate": 9000,
+      "pivot": "center",
+      "optimize": {
+        "texture": 1024
+      },
+      "yaw": 90
+    }
+  }
+}

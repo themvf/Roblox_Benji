@@ -1,0 +1,64 @@
+{
+  "checkedOn": "2026-11-22 22:09",
+  "route": "clean",
+  "builder": "tools/blender/build_lightning_carbine.py",
+  "export": "assets/models/lightning-carbine/exports/LightningCarbineClean.glb",
+  "exportSha256": "31ab2f7c0c7de7ec69796ce24ade0efacbd97452a9410a1b13b946058f36f060",
+  "triangleCapPassed": true,
+  "inspect": [
+    "file     LightningCarbineClean.glb (0.12 MB)",
+    "           Body                             1,780 tris",
+    "           Glow                                28 tris",
+    "           total                            1,808 tris (2 meshes)",
+    "           texture                          64x32  image/png"
+  ],
+  "detail": {
+    "outlineOverlap": null,
+    "passed": null
+  },
+  "budget": {
+    "role": "held",
+    "budget": 4000,
+    "triangles": 1808,
+    "waiver": null,
+    "passed": true,
+    "within": true
+  },
+  "contract": {
+    "sizeStuds": [
+      0.67,
+      1.9,
+      4.52
+    ],
+    "heightStuds": 1.9,
+    "kind": "weapon",
+    "mounts": {
+      "Grip": [
+        0.0,
+        -0.53,
+        1.06
+      ],
+      "Muzzle": [
+        0.0,
+        -0.08,
+        -2.26
+      ]
+    },
+    "mountSheet": "assets/models/lightning-carbine/review/mounts.png",
+    "pivot": "center",
+    "problems": [],
+    "passed": true
+  },
+  "audit": {
+    "passed": true,
+    "waiver": null,
+    "sheets": [
+      "assets/models/lightning-carbine/review/audit.png",
+      "assets/models/lightning-carbine/review/audit_closeups.png"
+    ],
+    "flaggedViews": [],
+    "worstBackFacePercent": 0.0,
+    "worstPatchPercent": 0.0
+  },
+  "limitations": "Local checks only. Shape fidelity is judged by eye on the builder's renders."
+}

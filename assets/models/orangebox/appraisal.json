@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-10-12",
+  "source": "OrangeBoxRansacked.glb",
+  "sourceSha256": "51ee49cdfbd6ce7e0b594ae34d8dc0fa1c50091e6e2be3e449a2d15e01b5efe7",
+  "measurements": {
+    "triangles": 9011,
+    "size": [
+      6.876,
+      5.305,
+      3.8
+    ],
+    "reliefRatio": 0.5527,
+    "openEdges": 19173,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Ransacked small sci-fi cargo box, clean hard-surface rebuild from the user-selected TRELLIS source and matching Midjourney reference. White chipped panels, charcoal protective frame, orange latches, torn side hatch, pried lid, forced end door and scattered orange cargo cases. Second detail pass adds lid ribs, service slats, panel seams, fasteners, vents, hinge hardware, latch controls, base grilles, case clasps and loose cartridges, following the user request for more detail. A later partial-blast pass breaks the front roof rail and upper wall, with asymmetric soot, bent hot metal, exposed ribs, a sheared hinge and attached floor fragments. Realism pass transfers fine surface variation from the original TRELLIS color atlas, adds edge wear, exposed metallic chips, roughness variation and a subtle tangent-space normal map. One mesh with color, metallic-roughness and normal atlas maps. The earlier 9,000-triangle optimized export is preserved as a trial. Provisional size is 3.8 studs high; role is decoration pending user approval."
+}

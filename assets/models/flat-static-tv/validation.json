@@ -1,0 +1,38 @@
+{
+  "checkedAtUtc": "2026-10-04T22:14:45.817610+00:00",
+  "sourceSha256": "bd24c761762e36018d90a23134b87913d08cb06d0d0d941f1eddb8c02def95c1",
+  "referenceSha256": "c268dc27678f5b58f5dd7ff04bea7095a20774ff8714dcce281694a671cef854",
+  "exportSha256": "900e55ccc94c968bbdaa6a9acf02f110be63748132a44cff4e1ae8a09bcd608a",
+  "screenTextureSha256": "d984f80fe91a3753011e5a9546d5a70fecdf89e28728c7efcba918e80e9a4341",
+  "meshNames": [
+    "TV_SlimFrame",
+    "TV_StaticScreen"
+  ],
+  "trianglesPerMesh": [
+    108,
+    2
+  ],
+  "boundsGlbYUp": {
+    "min": [
+      -4,
+      0,
+      0
+    ],
+    "max": [
+      4,
+      4.599999904632568,
+      0.2850000858306885
+    ]
+  },
+  "checks": {
+    "twoMeshes": true,
+    "noStandMesh": true,
+    "meshTriangleLimit": true,
+    "width8Studs": true,
+    "height4p6Studs": true,
+    "depthUnderHalfStud": true,
+    "bottomAtZero": true,
+    "embeddedScreenPng": true
+  },
+  "studioImport": "unverified; user will upload"
+}

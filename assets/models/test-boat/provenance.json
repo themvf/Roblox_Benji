@@ -1,0 +1,31 @@
+{
+  "asset": "test-boat",
+  "recordedOn": "2026-11-17",
+  "reference": {
+    "file": "assets/models/test-boat/source/reference.png",
+    "sha256": "8595ce2869f05e293856f6d65ead03732875d9c8cb28783a619d3d63934fe407",
+    "origin": "unknown",
+    "madeWith": null,
+    "prompt": null
+  },
+  "mesh": {
+    "file": "assets/models/test-boat/source/TestBoat.glb",
+    "sha256": "b757ed666326d61cdc21529bdbbb29250d94cd8651bf527d66213f84c67e62ad",
+    "generator": {
+      "service": "tripo retopo",
+      "space": null,
+      "seed": 202,
+      "resolution": "imported",
+      "file": "bd99d8a9-rigid_inflatable_boat_3d_model_25000.glb",
+      "sha256": "b757ed666326d61cdc21529bdbbb29250d94cd8651bf527d66213f84c67e62ad",
+      "settings": "same boat, Tripo Retopo: Triangle, polygon count 25,872",
+      "decoded": null,
+      "reference": "reference.png",
+      "importedOn": "2026-11-17"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

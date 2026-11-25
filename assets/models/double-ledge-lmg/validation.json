@@ -1,0 +1,57 @@
+{
+  "sourceSha256": "098d66e5617909ed3679a2f39fb9a7c415a5cf41c18028edf20d08e6c2a90454",
+  "exportSha256": "ab532fd74137b01370633bd78dc62db7902b83df5d2ba381d27258c60130dd9a",
+  "meshCount": 9,
+  "meshNames": [
+    "Base_01",
+    "Base_02",
+    "Base_03",
+    "Head_01",
+    "Head_02",
+    "Head_03",
+    "Head_04",
+    "Head_05",
+    "Head_06"
+  ],
+  "trianglesPerMesh": [
+    9000,
+    9000,
+    1843,
+    9000,
+    9000,
+    9000,
+    9000,
+    9000,
+    5560
+  ],
+  "totalTriangles": 70403,
+  "boundsGlbYUp": {
+    "min": [
+      -5.171658992767334,
+      0,
+      -4.7213215827941895
+    ],
+    "max": [
+      5.171658992767334,
+      8,
+      4.7213215827941895
+    ]
+  },
+  "imageFormats": [
+    "image/png",
+    "image/png"
+  ],
+  "limits": {
+    "maxTrianglesPerMesh": 10000,
+    "targetHeightStuds": 8
+  },
+  "checks": {
+    "meshTriangleLimit": true,
+    "baseAndHeadNamed": true,
+    "height": true,
+    "pngTextures": true
+  },
+  "studioImport": "unverified",
+  "studioTextures": "unverified",
+  "gameplay": "unverified"
+}

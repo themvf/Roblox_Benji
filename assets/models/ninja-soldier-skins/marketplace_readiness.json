@@ -1,0 +1,99 @@
+{
+  "checkedAt": "2026-10-18T19:56:25.100051+00:00",
+  "purpose": "Full character bundles for Marketplace and matching selectable game skins",
+  "result": "No current GLB is Marketplace-ready",
+  "publishedSpec": {
+    "bodyTriangleBudget": 10742,
+    "head": 4000,
+    "torso": 1750,
+    "eachArm": 1248,
+    "eachLeg": 1248,
+    "rigidOrLayeredAccessoryPerMesh": 4000,
+    "source": "https://create.roblox.com/docs/avatar/character-bodies/specifications",
+    "accessorySource": "https://create.roblox.com/docs/avatar/rigid-accessories/specifications"
+  },
+  "characters": {
+    "SciFiSentry": {
+      "files": [
+        {
+          "path": "source/SciFiSentrySource.glb",
+          "sha256": "d667838e7ac402cab9952cdd788819328f5c1645e5e58cf44fb2aa6a7dccbef2",
+          "meshCount": 1,
+          "triangles": 286076,
+          "overMarketplaceBodyTriangleBudget": true,
+          "gltfSkinCount": 0,
+          "embeddedImageCount": 2
+        },
+        {
+          "path": "exports/SciFiSentryArmor.glb",
+          "sha256": "aa7903d8f11ed632bfc175aef739ee4e42355407a5a3a87e4698527f3a7b345b",
+          "meshCount": 39,
+          "triangles": 2016,
+          "overMarketplaceBodyTriangleBudget": false,
+          "gltfSkinCount": 0,
+          "embeddedImageCount": 0
+        },
+        {
+          "path": "trials/SciFiSentryDetailedSegmented.glb",
+          "sha256": "d6966d07c419d1dfd1887803905f2cadc963a1f3db6127f29a1b496a09a2ee40",
+          "meshCount": 18,
+          "triangles": 73404,
+          "overMarketplaceBodyTriangleBudget": true,
+          "gltfSkinCount": 0,
+          "embeddedImageCount": 2
+        }
+      ],
+      "remaining": [
+        "Clean contiguous A-pose or T-pose humanoid body within body and region budgets",
+        "Marketplace dynamic head with usable eye and mouth geometry",
+        "R15 rig, skinning, body cages and accessory attachments",
+        "Separate helmet and other armor accessories with own geometry limits",
+        "Texture/detail transfer from approved source and posed visual review"
+      ]
+    },
+    "TacticalOperator": {
+      "files": [
+        {
+          "path": "source/TacticalOperatorSource.glb",
+          "sha256": "c54379a03a5bcabf6690bd99977e2aa47945076053e2a39e5d02983c4a5ec7c0",
+          "meshCount": 1,
+          "triangles": 292524,
+          "overMarketplaceBodyTriangleBudget": true,
+          "gltfSkinCount": 0,
+          "embeddedImageCount": 2
+        },
+        {
+          "path": "exports/TacticalOperatorArmor.glb",
+          "sha256": "a51bef0aa5fa16bfecad0f9b4bf2f307e19b22effb4d12c69280d5ea4f958058",
+          "meshCount": 33,
+          "triangles": 2336,
+          "overMarketplaceBodyTriangleBudget": false,
+          "gltfSkinCount": 0,
+          "embeddedImageCount": 0
+        },
+        {
+          "path": "trials/TacticalOperatorDetailedSegmented.glb",
+          "sha256": "71af71ac5e9e4cb4d16addd748b68a0f81ab9d12d7bcd887fc6129e9082cb2bc",
+          "meshCount": 18,
+          "triangles": 66473,
+          "overMarketplaceBodyTriangleBudget": true,
+          "gltfSkinCount": 0,
+          "embeddedImageCount": 2
+        }
+      ],
+      "remaining": [
+        "Clean contiguous A-pose or T-pose humanoid body within body and region budgets",
+        "Marketplace dynamic head with usable eye and mouth geometry",
+        "R15 rig, skinning, body cages and accessory attachments",
+        "Separate helmet and other armor accessories with own geometry limits",
+        "Texture/detail transfer from approved source and posed visual review"
+      ]
+    }
+  },
+  "notLocallyVerifiable": [
+    "Avatar Setup Platform Avatar processing and generated dynamic head/cages",
+    "Studio animation and accessory fitting",
+    "Marketplace creator eligibility, rights, fees and moderation",
+    "bundle composition and catalog publication"
+  ]
+}

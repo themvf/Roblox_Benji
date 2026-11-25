@@ -71,6 +71,7 @@ end
 local function hurt(attacker, victim, amount)
     victim.Character:SetAttribute("LastHitBy", attacker.UserId)
     victim.Character:SetAttribute("LastHitByName", attacker.Name)
+    victim.Character:SetAttribute("LastHitAt", os.clock())
     local dealt = math.min(amount, victim.Humanoid.Health)
     Knit.GetService("StatsService"):OnDamage(attacker, victim.Character, dealt)
     victim.Humanoid:TakeDamage(amount)
@@ -216,6 +217,10 @@ function AbilityService:ApplyBrace(victimCharacter, attackerPosition, amount)
         return amount * (1 - def.FrontalResistance)
     end
     return amount
+end
+
+function AbilityService:ShovePlayer(player, velocity)
+    self.Client.Knockback:Fire(player, velocity)
 end
 
 -- Charge hits: server sweeps in front of charging players every heartbeat

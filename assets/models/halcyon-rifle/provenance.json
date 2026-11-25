@@ -1,0 +1,31 @@
+{
+  "asset": "halcyon-rifle",
+  "recordedOn": "2026-11-23",
+  "reference": {
+    "file": null,
+    "sha256": null,
+    "origin": "unknown",
+    "madeWith": null,
+    "prompt": null
+  },
+  "mesh": {
+    "file": "assets/models/halcyon-rifle/source/HalcyonRifle.glb",
+    "sha256": "5ef15680807c77f0b9db88828b6ec988f3c563a87d62db4ea15c9f1d4ae569ac",
+    "generator": {
+      "service": "meshy",
+      "space": null,
+      "seed": 202,
+      "resolution": "imported",
+      "file": "model.glb",
+      "sha256": "5ef15680807c77f0b9db88828b6ec988f3c563a87d62db4ea15c9f1d4ae569ac",
+      "settings": null,
+      "decoded": null,
+      "reference": null,
+      "importedOn": "2026-11-23"
+    }
+  },
+  "rights": {
+    "note": "Fill in before selling or giving this asset away: whose work the reference is, and the generator terms that applied on the date above.",
+    "checkedOn": null
+  }
+}

@@ -1,0 +1,47 @@
+{
+ "purpose": "Hand Cannon: a chunky red-and-chrome heavy revolver players hold, in every map",
+ "role": "held",
+ "heightStuds": 1.3,
+ "pivot": "center",
+ "route": "scan",
+ "kind": "weapon",
+ "lengthStuds": 2.95,
+ "widthStuds": 0.55,
+ "gameName": "HandCannon",
+ "where": "held in every map",
+ "copies": 12,
+ "moving": "cylinder spins when firing",
+ "share": "game",
+ "nearestStuds": 0.0,
+ "thin": "no",
+ "assumed": "behaves like the existing Revolver (Pistol kit base); oversized 2.6 studs long to match the chunky kits; route scan via Meshy as a trial of the held-prop rule, with the cylinder split off as its own piece",
+ "meshes": "auto",
+ "scene": {
+  "decimate": 3880,
+  "yaw": 90,
+  "split": {
+   "name": "Cylinder",
+   "axis": "y",
+   "center": [
+    0,
+    -0.025,
+    0.27
+   ],
+   "radius": 0.275,
+   "halfLength": 0.23
+  }
+ },
+ "counts": {},
+ "mounts": {
+  "Grip": [
+   0.0,
+   -0.35,
+   0.7
+  ],
+  "Muzzle": [
+   0.0,
+   0.2,
+   -1.47
+  ]
+ }
+}

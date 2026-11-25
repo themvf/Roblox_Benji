@@ -1,0 +1,33 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-12",
+  "source": "DarkFantasyDemonFemaleSource.glb",
+  "sourceSha256": "1e43724c86c74d4ffd2b3d0789c50cd4603cff86a51276eb8ed3f87607278760",
+  "measurements": {
+    "triangles": 299619,
+    "size": [
+      0.617,
+      0.324,
+      1.002
+    ],
+    "reliefRatio": 0.3237,
+    "openEdges": 258133,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "Too dense to survive as ONE mesh.",
+    "  Tiling instead: 8 meshes keeps 25% of the detail (74,904 triangles);",
+    "  Tiling instead: 15 meshes keeps 50% of the detail (149,809 triangles);",
+    "  the 10,000 cap is PER MESH, so `tile` beats `decimate` for anything",
+    "  broad that the player gets close to. Weigh the part count against",
+    "  your device budget.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Marketplace character bundle + matching game skin; TRELLIS scan used as shape/texture reference only."
+}

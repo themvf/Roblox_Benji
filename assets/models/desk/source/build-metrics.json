@@ -1,0 +1,15 @@
+{
+  "triangles": 5828,
+  "blenderDimensions": [
+    14.0,
+    3.882,
+    2.9993
+  ],
+  "lengthStuds": 14.0,
+  "workSurfaceStuds": 2.8,
+  "front": "glTF +Z (Blender -Y)",
+  "role": "decoration (provisional)",
+  "materialCount": 1,
+  "surfaceDetail": "recreated PNG atlas + modelled seams; no source bake",
+  "sourceComponents": 37
+}

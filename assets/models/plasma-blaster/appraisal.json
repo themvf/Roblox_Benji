@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-23",
+  "source": "PlasmaBlaster.glb",
+  "sourceSha256": "dea642d6e98a2175afc4d303521dd15791359dae549ea81f37d2b629e041c22e",
+  "measurements": {
+    "triangles": 28747,
+    "size": [
+      1.903,
+      0.27,
+      0.592
+    ],
+    "reliefRatio": 0.1418,
+    "openEdges": 36487,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": "Plasma Blaster: a heavy rust-red and gunmetal sci-fi blaster with a glowing molten plasma core window that players hold, in every map (role: held, about 1.74 studs tall)"
+}

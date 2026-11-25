@@ -1,0 +1,12 @@
+{
+  "source": "InsertService:LoadAsset(125382461619919), the model publish uploaded on 2026-11-23",
+  "assetId": 125382461619919,
+  "parts": [
+    {
+      "name": "Mesh_0",
+      "meshId": "rbxassetid://89193641889067",
+      "textureId": "rbxassetid://106196535481167",
+      "size": [0.7091449499130249, 1.5049999952316284, 4.498892307281494]
+    }
+  ]
+}

@@ -459,6 +459,10 @@ function ConvergenceService:StartMatch(players, teamSize, mapName, solo)
                                 if outpost and match.Telemetry.Outposts[outpost] then
                                     match.Telemetry.Outposts[outpost].Kills += 1
                                 end
+                            elseif type(killerId) == "number" and killerId < 0 and teamOf(p) then
+                                -- a bot's kill scores for the bot's team, as bot-on-bot kills do
+                                local bteam = teamOf(p) == "Red" and "Blue" or "Red"
+                                match.Score[bteam] += rules.KillPoints
                             end
                             local root = character:FindFirstChild("HumanoidRootPart")
                             if root then
@@ -518,10 +522,19 @@ function ConvergenceService:StartMatch(players, teamSize, mapName, solo)
             end
             fireEventsForPhase(1)
 
-            -- Test bots: fill each team with N bots that capture, shoot and respawn
-            local botsPerTeam = rules.BotsPerTeam or 0
-            if botsPerTeam > 0 then
-                BotService:Start(botsPerTeam, rules.RespawnSeconds, function()
+            -- Bots that capture, shoot and respawn. Training fills each team to the training
+            -- size, so the player's side has one bot fewer; otherwise N per team (testing).
+            local botFill = rules.BotsPerTeam or 0
+            if match.Solo then
+                local humans = { Red = 0, Blue = 0 }
+                for _, p in present(match) do
+                    local team = p:GetAttribute("Team")
+                    humans[team] = (humans[team] or 0) + 1
+                end
+                botFill = Config.TrainingBots(Config.GetTraining().TeamSize, humans)
+            end
+            if type(botFill) == "table" or botFill > 0 then
+                BotService:Start(botFill, rules.RespawnSeconds, function()
                     return match.Zones
                 end)
             end
@@ -639,6 +652,7 @@ function ConvergenceService:StartMatch(players, teamSize, mapName, solo)
                         -- Close atomically with the phase transition, retaining survivor ownership/progress.
                         local revealed = match.FinalePlan and match.Phase == 2 and FinalePlan.reveal(match.FinalePlan)
                         local finalZone
+                        local liveZones = 0
                         for _, zone in match.Zones do
                             if not zoneLive(match, zone, match.Phase) and not zone.Closed then
                                 zone.Closed = true
@@ -650,6 +664,9 @@ function ConvergenceService:StartMatch(players, teamSize, mapName, solo)
                                     { Zone = zone.Name, Index = zone.Index }
                                 )
                             end
+                            if not zone.Closed then
+                                liveZones += 1
+                            end
                             zone.IsFinal = FinalePlan.visibleFinal(match.FinalePlan, match.Phase) == zone.Id
                                 and zone.Id ~= nil
                             if zone.IsFinal then
@@ -657,12 +674,7 @@ function ConvergenceService:StartMatch(players, teamSize, mapName, solo)
                             end
                             paintZone(zone)
                         end
-                        self:FireAll(
-                            match,
-                            self.Client.Event,
-                            "Phase",
-                            { Phase = match.Phase, Zones = phaseCount - match.Phase + 1 }
-                        )
+                        self:FireAll(match, self.Client.Event, "Phase", { Phase = match.Phase, Zones = liveZones })
                         fireEventsForPhase(match.Phase)
                         if revealed and finalZone then
                             self:FireAll(match, self.Client.Event, "FinaleRevealed", {

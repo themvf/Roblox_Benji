@@ -1,0 +1,2515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ENGAGE / Convergence — 2-Year Roblox Business Plan Simulator</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    input[type="range"] {
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    input[type="number"]::-webkit-inner-spin-button {
+      opacity: 0.7;
+    }
+    .tab-active {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+    }
+    .preset-active {
+      border-color: var(--primary);
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-4 md:p-6">
+  <div class="max-w-[1460px] mx-auto space-y-5">
+
+    <!-- Header & Scenario Controls -->
+    <header class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-3 flex-wrap">
+          <h1 class="text-xl font-bold tracking-tight">ENGAGE / <em>Convergence</em> — 2-Year Business Plan Simulator</h1>
+          <span id="modeBadge" class="text-xs font-medium px-2.5 py-1 rounded-full bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)]">
+            Base Case Preset
+          </span>
+        </div>
+        <p class="text-sm text-[var(--muted-foreground)] mt-1">
+          Interactive 24-month Roblox economics model with all 8 revenue streams, Tier-1 vs. Global Ads Manager geo-splits, Ad Credits (263 R$/$1), and sensitivity grids.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="applyPreset('conservative')" id="btn-conservative" class="px-3 py-2 rounded-lg text-sm font-medium border border-[var(--border)] bg-[var(--content)] hover:opacity-90 transition">
+          Conservative
+        </button>
+        <button onclick="applyPreset('base')" id="btn-base" class="px-3 py-2 rounded-lg text-sm font-medium border border-[var(--border)] bg-[var(--content)] hover:opacity-90 transition">
+          Base Case
+        </button>
+        <button onclick="applyPreset('breakout')" id="btn-breakout" class="px-3 py-2 rounded-lg text-sm font-medium border border-[var(--border)] bg-[var(--content)] hover:opacity-90 transition">
+          Breakout
+        </button>
+        <div class="h-6 w-px bg-[var(--border)] mx-0.5 hidden sm:block"></div>
+        <button onclick="saveCustomLocal()" id="btn-save" class="px-3 py-2 rounded-lg text-sm font-medium bg-[var(--content)] border border-[var(--border)] hover:opacity-90 transition">
+          Save
+        </button>
+        <button onclick="loadCustomLocal()" id="btn-load" class="px-3 py-2 rounded-lg text-sm font-medium bg-[var(--content)] border border-[var(--border)] hover:opacity-90 transition disabled:opacity-40" disabled>
+          Load Saved
+        </button>
+        <button onclick="exportCSV()" class="px-3 py-2 rounded-lg text-sm font-medium bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] hover:opacity-90 transition">
+          Export CSV
+        </button>
+        <button onclick="resetCurrentPreset()" class="px-3 py-2 rounded-lg text-sm font-medium bg-[var(--content)] text-[var(--muted-foreground)] border border-[var(--border)] hover:text-[var(--foreground)] transition">
+          Reset
+        </button>
+      </div>
+    </header>
+
+    <!-- KPI Summary Strip -->
+    <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" id="kpiStrip"></section>
+
+    <!-- Main Layout: Controls Sidebar + Visualization Area -->
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
+
+      <!-- Left Column: Interactive Variables -->
+      <aside class="xl:col-span-4 space-y-4">
+
+        <!-- 1. Growth & Engagement -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3.5">
+          <div class="flex items-center justify-between border-b border-[var(--border)] pb-2">
+            <h2 class="text-sm font-semibold uppercase tracking-wide">1. Player Scale & Engagement</h2>
+            <span class="text-xs text-[var(--muted-foreground)]" id="dauRatioLabel">58× DAU/CCU</span>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <label for="in-m3ccu">Soft Launch Avg CCU (M3)</label>
+                <span class="font-semibold tabular-nums" id="val-m3ccu">60</span>
+              </div>
+              <input id="in-m3ccu" type="range" min="10" max="500" step="5" class="w-full" oninput="onDriverChange()" />
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <label for="in-y1ccu">End of Year 1 Avg CCU (M12)</label>
+                <span class="font-semibold tabular-nums" id="val-y1ccu">2,200</span>
+              </div>
+              <input id="in-y1ccu" type="range" min="100" max="25000" step="50" class="w-full" oninput="onDriverChange()" />
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <label for="in-y2ccu">End of Year 2 Avg CCU (M24)</label>
+                <span class="font-semibold tabular-nums" id="val-y2ccu">5,200</span>
+              </div>
+              <input id="in-y2ccu" type="range" min="200" max="60000" step="100" class="w-full" oninput="onDriverChange()" />
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <label for="in-playtime">Avg Daily Playtime / DAU (min)</label>
+                <span class="font-semibold tabular-nums" id="val-playtime">24.8 min</span>
+              </div>
+              <input id="in-playtime" type="range" min="12" max="45" step="0.5" class="w-full" oninput="onDriverChange()" />
+              <p class="text-xs text-[var(--muted-foreground)] mt-0.5">Determines DAU = CCU × (1,440 / Daily Minutes)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Roblox Monetization & DevEx -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3.5">
+          <div class="flex items-center justify-between border-b border-[var(--border)] pb-2">
+            <h2 class="text-sm font-semibold uppercase tracking-wide">2. Monetization & DevEx</h2>
+            <span class="text-xs text-[var(--muted-foreground)]" id="blendedDevexLabel">$0.0038/R$</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs mb-1" for="in-arpStart">M3 Gross ARPDAU (R$)</label>
+                <input id="in-arpStart" type="number" min="0.2" max="20" step="0.1" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+              <div>
+                <label class="block text-xs mb-1" for="in-arpEnd">M24 Gross ARPDAU (R$)</label>
+                <input id="in-arpEnd" type="number" min="0.5" max="25" step="0.1" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+            </div>
+
+            <!-- Payer Conversion Sanity-Check Helper -->
+            <div class="p-2.5 rounded-lg bg-[var(--content)] border border-[var(--border)] space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-medium">ARPDAU Sanity Calculator</span>
+                <button onclick="applyCalculatedArpdau()" class="text-xs font-medium underline hover:opacity-80">Apply to M24</button>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-0.5" for="in-dailyPayerPct">Daily Payer %</label>
+                  <input id="in-dailyPayerPct" type="number" min="0.1" max="10" step="0.1" value="1.6" class="w-full px-2 py-1 text-xs rounded bg-[var(--card)] border border-[var(--border)] tabular-nums" oninput="updateArpdauHelper()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-0.5" for="in-avgSpendR">Spend / Payer (R$)</label>
+                  <input id="in-avgSpendR" type="number" min="25" max="2000" step="25" value="250" class="w-full px-2 py-1 text-xs rounded bg-[var(--card)] border border-[var(--border)] tabular-nums" oninput="updateArpdauHelper()" />
+                </div>
+              </div>
+              <div class="text-xs text-[var(--muted-foreground)]" id="arpdauCalcPreview">Implied Gross ARPDAU: 4.0 R$ ($0.0106 net/DAU)</div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <label for="in-crShare">Creator Rewards Active Spender %</label>
+                <span class="font-semibold tabular-nums" id="val-crShare">7.5%</span>
+              </div>
+              <input id="in-crShare" type="range" min="0" max="15" step="0.5" class="w-full" oninput="onDriverChange()" />
+              <p class="text-xs text-[var(--muted-foreground)] mt-0.5">5 Earned R$/day per qualifying $9.99+ Active Spender (10+ min, top-3 game)</p>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <label for="in-us18Share">U.S. 18+ Verified Spend Mix ($0.0054/R$)</label>
+                <span class="font-semibold tabular-nums" id="val-us18Share">0%</span>
+              </div>
+              <input id="in-us18Share" type="range" min="0" max="60" step="5" class="w-full" oninput="onDriverChange()" />
+              <p class="text-xs text-[var(--muted-foreground)] mt-0.5">0% = pure $0.0038/R$ rate; +42% payout on verified US 18+ IAP</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs mb-1" for="in-mktCut">Roblox Fee (%)</label>
+                <input id="in-mktCut" type="number" min="0" max="50" step="1" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+              <div>
+                <label class="block text-xs mb-1" for="in-taxRate">Tax Reserve (%)</label>
+                <input id="in-taxRate" type="number" min="0" max="50" step="1" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+            </div>
+
+            <label class="text-xs flex items-center justify-between gap-2 pt-1 border-t border-[var(--border)] cursor-pointer">
+              <span class="flex items-center gap-2">
+                <input id="in-directOnly" type="checkbox" class="rounded" onchange="onDriverChange()" />
+                <span>Direct-Only Shop (No Paid Random Cases)</span>
+              </span>
+              <span class="text-xs text-[var(--muted-foreground)]">-15% ARPDAU</span>
+            </label>
+
+            <!-- Expanded Revenue Streams Quick Box -->
+            <div class="p-2.5 rounded-lg bg-[var(--content)] border border-[var(--border)] space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-medium">Streams #3–#8 (Subs, Ads, UGC)</span>
+                <span class="font-semibold text-emerald-500 tabular-nums" id="extraStreamsSummary">+$0/24M</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <button onclick="applyStreamProfile('target')" class="flex-1 px-2 py-1 rounded text-xs font-medium bg-[var(--card)] border border-[var(--border)] hover:opacity-90">Enable All 8</button>
+                <button onclick="applyStreamProfile('baseline')" class="px-2 py-1 rounded text-xs text-[var(--muted-foreground)] bg-[var(--card)] border border-[var(--border)] hover:text-[var(--foreground)]">Reset (0)</button>
+                <button onclick="switchTab('streams')" class="px-2 py-1 rounded text-xs font-medium underline hover:opacity-80">Docs & Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Advertising & User Acquisition (Geo-Split + Channels) -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3.5">
+          <div class="flex items-center justify-between border-b border-[var(--border)] pb-2">
+            <h2 class="text-sm font-semibold uppercase tracking-wide">3. Advertising & User Acquisition</h2>
+            <span class="text-xs text-[var(--muted-foreground)]" id="blendedCppLabel">Blended CPP: $0.33</span>
+          </div>
+
+          <!-- Quick Ad Strategy Mix Buttons -->
+          <div class="grid grid-cols-2 gap-1.5">
+            <button onclick="applyAdStrategy('balanced')" class="px-2 py-1.5 rounded text-xs font-medium bg-[var(--content)] border border-[var(--border)] hover:opacity-90">Balanced Mix</button>
+            <button onclick="applyAdStrategy('tier1')" class="px-2 py-1.5 rounded text-xs font-medium bg-[var(--content)] border border-[var(--border)] hover:opacity-90">Tier-1 ROAS (85% US)</button>
+            <button onclick="applyAdStrategy('global')" class="px-2 py-1.5 rounded text-xs font-medium bg-[var(--content)] border border-[var(--border)] hover:opacity-90">Global CCU Fill (20%)</button>
+            <button onclick="applyAdStrategy('creators')" class="px-2 py-1.5 rounded text-xs font-medium bg-[var(--content)] border border-[var(--border)] hover:opacity-90">Creator / Shorts Blitz</button>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs mb-1" for="in-softAds">Pre-Launch & Soft-Launch Ad Test (M2–M3 Total, $)</label>
+              <input id="in-softAds" type="number" min="0" max="50000" step="100" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs mb-1" for="in-y1RobloxAds">Y1 Roblox Ads/Mo ($)</label>
+                <input id="in-y1RobloxAds" type="number" min="0" max="100000" step="100" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+              <div>
+                <label class="block text-xs mb-1" for="in-y1InfAds">Y1 Influencers/Mo ($)</label>
+                <input id="in-y1InfAds" type="number" min="0" max="100000" step="100" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs mb-1" for="in-y2RobloxAds">Y2 Roblox Ads/Mo ($)</label>
+                <input id="in-y2RobloxAds" type="number" min="0" max="200000" step="250" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+              <div>
+                <label class="block text-xs mb-1" for="in-y2InfAds">Y2 Influencers/Mo ($)</label>
+                <input id="in-y2InfAds" type="number" min="0" max="200000" step="250" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+            </div>
+
+            <!-- Geo-Split Roblox Ads -->
+            <div class="p-2.5 rounded-lg bg-[var(--content)] border border-[var(--border)] space-y-2.5">
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <label for="in-tier1Share">Tier-1 (US/UK/CA/AU) Roblox Ad Share</label>
+                  <span class="font-semibold tabular-nums" id="val-tier1Share">75%</span>
+                </div>
+                <input id="in-tier1Share" type="range" min="0" max="100" step="5" class="w-full" oninput="onDriverChange()" />
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-0.5" for="in-t1Cpp">Tier-1 CPP ($)</label>
+                  <input id="in-t1Cpp" type="number" min="0.08" max="2.50" step="0.02" class="w-full px-2 py-1 text-xs rounded bg-[var(--card)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-0.5" for="in-rowCpp">Global/ROW CPP ($)</label>
+                  <input id="in-rowCpp" type="number" min="0.04" max="1.50" step="0.02" class="w-full px-2 py-1 text-xs rounded bg-[var(--card)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+              </div>
+              <label class="text-xs flex items-center gap-2 cursor-pointer">
+                <input id="in-geoCoupling" type="checkbox" class="rounded" onchange="onDriverChange()" />
+                <span>Couple ARPDAU to Tier-1 geo share</span>
+              </label>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs mb-1" for="in-infCpp">Influencer CPP ($)</label>
+                <input id="in-infCpp" type="number" min="0.05" max="2.00" step="0.01" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+              <div>
+                <label class="block text-xs mb-1" for="in-creatorCodePct">Creator Code Share (%)</label>
+                <input id="in-creatorCodePct" type="number" min="0" max="15" step="0.5" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs mb-1" for="in-y1Creative">Y1 Ad Creative/GFX ($/mo)</label>
+                <input id="in-y1Creative" type="number" min="0" max="20000" step="50" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+              <div>
+                <label class="block text-xs mb-1" for="in-y2Creative">Y2 Ad Creative/GFX ($/mo)</label>
+                <input id="in-y2Creative" type="number" min="0" max="30000" step="50" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+            </div>
+
+            <label class="text-xs flex items-center justify-between gap-2 pt-1 border-t border-[var(--border)] cursor-pointer">
+              <span class="flex items-center gap-2">
+                <input id="in-adCredits" type="checkbox" class="rounded" onchange="onDriverChange()" />
+                <span>Reinvest Earned R$ as Ad Credits (263 R$/$1)</span>
+              </span>
+              <span class="text-xs text-[var(--muted-foreground)]" id="adCreditsNote">Cash UA</span>
+            </label>
+
+            <p class="text-xs text-[var(--muted-foreground)]" id="adSummaryLine">24M Ad + Creative: $180.7k</p>
+          </div>
+        </div>
+
+        <!-- 4. Team, Dev & Operating Costs -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3.5">
+          <div class="flex items-center justify-between border-b border-[var(--border)] pb-2">
+            <h2 class="text-sm font-semibold uppercase tracking-wide">4. Team, Dev & Operating Costs</h2>
+            <span class="text-xs text-[var(--muted-foreground)]">USD / Month</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs mb-1" for="in-preDev">Pre-Launch Dev/Mo ($)</label>
+                <input id="in-preDev" type="number" min="0" max="20000" step="100" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+              <div>
+                <label class="block text-xs mb-1" for="in-liveDev">Live-Ops Dev/Mo ($)</label>
+                <input id="in-liveDev" type="number" min="0" max="30000" step="100" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs mb-1" for="in-y1Staff">Y1 Live Staff/Mo ($)</label>
+                <input id="in-y1Staff" type="number" min="0" max="30000" step="100" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+              <div>
+                <label class="block text-xs mb-1" for="in-y2Staff">Y2 Scale Staff/Mo ($)</label>
+                <input id="in-y2Staff" type="number" min="0" max="80000" step="250" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs mb-1" for="in-toolsMo">Tools, AI & Infra Base ($/mo)</label>
+              <input id="in-toolsMo" type="number" min="0" max="5000" step="25" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs mb-1" for="in-founderY1">Y1 Founder Draw/Mo ($)</label>
+                <input id="in-founderY1" type="number" min="0" max="20000" step="250" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+              <div>
+                <label class="block text-xs mb-1" for="in-founderY2">Y2 Founder Draw/Mo ($)</label>
+                <input id="in-founderY2" type="number" min="0" max="30000" step="250" class="w-full px-2.5 py-1.5 text-sm rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+            </div>
+
+            <div class="pt-1 flex items-center justify-between gap-2 border-t border-[var(--border)]">
+              <label class="text-xs flex items-center gap-2 cursor-pointer">
+                <input id="in-devexLag" type="checkbox" class="rounded" onchange="onDriverChange()" />
+                <span>Simulate 30-Day DevEx Cash Lag</span>
+              </label>
+              <span class="text-xs text-[var(--muted-foreground)]" id="lagNote">Accrual view</span>
+            </div>
+
+            <div class="pt-1 flex items-center justify-between gap-2 border-t border-[var(--border)]">
+              <label class="text-xs flex items-center gap-2 cursor-pointer">
+                <input id="in-hiddenOverhead" type="checkbox" class="rounded" onchange="onDriverChange()" />
+                <span>Legal, QA, Audio & 2.5% Friction</span>
+              </label>
+              <span class="text-xs text-[var(--muted-foreground)]" id="hiddenOverheadNote">Off (Base)</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Column: Charts, Tabs & Ledger -->
+      <main class="xl:col-span-8 space-y-4">
+
+        <!-- Tab Navigation -->
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-2 flex flex-wrap gap-2">
+          <button onclick="switchTab('overview')" id="tab-overview" class="tab-active px-3.5 py-2 rounded-lg text-sm font-medium transition">
+            Overview & Charts
+          </button>
+          <button onclick="switchTab('streams')" id="tab-streams" class="px-3.5 py-2 rounded-lg text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition">
+            All 8 Revenue Streams
+          </button>
+          <button onclick="switchTab('ledger')" id="tab-ledger" class="px-3.5 py-2 rounded-lg text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition">
+            Editable 24-Month P&L
+          </button>
+          <button onclick="switchTab('unit')" id="tab-unit" class="px-3.5 py-2 rounded-lg text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition">
+            Unit Economics & Ads Funnel
+          </button>
+          <button onclick="switchTab('compare')" id="tab-compare" class="px-3.5 py-2 rounded-lg text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition">
+            Compare & Sensitivity
+          </button>
+          <button onclick="switchTab('pass')" id="tab-pass" class="px-3.5 py-2 rounded-lg text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition">
+            60-Day Season Pass
+          </button>
+        </div>
+
+        <!-- TAB 1: Overview & Charts -->
+        <div id="panel-overview" class="space-y-4">
+          <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+              <div>
+                <h3 class="text-base font-semibold">24-Month Revenue, Operating Costs & Cash Flow</h3>
+                <p class="text-xs text-[var(--muted-foreground)]">Hover any month to inspect Revenue, OpEx, Net Profit, Paid Plays, and Cash Balance</p>
+              </div>
+              <div class="flex items-center gap-4 text-xs">
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#10b981"></span>Revenue</span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm inline-block" style="background:#f59e0b"></span>OpEx</span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 inline-block" style="background:#3b82f6"></span>Cumulative Cash</span>
+              </div>
+            </div>
+            <div class="relative">
+              <canvas id="mainChart" class="w-full h-[300px] block"></canvas>
+              <div id="chartTooltip" class="hidden pointer-events-none absolute z-10 bg-[var(--card)] border border-[var(--border)] rounded-lg p-3 shadow-lg text-xs space-y-1 min-w-[210px]"></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5">
+              <h3 class="text-base font-semibold mb-1">CCU Trajectory</h3>
+              <p class="text-xs text-[var(--muted-foreground)] mb-3">Average Concurrent Users across Launch, Live-Ops, and Y2 Scale</p>
+              <canvas id="ccuChart" class="w-full h-[210px] block"></canvas>
+            </div>
+
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5">
+              <h3 class="text-base font-semibold mb-1">24-Month Cost & Revenue Structure</h3>
+              <p class="text-xs text-[var(--muted-foreground)] mb-3">Expense allocation and Roblox revenue mix</p>
+              <div id="breakdownBars" class="space-y-2.5 text-xs"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: Editable 24-Month P&L -->
+        <div id="panel-ledger" class="hidden bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <h3 class="text-base font-semibold">24-Month P&L Ledger (Direct Cell Overrides)</h3>
+              <p class="text-xs text-[var(--muted-foreground)]">Edit CCU, ARPDAU (R$), or Paid UA ($) for any individual month to model seasonal spikes or update launches.</p>
+            </div>
+            <button onclick="clearMonthlyOverrides()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--content)] border border-[var(--border)] hover:opacity-90">
+              Clear Monthly Overrides
+            </button>
+          </div>
+
+          <div class="overflow-x-auto max-h-[560px] overflow-y-auto border border-[var(--border)] rounded-lg">
+            <table class="w-full text-xs text-right border-collapse">
+              <thead class="bg-[var(--content)] sticky top-0 z-10 border-b border-[var(--border)]">
+                <tr>
+                  <th class="py-2.5 px-2.5 text-left font-semibold">Mo</th>
+                  <th class="py-2.5 px-2 text-left font-semibold">Phase</th>
+                  <th class="py-2.5 px-2 font-semibold">Avg CCU</th>
+                  <th class="py-2.5 px-2 font-semibold">Est. DAU</th>
+                  <th class="py-2.5 px-2 font-semibold">ARPDAU (R$)</th>
+                  <th class="py-2.5 px-2 font-semibold">UA ($)</th>
+                  <th class="py-2.5 px-2 font-semibold">Revenue ($)</th>
+                  <th class="py-2.5 px-2 font-semibold">OpEx ($)</th>
+                  <th class="py-2.5 px-2 font-semibold">Net ($)</th>
+                  <th class="py-2.5 px-2.5 font-semibold">Cum Cash ($)</th>
+                </tr>
+              </thead>
+              <tbody id="ledgerBody" class="divide-y divide-[var(--border)] tabular-nums"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 3: Annual Summary & Unit Economics -->
+        <div id="panel-unit" class="hidden space-y-4">
+          <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5">
+            <h3 class="text-base font-semibold mb-3">Year 1, Year 2 & 24-Month P&L Rollup</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-right border-collapse tabular-nums" id="annualTable"></table>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 space-y-3">
+              <h3 class="text-base font-semibold">Roblox Unit Economics & Compliance</h3>
+              <div id="unitEconBox" class="space-y-2 text-sm"></div>
+            </div>
+
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 space-y-3">
+              <h3 class="text-base font-semibold">Ads Manager & Soft-Launch Funnel</h3>
+              <div id="healthBox" class="space-y-2 text-sm"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: Compare & Sensitivity -->
+        <div id="panel-compare" class="hidden space-y-4">
+          <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5">
+            <h3 class="text-base font-semibold mb-1">4-Way Scenario Comparison</h3>
+            <p class="text-xs text-[var(--muted-foreground)] mb-3">Compares all three baseline presets directly against your live customized model.</p>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-right border-collapse tabular-nums" id="compareTable"></table>
+            </div>
+          </div>
+
+          <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5">
+            <h3 class="text-base font-semibold mb-1">24-Month Net Profit Sensitivity Matrix (End Y2 CCU × Mature ARPDAU)</h3>
+            <p class="text-xs text-[var(--muted-foreground)] mb-3">Holds your current cost, UA, and DevEx settings constant while varying Year 2 CCU scale and M24 ARPDAU.</p>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-right border-collapse tabular-nums" id="sensitivityTable"></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: All 8 Roblox Revenue Streams (Controls, Blurbs & Real Examples) -->
+        <div id="panel-streams" class="hidden space-y-4">
+          <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <h3 class="text-base font-semibold">All 8 Roblox Revenue Streams — Controls, Mechanics & Examples</h3>
+              <p class="text-xs text-[var(--muted-foreground)] mt-0.5">
+                Baseline presets conservatively include only Streams #1–#2. Enable or customize Streams #3–#8 below to model full live-ops monetization.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2 shrink-0">
+              <button onclick="applyStreamProfile('target')" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90">
+                Enable Target Mix (All 8)
+              </button>
+              <button onclick="applyStreamProfile('baseline')" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--content)] border border-[var(--border)] hover:opacity-90">
+                Baseline Only (#1–#2)
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- Stream 1: Standard IAP -->
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+              <div class="flex items-start justify-between gap-2 border-b border-[var(--border)] pb-2">
+                <div>
+                  <span class="text-xs font-medium text-emerald-500">Stream #1 · Baseline Core</span>
+                  <h4 class="text-sm font-semibold">In-Game IAP (GamePasses & DevProducts)</h4>
+                </div>
+                <span class="text-sm font-bold text-emerald-500 tabular-nums" id="streamOut-1">$0</span>
+              </div>
+              <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">
+                Direct Robux purchases for Season Passes, Sidegrade Kits, Skin Cases, Starter Packs, and Key Bundles. Roblox deducts a 30% platform fee; the studio keeps 70% Earned Robux and converts at DevEx ($0.0038/R$, or $0.0054/R$ for verified U.S. 18+). Controlled via <strong>M3/M24 ARPDAU</strong> and <strong>Direct-Only Shop</strong> in Section 2.
+              </p>
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1 border-t border-[var(--border)]">
+                <span class="text-[var(--muted-foreground)]"><strong>Examples:</strong> <em>Rivals</em> (Skin Cases, Key Bundles) &amp; <em>BedWars</em> (Kits)</span>
+                <a href="https://create.roblox.com/docs/get-started/monetization" target="_blank" rel="noopener noreferrer" class="underline font-medium hover:opacity-80">Roblox IAP Docs ↗</a>
+              </div>
+            </div>
+
+            <!-- Stream 2: Creator Rewards Daily Engagement -->
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+              <div class="flex items-start justify-between gap-2 border-b border-[var(--border)] pb-2">
+                <div>
+                  <span class="text-xs font-medium text-emerald-500">Stream #2 · Baseline Core</span>
+                  <h4 class="text-sm font-semibold">Creator Rewards — Daily Engagement</h4>
+                </div>
+                <span class="text-sm font-bold text-emerald-500 tabular-nums" id="streamOut-2">$0</span>
+              </div>
+              <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">
+                Replaced legacy Engagement-Based Payouts. Pays a flat <strong>5 Earned R$ ($0.019)</strong> per qualifying "Active Spender" ($9.99+ spent on Roblox in past 60 days) who plays 10+ minutes when <em>ENGAGE</em> is among their first 3 qualifying games that day. Controlled via <strong>Active Spender %</strong> in Section 2.
+              </p>
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1 border-t border-[var(--border)]">
+                <span class="text-[var(--muted-foreground)]"><strong>Fit:</strong> 24–26 min FPS sessions naturally clear 10m gate</span>
+                <a href="https://create.roblox.com/docs/creator-rewards" target="_blank" rel="noopener noreferrer" class="underline font-medium hover:opacity-80">Creator Rewards Docs ↗</a>
+              </div>
+            </div>
+
+            <!-- Stream 3: Experience Subscriptions -->
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+              <div class="flex items-start justify-between gap-2 border-b border-[var(--border)] pb-2">
+                <div>
+                  <span class="text-xs font-medium text-sky-400">Stream #3 · Unmodeled Upside (M4+)</span>
+                  <h4 class="text-sm font-semibold">Experience Subscriptions ("ENGAGE Elite")</h4>
+                </div>
+                <span class="text-sm font-bold text-emerald-500 tabular-nums" id="streamOut-3">$0</span>
+              </div>
+              <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">
+                Monthly auto-renewing memberships (local fiat USD or Robux). You earn <strong>70% in Month 1</strong> and <strong>100% of Robux value on Month 2+ renewals</strong> (Roblox drops the 30% cut!). Ideal for a $3.99/mo VIP Club (monthly Shards stipend, Clan Tag, +10% Pass XP).
+              </p>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-subPct">Active Subs (% of DAU)</label>
+                  <input id="in-subPct" type="number" min="0" max="5" step="0.05" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-subPriceR">Monthly Value (R$ equiv)</label>
+                  <input id="in-subPriceR" type="number" min="50" max="2000" step="50" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1 border-t border-[var(--border)]">
+                <span class="text-[var(--muted-foreground)]"><strong>Mechanism:</strong> 70% M1 → ~90% blended renewal payout</span>
+                <a href="https://create.roblox.com/docs/production/monetization/subscriptions" target="_blank" rel="noopener noreferrer" class="underline font-medium hover:opacity-80">Subscriptions Docs ↗</a>
+              </div>
+            </div>
+
+            <!-- Stream 4: Rewarded Video Ads -->
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+              <div class="flex items-start justify-between gap-2 border-b border-[var(--border)] pb-2">
+                <div>
+                  <span class="text-xs font-medium text-sky-400">Stream #4 · Monetizes 90%+ Non-Payers (M4+)</span>
+                  <h4 class="text-sm font-semibold">Rewarded Video Ads (6–30s Opt-In)</h4>
+                </div>
+                <span class="text-sm font-bold text-emerald-500 tabular-nums" id="streamOut-4">$0</span>
+              </div>
+              <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">
+                Players choose to watch a 6–30s full-screen video after a match in exchange for a non-P2W Developer Product (e.g., <em>2× Daily Quest Shards</em> or <em>1-Match Locked Kit Trial</em> — never direct Robux). Monetizes free-to-play users who spend $0 IAP, paid by EPM.
+              </p>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-rvaViewsPer100">Views / 100 DAU / Day</label>
+                  <input id="in-rvaViewsPer100" type="number" min="0" max="100" step="1" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-rvaEcpm">Effective eCPM ($ / 1k views)</label>
+                  <input id="in-rvaEcpm" type="number" min="0.2" max="10" step="0.1" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1 border-t border-[var(--border)]">
+                <a href="https://devforum.roblox.com/t/boost-your-game-earnings-with-rewarded-video-enhancements/4645335" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">Creator Guide / Case Updates ↗</a>
+                <a href="https://create.roblox.com/docs/production/promotion/rewarded-video-ads" target="_blank" rel="noopener noreferrer" class="underline font-medium hover:opacity-80">Rewarded Video Docs ↗</a>
+              </div>
+            </div>
+
+            <!-- Stream 5: In-Experience Avatar UGC -->
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+              <div class="flex items-start justify-between gap-2 border-b border-[var(--border)] pb-2">
+                <div>
+                  <span class="text-xs font-medium text-sky-400">Stream #5 · 40%–70% Split (M3+)</span>
+                  <h4 class="text-sm font-semibold">In-Experience Avatar UGC Closet</h4>
+                </div>
+                <span class="text-sm font-bold text-emerald-500 tabular-nums" id="streamOut-5">$0</span>
+              </div>
+              <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">
+                Players inspect teammates or browse a "Dark Matter Closet" in the lobby and buy Avatar Marketplace gear in-game. Roblox pays <strong>40% commission</strong> on 3rd-party items, and <strong>70% (40% + 30% creator)</strong> when selling <em>ENGAGE</em>'s own Dark Matter UGC helmets/backpacks.
+              </p>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-ugcPer1kDauR">Gross UGC / 1k DAU / Day (R$)</label>
+                  <input id="in-ugcPer1kDauR" type="number" min="0" max="500" step="5" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-ugcSharePct">Blended Commission (%)</label>
+                  <input id="in-ugcSharePct" type="number" min="40" max="70" step="5" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1 border-t border-[var(--border)]">
+                <span class="text-[var(--muted-foreground)]"><strong>Example:</strong> <em>Catalog Avatar Creator</em> seamless try-on</span>
+                <div class="flex gap-2.5">
+                  <a href="https://create.roblox.com/docs/players/avatar-inspect-menu" target="_blank" rel="noopener noreferrer" class="underline font-medium hover:opacity-80">Inspect Menu ↗</a>
+                  <a href="https://create.roblox.com/docs/marketplace/marketplace-fees-and-commissions" target="_blank" rel="noopener noreferrer" class="underline font-medium hover:opacity-80">40% Split Docs ↗</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stream 6: Native Private Servers -->
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+              <div class="flex items-start justify-between gap-2 border-b border-[var(--border)] pb-2">
+                <div>
+                  <span class="text-xs font-medium text-sky-400">Stream #6 · Competitive Scrim MRR (M4+)</span>
+                  <h4 class="text-sm font-semibold">Native Private Servers</h4>
+                </div>
+                <span class="text-sm font-bold text-emerald-500 tabular-nums" id="streamOut-6">$0</span>
+              </div>
+              <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">
+                Built-in monthly Robux server rentals (70% net share) for clan wars, 1v1 ranked scrims, friend groups, and YouTuber tournament filming without paying external server hosting bills. Includes engagement payouts when Premium friends join.
+              </p>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-psPer1kCcu">Active Servers / 1k CCU</label>
+                  <input id="in-psPer1kCcu" type="number" min="0" max="1000" step="10" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-psPriceR">Monthly Fee (R$)</label>
+                  <input id="in-psPriceR" type="number" min="10" max="1000" step="10" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1 border-t border-[var(--border)]">
+                <span class="text-[var(--muted-foreground)]"><strong>Fit:</strong> Clan scrims &amp; custom Duel/Convergence lobbies</span>
+                <a href="https://create.roblox.com/docs/production/monetization/private-servers" target="_blank" rel="noopener noreferrer" class="underline font-medium hover:opacity-80">Private Servers Docs ↗</a>
+              </div>
+            </div>
+
+            <!-- Stream 7: Audience Expansion Creator Rewards -->
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+              <div class="flex items-start justify-between gap-2 border-b border-[var(--border)] pb-2">
+                <div>
+                  <span class="text-xs font-medium text-sky-400">Stream #7 · CAC Rebate Engine (M4+)</span>
+                  <h4 class="text-sm font-semibold">Creator Rewards — Audience Expansion</h4>
+                </div>
+                <span class="text-sm font-bold text-emerald-500 tabular-nums" id="streamOut-7">$0</span>
+              </div>
+              <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">
+                Pays a <strong>35% platform rev-share</strong> over 60 days on Robux spent anywhere on Roblox by brand-new or 60-day reactivated users brought via your creator share links—effectively rebating a portion of your TikTok/YouTube influencer spend.
+              </p>
+              <div>
+                <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-expOffsetPct">% of Influencer Spend Recovered as Expansion Rewards</label>
+                <input id="in-expOffsetPct" type="number" min="0" max="50" step="1" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+              </div>
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1 border-t border-[var(--border)]">
+                <span class="text-[var(--muted-foreground)]"><strong>Rule:</strong> 35% of platform purchases for 60 days</span>
+                <a href="https://create.roblox.com/rewards" target="_blank" rel="noopener noreferrer" class="underline font-medium hover:opacity-80">Creator Rewards Portal ↗</a>
+              </div>
+            </div>
+
+            <!-- Stream 8: Immersive AdGui & Creator Store / IP -->
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+              <div class="flex items-start justify-between gap-2 border-b border-[var(--border)] pb-2">
+                <div>
+                  <span class="text-xs font-medium text-sky-400">Stream #8 · Post-Scale & Secondary IP</span>
+                  <h4 class="text-sm font-semibold">Immersive <code>AdGui</code> &amp; Creator Store / IP</h4>
+                </div>
+                <span class="text-sm font-bold text-emerald-500 tabular-nums" id="streamOut-8">$0</span>
+              </div>
+              <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">
+                Native 3D billboards/video screens in lobby areas (~15–20 Earned R$ [$0.057–$0.076] per 1k visits benchmark; automatically gated to M7+ when ≥1,000 CCU so early UX stays clean), plus modular Creator Store sci-fi prop packs (up to 100% net proceeds) and Year 2 YouTube/merch/cups.
+              </p>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-immRpmR">AdGui RPM (R$ / 1k visits)</label>
+                  <input id="in-immRpmR" type="number" min="0" max="50" step="1" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-secIpUsd">Creator Store / IP ($/mo Y2)</label>
+                  <input id="in-secIpUsd" type="number" min="0" max="5000" step="50" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onDriverChange()" />
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1 border-t border-[var(--border)]">
+                <a href="https://create.roblox.com/docs/production/monetization/immersive-ads" target="_blank" rel="noopener noreferrer" class="underline font-medium hover:opacity-80">Immersive Ads Docs ↗</a>
+                <a href="https://create.roblox.com/docs/production/creator-store" target="_blank" rel="noopener noreferrer" class="underline font-medium hover:opacity-80">Creator Store Docs ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 6: 60-Day Season Pass Daily Distribution -->
+        <div id="panel-pass" class="hidden space-y-4">
+          <!-- Top Banner & Pace Presets -->
+          <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+            <div>
+              <h3 class="text-base font-semibold">60-Day Season Pass — Daily XP, Tier & Revenue Distribution</h3>
+              <p class="text-xs text-[var(--muted-foreground)] mt-0.5">
+                Day-by-day simulation comparing a <strong>Non-Buyer (F2P)</strong> vs. a <strong>Season Pass Buyer (399 R$ [~$4.99 retail / $1.06 net])</strong> alongside daily cohort Pass sales waves across Days 1–60.
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2 shrink-0">
+              <button onclick="applyPassSchedule('casual')" id="btn-pass-casual" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90">
+                Casual (5d/wk · 44d)
+              </button>
+              <button onclick="applyPassSchedule('hardcore')" id="btn-pass-hardcore" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--content)] border border-[var(--border)] hover:opacity-90">
+                Grinder (6d/wk · 52d)
+              </button>
+              <button onclick="applyPassSchedule('weekend')" id="btn-pass-weekend" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--content)] border border-[var(--border)] hover:opacity-90">
+                Weekend (3d/wk · 27d)
+              </button>
+              <button onclick="exportSeasonCSV()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] hover:opacity-90">
+                Export 60d CSV
+              </button>
+            </div>
+          </div>
+
+          <!-- Season Pass KPI Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" id="passKpiStrip"></div>
+
+          <!-- Pass Controls Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between border-b border-[var(--border)] pb-2">
+                <h4 class="text-xs font-semibold uppercase tracking-wide">Player Progression Inputs (Bar 1 + Bar 2 XP)</h4>
+                <span class="text-xs text-[var(--muted-foreground)]" id="passGoalLabel">50 Tiers × 2,000 XP = 100k XP</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-spDaysWk">Active Days / Wk</label>
+                  <input id="in-spDaysWk" type="number" min="1" max="7" step="1" value="5" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onPassInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-spMatchXp">Match XP / Active Day</label>
+                  <input id="in-spMatchXp" type="number" min="100" max="5000" step="50" value="750" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onPassInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-spDailyXp">Daily Quest XP</label>
+                  <input id="in-spDailyXp" type="number" min="0" max="3000" step="50" value="800" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onPassInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-spWeeklyFree">Weekly Quest XP (Free)</label>
+                  <input id="in-spWeeklyFree" type="number" min="0" max="15000" step="250" value="4250" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onPassInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-spWeeklyBonus">Pass Bonus Wkly XP</label>
+                  <input id="in-spWeeklyBonus" type="number" min="0" max="10000" step="125" value="2125" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onPassInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-spBoostPct">Pass Match Boost (%)</label>
+                  <input id="in-spBoostPct" type="number" min="0" max="100" step="5" value="25" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onPassInputChange()" />
+                </div>
+              </div>
+              <p class="text-xs text-[var(--muted-foreground)]" id="passRuleNote">
+                Account XP (<code>StatsService.lua</code>) feeds Level-Up Shards (+75 avg) + Ranked Level-5 Gate (1,600 XP), while Season XP advances Tiers 1–50 (2,000 XP/Tier). Kit cost = 3,500 Shards.
+              </p>
+            </div>
+
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between border-b border-[var(--border)] pb-2">
+                <h4 class="text-xs font-semibold uppercase tracking-wide">Season Cohort & Daily Sales Distribution</h4>
+                <span class="text-xs text-[var(--muted-foreground)]" id="passCohortNote">Synced to Launch Avg DAU</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-spPriceR">Pass Price (R$)</label>
+                  <input id="in-spPriceR" type="number" min="99" max="1999" step="50" value="399" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onPassInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-spBundleR">Tier-Skip Bundle (R$)</label>
+                  <input id="in-spBundleR" type="number" min="299" max="2999" step="50" value="799" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onPassInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-spBundlePct">% Buyers Buying Bundle</label>
+                  <input id="in-spBundlePct" type="number" min="0" max="50" step="1" value="15" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onPassInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-spCohortDau">Season Active Players</label>
+                  <input id="in-spCohortDau" type="number" min="1000" max="5000000" step="1000" value="30000" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onPassManualDau()" />
+                </div>
+                <div>
+                  <label class="block text-xs text-[var(--muted-foreground)] mb-1" for="in-spAttachPct">Season Pass Attach (%)</label>
+                  <input id="in-spAttachPct" type="number" min="0.5" max="30" step="0.5" value="6.5" class="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[var(--content)] border border-[var(--border)] tabular-nums" oninput="onPassInputChange()" />
+                </div>
+                <div class="flex items-end">
+                  <button onclick="syncSeasonDauFromModel()" class="w-full px-2.5 py-1.5 text-xs font-medium rounded-lg bg-[var(--content)] border border-[var(--border)] hover:opacity-90">
+                    Sync to S1 DAU
+                  </button>
+                </div>
+              </div>
+              <div class="text-xs text-[var(--muted-foreground)] flex flex-wrap justify-between gap-2" id="passPriceUsdPreview">
+                Pass: 399 R$ (~$4.99 retail / $1.06 net) · Bundle: 799 R$ (~$9.99 retail / $2.13 net)
+              </div>
+            </div>
+          </div>
+
+          <!-- Two Daily Distribution Charts -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                <div>
+                  <h3 class="text-sm font-semibold">Daily Cumulative Season XP & Tiers (Days 1–60)</h3>
+                  <p class="text-xs text-[var(--muted-foreground)]">Hover any day to compare F2P vs. Pass Buyer XP, Tiers & Account Level</p>
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#38bdf8"></span>F2P</span>
+                  <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#a855f7"></span>Pass Buyer</span>
+                </div>
+              </div>
+              <div class="relative">
+                <canvas id="passXpChart" class="w-full h-[260px] block"></canvas>
+                <div id="passXpTooltip" class="hidden pointer-events-none absolute z-10 bg-[var(--card)] border border-[var(--border)] rounded-lg p-3 shadow-lg text-xs space-y-1 min-w-[220px]"></div>
+              </div>
+            </div>
+
+            <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                <div>
+                  <h3 class="text-sm font-semibold">Daily Season Pass Sales Distribution (Days 1–60)</h3>
+                  <p class="text-xs text-[var(--muted-foreground)]">Launch Surge (D1–7) · Tier-25 Kit Spike (D25–30) · Tier-50 FOMO Wave (D53–60)</p>
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#10b981"></span>Daily Net ($)</span>
+                  <span class="flex items-center gap-1"><span class="w-2.5 h-0.5 inline-block" style="background:#f59e0b"></span>Cum Revenue</span>
+                </div>
+              </div>
+              <div class="relative">
+                <canvas id="passRevChart" class="w-full h-[260px] block"></canvas>
+                <div id="passRevTooltip" class="hidden pointer-events-none absolute z-10 bg-[var(--card)] border border-[var(--border)] rounded-lg p-3 shadow-lg text-xs space-y-1 min-w-[220px]"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scrollable 60-Day Daily Table -->
+          <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div>
+                <h3 class="text-sm font-semibold">Complete 60-Day Daily Distribution Schedule (Day 1 → Day 60)</h3>
+                <p class="text-xs text-[var(--muted-foreground)]">Tracks daily active schedule, dual-bar XP, Shards/Kits unlocked, daily Pass conversions, and USD revenue.</p>
+              </div>
+              <span class="text-xs text-[var(--muted-foreground)]" id="passTableSummary">60 Days · 50 Tiers · 100,000 XP</span>
+            </div>
+
+            <div class="overflow-x-auto max-h-[460px] overflow-y-auto border border-[var(--border)] rounded-lg">
+              <table class="w-full text-xs text-right border-collapse">
+                <thead class="bg-[var(--content)] sticky top-0 z-10 border-b border-[var(--border)]">
+                  <tr>
+                    <th class="py-2 px-2 text-left font-semibold">Day</th>
+                    <th class="py-2 px-2 text-center font-semibold">Play?</th>
+                    <th class="py-2 px-2 font-semibold">F2P +XP</th>
+                    <th class="py-2 px-2 font-semibold">F2P Tier (XP)</th>
+                    <th class="py-2 px-2 font-semibold">Pass +XP</th>
+                    <th class="py-2 px-2 font-semibold">Pass Tier (XP)</th>
+                    <th class="py-2 px-2 font-semibold">Acct Lvl</th>
+                    <th class="py-2 px-2 font-semibold">F2P Shards</th>
+                    <th class="py-2 px-2 font-semibold">New Passes</th>
+                    <th class="py-2 px-2 font-semibold">Daily Gross R$ (Retail)</th>
+                    <th class="py-2 px-2 font-semibold">Daily DevEx Net</th>
+                    <th class="py-2 px-2.5 text-left font-semibold">Milestone / Event</th>
+                  </tr>
+                </thead>
+                <tbody id="passDailyBody" class="divide-y divide-[var(--border)] tabular-nums"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+<script>
+const STORAGE_KEY = "engage_roblox_bizplan_saved_v1";
+
+const PRESETS = {
+  conservative: {
+    label: "Conservative Preset",
+    m3ccu: 30, y1ccu: 350, y2ccu: 650, playtime: 24.0,
+    arpStart: 1.5, arpEnd: 2.7, crShare: 5.5, us18Share: 0,
+    mktCut: 30, taxRate: 25, directOnly: false,
+    softAds: 950, y1RobloxAds: 550, y1InfAds: 361, y2RobloxAds: 550, y2InfAds: 300,
+    tier1Share: 60, t1Cpp: 0.52, rowCpp: 0.22, geoCoupling: false,
+    infCpp: 0.30, creatorCodePct: 0, y1Creative: 275, y2Creative: 300,
+    adCredits: false,
+    preDev: 1500, liveDev: 650, y1Staff: 450, y2Staff: 900,
+    toolsMo: 180, founderY1: 600, founderY2: 1400,
+    devexLag: false, hiddenOverhead: false,
+    subPct: 0, subPriceR: 400, rvaViewsPer100: 0, rvaEcpm: 1.80,
+    ugcPer1kDauR: 0, ugcSharePct: 55, psPer1kCcu: 0, psPriceR: 150,
+    expOffsetPct: 0, immRpmR: 0, secIpUsd: 0,
+    ccuCurve: [0,0,30,80,120,160,200,230,260,290,320,350,380,410,440,470,500,530,550,570,590,610,630,650],
+    arpCurve: [0,0,1.5,1.8,1.9,2.0,2.1,2.1,2.2,2.2,2.3,2.4,2.4,2.4,2.5,2.5,2.5,2.6,2.6,2.6,2.6,2.7,2.7,2.7],
+    uaCurve:  [0,150,800,1200,1000,900,800,800,800,800,900,1000,800,800,800,800,900,1000,800,800,800,800,900,1000],
+    artCurve: [350,350,350,250,250,250,250,250,250,250,250,250,300,300,300,300,300,300,300,300,300,300,300,300],
+    devRatio: (m, pre, live) => m <= 2 ? pre : (m <= 4 ? Math.round((pre + live) * 0.84) : (m <= 12 ? live : Math.round(live * 1.15))),
+    staffFn:  (m, y1s, y2s) => m <= 3 ? 0 : (m <= 6 ? Math.round(y1s * 0.55) : (m <= 12 ? y1s : y2s)),
+    toolsFn:  (m, t) => m <= 6 ? Math.round(t * 0.89) : (m <= 12 ? t : Math.round(t * 1.22)),
+    founderFn:(m, f1, f2) => m <= 9 ? 0 : (m <= 12 ? f1 : f2),
+    hiddenFixedFn: (m) => m <= 2 ? 600 : (m <= 12 ? 160 : 225),
+  },
+  base: {
+    label: "Base Case Preset",
+    m3ccu: 60, y1ccu: 2200, y2ccu: 5200, playtime: 24.8,
+    arpStart: 1.9, arpEnd: 4.1, crShare: 7.5, us18Share: 0,
+    mktCut: 30, taxRate: 25, directOnly: false,
+    softAds: 2300, y1RobloxAds: 3200, y1InfAds: 1967, y2RobloxAds: 5500, y2InfAds: 3625,
+    tier1Share: 75, t1Cpp: 0.52, rowCpp: 0.20, geoCoupling: false,
+    infCpp: 0.22, creatorCodePct: 0, y1Creative: 663, y2Creative: 1200,
+    adCredits: false,
+    preDev: 2200, liveDev: 1800, y1Staff: 2800, y2Staff: 7000,
+    toolsMo: 300, founderY1: 2000, founderY2: 5500,
+    devexLag: false, hiddenOverhead: false,
+    subPct: 0, subPriceR: 400, rvaViewsPer100: 0, rvaEcpm: 1.80,
+    ugcPer1kDauR: 0, ugcSharePct: 55, psPer1kCcu: 0, psPriceR: 150,
+    expOffsetPct: 0, immRpmR: 0, secIpUsd: 0,
+    ccuCurve: [0,0,60,280,520,800,1050,1300,1500,1700,1950,2200,2450,2700,3000,3250,3500,3850,4050,4300,4550,4750,4950,5200],
+    arpCurve: [0,0,1.9,2.3,2.5,2.7,2.8,2.9,3.0,3.1,3.3,3.5,3.4,3.5,3.6,3.6,3.7,3.8,3.8,3.8,3.9,3.9,4.0,4.1],
+    uaCurve:  [0,300,2000,4000,4500,4500,4500,4500,5000,5500,6500,7500,7000,7500,8000,8000,8500,9500,9000,9500,9500,10000,11000,12000],
+    artCurve: [550,550,550,700,700,700,700,700,700,700,700,700,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200],
+    devRatio: (m, pre, live) => m <= 2 ? pre : (m <= 4 ? Math.round(live) : (m <= 12 ? live : Math.round(live * 1.67))),
+    staffFn:  (m, y1s, y2s) => m <= 3 ? 0 : (m <= 6 ? Math.round(y1s * 0.32) : (m <= 12 ? y1s : y2s)),
+    toolsFn:  (m, t) => m <= 6 ? Math.round(t * 0.67) : (m <= 12 ? t : t * 2),
+    founderFn:(m, f1, f2) => m <= 6 ? 0 : (m <= 12 ? f1 : f2),
+    hiddenFixedFn: (m) => m <= 2 ? 1000 : (m <= 12 ? 510 : 1100),
+  },
+  breakout: {
+    label: "Breakout Preset",
+    m3ccu: 120, y1ccu: 10000, y2ccu: 28000, playtime: 26.2,
+    arpStart: 2.2, arpEnd: 6.0, crShare: 9.0, us18Share: 0,
+    mktCut: 30, taxRate: 25, directOnly: false,
+    softAds: 3500, y1RobloxAds: 9500, y1InfAds: 6278, y2RobloxAds: 20000, y2InfAds: 14667,
+    tier1Share: 75, t1Cpp: 0.45, rowCpp: 0.16, geoCoupling: false,
+    infCpp: 0.16, creatorCodePct: 0, y1Creative: 1538, y2Creative: 3500,
+    adCredits: false,
+    preDev: 2800, liveDev: 4500, y1Staff: 10000, y2Staff: 25000,
+    toolsMo: 700, founderY1: 4500, founderY2: 11000,
+    devexLag: false, hiddenOverhead: false,
+    subPct: 0, subPriceR: 400, rvaViewsPer100: 0, rvaEcpm: 1.80,
+    ugcPer1kDauR: 0, ugcSharePct: 55, psPer1kCcu: 0, psPriceR: 150,
+    expOffsetPct: 0, immRpmR: 0, secIpUsd: 0,
+    ccuCurve: [0,0,120,850,2100,3600,4800,6000,6800,7600,8800,10000,11500,13500,15500,17000,18500,20500,21500,23000,24500,25500,26800,28000],
+    arpCurve: [0,0,2.2,2.8,3.2,3.6,3.8,4.0,4.2,4.4,4.6,4.9,4.8,5.0,5.1,5.2,5.3,5.5,5.5,5.6,5.6,5.7,5.8,6.0],
+    uaCurve:  [0,500,3000,7000,10000,12000,14000,15000,17000,19000,22000,26000,24000,26000,28000,30000,32000,36000,34000,36000,38000,40000,44000,48000],
+    artCurve: [750,750,750,1800,1800,1800,1800,1800,1800,1800,1800,1800,3500,3500,3500,3500,3500,3500,3500,3500,3500,3500,3500,3500],
+    devRatio: (m, pre, live) => m <= 2 ? pre : (m <= 4 ? Math.round(pre * 0.89) : (m <= 12 ? live : Math.round(live * 1.89))),
+    staffFn:  (m, y1s, y2s) => m <= 3 ? 0 : (m <= 6 ? Math.round(y1s * 0.25) : (m <= 12 ? y1s : y2s)),
+    toolsFn:  (m, t) => m <= 6 ? Math.round(t * 0.34) : (m <= 12 ? t : Math.round(t * 3.14)),
+    founderFn:(m, f1, f2) => m <= 5 ? 0 : (m <= 12 ? f1 : f2),
+    hiddenFixedFn: (m) => m <= 2 ? 1600 : (m <= 12 ? 1350 : (m <= 22 ? 4283 : 4285)),
+  }
+};
+
+let currentPresetKey = "base";
+let isCustom = false;
+let monthlyOverrides = {};
+let lastRows = [];
+
+function getInputs() {
+  return {
+    m3ccu: +document.getElementById("in-m3ccu").value,
+    y1ccu: +document.getElementById("in-y1ccu").value,
+    y2ccu: +document.getElementById("in-y2ccu").value,
+    playtime: +document.getElementById("in-playtime").value,
+    arpStart: +document.getElementById("in-arpStart").value,
+    arpEnd: +document.getElementById("in-arpEnd").value,
+    crShare: +document.getElementById("in-crShare").value,
+    us18Share: +document.getElementById("in-us18Share").value,
+    mktCut: +document.getElementById("in-mktCut").value,
+    taxRate: +document.getElementById("in-taxRate").value,
+    directOnly: document.getElementById("in-directOnly").checked,
+    softAds: +document.getElementById("in-softAds").value,
+    y1RobloxAds: +document.getElementById("in-y1RobloxAds").value,
+    y1InfAds: +document.getElementById("in-y1InfAds").value,
+    y2RobloxAds: +document.getElementById("in-y2RobloxAds").value,
+    y2InfAds: +document.getElementById("in-y2InfAds").value,
+    tier1Share: +document.getElementById("in-tier1Share").value,
+    t1Cpp: +document.getElementById("in-t1Cpp").value,
+    rowCpp: +document.getElementById("in-rowCpp").value,
+    geoCoupling: document.getElementById("in-geoCoupling").checked,
+    infCpp: +document.getElementById("in-infCpp").value,
+    creatorCodePct: +document.getElementById("in-creatorCodePct").value,
+    y1Creative: +document.getElementById("in-y1Creative").value,
+    y2Creative: +document.getElementById("in-y2Creative").value,
+    adCredits: document.getElementById("in-adCredits").checked,
+    preDev: +document.getElementById("in-preDev").value,
+    liveDev: +document.getElementById("in-liveDev").value,
+    y1Staff: +document.getElementById("in-y1Staff").value,
+    y2Staff: +document.getElementById("in-y2Staff").value,
+    toolsMo: +document.getElementById("in-toolsMo").value,
+    founderY1: +document.getElementById("in-founderY1").value,
+    founderY2: +document.getElementById("in-founderY2").value,
+    devexLag: document.getElementById("in-devexLag").checked,
+    hiddenOverhead: document.getElementById("in-hiddenOverhead").checked,
+    subPct: +document.getElementById("in-subPct").value,
+    subPriceR: +document.getElementById("in-subPriceR").value,
+    rvaViewsPer100: +document.getElementById("in-rvaViewsPer100").value,
+    rvaEcpm: +document.getElementById("in-rvaEcpm").value,
+    ugcPer1kDauR: +document.getElementById("in-ugcPer1kDauR").value,
+    ugcSharePct: +document.getElementById("in-ugcSharePct").value,
+    psPer1kCcu: +document.getElementById("in-psPer1kCcu").value,
+    psPriceR: +document.getElementById("in-psPriceR").value,
+    expOffsetPct: +document.getElementById("in-expOffsetPct").value,
+    immRpmR: +document.getElementById("in-immRpmR").value,
+    secIpUsd: +document.getElementById("in-secIpUsd").value,
+  };
+}
+
+function setInputs(p) {
+  const numMap = {
+    "in-m3ccu": p.m3ccu, "in-y1ccu": p.y1ccu, "in-y2ccu": p.y2ccu,
+    "in-playtime": p.playtime, "in-arpStart": p.arpStart, "in-arpEnd": p.arpEnd,
+    "in-crShare": p.crShare, "in-us18Share": p.us18Share, "in-mktCut": p.mktCut,
+    "in-taxRate": p.taxRate,
+    "in-softAds": p.softAds, "in-y1RobloxAds": p.y1RobloxAds, "in-y1InfAds": p.y1InfAds,
+    "in-y2RobloxAds": p.y2RobloxAds, "in-y2InfAds": p.y2InfAds,
+    "in-tier1Share": p.tier1Share, "in-t1Cpp": p.t1Cpp, "in-rowCpp": p.rowCpp,
+    "in-infCpp": p.infCpp, "in-creatorCodePct": p.creatorCodePct,
+    "in-y1Creative": p.y1Creative, "in-y2Creative": p.y2Creative,
+    "in-preDev": p.preDev, "in-liveDev": p.liveDev, "in-y1Staff": p.y1Staff,
+    "in-y2Staff": p.y2Staff, "in-toolsMo": p.toolsMo,
+    "in-founderY1": p.founderY1, "in-founderY2": p.founderY2,
+    "in-subPct": p.subPct ?? 0, "in-subPriceR": p.subPriceR ?? 400,
+    "in-rvaViewsPer100": p.rvaViewsPer100 ?? 0, "in-rvaEcpm": p.rvaEcpm ?? 1.80,
+    "in-ugcPer1kDauR": p.ugcPer1kDauR ?? 0, "in-ugcSharePct": p.ugcSharePct ?? 55,
+    "in-psPer1kCcu": p.psPer1kCcu ?? 0, "in-psPriceR": p.psPriceR ?? 150,
+    "in-expOffsetPct": p.expOffsetPct ?? 0,
+    "in-immRpmR": p.immRpmR ?? 0, "in-secIpUsd": p.secIpUsd ?? 0,
+  };
+  for (const [id, v] of Object.entries(numMap)) {
+    document.getElementById(id).value = v;
+  }
+  document.getElementById("in-directOnly").checked = !!p.directOnly;
+  document.getElementById("in-geoCoupling").checked = !!p.geoCoupling;
+  document.getElementById("in-adCredits").checked = !!p.adCredits;
+  document.getElementById("in-devexLag").checked = !!p.devexLag;
+  document.getElementById("in-hiddenOverhead").checked = !!p.hiddenOverhead;
+}
+
+function applyStreamProfile(mode) {
+  const target = mode === "target";
+  document.getElementById("in-subPct").value = target ? 0.35 : 0;
+  document.getElementById("in-subPriceR").value = 400;
+  document.getElementById("in-rvaViewsPer100").value = target ? 10 : 0;
+  document.getElementById("in-rvaEcpm").value = 1.80;
+  document.getElementById("in-ugcPer1kDauR").value = target ? 35 : 0;
+  document.getElementById("in-ugcSharePct").value = 55;
+  document.getElementById("in-psPer1kCcu").value = target ? 120 : 0;
+  document.getElementById("in-psPriceR").value = 150;
+  document.getElementById("in-expOffsetPct").value = target ? 15 : 0;
+  document.getElementById("in-immRpmR").value = target ? 15 : 0;
+  document.getElementById("in-secIpUsd").value = target ? 250 : 0;
+  onDriverChange();
+}
+
+function applyPreset(key) {
+  currentPresetKey = key;
+  isCustom = false;
+  monthlyOverrides = {};
+  setInputs(PRESETS[key]);
+  updatePresetButtons();
+  recalculate();
+}
+
+function resetCurrentPreset() {
+  applyPreset(currentPresetKey);
+}
+
+function applyAdStrategy(kind) {
+  const inp = getInputs();
+  const y1Total = inp.y1RobloxAds + inp.y1InfAds;
+  const y2Total = inp.y2RobloxAds + inp.y2InfAds;
+  if (kind === "balanced") {
+    document.getElementById("in-tier1Share").value = 75;
+    document.getElementById("in-y1RobloxAds").value = Math.round(y1Total * 0.62);
+    document.getElementById("in-y1InfAds").value = Math.round(y1Total * 0.38);
+    document.getElementById("in-y2RobloxAds").value = Math.round(y2Total * 0.60);
+    document.getElementById("in-y2InfAds").value = Math.round(y2Total * 0.40);
+    document.getElementById("in-geoCoupling").checked = true;
+  } else if (kind === "tier1") {
+    document.getElementById("in-tier1Share").value = 85;
+    document.getElementById("in-y1RobloxAds").value = Math.round(y1Total * 0.70);
+    document.getElementById("in-y1InfAds").value = Math.round(y1Total * 0.30);
+    document.getElementById("in-y2RobloxAds").value = Math.round(y2Total * 0.70);
+    document.getElementById("in-y2InfAds").value = Math.round(y2Total * 0.30);
+    document.getElementById("in-geoCoupling").checked = true;
+  } else if (kind === "global") {
+    document.getElementById("in-tier1Share").value = 20;
+    document.getElementById("in-y1RobloxAds").value = Math.round(y1Total * 0.80);
+    document.getElementById("in-y1InfAds").value = Math.round(y1Total * 0.20);
+    document.getElementById("in-y2RobloxAds").value = Math.round(y2Total * 0.75);
+    document.getElementById("in-y2InfAds").value = Math.round(y2Total * 0.25);
+    document.getElementById("in-geoCoupling").checked = true;
+  } else if (kind === "creators") {
+    document.getElementById("in-tier1Share").value = 70;
+    document.getElementById("in-y1RobloxAds").value = Math.round(y1Total * 0.30);
+    document.getElementById("in-y1InfAds").value = Math.round(y1Total * 0.70);
+    document.getElementById("in-y2RobloxAds").value = Math.round(y2Total * 0.30);
+    document.getElementById("in-y2InfAds").value = Math.round(y2Total * 0.70);
+    document.getElementById("in-creatorCodePct").value = 5;
+    document.getElementById("in-geoCoupling").checked = false;
+  }
+  onDriverChange();
+}
+
+function updateArpdauHelper() {
+  const pct = +document.getElementById("in-dailyPayerPct").value || 0;
+  const spend = +document.getElementById("in-avgSpendR").value || 0;
+  const implied = (pct / 100) * spend;
+  const netUsd = implied * 0.70 * 0.0038;
+  const retailUsd = spend * 0.0125;
+  document.getElementById("arpdauCalcPreview").textContent =
+    `Implied ARPDAU: ${implied.toFixed(2)} R$ ($${netUsd.toFixed(4)} net) · ${pct}% × ${spend} R$ (~$${retailUsd.toFixed(2)})`;
+  return implied;
+}
+
+function applyCalculatedArpdau() {
+  const implied = updateArpdauHelper();
+  document.getElementById("in-arpEnd").value = +implied.toFixed(1);
+  onDriverChange();
+}
+
+function saveCustomLocal() {
+  try {
+    const payload = { preset: currentPresetKey, inputs: getInputs(), overrides: monthlyOverrides };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    document.getElementById("btn-load").disabled = false;
+    const btn = document.getElementById("btn-save");
+    btn.textContent = "Saved!";
+    setTimeout(() => btn.textContent = "Save", 1200);
+  } catch (e) {}
+}
+
+function loadCustomLocal() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    currentPresetKey = data.preset || "base";
+    setInputs(data.inputs);
+    monthlyOverrides = data.overrides || {};
+    isCustom = true;
+    updatePresetButtons();
+    recalculate();
+  } catch (e) {}
+}
+
+function updatePresetButtons() {
+  ["conservative", "base", "breakout"].forEach(k => {
+    const el = document.getElementById(`btn-${k}`);
+    if (k === currentPresetKey && !isCustom) {
+      el.classList.add("preset-active");
+    } else {
+      el.classList.remove("preset-active");
+    }
+  });
+  document.getElementById("modeBadge").textContent = isCustom
+    ? `Custom (${PRESETS[currentPresetKey].label.replace(" Preset", "")} Base)`
+    : PRESETS[currentPresetKey].label;
+}
+
+function onDriverChange() {
+  isCustom = true;
+  updatePresetButtons();
+  recalculate();
+}
+
+function setMonthOverride(idx, field, value) {
+  isCustom = true;
+  if (!monthlyOverrides[idx]) monthlyOverrides[idx] = {};
+  monthlyOverrides[idx][field] = Math.max(0, Number(value) || 0);
+  updatePresetButtons();
+  recalculate();
+}
+
+function clearMonthlyOverrides() {
+  monthlyOverrides = {};
+  recalculate();
+}
+
+function interpolateCurve(baseCurve, m3Target, m12Target, m24Target, baseM3, baseM12, baseM24) {
+  return baseCurve.map((val, i) => {
+    const m = i + 1;
+    if (m <= 2) return 0;
+    if (m === 3) return m3Target;
+    if (m <= 12) {
+      const t = (m - 3) / 9;
+      const baseT = (val - baseM3) / Math.max(1, baseM12 - baseM3);
+      return Math.round(m3Target + (m12Target - m3Target) * (0.3 * t + 0.7 * baseT));
+    }
+    const t2 = (m - 12) / 12;
+    const baseT2 = (val - baseM12) / Math.max(1, baseM24 - baseM12);
+    return Math.round(m12Target + (m24Target - m12Target) * (0.3 * t2 + 0.7 * baseT2));
+  });
+}
+
+function interpolateArp(baseCurve, startTarget, endTarget, baseStart, baseEnd) {
+  return baseCurve.map((val, i) => {
+    if (i < 2) return 0;
+    const norm = (val - baseStart) / Math.max(0.01, baseEnd - baseStart);
+    return +(startTarget + (endTarget - startTarget) * norm).toFixed(2);
+  });
+}
+
+function runSimulation(inp, presetObj, overrides = {}) {
+  const dauRatio = 1440 / inp.playtime;
+  const earnedShare = 1 - inp.mktCut / 100;
+  const us18Frac = inp.us18Share / 100;
+  const blendedDevex = 0.0038 * (1 - us18Frac) + 0.0054 * us18Frac;
+
+  const t1Frac = inp.tier1Share / 100;
+  const robloxCppEff = 1 / ((t1Frac / Math.max(0.01, inp.t1Cpp)) + ((1 - t1Frac) / Math.max(0.01, inp.rowCpp)));
+  const geoArpMult = inp.geoCoupling ? (0.45 + 0.80 * (t1Frac / 0.75)) : 1.0;
+  const directMult = inp.directOnly ? 0.85 : 1.0;
+
+  const ccuArr = (inp.m3ccu === presetObj.m3ccu && inp.y1ccu === presetObj.y1ccu && inp.y2ccu === presetObj.y2ccu)
+    ? [...presetObj.ccuCurve]
+    : interpolateCurve(presetObj.ccuCurve, inp.m3ccu, inp.y1ccu, inp.y2ccu, presetObj.m3ccu, presetObj.y1ccu, presetObj.y2ccu);
+
+  const arpArr = (inp.arpStart === presetObj.arpStart && inp.arpEnd === presetObj.arpEnd)
+    ? [...presetObj.arpCurve]
+    : interpolateArp(presetObj.arpCurve, inp.arpStart, inp.arpEnd, presetObj.arpStart, presetObj.arpEnd);
+
+  const baseSoftSum = presetObj.uaCurve[1] + presetObj.uaCurve[2];
+  const baseY1PostAvg = presetObj.uaCurve.slice(3, 12).reduce((a, b) => a + b, 0) / 9;
+  const baseY2Avg = presetObj.uaCurve.slice(12).reduce((a, b) => a + b, 0) / 12;
+
+  const y1PostTarget = inp.y1RobloxAds + inp.y1InfAds;
+  const y2Target = inp.y2RobloxAds + inp.y2InfAds;
+  const softScale = baseSoftSum > 0 ? inp.softAds / baseSoftSum : 0;
+  const y1Scale = baseY1PostAvg > 0 ? y1PostTarget / baseY1PostAvg : 0;
+  const y2Scale = baseY2Avg > 0 ? y2Target / baseY2Avg : 0;
+
+  const y1BaseArtAvg = presetObj.artCurve.slice(0, 12).reduce((a, b) => a + b, 0) / 12;
+  const y2BaseArtAvg = presetObj.artCurve.slice(12).reduce((a, b) => a + b, 0) / 12;
+  const y1ArtScale = y1BaseArtAvg > 0 ? inp.y1Creative / y1BaseArtAvg : 0;
+  const y2ArtScale = y2BaseArtAvg > 0 ? inp.y2Creative / y2BaseArtAvg : 0;
+
+  const totalRobloxSpend = inp.softAds + (inp.y1RobloxAds * 9) + (inp.y2RobloxAds * 12);
+  const totalInfSpend = (inp.y1InfAds * 9) + (inp.y2InfAds * 12);
+  const estRobloxPlays = robloxCppEff > 0 ? totalRobloxSpend / robloxCppEff : 0;
+  const estInfPlays = inp.infCpp > 0 ? totalInfSpend / inp.infCpp : 0;
+  const blendedCpp = (estRobloxPlays + estInfPlays) > 0
+    ? (totalRobloxSpend + totalInfSpend) / (estRobloxPlays + estInfPlays)
+    : robloxCppEff;
+
+  const rows = [];
+  let cumAccrual = 0;
+  let cumCashInBank = 0;
+  let minAccrual = 0;
+  let minCashInBank = 0;
+  let beMonth = null;
+  let pbMonth = null;
+  let prevRev = 0;
+  let totalAdCreditUsdUsed = 0;
+
+  for (let i = 0; i < 24; i++) {
+    const m = i + 1;
+    const phase = m <= 2 ? "Pre-Launch" : (m === 3 ? "Soft Launch" : (m <= 6 ? "Launch & S1" : (m <= 12 ? "Y1 Live-Ops" : "Y2 Scale")));
+    const ov = overrides[i] || {};
+
+    const ccu = ov.ccu !== undefined ? ov.ccu : ccuArr[i];
+    const baseArp = +(arpArr[i] * geoArpMult * directMult).toFixed(2);
+    const arp = ov.arp !== undefined ? ov.arp : baseArp;
+
+    let defaultUa = 0;
+    let rShare = 1;
+    let monthCpp = robloxCppEff;
+    if (m === 2 || m === 3) {
+      defaultUa = Math.round(presetObj.uaCurve[i] * softScale);
+      rShare = 1;
+      monthCpp = robloxCppEff;
+    } else if (m <= 12) {
+      defaultUa = Math.round(presetObj.uaCurve[i] * y1Scale);
+      rShare = y1PostTarget > 0 ? inp.y1RobloxAds / y1PostTarget : 1;
+      const rPlays = robloxCppEff > 0 ? inp.y1RobloxAds / robloxCppEff : 0;
+      const iPlays = inp.infCpp > 0 ? inp.y1InfAds / inp.infCpp : 0;
+      monthCpp = (rPlays + iPlays) > 0 ? y1PostTarget / (rPlays + iPlays) : robloxCppEff;
+    } else {
+      defaultUa = Math.round(presetObj.uaCurve[i] * y2Scale);
+      rShare = y2Target > 0 ? inp.y2RobloxAds / y2Target : 1;
+      const rPlays = robloxCppEff > 0 ? inp.y2RobloxAds / robloxCppEff : 0;
+      const iPlays = inp.infCpp > 0 ? inp.y2InfAds / inp.infCpp : 0;
+      monthCpp = (rPlays + iPlays) > 0 ? y2Target / (rPlays + iPlays) : robloxCppEff;
+    }
+
+    const ua = ov.ua !== undefined ? ov.ua : defaultUa;
+    const robloxUa = ua * rShare;
+    const infUa = ua * (1 - rShare);
+
+    const dau = ccu * dauRatio;
+    const grossIapR = dau * arp * 30;
+    const earnedIapR = grossIapR * earnedShare;
+    const earnedCrR = ccu > 0 ? dau * (inp.crShare / 100) * 5 * 30 : 0;
+    const totalEarnedR = earnedIapR + earnedCrR;
+
+    // Creator code rev-share reduces studio IAP take on influencer-attributed portion (approx 20% of IAP * code%)
+    const creatorCodeCutR = earnedIapR * (1 - rShare) * 0.35 * (inp.creatorCodePct / 100);
+    const netEarnedIapR = Math.max(0, earnedIapR - creatorCodeCutR);
+
+    // Optional Ad Credits reinvestment: 263 Earned R$ = $1 Ad Credit (only from M4+ when Robux balance is available)
+    let adCreditUsdThisMo = 0;
+    let earnedRForCashout = netEarnedIapR;
+    if (inp.adCredits && m >= 4 && robloxUa > 0) {
+      const maxCreditFromEarned = (netEarnedIapR + earnedCrR) / 263;
+      adCreditUsdThisMo = Math.min(robloxUa, maxCreditFromEarned);
+      totalAdCreditUsdUsed += adCreditUsdThisMo;
+      const robuxUsedForAds = adCreditUsdThisMo * 263;
+      const takeFromIap = Math.min(netEarnedIapR, robuxUsedForAds);
+      earnedRForCashout = netEarnedIapR - takeFromIap;
+      const remFromCr = Math.max(0, robuxUsedForAds - takeFromIap);
+      var crCashUsd = Math.max(0, earnedCrR - remFromCr) * 0.0038;
+    } else {
+      var crCashUsd = earnedCrR * 0.0038;
+    }
+
+    const iapUsd = earnedRForCashout * blendedDevex;
+    const crUsd = crCashUsd;
+
+    // Expanded Revenue Streams (#3-#8)
+    const subNetR = (m >= 4 && dau > 0 && (inp.subPct || 0) > 0)
+      ? dau * ((inp.subPct || 0) / 100) * (inp.subPriceR || 400) * (m === 4 ? 0.70 : 0.90)
+      : 0;
+    const subUsd = subNetR * blendedDevex;
+
+    const rvaViews = (m >= 4 && dau > 0 && (inp.rvaViewsPer100 || 0) > 0)
+      ? dau * 30 * ((inp.rvaViewsPer100 || 0) / 100)
+      : 0;
+    const rvaUsd = (rvaViews / 1000) * (inp.rvaEcpm || 0);
+
+    const ugcNetR = (m >= 3 && dau > 0 && (inp.ugcPer1kDauR || 0) > 0)
+      ? (dau / 1000) * (inp.ugcPer1kDauR || 0) * 30 * ((inp.ugcSharePct || 55) / 100)
+      : 0;
+    const ugcUsd = ugcNetR * blendedDevex;
+
+    const psNetR = (m >= 4 && ccu > 0 && (inp.psPer1kCcu || 0) > 0)
+      ? (ccu / 1000) * (inp.psPer1kCcu || 0) * (inp.psPriceR || 150) * 0.70
+      : 0;
+    const psUsd = psNetR * blendedDevex;
+
+    const expUsd = (m >= 4 && infUa > 0 && (inp.expOffsetPct || 0) > 0)
+      ? infUa * ((inp.expOffsetPct || 0) / 100)
+      : 0;
+
+    const estVisits = dau * 30 * 1.35;
+    const immAdUsd = (m >= 7 && ccu >= 1000 && (inp.immRpmR || 0) > 0)
+      ? ((estVisits / 1000) * (inp.immRpmR || 0)) * 0.0038
+      : 0;
+    const secIpUsd = (inp.secIpUsd || 0) > 0
+      ? (m >= 13 ? inp.secIpUsd : (m >= 7 ? inp.secIpUsd * 0.35 : 0))
+      : 0;
+    const immUsd = immAdUsd + secIpUsd;
+
+    const extraRevUsd = subUsd + rvaUsd + ugcUsd + psUsd + expUsd + immUsd;
+    const rev = iapUsd + crUsd + extraRevUsd;
+
+    const dev = presetObj.devRatio(m, inp.preDev, inp.liveDev);
+    const art = Math.round(presetObj.artCurve[i] * (m <= 12 ? y1ArtScale : y2ArtScale));
+    const staff = presetObj.staffFn(m, inp.y1Staff, inp.y2Staff);
+    const tools = presetObj.toolsFn(m, inp.toolsMo);
+    const founder = presetObj.founderFn(m, inp.founderY1, inp.founderY2);
+
+    const hiddenFixedUsd = inp.hiddenOverhead && presetObj.hiddenFixedFn ? presetObj.hiddenFixedFn(m) : 0;
+    const frictionUsd = inp.hiddenOverhead ? rev * 0.025 : 0;
+    const hiddenCostUsd = hiddenFixedUsd + frictionUsd;
+
+    // If paid via Ad Credits, those Robux were deducted before DevEx cashout, so cash UA opex excludes adCreditUsdThisMo
+    const cashUaOpex = ua - adCreditUsdThisMo;
+    const opex = cashUaOpex + dev + art + staff + tools + founder + hiddenCostUsd;
+
+    const net = rev - opex;
+    cumAccrual += net;
+    if (cumAccrual < minAccrual) minAccrual = cumAccrual;
+
+    const cashReceived = inp.devexLag ? prevRev : rev;
+    const cashNet = cashReceived - opex;
+    cumCashInBank += cashNet;
+    if (cumCashInBank < minCashInBank) minCashInBank = cumCashInBank;
+
+    const effectiveCum = inp.devexLag ? cumCashInBank : cumAccrual;
+    if (beMonth === null && net > 0 && m >= 3) beMonth = m;
+    if (pbMonth === null && effectiveCum > 0 && m >= 4 && (inp.devexLag ? minCashInBank : minAccrual) < 0) pbMonth = m;
+
+    const t1Plays = robloxUa * t1Frac / Math.max(0.01, inp.t1Cpp);
+    const rowPlays = robloxUa * (1 - t1Frac) / Math.max(0.01, inp.rowCpp);
+    const infPlays = infUa / Math.max(0.01, inp.infCpp);
+    const paidPlays = t1Plays + rowPlays + infPlays;
+    prevRev = rev;
+
+    rows.push({
+      m, phase, ccu, dau, arp, grossIapR, totalEarnedR,
+      iapUsd, crUsd, subUsd, rvaUsd, ugcUsd, psUsd, expUsd, immUsd, extraRevUsd, rev,
+      ua, cashUaOpex, adCreditUsdThisMo,
+      dev, art, staff, tools, founder, hiddenFixedUsd, frictionUsd, hiddenCostUsd, opex,
+      net, cumAccrual, cumCashInBank, effectiveCum,
+      paidPlays, t1Plays, rowPlays, infPlays,
+    });
+  }
+
+  return {
+    rows, inp, dauRatio, blendedDevex, robloxCppEff, blendedCpp,
+    totalAdCreditUsdUsed,
+    minFunding: inp.devexLag ? minCashInBank : minAccrual,
+    beMonth, pbMonth,
+  };
+}
+
+function computeModel() {
+  const inp = getInputs();
+  const p = PRESETS[currentPresetKey];
+  const sim = runSimulation(inp, p, monthlyOverrides);
+
+  document.getElementById("val-m3ccu").textContent = inp.m3ccu.toLocaleString();
+  document.getElementById("val-y1ccu").textContent = inp.y1ccu.toLocaleString();
+  document.getElementById("val-y2ccu").textContent = inp.y2ccu.toLocaleString();
+  document.getElementById("val-playtime").textContent = `${inp.playtime.toFixed(1)} min`;
+  document.getElementById("dauRatioLabel").textContent = `${sim.dauRatio.toFixed(1)}× DAU/CCU`;
+  document.getElementById("val-crShare").textContent = `${inp.crShare.toFixed(1)}%`;
+  document.getElementById("val-us18Share").textContent = `${inp.us18Share}%`;
+  document.getElementById("blendedDevexLabel").textContent = `$${sim.blendedDevex.toFixed(4)}/R$`;
+  document.getElementById("val-tier1Share").textContent = `${inp.tier1Share}%`;
+  document.getElementById("blendedCppLabel").textContent = `Blended CPP: $${sim.blendedCpp.toFixed(2)}`;
+  document.getElementById("adCreditsNote").textContent = inp.adCredits ? "Using 263 R$/$1" : "Cash UA";
+  document.getElementById("lagNote").textContent = inp.devexLag ? "Cash lags 30d" : "Accrual view";
+  document.getElementById("hiddenOverheadNote").textContent = inp.hiddenOverhead ? "Included" : "Off (Base)";
+
+  const totExtraStreams = sim.rows.reduce((s, r) => s + r.extraRevUsd, 0);
+  document.getElementById("extraStreamsSummary").textContent = `+${fmtCompact(totExtraStreams).replace("-$","-")}/24M`;
+
+  const totAdPlusCreative = sim.rows.reduce((s, r) => s + r.ua + r.art, 0);
+  const totPaidPlays = sim.rows.reduce((s, r) => s + r.paidPlays, 0);
+  document.getElementById("adSummaryLine").textContent =
+    `24M Ad + Creative: ${fmtCompact(totAdPlusCreative)} · Paid Plays: ${Math.round(totPaidPlays).toLocaleString()}`;
+
+  return sim;
+}
+
+function fmtUsd(n, signed = false) {
+  const abs = Math.abs(Math.round(n));
+  const str = "$" + abs.toLocaleString();
+  if (n < 0) return "-" + str;
+  if (signed && n > 0) return "+" + str;
+  return str;
+}
+
+function fmtCompact(n) {
+  const abs = Math.abs(n);
+  const sign = n < 0 ? "-" : "";
+  if (abs >= 1e6) return sign + "$" + (abs / 1e6).toFixed(2) + "M";
+  if (abs >= 1e3) return sign + "$" + (abs / 1e3).toFixed(1) + "k";
+  return sign + "$" + Math.round(abs);
+}
+
+function recalculate() {
+  const model = computeModel();
+  lastRows = model.rows;
+  renderKpis(model);
+  renderMainChart(model);
+  renderCcuChart(model);
+  renderBreakdown(model);
+  renderStreamsOutputs(model);
+  renderLedger(model);
+  renderAnnualAndUnit(model);
+  renderCompareAndSensitivity(model);
+  renderSeasonPassTab(model);
+}
+
+function renderStreamsOutputs(model) {
+  const sum = (k) => model.rows.reduce((s, r) => s + (r[k] || 0), 0);
+  const vals = [
+    sum("iapUsd"),
+    sum("crUsd"),
+    sum("subUsd"),
+    sum("rvaUsd"),
+    sum("ugcUsd"),
+    sum("psUsd"),
+    sum("expUsd"),
+    sum("immUsd"),
+  ];
+  vals.forEach((v, idx) => {
+    const el = document.getElementById(`streamOut-${idx + 1}`);
+    if (el) el.textContent = fmtUsd(v);
+  });
+}
+
+function renderKpis(model) {
+  const { rows, inp, minFunding, beMonth, pbMonth } = model;
+  const totRev = rows.reduce((s, r) => s + r.rev, 0);
+  const totOpex = rows.reduce((s, r) => s + r.opex, 0);
+  const totUaGross = rows.reduce((s, r) => s + r.ua, 0);
+  const totNet = totRev - totOpex;
+  const afterTax = totNet > 0 ? totNet * (1 - inp.taxRate / 100) : totNet;
+  const endRow = rows[23];
+
+  const cards = [
+    { label: inp.adCredits ? "24M Net Cash Rev (Post-Credits)" : "24M Total Revenue", val: fmtCompact(totRev), sub: `Y1 ${fmtCompact(rows.slice(0,12).reduce((s,r)=>s+r.rev,0))} · Y2 ${fmtCompact(rows.slice(12).reduce((s,r)=>s+r.rev,0))}` },
+    { label: "24M Total Cash OpEx", val: fmtCompact(totOpex), sub: `Gross Ad Spend: ${fmtCompact(totUaGross)}` },
+    { label: "24M Net Profit", val: fmtCompact(totNet), sub: `After ${inp.taxRate}% tax: ${fmtCompact(afterTax)}`, accent: totNet >= 0 ? "text-emerald-500" : "text-rose-500" },
+    { label: inp.devexLag ? "Peak Cash Needed (30d Lag)" : "Peak Cash Deficit", val: fmtUsd(Math.abs(minFunding)), sub: minFunding < 0 ? "Max cumulative drawdown" : "Self-funded from M1", accent: "text-amber-500" },
+    { label: "Breakeven / Payback", val: `${beMonth ? "M" + beMonth : "None"} / ${pbMonth ? "M" + pbMonth : "—"}`, sub: "Monthly BE / Full payback" },
+    { label: "Month 24 Scale", val: `${endRow.ccu.toLocaleString()} CCU`, sub: `${Math.round(endRow.dau).toLocaleString()} DAU · ${fmtCompact(endRow.rev)}/mo` },
+  ];
+
+  document.getElementById("kpiStrip").innerHTML = cards.map(c => `
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3.5">
+      <div class="text-xs text-[var(--muted-foreground)]">${c.label}</div>
+      <div class="text-lg font-bold mt-1 tabular-nums ${c.accent || ""}">${c.val}</div>
+      <div class="text-xs text-[var(--muted-foreground)] mt-0.5 truncate">${c.sub}</div>
+    </div>
+  `).join("");
+}
+
+function getThemeColors() {
+  const cs = getComputedStyle(document.documentElement);
+  const isLight = document.documentElement.classList.contains("light");
+  return {
+    text: cs.getPropertyValue("--muted-foreground").trim() || (isLight ? "#52525b" : "#a1a1aa"),
+    grid: cs.getPropertyValue("--border").trim() || (isLight ? "#e4e4e7" : "#27272a"),
+    fg: cs.getPropertyValue("--foreground").trim() || (isLight ? "#09090b" : "#fafafa"),
+  };
+}
+
+function renderMainChart(model) {
+  const canvas = document.getElementById("mainChart");
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  if (rect.width === 0) return;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width, H = rect.height;
+  const pad = { top: 18, right: 64, bottom: 28, left: 60 };
+  const cw = W - pad.left - pad.right;
+  const ch = H - pad.top - pad.bottom;
+  const tc = getThemeColors();
+  const { rows } = model;
+
+  const maxBar = Math.max(1000, ...rows.map(r => Math.max(r.rev, r.opex))) * 1.15;
+  const minCum = Math.min(0, ...rows.map(r => r.effectiveCum));
+  const maxCum = Math.max(1000, ...rows.map(r => r.effectiveCum)) * 1.12;
+  const cumRange = Math.max(1000, maxCum - minCum);
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.font = "12px sans-serif";
+
+  for (let g = 0; g <= 4; g++) {
+    const y = pad.top + (ch * g) / 4;
+    ctx.strokeStyle = tc.grid;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(W - pad.right, y);
+    ctx.stroke();
+
+    const barVal = maxBar * (1 - g / 4);
+    ctx.fillStyle = tc.text;
+    ctx.textAlign = "right";
+    ctx.fillText(fmtCompact(barVal), pad.left - 8, y + 4);
+
+    const cumVal = maxCum - (cumRange * g) / 4;
+    ctx.textAlign = "left";
+    ctx.fillText(fmtCompact(cumVal), W - pad.right + 8, y + 4);
+  }
+
+  const slotW = cw / 24;
+  const bw = Math.max(4, slotW * 0.34);
+
+  rows.forEach((r, i) => {
+    const cx = pad.left + slotW * (i + 0.5);
+    const revH = (r.rev / maxBar) * ch;
+    const opexH = (r.opex / maxBar) * ch;
+
+    ctx.fillStyle = "#10b981";
+    ctx.fillRect(cx - bw - 1, pad.top + ch - revH, bw, revH);
+
+    ctx.fillStyle = "#f59e0b";
+    ctx.fillRect(cx + 1, pad.top + ch - opexH, bw, opexH);
+
+    if (i % 2 === 0 || i === 23) {
+      ctx.fillStyle = tc.text;
+      ctx.textAlign = "center";
+      ctx.fillText(`M${r.m}`, cx, H - 8);
+    }
+  });
+
+  ctx.strokeStyle = "#3b82f6";
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  rows.forEach((r, i) => {
+    const cx = pad.left + slotW * (i + 0.5);
+    const cy = pad.top + ((maxCum - r.effectiveCum) / cumRange) * ch;
+    if (i === 0) ctx.moveTo(cx, cy);
+    else ctx.lineTo(cx, cy);
+  });
+  ctx.stroke();
+
+  canvas.onmousemove = (e) => {
+    const r = canvas.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const idx = Math.floor((x - pad.left) / slotW);
+    const tip = document.getElementById("chartTooltip");
+    if (idx < 0 || idx >= 24) {
+      tip.classList.add("hidden");
+      return;
+    }
+    const d = rows[idx];
+    tip.innerHTML = `
+      <div class="font-semibold">Month ${d.m} · ${d.phase}</div>
+      <div class="flex justify-between gap-4"><span class="text-[var(--muted-foreground)]">Avg CCU:</span><span>${d.ccu.toLocaleString()}</span></div>
+      <div class="flex justify-between gap-4"><span class="text-[var(--muted-foreground)]">Paid Plays:</span><span>${Math.round(d.paidPlays).toLocaleString()}</span></div>
+      <div class="flex justify-between gap-4"><span class="text-[var(--muted-foreground)]">Revenue:</span><span class="text-emerald-500 font-medium">${fmtUsd(d.rev)}</span></div>
+      <div class="flex justify-between gap-4"><span class="text-[var(--muted-foreground)]">Cash OpEx:</span><span class="text-amber-500 font-medium">${fmtUsd(d.opex)}</span></div>
+      <div class="flex justify-between gap-4"><span class="text-[var(--muted-foreground)]">Monthly Net:</span><span class="font-medium">${fmtUsd(d.net, true)}</span></div>
+      <div class="flex justify-between gap-4 border-t border-[var(--border)] pt-1"><span class="text-[var(--muted-foreground)]">Cum Cash:</span><span class="font-semibold">${fmtUsd(d.effectiveCum, true)}</span></div>
+    `;
+    tip.style.left = Math.min(r.width - 225, Math.max(8, x + 12)) + "px";
+    tip.style.top = "12px";
+    tip.classList.remove("hidden");
+  };
+  canvas.onmouseleave = () => document.getElementById("chartTooltip").classList.add("hidden");
+}
+
+function renderCcuChart(model) {
+  const canvas = document.getElementById("ccuChart");
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  if (rect.width === 0) return;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width, H = rect.height;
+  const pad = { top: 14, right: 16, bottom: 26, left: 50 };
+  const cw = W - pad.left - pad.right;
+  const ch = H - pad.top - pad.bottom;
+  const tc = getThemeColors();
+  const { rows } = model;
+  const maxCcu = Math.max(100, ...rows.map(r => r.ccu)) * 1.12;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.font = "12px sans-serif";
+
+  for (let g = 0; g <= 3; g++) {
+    const y = pad.top + (ch * g) / 3;
+    ctx.strokeStyle = tc.grid;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(W - pad.right, y);
+    ctx.stroke();
+
+    ctx.fillStyle = tc.text;
+    ctx.textAlign = "right";
+    const v = Math.round(maxCcu * (1 - g / 3));
+    ctx.fillText(v >= 1000 ? (v / 1000).toFixed(1) + "k" : v, pad.left - 6, y + 4);
+  }
+
+  const slotW = cw / 23;
+  ctx.beginPath();
+  rows.forEach((r, i) => {
+    const x = pad.left + i * slotW;
+    const y = pad.top + ch - (r.ccu / maxCcu) * ch;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.lineTo(pad.left + 23 * slotW, pad.top + ch);
+  ctx.lineTo(pad.left, pad.top + ch);
+  ctx.closePath();
+  ctx.fillStyle = "rgba(139, 92, 246, 0.18)";
+  ctx.fill();
+
+  ctx.strokeStyle = "#8b5cf6";
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  rows.forEach((r, i) => {
+    const x = pad.left + i * slotW;
+    const y = pad.top + ch - (r.ccu / maxCcu) * ch;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+    if (i % 3 === 0 || i === 23) {
+      ctx.fillStyle = tc.text;
+      ctx.textAlign = "center";
+      ctx.fillText(`M${r.m}`, x, H - 6);
+    }
+  });
+  ctx.stroke();
+}
+
+function renderBreakdown(model) {
+  const { rows } = model;
+  const sum = (k) => rows.reduce((s, r) => s + r[k], 0);
+  const totOpex = Math.max(1, sum("opex"));
+  const totRev = Math.max(1, sum("rev"));
+
+  const items = [
+    { name: "Cash Paid UA (Ads & Creators)", val: sum("cashUaOpex"), color: "#3b82f6" },
+    { name: "Live-Ops Staff & Mods", val: sum("staff"), color: "#8b5cf6" },
+    { name: "Founder / Operator Draw", val: sum("founder"), color: "#10b981" },
+    { name: "Dev Contractors (Code/VFX/Audio)", val: sum("dev"), color: "#f59e0b" },
+    { name: "Ad Creative, GFX & Trailers", val: sum("art"), color: "#ec4899" },
+    { name: "Tools, AI & Roblox Infra", val: sum("tools"), color: "#64748b" },
+    ...(sum("hiddenCostUsd") > 0 ? [{ name: "Legal, QA, Audio & 2.5% Friction", val: sum("hiddenCostUsd"), color: "#ef4444" }] : []),
+  ];
+
+  const iap = sum("iapUsd");
+  const cr = sum("crUsd");
+  const extra = sum("extraRevUsd");
+
+  document.getElementById("breakdownBars").innerHTML = `
+    <div class="space-y-2">
+      ${items.map(it => {
+        const pct = (it.val / totOpex) * 100;
+        return `
+          <div>
+            <div class="flex justify-between mb-1">
+              <span>${it.name}</span>
+              <span class="font-medium tabular-nums">${fmtUsd(it.val)} (${pct.toFixed(1)}%)</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-[var(--content)] overflow-hidden">
+              <div class="h-full rounded-full" style="width:${Math.min(100, pct)}%; background:${it.color}"></div>
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+    <div class="pt-3 mt-3 border-t border-[var(--border)] flex flex-wrap justify-between gap-2 text-xs">
+      <span><strong>IAP ${(iap/totRev*100).toFixed(1)}%</strong> (${fmtCompact(iap)})</span>
+      <span><strong>Creator Rewards ${(cr/totRev*100).toFixed(1)}%</strong> (${fmtCompact(cr)})</span>
+      ${extra > 0 ? `<span><strong>Streams #3–#8 ${(extra/totRev*100).toFixed(1)}%</strong> (${fmtCompact(extra)})</span>` : ""}
+    </div>
+  `;
+}
+
+function renderLedger(model) {
+  const body = document.getElementById("ledgerBody");
+  body.innerHTML = model.rows.map((r, i) => `
+    <tr class="hover:bg-[var(--content)]/60">
+      <td class="py-1.5 px-2.5 text-left font-medium">M${String(r.m).padStart(2, "0")}</td>
+      <td class="py-1.5 px-2 text-left text-[var(--muted-foreground)]">${r.phase}</td>
+      <td class="py-1 px-1.5">
+        <input type="number" min="0" step="10" value="${r.ccu}"
+          onchange="setMonthOverride(${i}, 'ccu', this.value)"
+          class="w-20 px-1.5 py-1 text-right rounded bg-[var(--content)] border border-[var(--border)]" />
+      </td>
+      <td class="py-1.5 px-2 text-[var(--muted-foreground)]">${Math.round(r.dau).toLocaleString()}</td>
+      <td class="py-1 px-1.5">
+        <input type="number" min="0" step="0.1" value="${r.arp}"
+          onchange="setMonthOverride(${i}, 'arp', this.value)"
+          class="w-16 px-1.5 py-1 text-right rounded bg-[var(--content)] border border-[var(--border)]" />
+      </td>
+      <td class="py-1 px-1.5">
+        <input type="number" min="0" step="100" value="${r.ua}"
+          onchange="setMonthOverride(${i}, 'ua', this.value)"
+          class="w-20 px-1.5 py-1 text-right rounded bg-[var(--content)] border border-[var(--border)]" />
+      </td>
+      <td class="py-1.5 px-2 font-medium text-emerald-500">${fmtUsd(r.rev)}</td>
+      <td class="py-1.5 px-2">${fmtUsd(r.opex)}</td>
+      <td class="py-1.5 px-2 font-medium ${r.net >= 0 ? "text-emerald-500" : "text-rose-500"}">${fmtUsd(r.net, true)}</td>
+      <td class="py-1.5 px-2.5 font-semibold ${r.effectiveCum >= 0 ? "" : "text-amber-500"}">${fmtUsd(r.effectiveCum, true)}</td>
+    </tr>
+  `).join("");
+}
+
+function renderAnnualAndUnit(model) {
+  const { rows, inp, blendedDevex, robloxCppEff, blendedCpp, totalAdCreditUsdUsed } = model;
+  const agg = (sl) => ({
+    avgCcu: sl.reduce((s, r) => s + r.ccu, 0) / sl.length,
+    endCcu: sl[sl.length - 1].ccu,
+    grossR: sl.reduce((s, r) => s + r.grossIapR, 0),
+    earnedR: sl.reduce((s, r) => s + r.totalEarnedR, 0),
+    iap: sl.reduce((s, r) => s + r.iapUsd, 0),
+    cr: sl.reduce((s, r) => s + r.crUsd, 0),
+    extraRev: sl.reduce((s, r) => s + r.extraRevUsd, 0),
+    hiddenCost: sl.reduce((s, r) => s + r.hiddenCostUsd, 0),
+    rev: sl.reduce((s, r) => s + r.rev, 0),
+    opex: sl.reduce((s, r) => s + r.opex, 0),
+    ua: sl.reduce((s, r) => s + r.ua, 0),
+    net: sl.reduce((s, r) => s + r.net, 0),
+    plays: sl.reduce((s, r) => s + r.paidPlays, 0),
+    t1Plays: sl.reduce((s, r) => s + r.t1Plays, 0),
+    rowPlays: sl.reduce((s, r) => s + r.rowPlays, 0),
+    infPlays: sl.reduce((s, r) => s + r.infPlays, 0),
+  });
+
+  const y1 = agg(rows.slice(0, 12));
+  const y2 = agg(rows.slice(12));
+  const tot = agg(rows);
+
+  document.getElementById("annualTable").innerHTML = `
+    <thead class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+      <tr>
+        <th class="py-2 text-left">Metric</th>
+        <th class="py-2 px-3">Year 1 (M1–M12)</th>
+        <th class="py-2 px-3">Year 2 (M13–M24)</th>
+        <th class="py-2 pl-3">24-Month Total</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-[var(--border)]">
+      <tr><td class="py-2 text-left">Average / Ending CCU</td><td class="px-3">${Math.round(y1.avgCcu).toLocaleString()} / ${y1.endCcu.toLocaleString()}</td><td class="px-3">${Math.round(y2.avgCcu).toLocaleString()} / ${y2.endCcu.toLocaleString()}</td><td class="pl-3">${Math.round(tot.avgCcu).toLocaleString()} / ${tot.endCcu.toLocaleString()}</td></tr>
+      <tr><td class="py-2 text-left">Gross IAP Robux (Retail Equiv)</td><td class="px-3">${(y1.grossR/1e6).toFixed(2)}M R$ (~${fmtCompact(y1.grossR*0.0125)})</td><td class="px-3">${(y2.grossR/1e6).toFixed(2)}M R$ (~${fmtCompact(y2.grossR*0.0125)})</td><td class="pl-3">${(tot.grossR/1e6).toFixed(2)}M R$ (~${fmtCompact(tot.grossR*0.0125)})</td></tr>
+      <tr><td class="py-2 text-left">Earned Robux (DevEx Gross Equiv)</td><td class="px-3">${(y1.earnedR/1e6).toFixed(2)}M R$ (${fmtCompact(y1.earnedR*blendedDevex)})</td><td class="px-3">${(y2.earnedR/1e6).toFixed(2)}M R$ (${fmtCompact(y2.earnedR*blendedDevex)})</td><td class="pl-3">${(tot.earnedR/1e6).toFixed(2)}M R$ (${fmtCompact(tot.earnedR*blendedDevex)})</td></tr>
+      <tr><td class="py-2 text-left">IAP DevEx Cash</td><td class="px-3">${fmtUsd(y1.iap)}</td><td class="px-3">${fmtUsd(y2.iap)}</td><td class="pl-3">${fmtUsd(tot.iap)}</td></tr>
+      <tr><td class="py-2 text-left">Creator Rewards Cash</td><td class="px-3">${fmtUsd(y1.cr)}</td><td class="px-3">${fmtUsd(y2.cr)}</td><td class="pl-3">${fmtUsd(tot.cr)}</td></tr>
+      ${tot.extraRev > 0 ? `<tr><td class="py-2 text-left">Expanded Streams (#3–#8: Subs, Video, UGC, PS, Imm)</td><td class="px-3">${fmtUsd(y1.extraRev)}</td><td class="px-3">${fmtUsd(y2.extraRev)}</td><td class="pl-3">${fmtUsd(tot.extraRev)}</td></tr>` : ""}
+      <tr class="font-semibold"><td class="py-2 text-left">Total Cash Revenue</td><td class="px-3 text-emerald-500">${fmtUsd(y1.rev)}</td><td class="px-3 text-emerald-500">${fmtUsd(y2.rev)}</td><td class="pl-3 text-emerald-500">${fmtUsd(tot.rev)}</td></tr>
+      <tr><td class="py-2 text-left">Total Cash OpEx (Incl. Founder${tot.hiddenCost > 0 ? " + Overhead/Friction" : ""})</td><td class="px-3">${fmtUsd(y1.opex)}</td><td class="px-3">${fmtUsd(y2.opex)}</td><td class="pl-3">${fmtUsd(tot.opex)}</td></tr>
+      <tr><td class="py-2 text-left">Paid Plays Acquired</td><td class="px-3">${Math.round(y1.plays).toLocaleString()}</td><td class="px-3">${Math.round(y2.plays).toLocaleString()}</td><td class="pl-3">${Math.round(tot.plays).toLocaleString()}</td></tr>
+      <tr class="font-bold"><td class="py-2 text-left">Net Operating Profit (Pre-Tax)</td><td class="px-3 ${y1.net>=0?"text-emerald-500":"text-rose-500"}">${fmtUsd(y1.net, true)}</td><td class="px-3 ${y2.net>=0?"text-emerald-500":"text-rose-500"}">${fmtUsd(y2.net, true)}</td><td class="pl-3 ${tot.net>=0?"text-emerald-500":"text-rose-500"}">${fmtUsd(tot.net, true)}</td></tr>
+      <tr><td class="py-2 text-left text-[var(--muted-foreground)]">Est. After-Tax Profit (${inp.taxRate}%)</td><td class="px-3">${fmtUsd(y1.net>0?y1.net*(1-inp.taxRate/100):y1.net, true)}</td><td class="px-3">${fmtUsd(y2.net>0?y2.net*(1-inp.taxRate/100):y2.net, true)}</td><td class="pl-3">${fmtUsd(tot.net>0?tot.net*(1-inp.taxRate/100):tot.net, true)}</td></tr>
+    </tbody>
+  `;
+
+  const m12 = rows[11], m24 = rows[23];
+  const m12DailyPerDau = (m12.arp * (1 - inp.mktCut/100) * blendedDevex) + ((inp.crShare/100) * 5 * 0.0038);
+  const m24DailyPerDau = (m24.arp * (1 - inp.mktCut/100) * blendedDevex) + ((inp.crShare/100) * 5 * 0.0038);
+  const directLtv90 = m12DailyPerDau * 7.5;
+  const kNeeded = blendedCpp / Math.max(0.001, directLtv90);
+
+  document.getElementById("unitEconBox").innerHTML = `
+    <div class="flex justify-between py-1.5 border-b border-[var(--border)]"><span class="text-[var(--muted-foreground)]">Cash per 1,000 Gross R$ Spent</span><span class="font-semibold">$${(1000*(1-inp.mktCut/100)*blendedDevex).toFixed(2)}</span></div>
+    <div class="flex justify-between py-1.5 border-b border-[var(--border)]"><span class="text-[var(--muted-foreground)]">M12 / M24 Revenue per DAU / Day</span><span class="font-semibold">$${m12DailyPerDau.toFixed(4)} / $${m24DailyPerDau.toFixed(4)}</span></div>
+    <div class="flex justify-between py-1.5 border-b border-[var(--border)]"><span class="text-[var(--muted-foreground)]">Est. Direct 90d LTV / Play (~7.5 days)</span><span class="font-semibold">$${directLtv90.toFixed(3)}</span></div>
+    <div class="flex justify-between py-1.5 border-b border-[var(--border)]"><span class="text-[var(--muted-foreground)]">Organic Multiplier for 1:1 Paid ROAS</span><span class="font-semibold">${kNeeded.toFixed(1)}×</span></div>
+    <div class="flex justify-between py-1.5"><span class="text-[var(--muted-foreground)]">Paid Random Items Policy Risk</span><span class="font-semibold ${inp.directOnly?"text-emerald-500":"text-amber-500"}">${inp.directOnly?"Zero (Direct-Only)":"Requires PolicyService + Odds UI"}</span></div>
+  `;
+
+  const m3 = rows[2], m4 = rows[3];
+  const m3Roas = m3.ua > 0 ? m3.rev / m3.ua : 0;
+  const cppHealthy = robloxCppEff <= 0.45;
+  const arpHealthy = m3.arp >= 1.8;
+  document.getElementById("healthBox").innerHTML = `
+    <div class="flex justify-between py-1.5 border-b border-[var(--border)]"><span class="text-[var(--muted-foreground)]">Effective Roblox Ads CPP (${inp.tier1Share}% T1)</span><span class="font-semibold ${cppHealthy?"text-emerald-500":"text-amber-500"}">$${robloxCppEff.toFixed(2)} (${cppHealthy?"Healthy":"Tier-1 Premium"})</span></div>
+    <div class="flex justify-between py-1.5 border-b border-[var(--border)]"><span class="text-[var(--muted-foreground)]">24M Channel Plays (T1 / ROW / Inf)</span><span class="font-semibold">${Math.round(tot.t1Plays/1000)}k / ${Math.round(tot.rowPlays/1000)}k / ${Math.round(tot.infPlays/1000)}k</span></div>
+    <div class="flex justify-between py-1.5 border-b border-[var(--border)]"><span class="text-[var(--muted-foreground)]">Ad Credits Reinvested (263 R$/$1)</span><span class="font-semibold">${fmtUsd(totalAdCreditUsdUsed)}</span></div>
+    <div class="flex justify-between py-1.5 border-b border-[var(--border)]"><span class="text-[var(--muted-foreground)]">M3 Soft Launch ARPDAU (≥ 1.8 R$ [$0.0048 net])</span><span class="font-semibold ${arpHealthy?"text-emerald-500":"text-amber-500"}">${m3.arp.toFixed(2)} R$ ($${(m3.arp*(1-inp.mktCut/100)*blendedDevex).toFixed(4)} net) · ${arpHealthy?"Go":"Tune Shop"}</span></div>
+    <div class="flex justify-between py-1.5"><span class="text-[var(--muted-foreground)]">M3 / M4 Revenue-to-UA Ratio</span><span class="font-semibold">${(m3Roas*100).toFixed(0)}% / ${(m4.ua>0?(m4.rev/m4.ua*100):0).toFixed(0)}%</span></div>
+  `;
+}
+
+function renderCompareAndSensitivity(currentModel) {
+  const summarize = (sim, label) => ({
+    label,
+    y1EndCcu: sim.rows[11].ccu,
+    y2EndCcu: sim.rows[23].ccu,
+    rev24: sim.rows.reduce((s, r) => s + r.rev, 0),
+    ua24: sim.rows.reduce((s, r) => s + r.ua, 0),
+    opex24: sim.rows.reduce((s, r) => s + r.opex, 0),
+    net24: sim.rows.reduce((s, r) => s + r.net, 0),
+    minFunding: sim.minFunding,
+    beMonth: sim.beMonth,
+    pbMonth: sim.pbMonth,
+  });
+
+  const consSim = summarize(runSimulation(PRESETS.conservative, PRESETS.conservative), "Conservative");
+  const baseSim = summarize(runSimulation(PRESETS.base, PRESETS.base), "Base Case");
+  const brkSim = summarize(runSimulation(PRESETS.breakout, PRESETS.breakout), "Breakout");
+  const curSim = summarize(currentModel, isCustom ? "Your Custom" : `Active (${PRESETS[currentPresetKey].label.replace(" Preset","")})`);
+  const cols = [consSim, baseSim, brkSim, curSim];
+
+  document.getElementById("compareTable").innerHTML = `
+    <thead class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+      <tr>
+        <th class="py-2 text-left">Metric</th>
+        ${cols.map((c, idx) => `<th class="py-2 px-3 ${idx===3?"text-[var(--foreground)] underline":""}">${c.label}</th>`).join("")}
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-[var(--border)]">
+      <tr><td class="py-2 text-left">End Y1 Avg CCU (M12)</td>${cols.map(c=>`<td class="px-3">${c.y1EndCcu.toLocaleString()}</td>`).join("")}</tr>
+      <tr><td class="py-2 text-left">End Y2 Avg CCU (M24)</td>${cols.map(c=>`<td class="px-3">${c.y2EndCcu.toLocaleString()}</td>`).join("")}</tr>
+      <tr><td class="py-2 text-left">24M Total Ad Spend (UA)</td>${cols.map(c=>`<td class="px-3">${fmtCompact(c.ua24)}</td>`).join("")}</tr>
+      <tr><td class="py-2 text-left">24M Cash Revenue</td>${cols.map(c=>`<td class="px-3 text-emerald-500 font-medium">${fmtCompact(c.rev24)}</td>`).join("")}</tr>
+      <tr><td class="py-2 text-left">24M Total Cash OpEx</td>${cols.map(c=>`<td class="px-3">${fmtCompact(c.opex24)}</td>`).join("")}</tr>
+      <tr class="font-bold"><td class="py-2 text-left">24M Net Operating Profit</td>${cols.map(c=>`<td class="px-3 ${c.net24>=0?"text-emerald-500":"text-rose-500"}">${fmtCompact(c.net24)}</td>`).join("")}</tr>
+      <tr><td class="py-2 text-left">Peak Cash Deficit</td>${cols.map(c=>`<td class="px-3 text-amber-500">${fmtUsd(Math.abs(c.minFunding))}</td>`).join("")}</tr>
+      <tr><td class="py-2 text-left">Breakeven / Payback</td>${cols.map(c=>`<td class="px-3">${c.beMonth?"M"+c.beMonth:"—"} / ${c.pbMonth?"M"+c.pbMonth:"—"}</td>`).join("")}</tr>
+    </tbody>
+  `;
+
+  // 2D Sensitivity Matrix: CCU Scale x ARPDAU Scale
+  const ccuMults = [0.5, 0.75, 1.0, 1.25, 1.5];
+  const arpMults = [0.6, 0.8, 1.0, 1.25, 1.5];
+  const inp = currentModel.inp;
+  const p = PRESETS[currentPresetKey];
+
+  let html = `
+    <thead class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+      <tr>
+        <th class="py-2 px-2 text-left">End Y2 CCU \\ M24 ARPDAU</th>
+        ${arpMults.map(am => { const r = inp.arpEnd * am; const n = r * (1 - inp.mktCut/100) * (0.0038 * (1 - inp.us18Share/100) + 0.0054 * (inp.us18Share/100)); return `<th class="py-2 px-2">${r.toFixed(1)} R$ ($${n.toFixed(4)} net)</th>`; }).join("")}
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-[var(--border)]">
+  `;
+
+  ccuMults.forEach(cm => {
+    const rowCcuLabel = `${Math.round(inp.y2ccu * cm).toLocaleString()} CCU (${Math.round(cm*100)}%)`;
+    html += `<tr><td class="py-2 px-2 text-left font-medium">${rowCcuLabel}</td>`;
+    arpMults.forEach(am => {
+      const testInp = {
+        ...inp,
+        m3ccu: Math.max(10, Math.round(inp.m3ccu * cm)),
+        y1ccu: Math.max(50, Math.round(inp.y1ccu * cm)),
+        y2ccu: Math.max(100, Math.round(inp.y2ccu * cm)),
+        arpStart: +(inp.arpStart * am).toFixed(2),
+        arpEnd: +(inp.arpEnd * am).toFixed(2),
+      };
+      const testSim = runSimulation(testInp, p, {});
+      const net = testSim.rows.reduce((s, r) => s + r.net, 0);
+      const isCenter = cm === 1.0 && am === 1.0;
+      const cls = net >= 0 ? "text-emerald-500" : "text-rose-500";
+      html += `<td class="py-2 px-2 ${cls} ${isCenter ? "font-bold ring-1 ring-inset ring-[var(--primary)] bg-[var(--content)]" : ""}">${fmtCompact(net)}</td>`;
+    });
+    html += `</tr>`;
+  });
+  html += `</tbody>`;
+  document.getElementById("sensitivityTable").innerHTML = html;
+}
+
+function switchTab(tab) {
+  ["overview", "streams", "ledger", "unit", "compare", "pass"].forEach(t => {
+    document.getElementById(`panel-${t}`).classList.toggle("hidden", t !== tab);
+    const btn = document.getElementById(`tab-${t}`);
+    if (t === tab) {
+      btn.classList.add("tab-active");
+      btn.classList.remove("text-[var(--muted-foreground)]");
+    } else {
+      btn.classList.remove("tab-active");
+      btn.classList.add("text-[var(--muted-foreground)]");
+    }
+  });
+  if (tab === "overview") {
+    const model = computeModel();
+    renderMainChart(model);
+    renderCcuChart(model);
+  } else if (tab === "pass") {
+    const model = computeModel();
+    renderSeasonPassTab(model);
+  }
+}
+
+let passScheduleKey = "casual";
+let passManualDau = false;
+let lastPassModel = null;
+
+// 60-day daily purchase distribution shape: Launch Wave (D1-7 ~42%), Steady (D8-24 ~17%), Tier-25 Kit Spike (D25-32 ~18%), Cooldown+FOMO (D33-60 ~23%)
+const RAW_PASS_WAVE = [
+  14.0, 8.0, 6.0, 4.5, 3.5, 3.0, 3.0,
+  1.2, 1.1, 1.1, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.9, 0.9, 0.9, 0.9, 1.0, 1.0,
+  2.2, 2.5, 2.5, 2.4, 2.3, 2.2, 2.0, 1.9,
+  0.5, 0.5, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.40, 0.40,
+  1.3, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.2
+];
+const PASS_WAVE_SUM = RAW_PASS_WAVE.reduce((a, b) => a + b, 0);
+const PASS_WAVE_WEIGHTS = RAW_PASS_WAVE.map(w => w / PASS_WAVE_SUM);
+
+function applyPassSchedule(kind) {
+  passScheduleKey = kind;
+  if (kind === "casual") {
+    document.getElementById("in-spDaysWk").value = 5;
+    document.getElementById("in-spMatchXp").value = 750;
+    document.getElementById("in-spDailyXp").value = 800;
+  } else if (kind === "hardcore") {
+    document.getElementById("in-spDaysWk").value = 6;
+    document.getElementById("in-spMatchXp").value = 950;
+    document.getElementById("in-spDailyXp").value = 800;
+  } else if (kind === "weekend") {
+    document.getElementById("in-spDaysWk").value = 3;
+    document.getElementById("in-spMatchXp").value = 750;
+    document.getElementById("in-spDailyXp").value = 800;
+  }
+  ["casual", "hardcore", "weekend"].forEach(k => {
+    const b = document.getElementById(`btn-pass-${k}`);
+    if (k === kind) {
+      b.classList.add("bg-[var(--primary)]", "text-[var(--primary-foreground)]");
+      b.classList.remove("bg-[var(--content)]", "border", "border-[var(--border)]");
+    } else {
+      b.classList.remove("bg-[var(--primary)]", "text-[var(--primary-foreground)]");
+      b.classList.add("bg-[var(--content)]", "border", "border-[var(--border)]");
+    }
+  });
+  renderSeasonPassTab(computeModel());
+}
+
+function onPassInputChange() {
+  renderSeasonPassTab(computeModel());
+}
+
+function onPassManualDau() {
+  passManualDau = true;
+  document.getElementById("passCohortNote").textContent = "Custom Active Players";
+  renderSeasonPassTab(computeModel());
+}
+
+function syncSeasonDauFromModel() {
+  passManualDau = false;
+  document.getElementById("passCohortNote").textContent = "Synced to S1 Avg DAU";
+  renderSeasonPassTab(computeModel());
+}
+
+function buildSeason60Model(simModel) {
+  if (!passManualDau && simModel && simModel.rows && simModel.rows.length >= 6) {
+    // Use Season 1 (Months 4-5 avg DAU) as representative 60-day active pool
+    const s1Dau = Math.max(1000, Math.round((simModel.rows[3].dau + simModel.rows[4].dau) / 2));
+    document.getElementById("in-spCohortDau").value = s1Dau;
+    document.getElementById("passCohortNote").textContent = `Synced to S1 DAU (${s1Dau.toLocaleString()})`;
+  }
+
+  const daysWk = Math.max(1, Math.min(7, +document.getElementById("in-spDaysWk").value || 5));
+  const matchXp = Math.max(0, +document.getElementById("in-spMatchXp").value || 0);
+  const dailyXp = Math.max(0, +document.getElementById("in-spDailyXp").value || 0);
+  const weeklyFree = Math.max(0, +document.getElementById("in-spWeeklyFree").value || 0);
+  const weeklyBonus = Math.max(0, +document.getElementById("in-spWeeklyBonus").value || 0);
+  const boostPct = Math.max(0, +document.getElementById("in-spBoostPct").value || 0);
+
+  const passPriceR = Math.max(1, +document.getElementById("in-spPriceR").value || 399);
+  const bundleR = Math.max(passPriceR, +document.getElementById("in-spBundleR").value || 799);
+  const bundlePct = Math.max(0, Math.min(100, +document.getElementById("in-spBundlePct").value || 0));
+  const cohortDau = Math.max(100, +document.getElementById("in-spCohortDau").value || 30000);
+  const attachPct = Math.max(0, Math.min(100, +document.getElementById("in-spAttachPct").value || 6.5));
+
+  const xpPerTier = 2000;
+  const maxTiers = 50;
+  const goalXp = xpPerTier * maxTiers;
+  const kitCost = 3500;
+  const mktKeep = 1 - (simModel.inp.mktCut / 100);
+  const devexRate = simModel.blendedDevex;
+
+  const avgStickerR = (1 - bundlePct / 100) * passPriceR + (bundlePct / 100) * bundleR;
+  const totalBuyers = cohortDau * (attachPct / 100);
+  const weeklyCompletion = daysWk >= 6 ? 1.0 : (daysWk === 5 ? 0.75 : Math.min(0.85, daysWk / 5.5));
+
+  let f2pCumXp = 0;
+  let passCumXp = 0;
+  let acctXp = 0;
+  let acctLvl = 1;
+  let freeShards = 0;
+  let claimedFree5Tier = 0;
+  let activeDays = 0;
+  let cumRevUsd = 0;
+  let cumGrossR = 0;
+  let rankedUnlockDay = null;
+  let kit1Day = null;
+  let kit2Day = null;
+  let passTier25Day = null;
+  let passTier50Day = null;
+  let f2pTier50Day = null;
+
+  const days = [];
+  for (let d = 1; d <= 60; d++) {
+    const dayInWeek = (d - 1) % 7; // 0..6
+    const weekIdx = Math.floor((d - 1) / 7); // 0..7 for days 1..56
+    const isActive = dayInWeek < daysWk;
+
+    let f2pDaily = 0;
+    let passDaily = 0;
+    let weeklyDrop = 0;
+    let bonusWeeklyDrop = 0;
+
+    if (isActive) {
+      activeDays++;
+      acctXp += matchXp;
+      f2pDaily += matchXp + dailyXp;
+      passDaily += Math.round(matchXp * (1 + boostPct / 100)) + dailyXp;
+      freeShards += 40; // daily quest shards
+    }
+
+    // Credit 8 weekly quest drops on the last active day of Weeks 1..8
+    const weeklyFinishOffset = Math.min(daysWk, 5) - 1;
+    if (weekIdx < 8 && dayInWeek === weeklyFinishOffset) {
+      weeklyDrop = Math.round(weeklyFree * weeklyCompletion);
+      bonusWeeklyDrop = Math.round(weeklyBonus * weeklyCompletion);
+      f2pDaily += weeklyDrop;
+      passDaily += weeklyDrop + bonusWeeklyDrop;
+    }
+
+    f2pCumXp += f2pDaily;
+    passCumXp += passDaily;
+
+    const newAcctLvl = Math.floor(Math.sqrt(acctXp / 100)) + 1;
+    if (newAcctLvl > acctLvl) {
+      freeShards += (newAcctLvl - acctLvl) * 75;
+      acctLvl = newAcctLvl;
+    }
+
+    const f2pTier = f2pCumXp / xpPerTier;
+    const passTier = passCumXp / xpPerTier;
+
+    const tier5Count = Math.min(10, Math.floor(f2pTier / 5));
+    if (tier5Count > claimedFree5Tier) {
+      freeShards += (tier5Count - claimedFree5Tier) * 200;
+      claimedFree5Tier = tier5Count;
+    }
+
+    const notes = [];
+    if (d === 1) notes.push("Launch Day (Starter + 2 Trial Kits)");
+    if (rankedUnlockDay === null && acctLvl >= 5) {
+      rankedUnlockDay = d;
+      notes.push("Ranked Unlocked (Lvl 5)");
+    }
+    if (kit1Day === null && freeShards >= kitCost) {
+      kit1Day = d;
+      notes.push("1st Free Kit Unlocked (3,500 Shards)");
+    } else if (kit2Day === null && freeShards >= kitCost * 2) {
+      kit2Day = d;
+      notes.push("2nd Free Kit Unlocked (7,000 Shards)");
+    }
+    if (passTier25Day === null && passTier >= 25) {
+      passTier25Day = d;
+      notes.push("Pass hits Tier 25 Season Kit");
+    }
+    if (passTier50Day === null && passTier >= 50) {
+      passTier50Day = d;
+      notes.push("Pass Hits Tier 50 Mythic!");
+    }
+    if (f2pTier50Day === null && f2pTier >= 50) {
+      f2pTier50Day = d;
+      notes.push("F2P Hits Tier 50!");
+    }
+    if (d === 25) notes.push("Tier-25 Kit Conversion Spike");
+    if (d === 53 && passTier >= 50) notes.push("FOMO Upgrade Wave Begins");
+    if (d === 60) notes.push("Season 1 Finale");
+
+    const dayBuyers = totalBuyers * PASS_WAVE_WEIGHTS[d - 1];
+    const dailyGrossR = dayBuyers * avgStickerR;
+    const dailyRetailUsd = dailyGrossR * 0.0125;
+    const dailyNetUsd = dailyGrossR * mktKeep * devexRate;
+    cumGrossR += dailyGrossR;
+    cumRevUsd += dailyNetUsd;
+
+    days.push({
+      d, isActive, f2pDaily, f2pCumXp, f2pTier,
+      passDaily, passCumXp, passTier,
+      acctLvl, freeShards,
+      dayBuyers, dailyGrossR, dailyRetailUsd, dailyNetUsd, cumRevUsd,
+      notes,
+    });
+  }
+
+  return {
+    days, activeDays, goalXp, xpPerTier, maxTiers,
+    passPriceR, bundleR, avgStickerR, cohortDau, attachPct,
+    totalBuyers, cumGrossR, cumRevUsd,
+    rankedUnlockDay, kit1Day, kit2Day, passTier25Day, passTier50Day, f2pTier50Day,
+    f2pEnd: days[59], passEnd: days[59],
+  };
+}
+
+function renderSeasonPassTab(simModel) {
+  const sp = buildSeason60Model(simModel);
+  lastPassModel = sp;
+
+  const passRetail = sp.passPriceR * 0.0125;
+  const passNet = sp.passPriceR * (1 - simModel.inp.mktCut / 100) * simModel.blendedDevex;
+  const bRetail = sp.bundleR * 0.0125;
+  const bNet = sp.bundleR * (1 - simModel.inp.mktCut / 100) * simModel.blendedDevex;
+  document.getElementById("passPriceUsdPreview").textContent =
+    `Pass: ${sp.passPriceR} R$ (~$${passRetail.toFixed(2)} retail / $${passNet.toFixed(2)} net) · Bundle: ${sp.bundleR} R$ (~$${bRetail.toFixed(2)} retail / $${bNet.toFixed(2)} net) · Blend: ${Math.round(sp.avgStickerR)} R$`;
+
+  document.getElementById("passTableSummary").textContent =
+    `60 Days · ${sp.activeDays} Active Days · Goal ${sp.goalXp.toLocaleString()} XP (50 Tiers)`;
+
+  const kitsEarned = Math.floor(sp.f2pEnd.freeShards / 3500);
+  const kpis = [
+    { label: "F2P Day-60 Finish", val: `Tier ${sp.f2pEnd.f2pTier.toFixed(1)}`, sub: `${Math.round(sp.f2pEnd.f2pCumXp).toLocaleString()} XP (${sp.activeDays}d played)`, accent: sp.f2pEnd.f2pTier >= 50 ? "text-emerald-500" : "text-sky-400" },
+    { label: "Pass Buyer Finish", val: sp.passTier50Day ? `Tier 50 on D${sp.passTier50Day}` : `Tier ${sp.passEnd.passTier.toFixed(1)}`, sub: `Ends D60 at Tier ${sp.passEnd.passTier.toFixed(1)} (${Math.round(sp.passEnd.passCumXp).toLocaleString()} XP)`, accent: "text-purple-400" },
+    { label: "Account Lvl & Shards", val: `Lvl ${sp.f2pEnd.acctLvl} · ${sp.f2pEnd.freeShards.toLocaleString()}`, sub: `Ranked D${sp.rankedUnlockDay || "—"} · ${kitsEarned} Free Kit${kitsEarned === 1 ? "" : "s"}`, },
+    { label: "60d Pass Buyers", val: Math.round(sp.totalBuyers).toLocaleString(), sub: `${sp.attachPct.toFixed(1)}% of ${sp.cohortDau.toLocaleString()} active players` },
+    { label: "60d Gross Robux", val: `${(sp.cumGrossR / 1e6 >= 1 ? (sp.cumGrossR / 1e6).toFixed(2) + "M" : Math.round(sp.cumGrossR / 1000) + "k")} R$`, sub: `~$${Math.round(sp.cumGrossR * 0.0125).toLocaleString()} Retail Spend` },
+    { label: "60d Season Pass Net", val: fmtUsd(sp.cumRevUsd), sub: `${fmtUsd(sp.cumRevUsd / 2)}/mo run-rate DevEx`, accent: "text-emerald-500" },
+  ];
+
+  document.getElementById("passKpiStrip").innerHTML = kpis.map(c => `
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3.5">
+      <div class="text-xs text-[var(--muted-foreground)]">${c.label}</div>
+      <div class="text-base font-bold mt-1 tabular-nums ${c.accent || ""}">${c.val}</div>
+      <div class="text-xs text-[var(--muted-foreground)] mt-0.5 truncate">${c.sub}</div>
+    </div>
+  `).join("");
+
+  document.getElementById("passDailyBody").innerHTML = sp.days.map(r => {
+    const tierBadge = (xp, t) => `Tier ${t.toFixed(1)} <span class="text-[var(--muted-foreground)]">(${Math.round(xp / 1000)}k)</span>`;
+    const rowHighlight = r.notes.length > 0 ? "bg-[var(--content)]/40" : "";
+    return `
+      <tr class="hover:bg-[var(--content)]/70 ${rowHighlight}">
+        <td class="py-1.5 px-2 text-left font-medium">D${String(r.d).padStart(2, "0")}</td>
+        <td class="py-1.5 px-2 text-center">${r.isActive ? '<span class="text-emerald-500 font-semibold">Yes</span>' : '<span class="text-[var(--muted-foreground)]">Rest</span>'}</td>
+        <td class="py-1.5 px-2 text-sky-400">+${r.f2pDaily.toLocaleString()}</td>
+        <td class="py-1.5 px-2">${tierBadge(r.f2pCumXp, r.f2pTier)}</td>
+        <td class="py-1.5 px-2 text-purple-400">+${r.passDaily.toLocaleString()}</td>
+        <td class="py-1.5 px-2 font-medium">${tierBadge(r.passCumXp, r.passTier)}</td>
+        <td class="py-1.5 px-2">L${r.acctLvl}</td>
+        <td class="py-1.5 px-2">${r.freeShards.toLocaleString()}</td>
+        <td class="py-1.5 px-2">${r.dayBuyers >= 10 ? Math.round(r.dayBuyers).toLocaleString() : r.dayBuyers.toFixed(1)}</td>
+        <td class="py-1.5 px-2">${Math.round(r.dailyGrossR).toLocaleString()} R$ <span class="text-[var(--muted-foreground)]">($${Math.round(r.dailyRetailUsd).toLocaleString()})</span></td>
+        <td class="py-1.5 px-2 font-medium text-emerald-500">${fmtUsd(r.dailyNetUsd)}</td>
+        <td class="py-1.5 px-2.5 text-left text-[var(--muted-foreground)]">${r.notes.join(" · ") || "—"}</td>
+      </tr>
+    `;
+  }).join("");
+
+  renderPassXpChart(sp);
+  renderPassRevChart(sp);
+}
+
+function renderPassXpChart(sp) {
+  const canvas = document.getElementById("passXpChart");
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  if (rect.width === 0) return;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width, H = rect.height;
+  const pad = { top: 16, right: 16, bottom: 26, left: 54 };
+  const cw = W - pad.left - pad.right;
+  const ch = H - pad.top - pad.bottom;
+  const tc = getThemeColors();
+  const maxXp = Math.max(sp.goalXp * 1.15, ...sp.days.map(d => d.passCumXp)) * 1.05;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.font = "11px sans-serif";
+
+  for (let g = 0; g <= 4; g++) {
+    const y = pad.top + (ch * g) / 4;
+    ctx.strokeStyle = tc.grid;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(W - pad.right, y);
+    ctx.stroke();
+
+    const xpVal = Math.round(maxXp * (1 - g / 4));
+    ctx.fillStyle = tc.text;
+    ctx.textAlign = "right";
+    ctx.fillText(Math.round(xpVal / 1000) + "k", pad.left - 6, y + 4);
+  }
+
+  // Tier 50 Goal dashed line (100k XP)
+  const goalY = pad.top + ch - (sp.goalXp / maxXp) * ch;
+  ctx.save();
+  ctx.setLineDash([5, 4]);
+  ctx.strokeStyle = "#f59e0b";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(pad.left, goalY);
+  ctx.lineTo(W - pad.right, goalY);
+  ctx.stroke();
+  ctx.fillStyle = "#f59e0b";
+  ctx.textAlign = "left";
+  ctx.fillText("Tier 50 Goal (100k XP)", pad.left + 6, goalY - 5);
+  ctx.restore();
+
+  const stepX = cw / 59;
+  const drawLine = (key, color) => {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    sp.days.forEach((d, i) => {
+      const x = pad.left + i * stepX;
+      const y = pad.top + ch - (d[key] / maxXp) * ch;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  };
+
+  drawLine("f2pCumXp", "#38bdf8");
+  drawLine("passCumXp", "#a855f7");
+
+  sp.days.forEach((d, i) => {
+    if (d.d === 1 || d.d % 10 === 0) {
+      const x = pad.left + i * stepX;
+      ctx.fillStyle = tc.text;
+      ctx.textAlign = "center";
+      ctx.fillText(`D${d.d}`, x, H - 6);
+    }
+  });
+
+  canvas.onmousemove = (e) => {
+    const r = canvas.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const idx = Math.max(0, Math.min(59, Math.round((x - pad.left) / stepX)));
+    const tip = document.getElementById("passXpTooltip");
+    if (x < pad.left - 8 || x > W - pad.right + 8) {
+      tip.classList.add("hidden");
+      return;
+    }
+    const d = sp.days[idx];
+    tip.innerHTML = `
+      <div class="font-semibold">Day ${d.d} · ${d.isActive ? "Active Play Day" : "Rest Day"}</div>
+      <div class="flex justify-between gap-4"><span class="text-sky-400">F2P Total:</span><span>Tier ${d.f2pTier.toFixed(1)} (${Math.round(d.f2pCumXp).toLocaleString()} XP)</span></div>
+      <div class="flex justify-between gap-4"><span class="text-purple-400">Pass Buyer:</span><span>Tier ${d.passTier.toFixed(1)} (${Math.round(d.passCumXp).toLocaleString()} XP)</span></div>
+      <div class="flex justify-between gap-4 border-t border-[var(--border)] pt-1"><span class="text-[var(--muted-foreground)]">Account Lvl / Shards:</span><span>Lvl ${d.acctLvl} · ${d.freeShards.toLocaleString()}</span></div>
+      ${d.notes.length ? `<div class="text-amber-400 pt-0.5">${d.notes.join(" · ")}</div>` : ""}
+    `;
+    tip.style.left = Math.min(r.width - 235, Math.max(8, x + 12)) + "px";
+    tip.style.top = "10px";
+    tip.classList.remove("hidden");
+  };
+  canvas.onmouseleave = () => document.getElementById("passXpTooltip").classList.add("hidden");
+}
+
+function renderPassRevChart(sp) {
+  const canvas = document.getElementById("passRevChart");
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  if (rect.width === 0) return;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width, H = rect.height;
+  const pad = { top: 16, right: 56, bottom: 26, left: 54 };
+  const cw = W - pad.left - pad.right;
+  const ch = H - pad.top - pad.bottom;
+  const tc = getThemeColors();
+
+  const maxDayRev = Math.max(10, ...sp.days.map(d => d.dailyNetUsd)) * 1.15;
+  const maxCumRev = Math.max(100, sp.cumRevUsd) * 1.10;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.font = "11px sans-serif";
+
+  for (let g = 0; g <= 4; g++) {
+    const y = pad.top + (ch * g) / 4;
+    ctx.strokeStyle = tc.grid;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(W - pad.right, y);
+    ctx.stroke();
+
+    ctx.fillStyle = tc.text;
+    ctx.textAlign = "right";
+    ctx.fillText(fmtCompact(maxDayRev * (1 - g / 4)), pad.left - 6, y + 4);
+
+    ctx.textAlign = "left";
+    ctx.fillText(fmtCompact(maxCumRev * (1 - g / 4)), W - pad.right + 6, y + 4);
+  }
+
+  const slotW = cw / 60;
+  const bw = Math.max(2, slotW * 0.65);
+
+  sp.days.forEach((d, i) => {
+    const cx = pad.left + slotW * (i + 0.5);
+    const barH = (d.dailyNetUsd / maxDayRev) * ch;
+    ctx.fillStyle = d.d <= 7 ? "#10b981" : (d.d >= 25 && d.d <= 32 ? "#3b82f6" : (d.d >= 53 ? "#a855f7" : "rgba(16, 185, 129, 0.55)"));
+    ctx.fillRect(cx - bw / 2, pad.top + ch - barH, bw, barH);
+
+    if (d.d === 1 || d.d % 10 === 0) {
+      ctx.fillStyle = tc.text;
+      ctx.textAlign = "center";
+      ctx.fillText(`D${d.d}`, cx, H - 6);
+    }
+  });
+
+  ctx.strokeStyle = "#f59e0b";
+  ctx.lineWidth = 2.2;
+  ctx.beginPath();
+  sp.days.forEach((d, i) => {
+    const cx = pad.left + slotW * (i + 0.5);
+    const cy = pad.top + ch - (d.cumRevUsd / maxCumRev) * ch;
+    if (i === 0) ctx.moveTo(cx, cy);
+    else ctx.lineTo(cx, cy);
+  });
+  ctx.stroke();
+
+  canvas.onmousemove = (e) => {
+    const r = canvas.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const idx = Math.floor((x - pad.left) / slotW);
+    const tip = document.getElementById("passRevTooltip");
+    if (idx < 0 || idx >= 60) {
+      tip.classList.add("hidden");
+      return;
+    }
+    const d = sp.days[idx];
+    const pctWave = (PASS_WAVE_WEIGHTS[idx] * 100).toFixed(2);
+    tip.innerHTML = `
+      <div class="font-semibold">Day ${d.d} · ${pctWave}% of Season Sales</div>
+      <div class="flex justify-between gap-4"><span class="text-[var(--muted-foreground)]">New Pass Buyers:</span><span>${Math.round(d.dayBuyers).toLocaleString()}</span></div>
+      <div class="flex justify-between gap-4"><span class="text-[var(--muted-foreground)]">Gross R$ (Retail):</span><span>${Math.round(d.dailyGrossR).toLocaleString()} R$ (~$${Math.round(d.dailyRetailUsd).toLocaleString()})</span></div>
+      <div class="flex justify-between gap-4"><span class="text-emerald-500">Daily Net DevEx:</span><span class="font-medium">${fmtUsd(d.dailyNetUsd)}</span></div>
+      <div class="flex justify-between gap-4 border-t border-[var(--border)] pt-1"><span class="text-amber-400">Cum Season Net:</span><span class="font-semibold">${fmtUsd(d.cumRevUsd)}</span></div>
+    `;
+    tip.style.left = Math.min(r.width - 235, Math.max(8, x + 12)) + "px";
+    tip.style.top = "10px";
+    tip.classList.remove("hidden");
+  };
+  canvas.onmouseleave = () => document.getElementById("passRevTooltip").classList.add("hidden");
+}
+
+function exportSeasonCSV() {
+  if (!lastPassModel) return;
+  const headers = ["Day","Active_Play","F2P_Daily_XP","F2P_Cum_XP","F2P_Tier","Pass_Daily_XP","Pass_Cum_XP","Pass_Tier","Account_Level","F2P_Shards","New_Pass_Buyers","Daily_Gross_Robux","Daily_Retail_USD","Daily_Net_DevEx_USD","Cum_Season_Net_USD","Milestones"];
+  const lines = [headers.join(",")];
+  lastPassModel.days.forEach(r => {
+    lines.push([
+      r.d, r.isActive ? 1 : 0, r.f2pDaily, Math.round(r.f2pCumXp), r.f2pTier.toFixed(2),
+      r.passDaily, Math.round(r.passCumXp), r.passTier.toFixed(2),
+      r.acctLvl, r.freeShards, r.dayBuyers.toFixed(2),
+      Math.round(r.dailyGrossR), r.dailyRetailUsd.toFixed(2), r.dailyNetUsd.toFixed(2), r.cumRevUsd.toFixed(2),
+      `"${r.notes.join("; ")}"`
+    ].join(","));
+  });
+  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `engage_60day_season_pass_${passScheduleKey}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportCSV() {
+  const headers = ["Month","Phase","Avg_CCU","Est_DAU","Gross_ARPDAU_Robux","Gross_IAP_Robux","Earned_Robux","IAP_Cash_USD","Creator_Rewards_USD","Subscriptions_USD","Rewarded_Video_USD","Avatar_UGC_USD","Private_Servers_USD","Audience_Expansion_USD","Immersive_Ads_IP_USD","Total_Cash_Rev_USD","Gross_Ad_Spend_USD","Ad_Credits_Used_USD","Cash_UA_OpEx_USD","Contractors_USD","Creative_GFX_USD","Staff_USD","Tools_USD","Founder_USD","Hidden_Overhead_Friction_USD","Total_Cash_OpEx_USD","Net_Profit_USD","Cumulative_Cash_USD","Paid_Plays_Total","Tier1_Plays","Global_Plays","Influencer_Plays"];
+  const lines = [headers.join(",")];
+  lastRows.forEach(r => {
+    lines.push([
+      r.m, r.phase, r.ccu, Math.round(r.dau), r.arp, Math.round(r.grossIapR), Math.round(r.totalEarnedR),
+      r.iapUsd.toFixed(2), r.crUsd.toFixed(2),
+      r.subUsd.toFixed(2), r.rvaUsd.toFixed(2), r.ugcUsd.toFixed(2), r.psUsd.toFixed(2), r.expUsd.toFixed(2), r.immUsd.toFixed(2),
+      r.rev.toFixed(2),
+      r.ua, r.adCreditUsdThisMo.toFixed(2), r.cashUaOpex.toFixed(2),
+      r.dev, r.art, r.staff, r.tools, r.founder, r.hiddenCostUsd.toFixed(2), r.opex.toFixed(2),
+      r.net.toFixed(2), r.effectiveCum.toFixed(2),
+      Math.round(r.paidPlays), Math.round(r.t1Plays), Math.round(r.rowPlays), Math.round(r.infPlays)
+    ].join(","));
+  });
+  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `engage_2yr_plan_${currentPresetKey}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+window.addEventListener("resize", () => {
+  if (!document.getElementById("panel-overview").classList.contains("hidden")) {
+    const m = computeModel();
+    renderMainChart(m);
+    renderCcuChart(m);
+  }
+  if (!document.getElementById("panel-pass").classList.contains("hidden")) {
+    const m = computeModel();
+    renderSeasonPassTab(m);
+  }
+});
+
+// Check saved localStorage state availability
+try {
+  if (localStorage.getItem(STORAGE_KEY)) {
+    document.getElementById("btn-load").disabled = false;
+  }
+} catch (e) {}
+
+// Initialize on Base Case and redraw after Tailwind layout settles
+applyPreset("base");
+updateArpdauHelper();
+window.addEventListener("load", () => recalculate());
+</script>
+</body>
+</html>

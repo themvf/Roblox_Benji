@@ -1,0 +1,29 @@
+{
+  "tool": "tools/blender/appraise_asset.py",
+  "appraisedOn": "2026-11-16",
+  "source": "PenthouseDaybed.glb",
+  "sourceSha256": "a60d97e4b942bde5869fdd3136724dc06b197814dc3625cf7813c48d217be9d3",
+  "measurements": {
+    "triangles": 28966,
+    "size": [
+      3.835,
+      7.724,
+      3.526
+    ],
+    "reliefRatio": 0.4565,
+    "openEdges": 40340,
+    "nonManifoldEdges": 0,
+    "oneSided": false,
+    "uvLayers": [
+      "UVMap"
+    ]
+  },
+  "views": "views.png",
+  "verdict": [
+    "No blocking problems found. Check it against the intent anyway:",
+    "  a horizon needs silhouette, a prop needs to read from every angle.",
+    "LOOK at views.png before building: generated meshes copy the reference's floor,",
+    "  cables and loose props, and glass comes out as an opaque slab. Numbers miss both."
+  ],
+  "decision": ""
+}
