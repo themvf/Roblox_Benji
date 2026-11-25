@@ -200,7 +200,8 @@ function QueueService:KnitStart()
                 elseif solo then
                     -- "Pick a side (1 per team)" would be a lie here: there is no side
                     -- to pick and nobody to wait for.
-                    status = "Step on to pick a map"
+                    local rotation = pad.Kind == "Convergence" and Config.ConvergenceMaps or Config.Maps
+                    status = #rotation == 1 and "Step on to start a match" or "Step on to pick a map"
                 elseif red == 0 and blue == 0 then
                     status = minNeed < need and ("Pick a side  (%d-%d per team)"):format(minNeed, need)
                         or ("Pick a side  (%d per team)"):format(need)

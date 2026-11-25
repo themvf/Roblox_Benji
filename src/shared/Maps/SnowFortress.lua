@@ -49,7 +49,7 @@ local map = {
         {
             Id = "keep",
             Name = "C — Fortress Upper Floor",
-            pos = { 0, 18.2, 0 },
+            pos = { 0, 19.1, 0 },
             radius = 18,
             halfHeight = 7,
             Phases = { 1, 2, 3 },
@@ -66,7 +66,7 @@ local map = {
         { name = "Red exterior", pos = { 200, 1, 0 } },
         { name = "North field", pos = { 0, 1, -128 } },
         { name = "South field", pos = { 0, 1, 128 } },
-        { name = "Fortress upper centre", pos = { 0, 19, 0 } },
+        { name = "Fortress upper centre", pos = { 0, 20, 0 } },
         { name = "Upper landing southwest", pos = { -60, 19, 46 } },
         { name = "Upper landing northeast", pos = { 60, 19, -46 } },
     },
@@ -140,7 +140,15 @@ local map = {
     -- Scenery. Built into its own folder and never part of the gameplay model, so a
     -- change here needs no review and cannot move a wall by accident.
     Decor = {},
-    Symmetry = { SniperOutposts = "rotational" },
+    -- One Sniper in each outpost, on the deck the outpost was authored with in Studio, so a
+    -- player collects it on the way to the firing window. Takes the kit Sniper's stats;
+    -- it expires on death or after `duration`, and returns after `respawn` (3 minutes).
+    Pickups = {
+        { kind = "weapon", weapon = "Sniper", pos = { -135, 20.2, -126 }, respawn = 180, duration = 45 },
+        { kind = "weapon", weapon = "Sniper", pos = { 172.6, 20.6, 122 }, respawn = 180, duration = 45 },
+    },
+    -- The Studio-authored outposts are offset differently; their pickup sites follow the actual decks.
+    Symmetry = { SniperOutposts = "asymmetric", Pickups = "asymmetric" },
     GroundRoutes = {
         {
             DistrictId = "gate",
@@ -259,14 +267,14 @@ local map = {
         {
             Id = "northwest",
             Name = "Northwest Outpost",
-            pos = { -145, 19, -126 },
+            pos = { -135, 21.5, -126 },
             radius = 12,
             GroundRouteId = "blue-north",
         },
         {
             Id = "southeast",
             Name = "Southeast Outpost",
-            pos = { 145, 19, 126 },
+            pos = { 172.6, 21.9, 122 },
             radius = 12,
             GroundRouteId = "red-south",
         },
@@ -277,7 +285,7 @@ local map = {
             Id = "Blue-north-launch",
             pos = { -125, 0.3, -30 },
             size = 8,
-            target = { -84, 2, -5 },
+            target = { -84, 3, -5 },
             vy = 62,
         },
         {
@@ -285,7 +293,7 @@ local map = {
             Id = "Blue-south-launch",
             pos = { -125, 0.3, 30 },
             size = 8,
-            target = { -84, 2, 5 },
+            target = { -84, 3, 5 },
             vy = 62,
         },
         {
@@ -293,7 +301,7 @@ local map = {
             Id = "Red-north-launch",
             pos = { 125, 0.3, -30 },
             size = 8,
-            target = { 84, 2, -5 },
+            target = { 84, 3, -5 },
             vy = 62,
         },
         {
@@ -301,26 +309,13 @@ local map = {
             Id = "Red-south-launch",
             pos = { 125, 0.3, 30 },
             size = 8,
-            target = { 84, 2, 5 },
+            target = { 84, 3, 5 },
             vy = 62,
         },
     },
-    ZipLines = {
-        {
-            Id = "southwest-upper",
-            From = { -150, 4, 130 },
-            To = { -55, 38, 50 },
-            GroundAlternative = "blue-centre",
-            Purpose = "Southwest exterior to roof hatch",
-        },
-        {
-            Id = "northeast-upper",
-            From = { 150, 4, -130 },
-            To = { 55, 38, -50 },
-            GroundAlternative = "red-centre",
-            Purpose = "Northeast exterior to roof hatch",
-        },
-    },
+    -- Removed after the 2026-10-10 playtest: the bright cables read as stray lines across
+    -- the map. The roof is reached by the launch pads and the stairs.
+    ZipLines = {},
     -- No grapple routes in the new authoritative sketch.
     GrappleAnchors = {},
     ReviewViews = {

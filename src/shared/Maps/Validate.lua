@@ -360,6 +360,9 @@ end
 -- Every entry in a list that is meant to be team-fair needs an x-mirror partner.
 -- Entries on the centre line (x ~ 0) are their own partner.
 local function checkMirrored(errors, label, list, getPos, symmetry)
+    if symmetry == "asymmetric" then
+        return
+    end
     if symmetry ~= nil and symmetry ~= "x" and symmetry ~= "rotational" then
         table.insert(errors, label .. ": unsupported symmetry " .. tostring(symmetry))
         return
@@ -579,7 +582,7 @@ function Validate.check(layout, weapons, solids)
         pos,
         layout.Symmetry and layout.Symmetry.SniperOutposts
     )
-    checkMirrored(fairness, "Pickups", layout.Pickups, pos)
+    checkMirrored(fairness, "Pickups", layout.Pickups, pos, layout.Symmetry and layout.Symmetry.Pickups)
     checkMirrored(fairness, "Barrier", layout.Barrier, pos)
     checkMirrored(fairness, "SafeRegions", layout.SafeRegions, pos)
     checkMirrored(fairness, "InvalidRegions", layout.InvalidRegions, pos)
