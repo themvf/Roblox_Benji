@@ -66,6 +66,19 @@ return {
             size = { 12, 1, 10 },
             color = Color3.fromRGB(120, 200, 160),
         },
+        -- Team Deathmatch 5v5, at the back of the gate between the two back walls, behind
+        -- Convergence. Sizes come from TDM_TeamSize / TDM_MinTeamSize (MapService), so the
+        -- numbers here are only the defaults.
+        {
+            name = "PadTDM",
+            kind = "TDM",
+            mode = "TEAM DEATHMATCH 5v5",
+            teamSize = 5,
+            minTeamSize = 3,
+            pos = { 0, 0, -47.5 },
+            size = { 14, 1, 7 },
+            color = Color3.fromRGB(235, 110, 90),
+        },
         -- Its own corner of the room, opposite the kiosk, because it is not a way to
         -- play the game -- it is the way to go look at a map you are building.
         --

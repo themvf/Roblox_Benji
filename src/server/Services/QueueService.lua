@@ -175,11 +175,14 @@ function QueueService:KnitStart()
                     full = red >= need and blue >= need
                     viable = red >= minNeed and blue >= minNeed
                 end
-                local rules = Config.GetConvergence()
+                -- Convergence and TDM start short-handed after a wait; Duel waits until full
+                local fillWait = (pad.Kind == "Convergence" and Config.GetConvergence().FillWaitSeconds)
+                    or (pad.Kind == "TDM" and Config.GetTDM().FillWaitSeconds)
+                    or nil
                 local waitLeft = nil
-                if viable and not full and pad.Kind == "Convergence" then
+                if viable and not full and fillWait then
                     fillSince[pad] = fillSince[pad] or os.clock()
-                    waitLeft = math.max(0, rules.FillWaitSeconds - (os.clock() - fillSince[pad]))
+                    waitLeft = math.max(0, fillWait - (os.clock() - fillSince[pad]))
                 else
                     fillSince[pad] = nil
                 end
@@ -200,7 +203,9 @@ function QueueService:KnitStart()
                 elseif solo then
                     -- "Pick a side (1 per team)" would be a lie here: there is no side
                     -- to pick and nobody to wait for.
-                    local rotation = pad.Kind == "Convergence" and Config.ConvergenceMaps or Config.Maps
+                    local rotation = (pad.Kind == "Convergence" and Config.ConvergenceMaps)
+                        or (pad.Kind == "TDM" and Config.TDMMaps)
+                        or Config.Maps
                     status = #rotation == 1 and "Step on to start a match" or "Step on to pick a map"
                 elseif red == 0 and blue == 0 then
                     status = minNeed < need and ("Pick a side  (%d-%d per team)"):format(minNeed, need)
@@ -248,6 +253,8 @@ function QueueService:KnitStart()
                         end
                         if kind == "Convergence" then
                             Knit.GetService("ConvergenceService"):StartMatch(players, teamSize, mapName, solo)
+                        elseif kind == "TDM" then
+                            Knit.GetService("TDMService"):StartMatch(players, teamSize, mapName)
                         else
                             RoundService:StartMatch(players, teamSize, mode, mapName)
                         end
