@@ -106,6 +106,12 @@ function TuningService:EnsureSetup()
             tuning:SetAttribute("Movement_" .. key, default)
         end
     end
+    -- weapon test range (RangeService, RangeController read these live)
+    for key, default in Config.Range do
+        if tuning:GetAttribute("Range_" .. key) == nil then
+            tuning:SetAttribute("Range_" .. key, default)
+        end
+    end
     -- arena camera framing (CameraController) -- experiment, tune while moving
     for key, default in
         {

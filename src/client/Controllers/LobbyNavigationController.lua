@@ -431,7 +431,8 @@ end
 function LobbyNavigationController:RefreshVisibility()
     local player = Players.LocalPlayer
     local committed = player:GetAttribute("QueueState") == "Committed"
-    local visible = not player:GetAttribute("InMatch") and not committed
+    -- the weapon range has its own HUD (RangeController) and its own way back
+    local visible = not player:GetAttribute("InMatch") and not committed and not player:GetAttribute("InRange")
     self.Nav.Visible = visible
     self.QueueBadge.Visible = visible and self.QueueBadge.Visible
     if not visible then
@@ -464,7 +465,7 @@ function LobbyNavigationController:KnitStart()
     end)
 
     local player = Players.LocalPlayer
-    for _, attribute in { "InMatch", "QueueState", "QueuedMode", "QueuedTeam" } do
+    for _, attribute in { "InMatch", "QueueState", "QueuedMode", "QueuedTeam", "InRange" } do
         player:GetAttributeChangedSignal(attribute):Connect(function()
             self:RefreshVisibility()
             if self.ActiveDrawer == "Play" then

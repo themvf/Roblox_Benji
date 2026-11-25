@@ -1745,7 +1745,9 @@ function MapService:Load(name)
     return true
 end
 
-local IGNORED_IN_WORKSPACE = { Baseplate = true, SpawnLocation = true, Map = true, Lobby = true }
+-- WeaponRange is RangeService's; it builds in KnitStart, after this sweep, but is listed so the
+-- order can change without the range being swept away as a loose piece.
+local IGNORED_IN_WORKSPACE = { Baseplate = true, SpawnLocation = true, Map = true, Lobby = true, WeaponRange = true }
 
 -- In a Studio play session, an editable map in Workspace IS the map: it is read here,
 -- with the same code the converter uses (Shared.MapAuthoring), and played as it stands.

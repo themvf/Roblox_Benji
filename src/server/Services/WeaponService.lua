@@ -19,6 +19,19 @@ local function onDamage(_system, target, amount, _damageType, dealer, hitInfo, w
     if not target:IsA("Humanoid") then
         return
     end
+    -- Weapon range dummies keep their own health and report every hit to the shooter.
+    local range = Knit.GetService("RangeService")
+    if range:IsDummy(target.Parent) then
+        local part = hitInfo and hitInfo.part
+        local headshot = part ~= nil and part.Name == "Head"
+        local config = weaponInstance and weaponInstance:FindFirstChild("Configuration")
+        local crit = config and config:FindFirstChild("CritMultiplier")
+        if headshot and crit then
+            amount *= crit.Value
+        end
+        range:OnDummyHit(dealer, target.Parent, amount, headshot, hitInfo, weaponInstance)
+        return
+    end
     if dealer and dealer:IsA("Player") and target.Parent then
         target.Parent:SetAttribute("LastHitBy", dealer.UserId)
         target.Parent:SetAttribute("LastHitByName", dealer.Name)

@@ -108,6 +108,13 @@ jobs:
       - name: Movement
         run: lune run tools/check_movement.luau
 
+      # Weapon test range: lanes bracket every gun's falloff, the picker lists exactly the built
+      # guns, and RangeService's hits, downs, heals, ammo and exits run from its real source.
+      - name: Weapon range
+        run: |
+          lune run tools/check_range.luau
+          lune run tools/check_range_service.luau
+
       # Studio-authored decor is not reviewed, by design. Collidable decor still has to
       # clear the zip lines and launch arcs, which a designer cannot see from the viewport.
       - name: Validate authored decor

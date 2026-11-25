@@ -35,6 +35,22 @@ The [Snow Fortress redesign specification](SNOW_FORTRESS_REDESIGN_SPEC.md) defin
   playable map from Studio-placed markers ([walkthrough](assets/environment/source/README.md))
 - `src/server/ProfileStore.luau` MadStudioRoblox ProfileStore (vendored); DataService saves loadout, favourites, skins, stats
 
+## Weapon test range
+A walled lane block beside the lobby for tuning guns. Walk onto the gold **WEAPON RANGE** pad next to the Armory
+(spawn, turn left) and press **E**. You arrive on the firing line holding your loadout's primary.
+- **Pick any gun instantly:** `G` (gamepad `Y`, touch: the **WEAPONS** button) opens the picker; `[` / `]`
+  (d-pad left/right) cycle. Every kit gun with a built tool is listed; melee and the jetpack are not.
+- **Infinite ammo:** the magazine is refilled after every shot while you are in the range.
+- **Dummies at marked distances:** 10 / 25 (CLOSE), 50 / 100 (MID), 150 / 200 (FAR) studs, one per lane, with
+  floor lines every 25 studs. 100 HP like a player; a downed dummy stands back up after 1.5 s and an
+  untouched one heals after 2.5 s (`Range_*` attributes on Tuning).
+- **Readout (top right):** body or CRIT damage (shotgun pellets summed per shot), measured distance, percent of
+  max damage and where that sits on the weapon's curve (full / in falloff / past dropoff end), the
+  `Shared/Weapons` spec value (flagged when the kit's own falloff differs), dummy health and time-to-kill.
+- Leave with **BACK TO LOBBY** in the picker or the **LOBBY** pad behind the firing line.
+Layout and maths: `Shared/Range.lua`; server: `RangeService`; HUD: `RangeController`. Gates:
+`tools/check_range.luau`, `tools/check_range_service.luau`.
+
 ## Editing in Studio (no code)
 TuningService fills missing tuning values and upload helpers. `default.project.json` also declares these containers and specific Tuning attributes, so inspect the Rojo project as well as Studio's effective values:
 - `ReplicatedStorage.Tuning`  a Configuration with attributes (RoundSeconds, RoundsToWin, IntermissionSeconds,
