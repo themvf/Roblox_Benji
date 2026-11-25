@@ -6,7 +6,7 @@ description: Build or edit a data-driven map layout for this project (Convergenc
 # Roblox map building (this project)
 
 Maps are Lua data tables in `src/shared/Maps/<Name>.lua`, built by `MapService` at match start. Services are
-generic; the map supplies data. Read `Carrier.lua` as the reference layout and `Forest.lua` for a terrain map.
+generic; the map supplies data. Read `SnowFortress.lua` as the reference layout and `Snow.lua` for a terrain map.
 
 ## Layout schema (what a map may declare)
 - `Name, Size, WallHeight, Seed`
