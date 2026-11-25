@@ -21,7 +21,7 @@ local CLOSED = Theme.Team.Closed
 local PANEL = Theme.Color.Panel
 local TEXT = Theme.Color.Text
 local ACCENT = Theme.Color.Accent
-local MUTED_ACCENT = Color3.fromRGB(150, 140, 110)
+local MUTED_ACCENT = Theme.Color.TextMuted
 
 local function corner(inst, r)
     local c = Instance.new("UICorner")
@@ -80,6 +80,22 @@ function ConvergenceController:BuildGui()
     end
     self.RedScore = score(0.03, RED, Enum.TextXAlignment.Left)
     self.BlueScore = score(0.67, BLUE, Enum.TextXAlignment.Right)
+    -- your side is underlined, so the bar itself says which team you are on, beside the badge
+    local function mark(x, color)
+        local m = Instance.new("Frame")
+        m.AnchorPoint = Vector2.new(0, 1)
+        m.Position = UDim2.new(x, 0, 1, -5)
+        m.Size = UDim2.fromOffset(30, 4)
+        m.BackgroundColor3 = color
+        m.BorderSizePixel = 0
+        m.Visible = false
+        m.Parent = top
+        corner(m, 2)
+        return m
+    end
+    self.RedMark = mark(0.03, RED)
+    self.BlueMark = mark(0.97, BLUE)
+    self.BlueMark.AnchorPoint = Vector2.new(1, 1)
 
     -- phase is context, the clock is the thing you glance at: one line, clock weighted heavier
     local mid = Instance.new("TextLabel")
@@ -136,34 +152,12 @@ function ConvergenceController:BuildGui()
     self.FinalLabel = final
     self.Chips = {}
 
-    -- Banner
-    -- Announcements sit ABOVE the crosshair, carry no panel behind them, and leave quickly.
-    -- A dark rectangle parked in the middle of the screen is a sight blocker; a stroked word is not.
-    local banner = Instance.new("TextLabel")
-    banner.AnchorPoint = Vector2.new(0.5, 0)
-    banner.Size = UDim2.fromOffset(520, 44)
-    banner.BackgroundTransparency = 1
-    banner.Text = ""
-    banner.TextSize = Theme.textSize(Theme.Type.Title)
-    banner.Font = Enum.Font.GothamBlack
-    banner.TextColor3 = ACCENT
-    banner.Visible = false
-    banner.Parent = root
-    banner.TextWrapped = true
-    local stroke = Instance.new("UIStroke") -- legibility against snow without a container
-    stroke.Thickness = 2
-    stroke.Color = Color3.fromRGB(12, 14, 18)
-    stroke.Transparency = 0.15
-    stroke.Parent = banner
-    self.BannerStroke = stroke
-    self.Banner = banner
-
-    -- The stack is laid out top-down from the safe-area inset and re-laid out on every screen
-    -- change, so the bar, the chips and the banner never overlap each other or drift under the
-    -- topbar. The banner stays above Screen.Aim: the middle of the screen stays readable.
+    -- Announcements go through the HUD's one notice line (HudController:Notify), which seats
+    -- itself under this stack. The stack is laid out top-down from the safe-area inset and
+    -- re-laid out on every screen change, so the bar and the chips never overlap each other or
+    -- drift under the topbar.
     Screen.autoScale(top)
     Screen.autoScale(row)
-    Screen.autoScale(banner)
     Screen.onChange(function(state)
         local k = state.Scale
         local topY = state.Insets.Top
@@ -171,18 +165,15 @@ function ConvergenceController:BuildGui()
         row.Position = UDim2.new(0.5, 0, 0, topY + math.floor(54 * k) + 8)
         final.Size = UDim2.fromOffset(math.min(320, state.Viewport.X - 32), 28)
         final.Position = UDim2.new(0.5, 0, 0, topY + math.floor(94 * k) + 10)
-        banner.Size = UDim2.fromOffset(state.Touch and 300 or 520, state.Touch and 28 or 44)
-        banner.TextSize = state.Touch and 14 or Theme.textSize(Theme.Type.Title)
-        banner.Position = UDim2.new(0.5, 0, 0, topY + math.floor(94 * k) + 42)
     end)
 end
 
--- Banner form of the same vocabulary: square, diamond, circle, bar. Keeps a banner a single
--- TextLabel while still never naming an objective.
-local GLYPH_CHAR = { "\u{25A0}", "\u{25C6}", "\u{25CF}", "\u{25AE}" }
+-- Notices name a zone by the same letter its chip shows, so "RED CAPTURED B" points at a chip
+-- the player can see. (The world keeps its shapes; the HUD speaks letters.)
+local ZONE_LETTER = { "A", "B", "C", "D" }
 
 local function glyphChar(index)
-    return GLYPH_CHAR[index or 0] or "\u{25CF}"
+    return ZONE_LETTER[index or 0] or "?"
 end
 
 -- shared with other controllers (bounty pings) so there is one vocabulary, not two
@@ -299,6 +290,9 @@ function ConvergenceController:Apply(snap)
     self.Gui.Enabled = true
     self.RedScore.Text = tostring(math.floor(snap.Score.Red))
     self.BlueScore.Text = tostring(math.floor(snap.Score.Blue))
+    local team = Players.LocalPlayer:GetAttribute("Team")
+    self.RedMark.Visible = team == "Red"
+    self.BlueMark.Visible = team == "Blue"
     local left = math.max(0, snap.PhaseTimeLeft or 0)
     if snap.Overtime then
         self.PhaseLabel.Text = "OVERTIME"
@@ -349,7 +343,7 @@ function ConvergenceController:RevealFinale(data)
     self.RevealedMatchId = data.MatchId
     self.FinalLabel.Text = "FINAL: " .. data.Name:upper()
     self.FinalLabel.Visible = true
-    self:ShowBanner("FINAL DISTRICT: " .. data.Name:upper(), ACCENT)
+    self:ShowBanner("FINAL DISTRICT: " .. data.Name:upper(), ACCENT, "Zone")
     local soundId = Uploads.resolve("upload:FinaleReveal_" .. data.Id) or Uploads.resolve("upload:FinaleReveal")
     if soundId then
         local sound = Instance.new("Sound")
@@ -378,31 +372,11 @@ function ConvergenceController:RevealFinale(data)
     end
 end
 
-function ConvergenceController:ShowBanner(text, color)
-    local b = self.Banner
-    b.Text = text
-    b.TextColor3 = color or ACCENT
-    b.Visible = true
-    b.TextTransparency = 0
-    self.BannerStroke.Transparency = 0.15
-    if self.BannerToken then
-        self.BannerToken = self.BannerToken + 1
-    else
-        self.BannerToken = 1
-    end
-    local token = self.BannerToken
-    task.delay(1.5, function()
-        if self.BannerToken ~= token then
-            return
-        end
-        TweenService:Create(b, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
-        TweenService:Create(self.BannerStroke, TweenInfo.new(0.3), { Transparency = 1 }):Play()
-        task.delay(0.3, function()
-            if self.BannerToken == token then
-                b.Visible = false
-            end
-        end)
-    end)
+-- Kept as the name other controllers call (mutation, bounties); it now feeds the HUD's one
+-- notice line, so a Duel shows these too -- the old banner lived in this gui, which is off
+-- outside Convergence, and silently swallowed them.
+function ConvergenceController:ShowBanner(text, color, icon)
+    Knit.GetController("HudController"):Notify(text, color or ACCENT, icon)
 end
 
 function ConvergenceController:KnitStart()
@@ -415,29 +389,35 @@ function ConvergenceController:KnitStart()
         if kind == "FinaleRevealed" then
             self:RevealFinale(data)
         elseif kind == "ZoneCaptured" then
-            self:ShowBanner((data.Team or ""):upper() .. " CAPTURED " .. glyphChar(data.Index), teamColor(data.Team))
+            self:ShowBanner(
+                (data.Team or ""):upper() .. " CAPTURED " .. glyphChar(data.Index),
+                teamColor(data.Team),
+                "Zone"
+            )
         elseif kind == "ZoneNeutralized" then
-            self:ShowBanner(glyphChar(data.Index) .. " NEUTRALIZED", NEUTRAL)
+            self:ShowBanner(glyphChar(data.Index) .. " NEUTRALIZED", NEUTRAL, "Zone")
         elseif kind == "ZoneClosing" then
-            self:ShowBanner(glyphChar(data.Index) .. " CLOSING IN " .. data.Seconds .. "s", ACCENT)
+            self:ShowBanner(glyphChar(data.Index) .. " CLOSING IN " .. data.Seconds .. "s", ACCENT, "Zone")
         elseif kind == "ZoneClosed" then
-            self:ShowBanner(glyphChar(data.Index) .. " CLOSED", CLOSED)
+            self:ShowBanner(glyphChar(data.Index) .. " CLOSED", CLOSED, "Zone")
         elseif kind == "Phase" then
             self:ShowBanner(
                 ("PHASE %d   %d ZONE%s"):format(data.Phase, data.Zones, data.Zones == 1 and "" or "S"),
-                ACCENT
+                ACCENT,
+                "Zone"
             )
         elseif kind == "MapEventWarning" then
             self:ShowBanner(
                 (data.Banner or data.Name:upper()) .. "  " .. tostring(data.Seconds) .. "s",
-                Theme.Color.Danger
+                Theme.Color.Danger,
+                "Info"
             )
         elseif kind == "MapEventStart" then
-            self:ShowBanner(data.Banner or data.Name:upper(), Theme.Color.Danger)
+            self:ShowBanner(data.Banner or data.Name:upper(), Theme.Color.Danger, "Info")
         elseif kind == "MapEventEnd" then
-            self:ShowBanner(data.Name:upper() .. " CLEAR", NEUTRAL)
+            self:ShowBanner(data.Name:upper() .. " CLEAR", NEUTRAL, "Info")
         elseif kind == "Overtime" then
-            self:ShowBanner("OVERTIME", ACCENT)
+            self:ShowBanner("OVERTIME", ACCENT, "Zone")
         end
     end)
     -- hide when the round system says we're back in the lobby or in a Duel

@@ -1,16 +1,50 @@
--- Minimal HUD: round state, score, ammo. Replace with real UI later.
+-- The top of the screen, Rivals-style: one score bar during a Duel round (red score, clock,
+-- blue score, your side underlined), one status line in the lobby and between rounds, and
+-- one notice line under them that every other system announces through -- pickups, safety,
+-- mutation, bounties, zone events. Convergence owns the top during its rounds, so this
+-- whole stack steps aside then and only the notice line stays.
+--
+-- Notices are an icon and a few words, never an instruction sentence: "SPEED" with a bolt,
+-- not "SPEED BOOST picked up, press Shift". Health, ammo and the hotbar live at the bottom
+-- (VitalsController, WeaponBarController).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local Screen = require(script.Parent.Parent.UI.Screen)
 local Theme = require(script.Parent.Parent.UI.Theme)
+local Icons = require(script.Parent.Parent.UI.Icons)
 
 local HudController = Knit.CreateController({ Name = "HudController" })
 
--- Slowly spin the kiosk showcase weapon so it catches the eye
+local PANEL = Theme.Color.Panel
+local TEXT = Theme.Color.Text
+local MUTED = Theme.Color.TextMuted
+local ACCENT = Theme.Color.Accent
+
+-- Server notices arrive as plain text; the icon is picked from what they say.
+local NOTICE_ICONS = {
+    { "SPEED", "Speed" },
+    { "JETPACK", "Fuel" },
+    { "PICKED UP", "Ammo" },
+    { "EXPIRED", "Ammo" },
+    { "RECOVERED", "Info" },
+    { "OUT OF BOUNDS", "Info" },
+}
+
+local function noticeIcon(text)
+    local upper = text:upper()
+    for _, pair in NOTICE_ICONS do
+        if upper:find(pair[1], 1, true) then
+            return pair[2]
+        end
+    end
+    return "Info"
+end
+
 -- Lobby nameplates: a flame + status for anyone on a visible streak (Phase 1 visibility)
 local function streakNameplates()
-    local RunService = game:GetService("RunService")
     local plates = {}
     RunService.Heartbeat:Connect(function()
         if os.clock() - (plates._t or 0) < 1 then
@@ -49,8 +83,8 @@ local function streakNameplates()
     end)
 end
 
+-- Slowly spin the kiosk showcase weapon so it catches the eye
 local function spinShowcase()
-    local RunService = game:GetService("RunService")
     task.spawn(function()
         local lobby = workspace:WaitForChild("Lobby", 30)
         local show = lobby and lobby:WaitForChild("Showcase", 30)
@@ -66,66 +100,261 @@ local function spinShowcase()
     end)
 end
 
+local function corner(inst, r)
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, r)
+    c.Parent = inst
+end
+
+local function text(parent, size, font, color)
+    local l = Instance.new("TextLabel")
+    l.BackgroundTransparency = 1
+    l.TextSize = Theme.textSize(size)
+    l.Font = font
+    l.TextColor3 = color
+    l.Text = ""
+    l.Parent = parent
+    return l
+end
+
+function HudController:BuildScoreBar(gui)
+    -- Duel score bar. Your team is the underlined side, so it reads without colour too.
+    local bar = Instance.new("Frame")
+    bar.Name = "ScoreBar"
+    bar.AnchorPoint = Vector2.new(0.5, 0)
+    bar.Size = UDim2.fromOffset(280, 48)
+    bar.BackgroundColor3 = PANEL
+    bar.BackgroundTransparency = Theme.Transparency.Panel
+    bar.Visible = false
+    bar.Parent = gui
+    corner(bar, 12)
+    Screen.autoScale(bar)
+    self.ScoreBar = bar
+
+    local function side(x, team)
+        local l = text(bar, Theme.Type.Display, Enum.Font.GothamBlack, Theme.team(team))
+        l.Position = UDim2.fromScale(x, 0)
+        l.Size = UDim2.fromScale(0.3, 1)
+        l.Text = "0"
+        local mark = Instance.new("Frame")
+        mark.AnchorPoint = Vector2.new(0.5, 1)
+        mark.Position = UDim2.new(0.5, 0, 1, -5)
+        mark.Size = UDim2.fromOffset(30, 4)
+        mark.BackgroundColor3 = Theme.team(team)
+        mark.BorderSizePixel = 0
+        mark.Visible = false
+        mark.Parent = l
+        corner(mark, 2)
+        return l, mark
+    end
+    self.RedScore, self.RedMark = side(0.02, "Red")
+    self.BlueScore, self.BlueMark = side(0.68, "Blue")
+
+    local clock = text(bar, Theme.Type.Title, Enum.Font.GothamBlack, TEXT)
+    clock.Position = UDim2.fromScale(0.3, 0)
+    clock.Size = UDim2.fromScale(0.4, 1)
+    self.Clock = clock
+end
+
+function HudController:BuildStatus(gui)
+    -- Lobby and between rounds: one line, e.g. "NEXT MAP  SNOW FORTRESS  0:05".
+    local status = text(gui, Theme.Type.Body, Enum.Font.GothamBold, TEXT)
+    status.Name = "Status"
+    status.AnchorPoint = Vector2.new(0.5, 0)
+    status.AutomaticSize = Enum.AutomaticSize.X
+    status.Size = UDim2.fromOffset(0, 34)
+    status.BackgroundColor3 = PANEL
+    status.BackgroundTransparency = Theme.Transparency.Panel
+    status.Visible = false
+    corner(status, 10)
+    local pad = Instance.new("UIPadding")
+    pad.PaddingLeft = UDim.new(0, 14)
+    pad.PaddingRight = UDim.new(0, 14)
+    pad.Parent = status
+    Screen.autoScale(status)
+    self.Status = status
+end
+
+function HudController:BuildNotice(gui)
+    -- An icon and a few stroked words above the crosshair, no panel: a dark box in the middle
+    -- of the screen is a sight blocker, a word is not.
+    local notice = Instance.new("Frame")
+    notice.Name = "Notice"
+    notice.AnchorPoint = Vector2.new(0.5, 0)
+    notice.AutomaticSize = Enum.AutomaticSize.X
+    notice.Size = UDim2.fromOffset(0, 32)
+    notice.BackgroundTransparency = 1
+    notice.Visible = false
+    notice.Parent = gui
+    Screen.autoScale(notice)
+    local layout = Instance.new("UIListLayout")
+    layout.FillDirection = Enum.FillDirection.Horizontal
+    layout.VerticalAlignment = Enum.VerticalAlignment.Center
+    layout.Padding = UDim.new(0, 8)
+    layout.SortOrder = Enum.SortOrder.LayoutOrder
+    layout.Parent = notice
+
+    local iconHolder = Instance.new("Frame")
+    iconHolder.Size = UDim2.fromOffset(28, 28)
+    iconHolder.BackgroundTransparency = 1
+    iconHolder.LayoutOrder = 1
+    iconHolder.Parent = notice
+    local icon = Icons.make(iconHolder, "Info")
+    if icon:IsA("TextLabel") then
+        Theme.overWorld(icon) -- a UIStroke on an ImageLabel would outline its box, not the glyph
+    end
+
+    local label = text(notice, Theme.Type.Title, Enum.Font.GothamBlack, ACCENT)
+    label.LayoutOrder = 2
+    label.AutomaticSize = Enum.AutomaticSize.X
+    label.Size = UDim2.fromOffset(0, 32)
+    Theme.overWorld(label)
+
+    self.Notice, self.NoticeIcon, self.NoticeLabel = notice, icon, label
+    self.NoticeToken = 0
+end
+
+-- Announce something. `icon` is an Icons name; omitted, it is inferred from the text.
+function HudController:Notify(message: string, color: Color3?, icon: string?, seconds: number?)
+    if not self.Notice then
+        return
+    end
+    color = color or ACCENT
+    Icons.set(self.NoticeIcon, icon or noticeIcon(message))
+    Icons.tint(self.NoticeIcon, color)
+    self.NoticeLabel.Text = message:upper()
+    self.NoticeLabel.TextColor3 = color
+    self.NoticeLabel.TextTransparency = 0
+    self.Notice.Visible = true
+    self.NoticeToken += 1
+    local token = self.NoticeToken
+    task.delay(seconds or 1.8, function()
+        if self.NoticeToken ~= token then
+            return
+        end
+        TweenService:Create(self.NoticeLabel, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
+        task.delay(0.3, function()
+            if self.NoticeToken == token then
+                self.Notice.Visible = false
+            end
+        end)
+    end)
+end
+
+-- Lay the stack out top-down from the safe area. The notice goes under whichever bar is up:
+-- the Convergence bar and its zone chips are taller than the Duel score bar.
+function HudController:Layout()
+    local state = Screen.get()
+    local k = state.Scale
+    local topY = state.Insets.Top
+    self.ScoreBar.Position = UDim2.new(0.5, 0, 0, topY)
+    self.Status.Position = UDim2.new(0.5, 0, 0, topY)
+    local conv = Knit.GetController("ConvergenceController")
+    local below
+    if conv.Gui and conv.Gui.Enabled then
+        below = topY + math.floor(102 * k) + 8
+    elseif self.ScoreBar.Visible then
+        below = topY + math.floor(48 * k) + 8
+    elseif self.Status.Visible then
+        below = topY + math.floor(34 * k) + 8
+    else
+        below = topY + 8
+    end
+    self.Notice.Position = UDim2.new(0.5, 0, 0, below)
+end
+
+function HudController:ApplyTeam()
+    local team = Players.LocalPlayer:GetAttribute("Team")
+    self.RedMark.Visible = team == "Red"
+    self.BlueMark.Visible = team == "Blue"
+end
+
+function HudController:OnState(s, data)
+    local convergence = data.Mode == "Convergence"
+    self.Deadline = data.Time and (os.clock() + data.Time) or nil
+    self.StatusText = nil
+
+    if data.Score then
+        self.RedScore.Text = tostring(math.floor(data.Score.Red))
+        self.BlueScore.Text = tostring(math.floor(data.Score.Blue))
+    end
+    -- Duel rounds get the score bar; Convergence rounds have their own bar.
+    self.ScoreBar.Visible = not convergence and (s == "Round" or s == "RoundOver")
+    self.Clock.Text = ""
+
+    if s == "Lobby" then
+        self.StatusText = "CHOOSE PLAY OR ENTER THE ARENA GATE"
+    elseif s == "Intermission" then
+        self.StatusText = data.Map and ("NEXT MAP  " .. (data.Map:gsub("(%l)(%u)", "%1 %2")):upper()) or "GET READY"
+        local wanted = {}
+        for _, p in Players:GetPlayers() do
+            if p:GetAttribute("InMatch") and (p:GetAttribute("CurrentStreak") or 0) >= 3 then
+                table.insert(wanted, p.Name)
+            end
+        end
+        if #wanted > 0 then
+            self:Notify("WANTED  " .. table.concat(wanted, ", "), Theme.Color.Warn, "Info", 4)
+        end
+        self:PlayVista(data)
+    elseif s == "RoundOver" and data.Winner then
+        self:Notify(data.Winner .. " WINS THE ROUND", Theme.team(data.Winner), "Zone", 3)
+    elseif s == "MatchOver" and not data.Aborted and data.Score then
+        local red, blue = data.Score.Red, data.Score.Blue
+        local winner = red > blue and "Red" or (blue > red and "Blue" or nil)
+        self.StatusText = winner and (winner:upper() .. " WINS") or "DRAW"
+    end
+    self.Status.Visible = self.StatusText ~= nil
+    self.Status.Text = self.StatusText or ""
+    self:ApplyTeam()
+    self:Layout()
+end
+
+-- Hero view: hold the camera on the map's vista for a couple of seconds
+function HudController:PlayVista(data)
+    local v = data.Vista
+    if not v then
+        return
+    end
+    local cam = workspace.CurrentCamera
+    cam.CameraType = Enum.CameraType.Scriptable
+    cam.CFrame = CFrame.lookAt(Vector3.new(v.pos[1], v.pos[2], v.pos[3]), Vector3.new(v.look[1], v.look[2], v.look[3]))
+    local tween = TweenService:Create(
+        cam,
+        TweenInfo.new(v.seconds or 2.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+        { CFrame = cam.CFrame * CFrame.new(6, -2, 0) }
+    )
+    tween:Play()
+    task.delay(math.min((v.seconds or 2.5), (data.Time or 5) - 0.5), function()
+        if cam.CameraType == Enum.CameraType.Scriptable then
+            cam.CameraType = Enum.CameraType.Custom
+        end
+    end)
+end
+
 function HudController:KnitStart()
     spinShowcase()
     streakNameplates()
     local gui = Screen.newScreenGui("Hud", Screen.Layers.Hud)
     gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
-
-    local function label(pos)
-        local l = Instance.new("TextLabel")
-        l.Size = UDim2.fromScale(0.3, 0.06)
-        l.Position = pos
-        -- 0.4 put muted text at 2.8:1 over a bright sky; Theme holds it at 5.8:1.
-        l.BackgroundTransparency = Theme.Transparency.Panel
-        l.BackgroundColor3 = Color3.new(0, 0, 0)
-        l.TextColor3 = Color3.new(1, 1, 1)
-        l.TextScaled = true
-        l.Font = Enum.Font.GothamBold
-        l.Parent = gui
-        return l
-    end
-    local state = label(UDim2.fromScale(0.35, 0.02))
-    state.AnchorPoint = Vector2.new(0.5, 0)
-    -- Pickup and safety toasts. They used to sit under the round state in the top centre, which
-    -- on a phone is exactly where the Convergence zone chips are and just above the crosshair.
-    -- The left edge, between the Roblox topbar and the movement thumbstick, is free on every
-    -- device, and a toast there never covers the fight.
-    local toast = label(UDim2.fromScale(0.35, 0.16))
-    toast.Size = UDim2.fromScale(0.3, 0.05)
-    toast.AnchorPoint = Vector2.new(0, 0)
-    toast.TextXAlignment = Enum.TextXAlignment.Left
-    toast.TextColor3 = Theme.Color.Accent
-    toast.Visible = false
-    local toastToken = 0
-    Knit.GetService("SafetyService").Notice:Connect(function(text)
-        toast.Text = text
-        toast.Visible = true
-        toastToken += 1
-        local mine = toastToken
-        task.delay(2.5, function()
-            if toastToken == mine then
-                toast.Visible = false
-            end
-        end)
+    self:BuildScoreBar(gui)
+    self:BuildStatus(gui)
+    self:BuildNotice(gui)
+    Screen.onChange(function()
+        self:Layout()
     end)
-    Knit.GetService("PickupService").Notice:Connect(function(text)
-        toast.Text = text
-        toast.Visible = true
-        toastToken += 1
-        local mine = toastToken
-        task.delay(1.6, function()
-            if toastToken == mine then
-                toast.Visible = false
-            end
-        end)
+
+    Knit.GetService("SafetyService").Notice:Connect(function(message)
+        self:Notify(message, MUTED)
+    end)
+    Knit.GetService("PickupService").Notice:Connect(function(message)
+        self:Notify(message, ACCENT)
     end)
     -- mild camera rumble for flyovers / kraken
     Knit.GetService("AmbientService").Rumble:Connect(function(strength, seconds)
         local cam = workspace.CurrentCamera
         local t0 = os.clock()
         local conn
-        conn = game:GetService("RunService").RenderStepped:Connect(function()
+        conn = RunService.RenderStepped:Connect(function()
             local t = os.clock() - t0
             if t > seconds then
                 conn:Disconnect()
@@ -136,117 +365,28 @@ function HudController:KnitStart()
                 * CFrame.Angles(math.rad((math.random() - 0.5) * k), math.rad((math.random() - 0.5) * k), 0)
         end)
     end)
-    local RunService = game:GetService("RunService")
-    local timer = label(UDim2.fromScale(0.42, 0.085))
-    timer.Size = UDim2.fromScale(0.16, 0.06)
-    timer.AnchorPoint = Vector2.new(0.5, 0)
-    timer.TextColor3 = Theme.Color.Accent
-    timer.Visible = false
-    local fuel = label(UDim2.fromScale(0.02, 0.9))
-    fuel.Size = UDim2.fromScale(0.16, 0.05)
-    fuel.TextColor3 = Theme.Color.Warn
-    fuel.Visible = false
 
-    -- All four readouts are re-anchored whenever the screen changes. The rules: hang off the
-    -- safe-area inset rather than the raw screen edge, keep out of Screen.Aim (the middle
-    -- of the screen), and on touch keep out of the bottom corners, which belong to Roblox's
-    -- thumbstick, jump button and the Weapons Kit fire button.
-    Screen.onChange(function(view)
-        local topY = view.Insets.Top
-        state.Position = UDim2.new(0.5, 0, 0, topY)
-        -- AbsoluteSize is still 0 on the first frame, so derive the row height from the viewport.
-        timer.Position = UDim2.new(0.5, 0, 0, topY + math.floor(view.Viewport.Y * 0.06) + 4)
-        toast.Position = UDim2.new(0, view.Insets.Left, 0.30, 0)
-        toast.Size = UDim2.fromScale(view.Touch and 0.34 or 0.26, 0.05)
-        if view.Touch then
-            -- bottom-left is the movement thumbstick; sit above it on the same edge
-            fuel.Position = UDim2.new(0, view.Insets.Left, 0.40, 0)
-        else
-            fuel.Position = UDim2.new(0, view.Insets.Left, 1, -view.Insets.Bottom - 40)
-        end
-        fuel.Size = UDim2.fromScale(view.Touch and 0.22 or 0.16, 0.05)
+    Knit.GetService("RoundService").StateChanged:Connect(function(s, data)
+        self:OnState(s, data or {})
+    end)
+    Players.LocalPlayer:GetAttributeChangedSignal("Team"):Connect(function()
+        self:ApplyTeam()
     end)
 
-    local RoundService = Knit.GetService("RoundService")
-    local deadline = nil
-    RoundService.StateChanged:Connect(function(s, data)
-        local text = s
-        if s == "Lobby" then
-            text = "Choose PLAY or enter the arena gate"
-        elseif data.Mode then
-            text = data.Mode .. "  " .. s
-        end
-        if s == "Intermission" and data.Map then
-            text = ("%s  Next map: %s"):format(data.Mode or "", data.Map)
-            local wanted = {}
-            for _, p in Players:GetPlayers() do
-                if p:GetAttribute("InMatch") and (p:GetAttribute("CurrentStreak") or 0) >= 3 then
-                    table.insert(
-                        wanted,
-                        ("%s (%d-match streak, %s)"):format(
-                            p.Name,
-                            p:GetAttribute("CurrentStreak"),
-                            p:GetAttribute("StreakStatus") or ""
-                        )
-                    )
-                end
-            end
-            if #wanted > 0 then
-                text = text .. "\nWANTED: " .. table.concat(wanted, "  ·  ")
-            end
-            -- Hero view: hold the camera on the map's vista for a couple of seconds
-            if data.Vista then
-                local cam = workspace.CurrentCamera
-                local v = data.Vista
-                cam.CameraType = Enum.CameraType.Scriptable
-                cam.CFrame = CFrame.lookAt(
-                    Vector3.new(v.pos[1], v.pos[2], v.pos[3]),
-                    Vector3.new(v.look[1], v.look[2], v.look[3])
-                )
-                local tween = game:GetService("TweenService"):Create(
-                    cam,
-                    TweenInfo.new(v.seconds or 2.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                    { CFrame = cam.CFrame * CFrame.new(6, -2, 0) }
-                )
-                tween:Play()
-                task.delay(math.min((v.seconds or 2.5), (data.Time or 5) - 0.5), function()
-                    if cam.CameraType == Enum.CameraType.Scriptable then
-                        cam.CameraType = Enum.CameraType.Custom
-                    end
-                end)
-            end
-        end
-        -- Convergence has its own top bar; keep this label out of the way during play
-        state.Visible = not (data.Mode == "Convergence" and s == "Round")
-        -- Countdown for any state that carries a Time (Intermission, Round)
-        if data.Time then
-            deadline = os.clock() + data.Time
-            timer.Visible = true
-        else
-            deadline = nil
-            timer.Visible = false
-        end
-        if data.Winner then
-            text ..= " - " .. data.Winner .. " wins"
-        end
-        if data.Score then
-            text ..= "  Red " .. data.Score.Red .. " - " .. data.Score.Blue .. " Blue"
-        end
-        state.Text = text
-    end)
-
+    local lastLayout = 0
     RunService.RenderStepped:Connect(function()
-        if deadline then
-            local left = math.max(0, deadline - os.clock())
-            timer.Text = ("%d:%02d"):format(math.floor(left / 60), math.floor(left % 60))
+        if self.Deadline then
+            local left = math.max(0, self.Deadline - os.clock())
+            local clock = ("%d:%02d"):format(math.floor(left / 60), math.floor(left % 60))
+            self.Clock.Text = clock
+            if self.StatusText then
+                self.Status.Text = self.StatusText .. "  " .. clock
+            end
         end
-        local character = Players.LocalPlayer.Character
-        local tool = character and character:FindFirstChildOfClass("Tool")
-        if tool and tool.Name == "Jetpack" then
-            fuel.Visible = true
-            fuel.Text = ("FUEL  %d"):format(tool:GetAttribute("Fuel") or 0)
-        else
-            fuel.Visible = false
+        -- the Convergence bar appears on its own schedule; re-seat the notice a few times a second
+        if os.clock() - lastLayout > 0.25 then
+            lastLayout = os.clock()
+            self:Layout()
         end
     end)
 end

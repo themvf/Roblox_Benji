@@ -26,7 +26,8 @@ local Screen = {}
 
 -- One DisplayOrder table so layers stop fighting. Higher wins.
 Screen.Layers = {
-    Hud = 2, -- round state, timers, toasts
+    Hud = 2, -- score bar, status line, notices
+    Hotbar = 3, -- weapon slots, health and ammo: under the objective readout and the touch buttons
     Objective = 4, -- Convergence top bar and zone chips
     Meter = 6, -- mutation / jetpack meters
     Touch = 8, -- on-screen buttons: always above the readouts they drive

@@ -1,6 +1,7 @@
 -- Touch HUD for phones and tablets. Draws big on-screen buttons for everything the desktop
 -- build binds to keys: Mutate (Q), Ground Slam / Brace / Charge (E/F/C), crouch and slide
--- (Ctrl/C), hold-to-fly for the jetpack, a scoreboard toggle (Tab) and the celebration skip
+-- (Ctrl/C), a scope toggle for scoped weapons (right mouse), hold-to-fly for the jetpack, a
+-- scoreboard toggle (Tab) and the celebration skip
 -- vote (V). Sprint needs no button: touch players sprint whenever they move, as in Rivals. Guns already get a fire
 -- button and drag-to-aim from the Weapons Kit, and movement/jump come from Roblox's own touch
 -- controls, so those are not duplicated here. Only rendering and input: every action goes
@@ -12,6 +13,7 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local AlterEgos = require(ReplicatedStorage.Shared.AlterEgos)
 local Screen = require(script.Parent.Parent.UI.Screen)
 local Theme = require(script.Parent.Parent.UI.Theme)
+local Icons = require(script.Parent.Parent.UI.Icons)
 
 local TouchController = Knit.CreateController({ Name = "TouchController" })
 
@@ -21,7 +23,20 @@ local MUTED = Theme.Color.TextMuted
 local READY = Theme.Color.Energy
 local FLY = Theme.Color.Fly
 
-local ABILITY_SHORT = { GroundSlam = "SLAM", Brace = "BRACE", Charge = "CHARGE" }
+-- The Weapons Kit's shoulder camera. It zooms only while right mouse or L2 is held and has
+-- no touch input, so a scoped weapon could not aim at all on a phone; SCOPE drives it.
+local kitCamera = nil
+local function scopeCamera()
+    if not kitCamera then
+        local folder = ReplicatedStorage:FindFirstChild("WeaponsSystem")
+        local module = folder and folder:FindFirstChild("WeaponsSystem")
+        if module then
+            local ok, system = pcall(require, module)
+            kitCamera = ok and system and system.camera or nil
+        end
+    end
+    return kitCamera
+end
 
 -- Touch device = a phone or tablet per Screen's device class (a laptop with a touchscreen keeps
 -- its keyboard layout, an iPad with a Magic Keyboard stays a tablet).
@@ -50,9 +65,10 @@ local function stroke(inst, color)
     return s
 end
 
--- A round button with a label, a fill that rises from the bottom (energy, fuel, cooldown
--- progress) and a small sub label underneath the text.
-local function makeButton(parent, text, color)
+-- A round button with an icon, a fill that rises from the bottom (energy, fuel, cooldown
+-- progress) and a small sub label under the icon for a number only (seconds, percent) --
+-- never an instruction like "tap" or "hold".
+local function makeButton(parent, iconName, color)
     local b = Instance.new("TextButton")
     b.Size = UDim2.fromOffset(Screen.MIN_TAP, Screen.MIN_TAP)
     b.BackgroundColor3 = PANEL
@@ -74,20 +90,15 @@ local function makeButton(parent, text, color)
     fill.Parent = b
     round(fill)
 
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.fromScale(1, 0.4)
-    label.Position = UDim2.fromScale(0, 0.22)
-    label.BackgroundTransparency = 1
-    label.Text = text
-    label.TextScaled = true
-    label.Font = Enum.Font.GothamBlack
-    label.TextColor3 = TEXT
-    label.ZIndex = 2
-    label.Parent = b
-    local pad = Instance.new("UIPadding")
-    pad.PaddingLeft = UDim.new(0, 8)
-    pad.PaddingRight = UDim.new(0, 8)
-    pad.Parent = label
+    local icon = Icons.make(b, iconName, UDim2.fromScale(0.5, 0.5))
+    icon.AnchorPoint = Vector2.new(0.5, 0.5)
+    icon.Position = UDim2.fromScale(0.5, 0.4)
+    icon.ZIndex = 2
+    if icon:IsA("ImageLabel") then
+        icon.SizeConstraint = Enum.SizeConstraint.RelativeYY -- square glyph
+    else
+        icon.Size = UDim2.fromScale(0.9, 0.36) -- the word fallback needs the width
+    end
 
     local sub = Instance.new("TextLabel")
     sub.Size = UDim2.fromScale(1, 0.22)
@@ -100,7 +111,7 @@ local function makeButton(parent, text, color)
     sub.ZIndex = 2
     sub.Parent = b
 
-    return { Button = b, Ring = ring, Fill = fill, Label = label, Sub = sub, Color = color }
+    return { Button = b, Ring = ring, Fill = fill, Icon = icon, Sub = sub, Color = color }
 end
 
 -- Hold detection for a button: onChange(true) on press, onChange(false) on release, including
@@ -159,9 +170,8 @@ function TouchController:BuildGui()
     self.ColumnLayout = col
 
     -- FLY: hold while the jetpack is equipped
-    self.Fly = makeButton(column, "FLY", FLY)
+    self.Fly = makeButton(column, "Fuel", FLY)
     self.Fly.Button.LayoutOrder = 10
-    self.Fly.Sub.Text = "hold"
     self.Fly.Button.Visible = false
     holdable(self.Fly.Button, function(down)
         Knit.GetController("JetpackController").TouchHold = down
@@ -170,7 +180,7 @@ function TouchController:BuildGui()
     -- Abilities: only while mutated, above the mutate slot they replace
     self.Abilities = {}
     for i, name in AlterEgos.ABILITY_ORDER do
-        local b = makeButton(column, ABILITY_SHORT[name] or name, READY)
+        local b = makeButton(column, Icons.ABILITY[name] or "Info", READY)
         b.Button.LayoutOrder = 20 + i
         b.Button.Visible = false
         b.Button.Activated:Connect(function()
@@ -181,14 +191,26 @@ function TouchController:BuildGui()
 
     -- CROUCH / SLIDE: one button, as in Rivals. Tap to crouch (tap again to stand); while
     -- running it becomes SLIDE. Next to MUTATE, the other most-reached-for button.
-    self.Crouch = makeButton(column, "CROUCH", READY)
+    self.Crouch = makeButton(column, "Crouch", READY)
     self.Crouch.Button.LayoutOrder = 80
     self.Crouch.Button.Activated:Connect(function()
         Knit.GetController("MovementController"):TouchCrouch()
     end)
 
+    -- SCOPE: tap to look down a scoped weapon's sight, tap again to come out. Only while
+    -- one is held. Fire with the kit's fire button as usual.
+    self.Scope = makeButton(column, "Scope", Theme.Color.Accent)
+    self.Scope.Button.LayoutOrder = 70
+    self.Scope.Button.Visible = false
+    self.Scope.Button.Activated:Connect(function()
+        local cam = scopeCamera()
+        if cam then
+            cam:setZoomedFromInput(not cam.zoomedFromInput)
+        end
+    end)
+
     -- MUTATE: the most-used button, so it sits closest to the resting thumb
-    self.Mutate = makeButton(column, "TITAN", READY)
+    self.Mutate = makeButton(column, "Mutate", READY)
     self.Mutate.Button.LayoutOrder = 90
     self.Mutate.Button.Activated:Connect(function()
         Knit.GetController("MutationController"):Activate()
@@ -215,8 +237,14 @@ function TouchController:BuildGui()
 
     -- SCORES: toggles the Tab scoreboard. Right edge, below the objective bar and clear of the
     -- aim zone; the safe-area inset keeps it off a notch in landscape.
-    self.Scores = pill("SCORES", 104)
+    self.Scores = pill("", Screen.MIN_TAP)
     self.Scores.AnchorPoint = Vector2.new(1, 0)
+    local scoresIcon = Icons.make(self.Scores, "Scores", UDim2.fromScale(0.6, 0.6))
+    scoresIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    scoresIcon.Position = UDim2.fromScale(0.5, 0.5)
+    if scoresIcon:IsA("TextLabel") then
+        scoresIcon.Size = UDim2.fromScale(0.9, 0.5)
+    end
 
     -- SKIP: vote to skip the celebration. Bottom centre, above the skip label.
     self.Skip = pill("SKIP CELEBRATION", 210)
@@ -256,8 +284,21 @@ function TouchController:Update()
     if jet.Active and jet.MaxFuel > 0 then
         local frac = jet.Fuel / jet.MaxFuel
         self.Fly.Fill.Size = UDim2.fromScale(1, frac)
-        self.Fly.Sub.Text = ("HOLD %d%%"):format(100 * frac)
+        self.Fly.Sub.Text = ("%d%%"):format(100 * frac)
         self.Fly.Ring.Transparency = jet.Fuel > 0 and 0.2 or 0.8
+    end
+
+    -- SCOPE: whenever the held weapon has a scope. Put away or swapped, the toggle resets, so
+    -- drawing the sniper again does not open straight into the scope.
+    local cam = scopeCamera()
+    local scoped = cam ~= nil and cam.enabled == true and cam.hasScope == true and cam.currentTool ~= nil
+    self.Scope.Button.Visible = scoped
+    if scoped then
+        local on = cam.zoomState == true
+        self.Scope.Ring.Transparency = on and 0 or 0.2
+        self.Scope.Fill.Size = UDim2.fromScale(1, on and 1 or 0)
+    elseif cam and cam.zoomedFromInput then
+        cam:setZoomedFromInput(false)
     end
 
     -- CROUCH / SLIDE: whenever the player can crouch, lobby included (maps are walked there)
@@ -270,18 +311,11 @@ function TouchController:Update()
         local stance = movement.Stance
         local cooldown = math.max(0, movement.SlideReadyAt - os.clock())
         local sliding = stance == "Sprint" or stance == "Slide"
-        self.Crouch.Label.Text = sliding and "SLIDE" or "CROUCH"
-        if stance == "Slide" then
-            self.Crouch.Sub.Text = "SLIDING"
-        elseif sliding and cooldown > 0 then
-            self.Crouch.Sub.Text = ("%.1fs"):format(cooldown)
-        elseif stance == "Crouch" then
-            self.Crouch.Sub.Text = "ON"
-        else
-            self.Crouch.Sub.Text = "tap"
-        end
+        Icons.set(self.Crouch.Icon, sliding and "Slide" or "Crouch")
+        -- on/off is the fill; the sub label only ever carries the cooldown
+        self.Crouch.Sub.Text = (sliding and stance ~= "Slide" and cooldown > 0) and ("%.1fs"):format(cooldown) or ""
         local ready = not (sliding and cooldown > 0)
-        self.Crouch.Label.TextColor3 = ready and TEXT or MUTED
+        Icons.tint(self.Crouch.Icon, ready and TEXT or MUTED)
         self.Crouch.Ring.Transparency = (stance == "Crouch" or stance == "Slide") and 0 or (ready and 0.2 or 0.7)
         self.Crouch.Fill.Size = UDim2.fromScale(1, (stance == "Crouch" or stance == "Slide") and 1 or 0)
     end
@@ -302,8 +336,8 @@ function TouchController:Update()
     self.Mutate.Button.Visible = not mutated
     if not mutated then
         self.Mutate.Fill.Size = UDim2.fromScale(1, energy / AlterEgos.Energy.Cap)
-        self.Mutate.Sub.Text = ready and "READY" or ("%d%%"):format(100 * energy / AlterEgos.Energy.Cap)
-        self.Mutate.Label.TextColor3 = ready and TEXT or MUTED
+        self.Mutate.Sub.Text = ready and "" or ("%d%%"):format(100 * energy / AlterEgos.Energy.Cap)
+        Icons.tint(self.Mutate.Icon, ready and TEXT or MUTED)
         local pulse = ready and (0.5 + 0.5 * math.sin(os.clock() * 6)) or 0
         self.Mutate.Ring.Transparency = ready and (0.6 - 0.6 * pulse) or 0.7
         self.Mutate.Fill.BackgroundTransparency = ready and (0.3 + 0.3 * pulse) or 0.6
@@ -317,8 +351,8 @@ function TouchController:Update()
             local cdLeft = math.max(0, cdEnd - nowServer)
             local progress = def.Cooldown > 0 and 1 - math.min(1, cdLeft / def.Cooldown) or 1
             b.Fill.Size = UDim2.fromScale(1, progress)
-            b.Sub.Text = cdLeft > 0 and ("%.1fs"):format(cdLeft) or "READY"
-            b.Label.TextColor3 = cdLeft > 0 and MUTED or TEXT
+            b.Sub.Text = cdLeft > 0 and ("%.1fs"):format(cdLeft) or ""
+            Icons.tint(b.Icon, cdLeft > 0 and MUTED or TEXT)
             b.Ring.Transparency = cdLeft > 0 and 0.7 or 0.1
         end
     end
