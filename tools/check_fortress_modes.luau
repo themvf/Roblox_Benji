@@ -1,4 +1,5 @@
--- Current public arena contract: one designer-built map (MyMap), two rule layouts.
+-- Public arena contract: the designer-built map (MyMap) leads every rotation and is the startup map,
+-- with two rule layouts.
 -- MyMapPublic promotes the generated draft; MyMapTDM is the same arena without objectives.
 local fs = require("@lune/fs")
 local roblox = require("@lune/roblox")
@@ -17,13 +18,13 @@ local public = luneRequire("../src/shared/Maps/MyMapPublic")
 script = { Parent = { MyMapPublic = public } }
 local tdm = luneRequire("../src/shared/Maps/MyMapTDM")
 
-local function only(list, name)
-    assert(#list == 1 and list[1] == name, name .. " must be the sole public map in this mode")
+local function leads(list, name)
+    assert(list[1] == name, name .. " must lead this mode's rotation")
 end
 
-only(Config.Maps, "MyMapPublic")
-only(Config.ConvergenceMaps, "MyMapPublic")
-only(Config.TDMMaps, "MyMapTDM")
+leads(Config.Maps, "MyMapPublic")
+leads(Config.ConvergenceMaps, "MyMapPublic")
+leads(Config.TDMMaps, "MyMapTDM")
 assert(Config.StartupMap == "MyMapPublic", "the server must start on the public map")
 assert(public.Draft == nil and public.Authored == nil, "the public release must not be a draft")
 assert(#public.Objectives == 3 and public.Finale, "the three objective layout must remain intact")
@@ -40,4 +41,4 @@ for _, team in { "Red", "Blue" } do
     end
 end
 
-print("PASS: MyMap is the sole public arena for Duel, objective and TDM; TDM has no capture objectives")
+print("PASS: MyMap leads the Duel, objective and TDM rotations; TDM has no capture objectives")

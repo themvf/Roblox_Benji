@@ -52,8 +52,8 @@ local function isScaffolding(inst)
     return false
 end
 
--- Derived maps (Snow) require their base by instance path; give them a `script` to walk.
-local preloaded = { Forest = require("../src/shared/Maps/Forest") }
+-- Derived maps (SnowForest, the TDM variants) require their base by instance path; give them a `script` to walk.
+local preloaded = {}
 script = { Parent = preloaded }
 local luneRequire = require
 require = function(target)
@@ -70,6 +70,7 @@ preloaded.MyMapPublic = luneRequire("../src/shared/Maps/MyMapPublic")
 preloaded.SciFiFoundry = luneRequire("../src/shared/Maps/SciFiFoundry")
 preloaded.FiveIslands = luneRequire("../src/shared/Maps/FiveIslands")
 preloaded.ChokeRidge = luneRequire("../src/shared/Maps/ChokeRidge")
+preloaded.HighwayOverpass = luneRequire("../src/shared/Maps/HighwayOverpass")
 
 local checked, failures = 0, 0
 local files = fs.readDir(MAPS_DIR)

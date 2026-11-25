@@ -17,9 +17,9 @@ local dir = "src/shared/Maps"
 -- Not arena layouts: the validator itself, and the lobby (its own schema, built by buildLobby).
 local SKIP = { ["Validate.lua"] = true, ["Lobby.lua"] = true }
 
--- Derived maps (Snow) do `require(script.Parent.Forest)`. Give them a `script` to walk and a
+-- Derived maps (SnowForest, the TDM variants) do `require(script.Parent.<Base>)`. Give them a `script` to walk and a
 -- `require` that hands back an already-loaded layout table.
-local preloaded = { Forest = require("../src/shared/Maps/Forest") }
+local preloaded = {}
 script = { Parent = preloaded }
 local luneRequire = require
 require = function(target)
@@ -46,7 +46,7 @@ local layouts = {}
 for _, file in files do
     if file:sub(-4) == ".lua" and not SKIP[file] then
         checked += 1
-        local layout = luneRequire("../" .. dir .. "/" .. file:sub(1, -5))
+        local layout = require("../" .. dir .. "/" .. file:sub(1, -5))
         layouts[file:sub(1, -5)] = layout
         -- Where a map is baked, check the geometry that actually ships. It carries
         -- collision the layout never described -- the facade kit authors 282 parts on

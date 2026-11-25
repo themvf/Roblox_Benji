@@ -14,16 +14,13 @@ local Config = {
         "ChokeRidge",
         "FiveIslandsHurricane",
         "SciFiFoundryTDM",
-        "Carrier",
-        "Forest",
         "Snow",
         "Arena",
-        "Swamp",
     }, -- Duel (1v1) rotation
     -- Module under Shared/Maps built at server start, before the first match. Also
     -- what Studio's Run (F8) shows, since Run starts the server with no character:
     -- point this at whatever map you are working on to inspect it with a free
-    -- camera and no second player. Design default is "Forest".
+    -- camera and no second player. Design default is "SnowFortress".
     --
     -- This one is NOT a Tuning attribute, unlike everything else here. The map builds
     -- once at server start, so a live attribute could not change it anyway, and a saved
