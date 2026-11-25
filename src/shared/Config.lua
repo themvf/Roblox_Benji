@@ -60,6 +60,15 @@ Config.Movement = {
     AutoSprintDesktop = false, -- Rivals' "Auto Sprint" setting, for keyboard and controller
 }
 
+-- Weapon test range (Shared/Range, RangeService, RangeController). Exposed as Tuning attributes
+-- Range_<Key>, read live.
+Config.Range = {
+    DummyHealth = 100, -- Rivals player health, so time-to-kill reads true
+    HealSeconds = 2.5, -- a dummy nobody has hit for this long is back to full
+    DownSeconds = 1.5, -- a downed dummy stands back up after this
+    PelletWindow = 0.12, -- hits on one dummy closer together than this read as one shot (shotguns)
+}
+
 -- Convergence keys exposed as flat Tuning attributes (Convergence_<Key>)
 Config.CONVERGENCE_TUNABLE = {
     "TeamSize",
